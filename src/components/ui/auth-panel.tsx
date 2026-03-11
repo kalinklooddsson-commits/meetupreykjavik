@@ -6,7 +6,6 @@ import {
   ArrowRight,
   CalendarDays,
   Compass,
-  KeyRound,
   ShieldCheck,
   Store,
   UsersRound,
@@ -17,7 +16,6 @@ import { useState, useTransition } from "react";
 import {
   demoAuthAccounts,
   MOCK_PASSWORD_HINT,
-  portalPathForRole,
 } from "@/lib/auth/mock-auth-config";
 import type { AccountType } from "@/types/domain";
 

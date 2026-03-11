@@ -632,15 +632,31 @@ export function VenueAvailabilityStudio({
   return (
     <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
       <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Weekly blocks
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              {schedule.reduce((total, day) => total + day.blocks.length, 0)}
+            </div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Exceptions
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{exceptionList.length}</div>
+          </div>
+        </div>
         {schedule.map((day) => (
           <button
             key={day.day}
             type="button"
             onClick={() => setSelectedDay(day.day)}
             className={cn(
-              "block w-full rounded-md border p-4 text-left transition",
+              "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               day.day === selected?.day
-                ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                 : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
@@ -656,7 +672,7 @@ export function VenueAvailabilityStudio({
       </div>
 
       {selected ? (
-        <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="text-lg font-semibold text-[var(--brand-text)]">
               {selected.day} availability
@@ -713,7 +729,7 @@ export function VenueAvailabilityStudio({
               <input
                 value={newException}
                 onChange={(event) => setNewException(event.target.value)}
-                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -790,9 +806,9 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
             type="button"
             onClick={() => setSelectedKey(deal.key)}
             className={cn(
-              "block w-full rounded-md border p-4 text-left transition",
+              "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               deal.key === selected?.key
-                ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                 : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
@@ -811,7 +827,7 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
       </div>
 
       {selected ? (
-        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="text-lg font-semibold text-[var(--brand-text)]">
               {selected.title}
@@ -842,7 +858,7 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
               value={selected.note}
               onChange={(event) => mutateSelected({ note: event.target.value })}
               rows={5}
-              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -851,7 +867,7 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
             <input
               value={selected.redemption}
               onChange={(event) => mutateSelected({ redemption: event.target.value })}
-              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -935,9 +951,9 @@ export function VenueProfileSectionEditor({
             type="button"
             onClick={() => setSelectedKey(section.key)}
             className={cn(
-              "block w-full rounded-md border p-4 text-left transition",
+              "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               section.key === selected?.key
-                ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                 : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
@@ -950,7 +966,7 @@ export function VenueProfileSectionEditor({
       </div>
 
       {selected ? (
-        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             {selected.title}
           </div>
@@ -966,7 +982,7 @@ export function VenueProfileSectionEditor({
               <input
                 value={item.value}
                 onChange={(event) => updateItem(item.label, event.target.value)}
-                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           ))}
@@ -1591,13 +1607,13 @@ export function OrganizerVenueRequestStudio({
               setRequestDate(match.nextSlot);
             }}
             className={cn(
-              "block w-full rounded-md border p-4 text-left transition",
+              "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               match.venue.slug === selected?.venue.slug
-                ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                 : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
-            <div className="h-24 rounded-md" style={{ background: match.venue.art }} />
+            <div className="h-24 rounded-lg" style={{ background: match.venue.art }} />
             <div className="mt-4 flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{match.venue.name}</div>
               <ToneBadge tone="sage">{match.score} fit</ToneBadge>
@@ -1610,7 +1626,7 @@ export function OrganizerVenueRequestStudio({
       </div>
 
       {selected ? (
-        <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div>
             <div className="text-lg font-semibold text-[var(--brand-text)]">
               {selected.venue.name}
@@ -1639,7 +1655,7 @@ export function OrganizerVenueRequestStudio({
             <input
               value={requestDate}
               onChange={(event) => setRequestDate(event.target.value)}
-              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -1649,7 +1665,7 @@ export function OrganizerVenueRequestStudio({
               value={requestNote}
               onChange={(event) => setRequestNote(event.target.value)}
               rows={5}
-              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -1667,10 +1683,15 @@ export function OrganizerVenueRequestStudio({
               Request pipeline
             </div>
             <div className="mt-3 space-y-3">
+              {pipelineState.length === 0 ? (
+                <div className="rounded-lg border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-5 text-sm text-[var(--brand-text-muted)]">
+                  No venue requests are in motion yet. Queue one from this panel to start the thread.
+                </div>
+              ) : null}
               {pipelineState.map((item) => (
                 <div
                   key={item.key}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                  className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="font-semibold text-[var(--brand-text)]">{item.venue}</div>

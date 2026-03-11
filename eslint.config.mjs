@@ -12,7 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    ".claude/**",
+    ".ownership-map-venv/**",
     "bootstrap-meetup-20260310/**",
+    "ownership-map-out/**",
     "tmp/**",
   ]),
 ]);

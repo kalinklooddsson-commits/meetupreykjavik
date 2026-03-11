@@ -151,15 +151,6 @@ const toneClasses: Record<DashboardTone, string> = {
     "border-[rgba(153,148,168,0.18)] bg-[rgba(255,255,255,0.74)] text-[var(--brand-text-muted)]",
 };
 
-const chartToneClasses: Record<DashboardTone, string> = {
-  indigo: "from-[var(--brand-indigo)] to-[var(--brand-indigo-light)]",
-  coral: "from-[var(--brand-coral)] to-[#f48b77]",
-  sage: "from-[var(--brand-sage)] to-[#a5beaa]",
-  sand: "from-[#e8dcca] to-[#f7efe4]",
-  basalt: "from-[var(--brand-basalt)] to-[#5f5878]",
-  neutral: "from-[#c9c4d4] to-[#e7e3ec]",
-};
-
 export function Surface({
   eyebrow,
   title,
@@ -172,7 +163,7 @@ export function Surface({
   return (
     <section
       className={cn(
-        "rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6",
+        "dashboard-surface rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6",
         className,
       )}
     >
@@ -218,7 +209,7 @@ export function CommandCenterDeck({
   stats,
 }: CommandCenterDeckProps) {
   return (
-    <section className="rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6">
+    <section className="dashboard-surface dashboard-grid-surface rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6">
       <div className="mb-4">
         <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
           {eyebrow}
@@ -341,7 +332,7 @@ export function StatCard({
 
 export function SignalRail({ eyebrow, title, description, items }: SignalRailProps) {
   return (
-    <section className="rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6">
+    <section className="dashboard-signal-rail rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6">
       <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr] xl:items-end">
         <div>
           <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
@@ -390,7 +381,7 @@ export function DecisionStrip({
   items,
 }: DecisionStripProps) {
   return (
-    <section className="rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6">
+    <section className="dashboard-decision-strip rounded-xl border border-[var(--brand-border-light)] bg-white p-5 sm:p-6">
       <div>
         <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
           {eyebrow}
@@ -442,6 +433,7 @@ export function StreamCard({
     <article
       className={cn(
         "rounded-lg border border-[var(--brand-border-light)] bg-white p-3",
+        "dashboard-stream-card",
         className,
       )}
     >
@@ -567,7 +559,7 @@ export function QuickActionCard({
   return (
     <Link
       href={href}
-      className="group block rounded-xl border border-[var(--brand-border-light)] bg-white p-4 transition hover:border-[var(--brand-indigo)] hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-indigo)]"
+      className="dashboard-quick-action group block rounded-xl border border-[var(--brand-border-light)] bg-white p-4 transition hover:border-[var(--brand-indigo)] hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-indigo)]"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -592,7 +584,7 @@ export function QuickActionCard({
 
 export function DashboardTable({ columns, rows, dense = false, caption }: TableProps) {
   return (
-    <div className="overflow-hidden rounded-lg border border-[var(--brand-border-light)]">
+    <div className="dashboard-table-shell overflow-hidden rounded-lg border border-[var(--brand-border-light)]">
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-left">
           {caption ? <caption className="sr-only">{caption}</caption> : null}

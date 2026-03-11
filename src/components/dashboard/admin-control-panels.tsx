@@ -867,7 +867,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
         </div>
 
         <div className="mt-5">
-          <label className="flex items-center gap-3 rounded-full border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3">
+          <label className="ops-search-shell flex items-center gap-3 rounded-full border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3">
             <Search className="h-4 w-4 text-[var(--brand-text-light)]" />
             <input
               type="search"
@@ -964,10 +964,18 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
               <article
                 key={candidate.id}
                 onClick={() => setActiveId(candidate.id)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setActiveId(candidate.id);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
                 className={cn(
-                  "rounded-lg border p-4 transition cursor-pointer",
+                  "ops-selection-card rounded-lg border p-4 transition cursor-pointer",
                   selected
-                    ? "border-[rgba(79,70,229,0.22)] bg-[rgba(79,70,229,0.08)]"
+                    ? "ops-selection-card-active border-[rgba(79,70,229,0.22)] bg-[rgba(79,70,229,0.08)]"
                     : active
                       ? "border-[rgba(232,97,77,0.18)] bg-[rgba(232,97,77,0.05)]"
                       : "border-[var(--brand-border-light)] bg-white",
@@ -986,7 +994,10 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                     </span>
                     <button
                       type="button"
-                      onClick={() => toggleCandidate(candidate.id)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        toggleCandidate(candidate.id);
+                      }}
                       className={cn(
                         pillBase,
                         selected
@@ -1039,7 +1050,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
           })}
         </div>
 
-        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           {activeCandidate ? (
             <div className="rounded-lg border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -1129,10 +1140,15 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
           </div>
 
           <div className="space-y-3">
+            {selectedCandidates.length === 0 ? (
+              <div className="rounded-lg border border-[var(--brand-border-light)] bg-white px-4 py-6 text-sm text-[var(--brand-text-muted)]">
+                No clients are selected yet. Pick from the candidate pool to start shaping the room.
+              </div>
+            ) : null}
             {selectedCandidates.map((candidate) => (
               <div
                 key={candidate.id}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -1304,7 +1320,7 @@ export function AdminClientCurationWorkbench({
     <div className="grid gap-5">
       <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
         <div className="space-y-4">
-          <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -1368,11 +1384,16 @@ export function AdminClientCurationWorkbench({
             {dossier.fitBreakdown.map((signal) => (
               <article
                 key={signal.key}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="dashboard-stream-card rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{signal.label}</div>
-                  <span className={cn(pillBase, "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]")}>
+                  <span
+                    className={cn(
+                      pillBase,
+                      "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]",
+                    )}
+                  >
                     {signal.score}%
                   </span>
                 </div>
@@ -1397,7 +1418,7 @@ export function AdminClientCurationWorkbench({
           </div>
         </div>
 
-        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div>
             <div className="text-lg font-semibold text-[var(--brand-text)]">
               Access and flags
@@ -1410,7 +1431,7 @@ export function AdminClientCurationWorkbench({
             {dossier.accessRules.map((rule) => (
               <div
                 key={rule.label}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
               >
                 <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                   {rule.label}
@@ -1462,7 +1483,7 @@ export function AdminClientCurationWorkbench({
                 startTransition(() => setNote(value));
               }}
               rows={5}
-              className="mt-3 w-full rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text)] outline-none"
+              className="luxe-field mt-3 w-full rounded-md bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text)] outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
         </div>
@@ -1473,7 +1494,7 @@ export function AdminClientCurationWorkbench({
           {dossier.playbook.map((item, index) => (
             <div
               key={`${item}-${index}`}
-              className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+              className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
             >
               {item}
             </div>
@@ -1481,7 +1502,7 @@ export function AdminClientCurationWorkbench({
           {dossier.adminNotes.map((item, index) => (
             <div
               key={`${item}-${index}`}
-              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+              className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
             >
               {item}
             </div>
@@ -1492,7 +1513,7 @@ export function AdminClientCurationWorkbench({
           {dossier.curationTimeline.map((entry) => (
             <div
               key={entry.key}
-              className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
+              className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-white p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{entry.title}</div>
@@ -1565,7 +1586,7 @@ export function AdminGroupOperationsDesk({
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -1623,7 +1644,7 @@ export function AdminGroupOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+          className="dashboard-stream-card mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -1644,9 +1665,9 @@ export function AdminGroupOperationsDesk({
               role="button"
               tabIndex={0}
               className={cn(
-                "cursor-pointer rounded-md border p-4 transition",
+                "ops-selection-card cursor-pointer rounded-md border p-4 transition",
                 group.key === selectedGroup?.key
-                  ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                   : "border-[var(--brand-border-light)] bg-white",
               )}
             >
@@ -1683,7 +1704,7 @@ export function AdminGroupOperationsDesk({
           ))}
         </div>
 
-        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div>
             <div className="text-lg font-semibold text-[var(--brand-text)]">
               Approval and recovery queue
@@ -1697,11 +1718,13 @@ export function AdminGroupOperationsDesk({
             {activeQueue.map((group) => (
               <div
                 key={group.key}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{group.name}</div>
-                  <ToneBadge tone={group.status.toLowerCase().includes("feature") ? "sage" : "coral"}>
+                  <ToneBadge
+                    tone={group.status.toLowerCase().includes("feature") ? "sage" : "coral"}
+                  >
                     {group.status}
                   </ToneBadge>
                 </div>
@@ -1788,7 +1811,7 @@ export function AdminEventOperationsDesk({
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -1857,7 +1880,7 @@ export function AdminEventOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+          className="dashboard-stream-card mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -1878,9 +1901,9 @@ export function AdminEventOperationsDesk({
               role="button"
               tabIndex={0}
               className={cn(
-                "cursor-pointer rounded-md border p-4 transition",
+                "ops-selection-card cursor-pointer rounded-md border p-4 transition",
                 event.key === selectedEvent?.key
-                  ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                   : "border-[var(--brand-border-light)] bg-white",
               )}
             >
@@ -1917,7 +1940,7 @@ export function AdminEventOperationsDesk({
         </div>
 
         {selectedEvent ? (
-          <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -1944,7 +1967,7 @@ export function AdminEventOperationsDesk({
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                  className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
                 >
                   <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {item.label}
@@ -2000,7 +2023,7 @@ export function AdminRevenueControlDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[0.96fr_1.04fr]">
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             Plan controls
@@ -2043,9 +2066,9 @@ export function AdminRevenueControlDesk({
               type="button"
               onClick={() => setSelectedPlanName(plan.name)}
               className={cn(
-                "block w-full rounded-md border p-4 text-left transition",
+                "ops-selection-card block w-full rounded-md border p-4 text-left transition",
                 plan.name === selectedPlan?.name
-                  ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                   : "border-[var(--brand-border-light)] bg-white",
               )}
             >
@@ -2061,7 +2084,7 @@ export function AdminRevenueControlDesk({
         </div>
 
         {selectedPlan ? (
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
+          <div className="ops-detail-panel rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
             <div className="font-semibold text-[var(--brand-text)]">{selectedPlan.name}</div>
             <label className="mt-4 block text-sm font-semibold text-[var(--brand-text)]">
               Price
@@ -2074,7 +2097,7 @@ export function AdminRevenueControlDesk({
                     `${selectedPlan.name} pricing updated to ${event.target.value}.`,
                   )
                 }
-                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-2 w-full rounded-md bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
             <label className="mt-4 block text-sm font-semibold text-[var(--brand-text)]">
@@ -2089,14 +2112,14 @@ export function AdminRevenueControlDesk({
                   )
                 }
                 rows={4}
-                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-2 w-full rounded-md bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           </div>
         ) : null}
       </div>
 
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             Policy guardrail editor
@@ -2128,13 +2151,13 @@ export function AdminRevenueControlDesk({
           {policyInventory.map((policy) => (
             <label
               key={policy.label}
-              className="block rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+              className="dashboard-stream-card block rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="text-sm font-semibold text-[var(--brand-text)]">{policy.label}</div>
               <input
                 value={policy.value}
                 onChange={(event) => updatePolicy(policy.label, event.target.value)}
-                className="mt-3 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-3 w-full rounded-md bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           ))}
@@ -2143,7 +2166,7 @@ export function AdminRevenueControlDesk({
         <div
           role="status"
           aria-live="polite"
-          className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+          className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -2197,7 +2220,7 @@ export function AdminRevenueOperationsDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[0.96fr_1.04fr]">
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             Money movement desk
@@ -2239,9 +2262,9 @@ export function AdminRevenueOperationsDesk({
               type="button"
               onClick={() => setSelectedKey(entry.key)}
               className={cn(
-                "block w-full rounded-md border p-4 text-left transition",
+                "ops-selection-card block w-full rounded-md border p-4 text-left transition",
                 entry.key === selected?.key
-                  ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                   : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
               )}
             >
@@ -2261,7 +2284,7 @@ export function AdminRevenueOperationsDesk({
 
       <div className="space-y-4">
         {selected ? (
-          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <article className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -2302,7 +2325,7 @@ export function AdminRevenueOperationsDesk({
           </article>
         ) : null}
 
-        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <article className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="text-sm font-semibold text-[var(--brand-text)]">
             Finance action journal
           </div>
@@ -2317,7 +2340,7 @@ export function AdminRevenueOperationsDesk({
             {actionLog.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
+                className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="text-sm font-semibold text-[var(--brand-text)]">{entry.action}</div>
@@ -2366,7 +2389,7 @@ export function AdminAnalyticsOperationsDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[0.92fr_1.08fr]">
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             Signal watch list
@@ -2379,7 +2402,7 @@ export function AdminAnalyticsOperationsDesk({
           {watchList.map((chart) => (
             <div
               key={chart.key}
-              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+              className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{chart.title}</div>
@@ -2413,7 +2436,7 @@ export function AdminAnalyticsOperationsDesk({
       </div>
 
       <div className="space-y-4">
-        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <article className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="text-sm font-semibold text-[var(--brand-text)]">
             Marketplace pressure summary
           </div>
@@ -2440,13 +2463,13 @@ export function AdminAnalyticsOperationsDesk({
           <div
             role="status"
             aria-live="polite"
-            className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+            className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
           >
             {message}
           </div>
         </article>
 
-        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <article className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="text-sm font-semibold text-[var(--brand-text)]">
             Operator prompts
           </div>
@@ -2458,7 +2481,7 @@ export function AdminAnalyticsOperationsDesk({
             ].map((prompt) => (
               <div
                 key={prompt}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4 text-sm leading-relaxed text-[var(--brand-text-muted)]"
               >
                 {prompt}
               </div>
@@ -2496,7 +2519,7 @@ export function AdminOpsInboxDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             Ops inbox
@@ -2512,9 +2535,9 @@ export function AdminOpsInboxDesk({
               type="button"
               onClick={() => setSelectedKey(item.key)}
               className={cn(
-                "block w-full rounded-md border p-4 text-left transition",
+                "ops-selection-card block w-full rounded-md border p-4 text-left transition",
                 item.key === selected?.key
-                  ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                   : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
               )}
             >
@@ -2534,7 +2557,7 @@ export function AdminOpsInboxDesk({
 
       <div className="space-y-4">
         {selected ? (
-          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <article className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -2567,7 +2590,7 @@ export function AdminOpsInboxDesk({
           </article>
         ) : null}
 
-        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <article className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="text-sm font-semibold text-[var(--brand-text)]">
             Handoff log
           </div>
@@ -2582,7 +2605,7 @@ export function AdminOpsInboxDesk({
             {handoffs.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
+                className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{entry.actor}</div>
@@ -2641,7 +2664,7 @@ export function AdminIncidentCommandDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             Incident command
@@ -2657,9 +2680,9 @@ export function AdminIncidentCommandDesk({
               type="button"
               onClick={() => setSelectedKey(item.key)}
               className={cn(
-                "block w-full rounded-md border p-4 text-left transition",
+                "ops-selection-card block w-full rounded-md border p-4 text-left transition",
                 item.key === selected?.key
-                  ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                   : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
               )}
             >
@@ -2679,7 +2702,7 @@ export function AdminIncidentCommandDesk({
 
       <div className="space-y-4">
         {selected ? (
-          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <article className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -2712,7 +2735,7 @@ export function AdminIncidentCommandDesk({
           </article>
         ) : null}
 
-        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <article className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="text-sm font-semibold text-[var(--brand-text)]">
             Ownership board
           </div>
@@ -2727,7 +2750,7 @@ export function AdminIncidentCommandDesk({
             {owners.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
+                className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{entry.lane}</div>
@@ -2892,7 +2915,7 @@ export function AdminVenueOperationsDesk({
           {queue.map((application) => (
             <article
               key={application.key}
-              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+              className="ops-selection-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{application.name}</div>
@@ -2924,13 +2947,13 @@ export function AdminVenueOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+          className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
       </div>
 
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             Live partner steering
@@ -2943,7 +2966,7 @@ export function AdminVenueOperationsDesk({
           {partners.slice(0, 4).map((partner) => (
             <label
               key={partner.key}
-              className="block rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+              className="dashboard-stream-card block rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{partner.name}</div>
@@ -2955,7 +2978,7 @@ export function AdminVenueOperationsDesk({
               <input
                 value={partner.note}
                 onChange={(event) => updatePartner(partner.key, event.target.value)}
-                className="mt-3 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-3 w-full rounded-md bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           ))}
@@ -3002,7 +3025,7 @@ export function AdminModerationOperationsDesk({
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -3053,13 +3076,30 @@ export function AdminModerationOperationsDesk({
           {queue.map((report) => (
             <article
               key={report.key}
-              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+              onClick={() => toggleKey(report.key)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  toggleKey(report.key);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              className={cn(
+                "ops-selection-card rounded-md border p-4 transition",
+                selectedKeys.includes(report.key)
+                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                  : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
+              )}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{report.subject}</div>
                 <button
                   type="button"
-                  onClick={() => toggleKey(report.key)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleKey(report.key);
+                  }}
                   className={cn(
                     pillBase,
                     selectedKeys.includes(report.key)
@@ -3085,7 +3125,7 @@ export function AdminModerationOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+          className="dashboard-stream-card mt-4 rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -3116,11 +3156,16 @@ export function AdminVenueApprovalConsole({
       {queue.map((venue) => (
         <article
           key={venue.key}
-          className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+          className="dashboard-stream-card rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="font-semibold text-[var(--brand-text)]">{venue.name}</div>
-            <span className={cn(pillBase, "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]")}>
+            <span
+              className={cn(
+                pillBase,
+                "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]",
+              )}
+            >
               {venue.status}
             </span>
           </div>
@@ -3129,10 +3174,29 @@ export function AdminVenueApprovalConsole({
             {venue.note}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <ActionButton label="Approve" onClick={() => updateStatus(venue.key, "Approved")} tone="sage" icon={CheckCheck} />
-            <ActionButton label="Waitlist" onClick={() => updateStatus(venue.key, "Waitlisted")} icon={ShieldAlert} />
-            <ActionButton label="Request info" onClick={() => updateStatus(venue.key, "Request info")} tone="indigo" icon={UserRoundCog} />
-            <ActionButton label="Reject" onClick={() => updateStatus(venue.key, "Rejected")} tone="coral" icon={Ban} />
+            <ActionButton
+              label="Approve"
+              onClick={() => updateStatus(venue.key, "Approved")}
+              tone="sage"
+              icon={CheckCheck}
+            />
+            <ActionButton
+              label="Waitlist"
+              onClick={() => updateStatus(venue.key, "Waitlisted")}
+              icon={ShieldAlert}
+            />
+            <ActionButton
+              label="Request info"
+              onClick={() => updateStatus(venue.key, "Request info")}
+              tone="indigo"
+              icon={UserRoundCog}
+            />
+            <ActionButton
+              label="Reject"
+              onClick={() => updateStatus(venue.key, "Rejected")}
+              tone="coral"
+              icon={Ban}
+            />
           </div>
         </article>
       ))}
@@ -3210,7 +3274,7 @@ export function AdminModerationConsole({
         {reportQueue.map((report) => (
           <article
             key={report.key}
-            className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+            className="dashboard-stream-card rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{report.subject}</div>
@@ -3230,7 +3294,7 @@ export function AdminModerationConsole({
         ))}
       </div>
 
-      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+      <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="text-lg font-semibold text-[var(--brand-text)]">
           Banned and appeals
         </div>
@@ -3240,7 +3304,7 @@ export function AdminModerationConsole({
         {banList.map((entry) => (
           <div
             key={entry.key}
-            className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+            className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{entry.name}</div>
@@ -3432,7 +3496,7 @@ export function AdminSettingsControlCenter({
 
       <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
         <div className="space-y-6">
-          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <article className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="text-sm font-semibold text-[var(--brand-text)]">
               Settings domains
             </div>
@@ -3443,9 +3507,9 @@ export function AdminSettingsControlCenter({
                   type="button"
                   onClick={() => setSelectedSectionKey(section.key)}
                   className={cn(
-                    "block w-full rounded-md border px-4 py-4 text-left transition",
+                    "ops-selection-card block w-full rounded-md border px-4 py-4 text-left transition",
                     section.key === selectedSection?.key
-                      ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                      ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
                       : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
                   )}
                 >
@@ -3463,11 +3527,11 @@ export function AdminSettingsControlCenter({
             </div>
           </article>
 
-          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <article className="dashboard-surface space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="text-sm font-semibold text-[var(--brand-text)]">
               Emergency controls
             </div>
-            <div className="mt-4 grid gap-3">
+            <div className="grid gap-3">
               <ActionButton
                 label="Freeze payouts"
                 tone="coral"
@@ -3526,7 +3590,7 @@ export function AdminSettingsControlCenter({
 
         <div className="space-y-6">
           {selectedSection ? (
-            <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+            <article className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <div className="text-lg font-semibold text-[var(--brand-text)]">
@@ -3542,7 +3606,7 @@ export function AdminSettingsControlCenter({
                 {selectedSection.items.map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                    className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-semibold text-[var(--brand-text)]">{item.label}</div>
@@ -3572,7 +3636,7 @@ export function AdminSettingsControlCenter({
                       onChange={(event) =>
                         updateItemValue(selectedSection.key, item.label, event.target.value)
                       }
-                      className="mt-3 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 text-sm outline-none transition focus:border-[var(--brand-coral)]"
+                      className="luxe-field mt-3 w-full rounded-md bg-white px-4 py-3 text-sm outline-none transition focus:border-[var(--brand-coral)]"
                     />
                   </div>
                 ))}
@@ -3581,7 +3645,7 @@ export function AdminSettingsControlCenter({
           ) : null}
 
           <div className="grid gap-6 xl:grid-cols-[0.96fr_1.04fr]">
-            <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+            <article className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
               <div className="text-sm font-semibold text-[var(--brand-text)]">
                 Access matrix
               </div>
@@ -3589,7 +3653,7 @@ export function AdminSettingsControlCenter({
                 {accessMatrix.map((entry) => (
                   <div
                     key={entry.capability}
-                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                    className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                   >
                     <div className="text-sm font-semibold text-[var(--brand-text)]">
                       {entry.capability}
@@ -3616,7 +3680,7 @@ export function AdminSettingsControlCenter({
               </div>
             </article>
 
-            <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+            <article className="dashboard-surface rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
               <div className="text-sm font-semibold text-[var(--brand-text)]">
                 Change journal
               </div>
@@ -3624,7 +3688,7 @@ export function AdminSettingsControlCenter({
                 {changeLog.map((entry) => (
                   <div
                     key={entry.key}
-                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                    className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-semibold text-[var(--brand-text)]">{entry.actor}</div>
