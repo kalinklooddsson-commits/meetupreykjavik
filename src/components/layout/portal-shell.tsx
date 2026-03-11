@@ -7,10 +7,8 @@ import {
   ArrowUpRight,
   CalendarRange,
   Compass,
-  LayoutDashboard,
   PanelLeftClose,
   PanelLeftOpen,
-  Sparkles,
   Store,
   UsersRound,
 } from "lucide-react";
@@ -98,8 +96,6 @@ export function PortalShell({
   roleMode = variant === "admin" ? "admin" : "member",
 }: PortalShellProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const activeLink = links.find((link) => link.active) ?? links[0];
-  const quickJumpLinks = links.filter((link) => !link.active).slice(0, 4);
   const isAdmin = variant === "admin";
   const currentRoleMeta = roleMeta[roleMode];
   const RoleIcon: LucideIcon = currentRoleMeta.icon;
@@ -168,31 +164,19 @@ export function PortalShell({
 
           <div
             className={cn(
-              "mt-4 flex flex-wrap gap-2",
+              "mt-4 rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/74 px-4 py-3",
               collapsed && "lg:hidden",
             )}
           >
-            <span className="portal-chip">
-              <LayoutDashboard className="h-4 w-4 text-[var(--brand-indigo)]" />
-              <strong>{links.length}</strong>
-              routes
-            </span>
-            <span className="portal-chip">
-              <Sparkles className="h-4 w-4 text-[var(--brand-coral)]" />
+            <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--brand-text-light)]">
               {currentRoleMeta.chip}
-            </span>
+            </div>
+            <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+              {currentRoleMeta.lane}
+            </div>
           </div>
 
-          <div
-            className={cn(
-              "mt-4 rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/74 px-4 py-3 text-sm text-[var(--brand-text-muted)]",
-              collapsed && "lg:hidden",
-            )}
-          >
-            {currentRoleMeta.note}
-          </div>
-
-          <nav className="mt-4 space-y-2">
+          <nav className="mt-5 space-y-2">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -210,10 +194,6 @@ export function PortalShell({
 
         <main className="space-y-6">
           <div className="portal-mobile-jumps lg:hidden">
-            <div className="portal-mobile-jumps-header">
-              <span className="portal-mobile-jumps-label">{currentRoleMeta.lane}</span>
-              <span className="portal-mobile-jumps-label">{links.length} routes</span>
-            </div>
             <div className="portal-mobile-jumps-row">
               {links.map((link) => (
                 <Link
@@ -260,105 +240,30 @@ export function PortalShell({
                 </p>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 xl:min-w-[320px]">
-                <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                    Section routes
-                  </div>
-                  <div className="font-editorial tabular-data mt-2 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
-                    {links.length}
-                  </div>
-                </div>
-                <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                    Workspace posture
-                  </div>
-                  <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
-                    {collapsed ? "Compact navigation" : currentRoleMeta.posture}
-                  </div>
-                </div>
-                <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                    Operating lane
-                  </div>
-                  <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
-                    {currentRoleMeta.lane}
-                  </div>
+              <div className="flex min-w-0 flex-col items-start gap-3 xl:min-w-[300px] xl:items-end">
+                <div className="flex flex-wrap gap-2 xl:justify-end">
+                  <span className="portal-context-pill">{currentRoleMeta.posture}</span>
+                  <span className="portal-context-pill">{currentRoleMeta.lane}</span>
                 </div>
                 {primaryAction ? (
                   <Link
                     href={primaryAction.href}
                     className={cn(
-                      "inline-flex min-h-[108px] flex-col justify-between rounded-[1.35rem] border px-4 py-4 text-left transition hover:-translate-y-0.5",
+                      "inline-flex min-h-12 items-center gap-3 rounded-full border px-5 py-3 text-left text-sm font-semibold transition hover:-translate-y-0.5",
                       isAdmin
                         ? "border-[rgba(30,27,46,0.14)] bg-[linear-gradient(140deg,rgba(30,27,46,0.96),rgba(55,48,163,0.92),rgba(232,97,77,0.78))] text-white shadow-[0_22px_44px_rgba(42,38,56,0.18)]"
                         : "border-[rgba(79,70,229,0.12)] bg-white text-[var(--brand-text)]",
                     )}
                   >
-                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-current/70">
-                      Primary action
-                    </div>
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-sm font-semibold">{primaryAction.label}</span>
-                      <ArrowUpRight className="h-4 w-4" />
-                    </div>
+                    <span>{primaryAction.label}</span>
+                    <ArrowUpRight className="h-4 w-4" />
                   </Link>
                 ) : null}
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-2">
-              {links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "portal-chip transition hover:-translate-y-0.5",
-                    link.active &&
-                      "border-[rgba(79,70,229,0.16)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-text)]",
-                  )}
-                >
-                  <ArrowUpRight className="h-4 w-4 text-[var(--brand-indigo)]" />
-                  <span>{link.label}</span>
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-6 grid gap-3 xl:grid-cols-[0.9fr_1.1fr]">
-              <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                  Active section
-                </div>
-                <div className="mt-2 font-semibold text-[var(--brand-text)]">
-                  {activeLink?.label ?? "Overview"}
-                </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
-                  Keep the current lane visible while using quick jumps below to move between
-                  queues, reporting, and operating tools faster.
-                </p>
-              </div>
-
-              <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                  Quick jumps
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {quickJumpLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="portal-chip transition hover:-translate-y-0.5"
-                    >
-                      <ArrowUpRight className="h-4 w-4 text-[var(--brand-indigo)]" />
-                      <span>{link.label}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-
             {signalCards.length ? (
-              <div className="mt-6 grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
+              <div className="mt-6 grid gap-3 lg:grid-cols-3">
                 {signalCards.map((signal) => (
                   <article
                     key={signal.label}
@@ -372,10 +277,10 @@ export function PortalShell({
                     <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
                       {signal.label}
                     </div>
-                    <div className="font-editorial tabular-data mt-2 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                    <div className="font-editorial tabular-data mt-2 text-[2rem] tracking-[-0.05em] text-[var(--brand-text)]">
                       {signal.value}
                     </div>
-                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    <p className="mt-2 text-sm leading-6 text-[var(--brand-text-muted)]">
                       {signal.detail}
                     </p>
                   </article>

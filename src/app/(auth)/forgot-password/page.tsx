@@ -5,8 +5,8 @@ export default function ForgotPasswordPage() {
     <AuthPanel
       mode="forgot-password"
       eyebrow="Password reset"
-      title="Recover access without losing the flow"
-      description="Send a recovery email, keep the same route shape, and return people to the correct portal without changing the frontend design."
+      title="Reset your password"
+      description="Enter your email address and we'll send you a link to create a new password."
       primaryLabel="Send recovery email"
       secondaryHref="/login"
       secondaryLabel="Back to login"

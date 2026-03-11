@@ -12,6 +12,12 @@ import {
   withMockSessionCookie,
 } from "@/lib/auth/mock-auth";
 import { getOrCreateSessionForSupabaseUser } from "@/lib/auth/session";
+import {
+  adminPortalData,
+  memberPortalData,
+  organizerPortalData,
+  venuePortalData,
+} from "@/lib/dashboard-data";
 import { loginSchema, forgotPasswordSchema, resetPasswordSchema, signupSchema } from "@/lib/validators/auth";
 import {
   eventCommentSchema,
@@ -31,6 +37,11 @@ import {
 } from "@/lib/validators/venues";
 import { findApiSpecRoute, routeKey, type ApiMethod } from "@/lib/api/spec-routes";
 import { mockAdminSettings, mockCatalog } from "@/lib/api/mock-data";
+import {
+  publicEvents,
+  publicGroups,
+  publicVenues,
+} from "@/lib/public-data";
 import { hasTrustedOrigin } from "@/lib/security/request";
 import { createSupabaseRouteClient } from "@/lib/supabase/route";
 import {
@@ -110,31 +121,198 @@ function getMockResponse(
         mockCatalog.users.find((user) => user.id === match.params.id) ?? null,
       );
     case "GET /api/groups":
-      return successResponse(mockCatalog.groups);
+      return successResponse(publicGroups);
     case "GET /api/groups/[slug]":
       return successResponse(
-        mockCatalog.groups.find((group) => group.slug === match.params.slug) ?? null,
+        publicGroups.find((group) => group.slug === match.params.slug) ?? null,
       );
     case "GET /api/events":
-      return successResponse(mockCatalog.events);
+      return successResponse(publicEvents);
     case "GET /api/events/[slug]":
       return successResponse(
-        mockCatalog.events.find((event) => event.slug === match.params.slug) ?? null,
+        publicEvents.find((event) => event.slug === match.params.slug) ?? null,
       );
     case "GET /api/venues":
-      return successResponse(mockCatalog.venues);
+      return successResponse(publicVenues);
     case "GET /api/venues/[slug]":
       return successResponse(
-        mockCatalog.venues.find((venue) => venue.slug === match.params.slug) ?? null,
+        publicVenues.find((venue) => venue.slug === match.params.slug) ?? null,
       );
     case "GET /api/admin/settings":
-      return successResponse(mockAdminSettings);
+      return successResponse(adminPortalData.settings ?? mockAdminSettings);
     default:
       return successResponse({
         route: pathname,
         params: match.params,
         note: "This endpoint is marked mock in the manifest but has not been given a custom payload yet.",
       });
+  }
+}
+
+async function resolveAppSession(request: NextRequest) {
+  if (!hasLiveSupabaseAuth()) {
+    return readMockSessionFromRequest(request);
+  }
+
+  const routeClient = createSupabaseRouteClient(request);
+
+  if (!routeClient) {
+    return null;
+  }
+
+  const {
+    data: { user },
+    error,
+  } = await routeClient.supabase.auth.getUser();
+
+  if (error || !user) {
+    return null;
+  }
+
+  return getOrCreateSessionForSupabaseUser(user);
+}
+
+function seededMessagesForRole(accountType: string | null | undefined) {
+  switch (accountType) {
+    case "organizer":
+      return organizerPortalData.messages;
+    case "venue":
+      return venuePortalData.messages;
+    case "admin":
+      return [
+        {
+          key: "admin-msg-1",
+          counterpart: adminPortalData.selectedUser.name,
+          role: adminPortalData.selectedUser.role,
+          subject: "Organizer quality review",
+          preview: adminPortalData.selectedUser.notes,
+          channel: "Admin oversight",
+          status: "Open",
+          meta: "Today",
+        },
+        {
+          key: "admin-msg-2",
+          counterpart: adminPortalData.clientDossier.name,
+          role: adminPortalData.clientDossier.tier,
+          subject: "Client curation note",
+          preview: adminPortalData.clientDossier.summary,
+          channel: "Client dossier",
+          status: "Pinned",
+          meta: "Today",
+        },
+      ];
+    default:
+      return memberPortalData.messages;
+  }
+}
+
+function seededNotificationsForRole(accountType: string | null | undefined) {
+  switch (accountType) {
+    case "organizer":
+      return organizerPortalData.notifications;
+    case "venue":
+      return venuePortalData.notifications;
+    case "admin":
+      return adminPortalData.urgentQueues.map((item) => ({
+        key: item.key,
+        title: item.title,
+        detail: item.detail,
+        channel: item.meta,
+        status: "Needs review",
+        meta: item.meta,
+        tone: item.tone,
+      }));
+    default:
+      return memberPortalData.notifications;
+  }
+}
+
+function seededBookingsForRole(accountType: string | null | undefined) {
+  switch (accountType) {
+    case "organizer":
+      return {
+        pipeline: organizerPortalData.bookingPipeline,
+        venues: organizerPortalData.venueMatches,
+      };
+    case "venue":
+      return venuePortalData.bookings;
+    case "admin":
+      return {
+        transactions: adminPortalData.revenue.transactions,
+        venueApplications: adminPortalData.venues.applications,
+      };
+    default:
+      return [];
+  }
+}
+
+function seededAdminAnalytics(type: string) {
+  switch (type) {
+    case "growth":
+      return {
+        growthChart: adminPortalData.growthChart,
+        geography: adminPortalData.geography,
+      };
+    case "content":
+      return adminPortalData.content;
+    case "revenue":
+      return adminPortalData.revenue;
+    case "moderation":
+      return adminPortalData.moderation;
+    default:
+      return {
+        deck: adminPortalData.analyticsDeck,
+        heatGrid: adminPortalData.heatGrid,
+        categoryMix: adminPortalData.categoryMix,
+      };
+  }
+}
+
+async function getSeededReadResponse(
+  match: NonNullable<ReturnType<typeof findApiSpecRoute>>,
+  request: NextRequest,
+) {
+  const session = await resolveAppSession(request);
+  const key = routeKey(match.route);
+
+  switch (key) {
+    case "GET /api/messages":
+      return successResponse({
+        accountType: session?.accountType ?? "user",
+        threads: seededMessagesForRole(session?.accountType),
+      });
+    case "GET /api/messages/[threadId]": {
+      const threads = seededMessagesForRole(session?.accountType);
+      return successResponse(
+        threads.find((thread) => thread.key === match.params.threadId) ?? null,
+      );
+    }
+    case "GET /api/notifications":
+      return successResponse({
+        accountType: session?.accountType ?? "user",
+        notifications: seededNotificationsForRole(session?.accountType),
+      });
+    case "GET /api/bookings":
+      return successResponse({
+        accountType: session?.accountType ?? "user",
+        data: seededBookingsForRole(session?.accountType),
+      });
+    case "GET /api/admin/stats":
+      return successResponse({
+        metrics: adminPortalData.metrics,
+        opsInbox: adminPortalData.opsInbox,
+        urgentQueues: adminPortalData.urgentQueues,
+      });
+    case "GET /api/admin/analytics/[type]":
+      return successResponse(seededAdminAnalytics(match.params.type));
+    case "GET /api/admin/transactions":
+      return successResponse(adminPortalData.revenue.transactions);
+    case "GET /api/admin/moderation":
+      return successResponse(adminPortalData.moderation);
+    case "GET /api/admin/audit-log":
+      return successResponse(adminPortalData.moderation.auditLog);
+    default:
+      return null;
   }
 }
 
@@ -465,6 +643,14 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
   try {
     if (method !== "GET" && !hasTrustedOrigin(request)) {
       return forbiddenResponse("Cross-site state changes are not allowed.");
+    }
+
+    if (method === "GET") {
+      const seededReadResponse = await getSeededReadResponse(match, request);
+
+      if (seededReadResponse) {
+        return seededReadResponse;
+      }
     }
 
     if (match.route.category === "auth") {

@@ -598,7 +598,10 @@ function EventCard({
     .toUpperCase();
 
   return (
-    <article className="marketplace-card rounded-[1.7rem]">
+    <Link
+      href={href}
+      className="marketplace-card group block rounded-[1.7rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-coral)]"
+    >
       <div className="grain-overlay relative h-48" style={{ background: event.art }} aria-hidden="true">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.06),rgba(30,27,46,0.58))]" />
         <div className="relative z-10 flex h-full flex-col justify-between p-5 text-white">
@@ -666,16 +669,13 @@ function EventCard({
             <div className="text-sm font-semibold text-[var(--brand-text)]">{event.groupName}</div>
             <div className="mt-1 text-sm text-[var(--brand-text-muted)]">{event.priceLabel}</div>
           </div>
-          <Link
-            href={href}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5"
-          >
+          <span className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition group-hover:-translate-y-0.5">
             View event
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -687,7 +687,10 @@ function GroupCard({
   upcomingTitle?: string;
 }) {
   return (
-    <article className="marketplace-card rounded-[1.7rem]">
+    <Link
+      href={groupHref(group.slug)}
+      className="marketplace-card group block rounded-[1.7rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-coral)]"
+    >
       <div className="relative h-40" style={{ background: group.banner }} aria-hidden="true">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.04),rgba(30,27,46,0.42))]" />
       </div>
@@ -721,16 +724,13 @@ function GroupCard({
           <div className="text-sm text-[var(--brand-text-muted)]">
             {upcomingTitle ? `Next up: ${upcomingTitle}` : "No public event queued yet"}
           </div>
-          <Link
-            href={groupHref(group.slug)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5"
-          >
+          <span className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition group-hover:-translate-y-0.5">
             View group
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -738,7 +738,10 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
   const nextEvent = publicEvents.find((event) => venue.upcomingEventSlugs.includes(event.slug));
 
   return (
-    <article className="marketplace-card rounded-[1.7rem]">
+    <Link
+      href={venueHref(venue.slug)}
+      className="marketplace-card group block rounded-[1.7rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-coral)]"
+    >
       <div className="relative h-40" style={{ background: venue.art }} aria-hidden="true">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.06),rgba(30,27,46,0.52))]" />
         <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5 text-white">
@@ -774,22 +777,22 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
           <div className="text-sm text-[var(--brand-text-muted)]">
             {nextEvent ? `Upcoming: ${nextEvent.title}` : "Open for new bookings"}
           </div>
-          <Link
-            href={venueHref(venue.slug)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5"
-          >
+          <span className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition group-hover:-translate-y-0.5">
             View venue
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
 function BlogCard({ post }: { post: BlogPost }) {
   return (
-    <article className="paper-panel-premium overflow-hidden rounded-[1.7rem]">
+    <Link
+      href={blogHref(post.slug)}
+      className="paper-panel-premium group block overflow-hidden rounded-[1.7rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--brand-coral)]"
+    >
       <div className="relative h-44" style={{ background: post.hero }} aria-hidden="true">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.02),rgba(30,27,46,0.52))]" />
       </div>
@@ -804,16 +807,13 @@ function BlogCard({ post }: { post: BlogPost }) {
         <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">{post.excerpt}</p>
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-[var(--brand-text-muted)]">{post.publishedAt}</div>
-          <Link
-            href={blogHref(post.slug)}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5"
-          >
+          <span className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white transition group-hover:-translate-y-0.5">
             Read article
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -937,22 +937,45 @@ function TierCard({
       : tone === "sage"
         ? "from-[rgba(124,154,130,0.18)] to-[rgba(245,240,232,0.92)]"
         : "from-[rgba(79,70,229,0.16)] to-[rgba(245,240,232,0.92)]";
+  const priceParts = getTierPriceParts(price);
 
   return (
-    <article className="sales-tier-card rounded-[1.8rem]">
-      <div className={`bg-gradient-to-br ${accentClass} p-6`}>
-        <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
-          {title}
+    <article className="sales-tier-card flex h-full flex-col rounded-[1.8rem]">
+      <div className={`bg-gradient-to-br ${accentClass} p-6 lg:p-7`}>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+              {title}
+            </div>
+            <div className="mt-3 inline-flex rounded-full border border-[rgba(255,255,255,0.72)] bg-[rgba(255,255,255,0.68)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand-text-muted)]">
+              {getTierPositioningLabel(title)}
+            </div>
+          </div>
+          <div className="rounded-full border border-[rgba(255,255,255,0.72)] bg-[rgba(255,255,255,0.62)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--brand-text-muted)]">
+            {getTierCadenceLabel(price)}
+          </div>
         </div>
-        <div className="font-editorial mt-4 text-5xl tracking-[-0.06em] text-[var(--brand-text)]">
-          {price}
+        <div className="mt-6 flex flex-wrap items-end gap-x-2 gap-y-1">
+          <span className="font-editorial text-[clamp(3rem,5vw,4.5rem)] leading-[0.88] tracking-[-0.07em] text-[var(--brand-text)]">
+            {priceParts.amount}
+          </span>
+          {priceParts.currency ? (
+            <span className="pb-2 text-lg font-semibold uppercase tracking-[0.16em] text-[var(--brand-text-muted)]">
+              {priceParts.currency}
+            </span>
+          ) : null}
+          {priceParts.cadence ? (
+            <span className="pb-2 text-base font-medium text-[var(--brand-text-muted)]">
+              {priceParts.cadence}
+            </span>
+          ) : null}
         </div>
-        <p className="mt-4 max-w-sm text-sm leading-7 text-[var(--brand-text-muted)]">
+        <p className="mt-5 max-w-md text-sm leading-7 text-[var(--brand-text-muted)]">
           {description}
         </p>
       </div>
       {features ? (
-        <div className="p-6">
+        <div className="flex flex-1 flex-col p-6 lg:p-7">
           <div className="space-y-3">
             {features.map((feature) => (
               <div
@@ -964,9 +987,166 @@ function TierCard({
               </div>
             ))}
           </div>
+          <div className="mt-5 border-t border-[rgba(221,215,203,0.7)] pt-4">
+            <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-text-light)]">
+              Best for
+            </div>
+            <p className="mt-2 text-sm leading-6 text-[var(--brand-text-muted)]">
+              {getTierAudienceCopy(title)}
+            </p>
+          </div>
         </div>
       ) : null}
     </article>
+  );
+}
+
+function getTierPriceParts(price: string) {
+  const normalized = price.replace(/\s+/g, " ").trim();
+  const match = normalized.match(
+    /^([\d.,]+|Free|Custom|Contact)(?:\s+([A-Z]{3}))?(?:\s*(\/.*))?$/i,
+  );
+
+  if (!match) {
+    return { amount: normalized, currency: "", cadence: "" };
+  }
+
+  const amount = match[1] ?? normalized;
+  const currency = (match[2] ?? "").toUpperCase();
+  const cadence = match[3] ?? "";
+
+  return { amount, currency, cadence };
+}
+
+function getTierCadenceLabel(price: string) {
+  return price.includes("/ mo") ? "Monthly" : price === "0 ISK" ? "Included" : "Plan";
+}
+
+function getTierPositioningLabel(title: string) {
+  const normalized = title.toLowerCase();
+
+  if (normalized.includes("organizer")) {
+    return "Built for hosts";
+  }
+
+  if (normalized.includes("venue")) {
+    return "Built for venue teams";
+  }
+
+  if (normalized.includes("free") || normalized.includes("plus") || normalized.includes("pro")) {
+    return "Built for members";
+  }
+
+  return "Built for operators";
+}
+
+function getTierAudienceCopy(title: string) {
+  const normalized = title.toLowerCase();
+
+  if (normalized.includes("organizer starter")) {
+    return "New hosts launching paid public formats with clear publishing, pricing, and basic audience control.";
+  }
+
+  if (normalized.includes("organizer pro")) {
+    return "Recurring organizers who need approvals, repeat series control, venue workflows, and stronger conversion tooling.";
+  }
+
+  if (normalized.includes("organizer studio")) {
+    return "Serious operators running premium series, sponsor inventory, and multiple formats under one commercial system.";
+  }
+
+  if (normalized.includes("venue listing")) {
+    return "Rooms that want visibility on the marketplace before adopting the full booking and partner workflow product.";
+  }
+
+  if (normalized.includes("venue partner")) {
+    return "Venue teams handling booking responses, availability, partner offers, and organizer-fit decisions in one place.";
+  }
+
+  if (normalized.includes("venue premium")) {
+    return "High-leverage venue operators who want featured placement, deeper analytics, and better-quality recurring business.";
+  }
+
+  if (normalized.includes("free")) {
+    return "Members who want to browse the city, join groups, and buy into the right events without a recurring commitment.";
+  }
+
+  if (normalized.includes("plus")) {
+    return "Members who want stronger access, cleaner discovery, and a higher-intent experience around premium formats.";
+  }
+
+  if (normalized.includes("pro")) {
+    return "Power members and regulars who want better signal, faster access, and the strongest discovery controls on the platform.";
+  }
+
+  return "People who want a cleaner operating layer instead of piecing together tools by hand.";
+}
+
+function ShowcaseBand({
+  eyebrow,
+  title,
+  description,
+  items,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  items: ReadonlyArray<{
+    title: string;
+    text: string;
+    tone: "indigo" | "coral" | "sage";
+    icon: typeof Compass;
+    badge?: string;
+  }>;
+}) {
+  const badgeForTone = (tone: "indigo" | "coral" | "sage") => {
+    switch (tone) {
+      case "coral":
+        return "Revenue signal";
+      case "sage":
+        return "Quality signal";
+      case "indigo":
+      default:
+        return "Strategic signal";
+    }
+  };
+
+  return (
+    <div className="showcase-band">
+      <div className="showcase-band-copy">
+        <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+          {eyebrow}
+        </div>
+        <h3 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)]">
+          {title}
+        </h3>
+        <p className="mt-3 max-w-xl text-sm leading-7 text-[var(--brand-text-muted)]">
+          {description}
+        </p>
+      </div>
+      <div className="showcase-band-grid">
+        {items.map((item) => (
+          <article key={item.title} className="showcase-band-card">
+            <div className="flex items-start gap-4">
+              <span className="editorial-icon-chip">
+                <item.icon className="h-5 w-5" />
+              </span>
+              <div>
+                <div className="text-base font-bold tracking-[-0.02em] text-[var(--brand-text)]">
+                  {item.title}
+                </div>
+                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  {item.text}
+                </p>
+                <div className="mt-3">
+                  <ToneBadge tone={item.tone}>{item.badge ?? badgeForTone(item.tone)}</ToneBadge>
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -1211,6 +1391,37 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
           },
         ]}
       />
+
+      <section className="section-shell py-8">
+        <ShowcaseBand
+          eyebrow="Decision frame"
+          title="A paid event detail page should reduce uncertainty before checkout."
+          description="The strongest event pages do more than list time and place. They make the room feel legible: who it is for, how arrival works, and whether the host has shaped the format well enough to deserve a paid seat."
+          items={[
+            {
+              icon: ShieldCheck,
+              title: "Social risk is lower",
+              text: "Approval mode, host line, and comments make it easier for solo attendees to judge whether the room will feel welcoming or awkward.",
+              tone: "indigo",
+              badge: "Trust signal",
+            },
+            {
+              icon: Ticket,
+              title: "Price feels justified",
+              text: `${event.priceLabel} works better when the page explains the format quality, venue fit, and reminder discipline instead of just showing a ticket button.`,
+              tone: "coral",
+              badge: "Conversion signal",
+            },
+            {
+              icon: Store,
+              title: "Venue fit is visible",
+              text: "Members should understand the room before they pay: seated or roaming, premium or casual, calmer or louder.",
+              tone: "sage",
+              badge: "Room signal",
+            },
+          ]}
+        />
+      </section>
 
       <section className="section-shell py-10">
         <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
@@ -1566,6 +1777,34 @@ export function GroupsIndexScreen() {
           ]}
         />
 
+        <div className="mt-8">
+          <ShowcaseBand
+            eyebrow="Why groups matter"
+            title="The group layer turns the marketplace from browsing into belonging."
+            description="The strongest communities do three things well: they keep a rhythm people can trust, they make the organizer visible, and they create a durable base for stronger paid formats later."
+            items={[
+              {
+                icon: UsersRound,
+                title: "Cadence beats novelty",
+                text: "A recurring rhythm is what makes a group feel alive. Members come back because they can picture the next edition, not just remember the last one.",
+                tone: "indigo",
+              },
+              {
+                icon: HeartHandshake,
+                title: "Organizer trust compounds",
+                text: "When the same host runs good rooms repeatedly, people stop evaluating each event from zero and start trusting the group itself.",
+                tone: "sage",
+              },
+              {
+                icon: HandCoins,
+                title: "Healthy groups monetize better",
+                text: "The events people are most willing to pay for usually come from communities that already feel coherent, hosted, and socially safe.",
+                tone: "coral",
+              },
+            ]}
+          />
+        </div>
+
         <div className="grid gap-6 xl:grid-cols-[1.12fr_0.88fr]">
           <div className="grid gap-6">
             {publicGroups.map((group) => (
@@ -1586,40 +1825,76 @@ export function GroupsIndexScreen() {
               title="Signals the product should keep rewarding"
               description="The healthiest groups are legible, recurring, and easy for a first-timer to understand."
             >
-              <div className="space-y-3">
+              <div className="grid gap-3">
                 {[
-                  "Clear arrival instructions and host structure beat vague social copy.",
-                  "Groups with strong venue fit produce better repeat attendance.",
-                  "A useful discussion layer keeps momentum alive between events.",
+                  {
+                    title: "Arrival discipline",
+                    text: "Clear host structure and visible arrival cues beat vague social copy every time.",
+                    icon: HeartHandshake,
+                  },
+                  {
+                    title: "Venue alignment",
+                    text: "Groups with repeat room fit create calmer experiences and better return rates.",
+                    icon: Store,
+                  },
+                  {
+                    title: "Between-event energy",
+                    text: "A live discussion layer keeps the group warm between editions and reduces churn.",
+                    icon: FileText,
+                  },
                 ].map((item) => (
-                  <div
-                    key={item}
-                    className="editorial-list-card px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                  <article
+                    key={item.title}
+                    className="editorial-list-card rounded-[1.3rem] px-4 py-4"
                   >
-                    {item}
-                  </div>
+                    <div className="flex items-start gap-3">
+                      <span className="editorial-icon-chip">
+                        <item.icon className="h-4 w-4" />
+                      </span>
+                      <div>
+                        <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                        <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                          {item.text}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
                 ))}
               </div>
             </Surface>
 
             <Surface
-              eyebrow="Category mix"
-              title="Where community energy is concentrated"
-              description="This list mirrors the homepage taxonomy while giving groups their own discovery context."
+              eyebrow="Host archetypes"
+              title="The kinds of communities this product should surface better"
+              description="Not all groups deserve identical discovery. The strongest marketplace surfaces make these operating patterns obvious."
             >
-              <div className="grid gap-3 sm:grid-cols-2">
-                {categories.map((category) => (
-                  <div
-                    key={category.name}
-                    className="editorial-list-card px-4 py-3"
-                  >
-                    <div className="font-semibold text-[var(--brand-text)]">
-                      {category.name}
+              <div className="grid gap-3">
+                {[
+                  {
+                    title: "Newcomer-led circles",
+                    meta: "High trust · warm intros",
+                    text: "Best when organizer identity and social guidance are visible before someone joins.",
+                  },
+                  {
+                    title: "Practical recurring formats",
+                    meta: "Workshops · language · hikes",
+                    text: "These groups compound because cadence and expectations are clearer than in casual one-off events.",
+                  },
+                  {
+                    title: "Premium social communities",
+                    meta: "Paid formats · stronger venue fit",
+                    text: "The groups most likely to monetize well usually already feel structured, safe, and hosted.",
+                  },
+                ].map((item) => (
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                      <ToneBadge tone="indigo">{item.meta}</ToneBadge>
                     </div>
-                    <div className="mt-1 text-sm text-[var(--brand-text-muted)]">
-                      {category.count} live signals
-                    </div>
-                  </div>
+                    <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                      {item.text}
+                    </p>
+                  </article>
                 ))}
               </div>
             </Surface>
@@ -1676,6 +1951,37 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
           },
         ]}
       />
+
+      <section className="section-shell py-8">
+        <ShowcaseBand
+          eyebrow="Community depth"
+          title="A real group page should show rhythm, host accountability, and social texture."
+          description="The best community pages feel alive before someone joins. They show what kind of conversations happen, what repeat formats exist, and why the organizer has earned trust beyond a single event listing."
+          items={[
+            {
+              icon: UsersRound,
+              title: "Cadence is obvious",
+              text: "Upcoming formats and archive history make the group feel recurring and real, not like a brand-new shell with a good banner image.",
+              tone: "indigo",
+              badge: "Retention signal",
+            },
+            {
+              icon: HeartHandshake,
+              title: "The host is accountable",
+              text: "Organizer identity, group discussions, and visible past activity make it easier for newcomers to believe the community is well held.",
+              tone: "sage",
+              badge: "Trust signal",
+            },
+            {
+              icon: HandCoins,
+              title: "Community creates value",
+              text: "The groups that build trust and repeat attendance are the same groups that eventually support stronger paid formats and venue business.",
+              tone: "coral",
+              badge: "Revenue signal",
+            },
+          ]}
+        />
+      </section>
 
       <section className="section-shell py-10">
         <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
@@ -1895,6 +2201,34 @@ export function VenuesIndexScreen() {
           ]}
         />
 
+        <div className="mt-8">
+          <ShowcaseBand
+            eyebrow="Venue quality"
+            title="The venue layer should feel like a living sourcebook for better rooms."
+            description="A finished marketplace does not treat venues like a flat directory. It shows why certain rooms produce better events, calmer arrivals, and more repeatable business than others."
+            items={[
+              {
+                icon: Store,
+                title: "Room fit is a product signal",
+                text: "Members and hosts should both understand what a room is good at before anyone commits time, money, or staffing to it.",
+                tone: "indigo",
+              },
+              {
+                icon: Globe2,
+                title: "The local intake matters",
+                text: "A stronger place inventory means fewer fake-feeling gradients, better discovery, and a frontend that feels closer to the actual city.",
+                tone: "sage",
+              },
+              {
+                icon: HandCoins,
+                title: "Better rooms create better economics",
+                text: "Partner venues raise trust, improve conversion, and make the recurring organizer and deal model feel justified.",
+                tone: "coral",
+              },
+            ]}
+          />
+        </div>
+
         <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
           <div className="grid gap-6">
             {publicVenues.map((venue) => (
@@ -1908,18 +2242,37 @@ export function VenuesIndexScreen() {
               title="What strong partner rooms unlock"
               description="A venue-aware product can be calmer, more trustworthy, and more monetizable than a generic event feed."
             >
-              <div className="space-y-3">
+              <div className="grid gap-3">
                 {[
-                  "Hosts can count on arrival support, layout, and clearer operating expectations.",
-                  "Members learn which rooms fit which formats instead of guessing each time.",
-                  "Venue deals and repeat bookings create a healthier business loop for the city.",
+                  {
+                    title: "Arrival quality",
+                    text: "Hosts can count on layout guidance, calmer arrival flow, and a clearer read on what the room supports well.",
+                    icon: ShieldCheck,
+                  },
+                  {
+                    title: "Format fit",
+                    text: "Members and organizers stop guessing because room shape, capacity, and style are legible before booking.",
+                    icon: Store,
+                  },
+                  {
+                    title: "Repeat business",
+                    text: "Deals, return bookings, and stronger host-venue pairing create a healthier city business loop.",
+                    icon: HandCoins,
+                  },
                 ].map((item) => (
-                  <div
-                    key={item}
-                    className="editorial-list-card px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
-                  >
-                    {item}
-                  </div>
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] px-4 py-4">
+                    <div className="flex items-start gap-3">
+                      <span className="editorial-icon-chip">
+                        <item.icon className="h-4 w-4" />
+                      </span>
+                      <div>
+                        <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                        <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                          {item.text}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
                 ))}
               </div>
             </Surface>
@@ -1929,18 +2282,31 @@ export function VenuesIndexScreen() {
               title="What the venue product already covers"
               description="The platform now includes a real local onboarding wizard for venue partners, not just a placeholder shell."
             >
-              <div className="grid gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {[
-                  "Business identity and legal profile",
-                  "Address, capacity, and room constraints",
-                  "Availability, deals, contacts, and billing",
+                  {
+                    title: "Identity and compliance",
+                    text: "Business profile, legal details, and operator contacts.",
+                  },
+                  {
+                    title: "Room intelligence",
+                    text: "Capacity, layout constraints, hours, and operating windows.",
+                  },
+                  {
+                    title: "Commercial settings",
+                    text: "Deals, featured opportunities, and billing posture.",
+                  },
+                  {
+                    title: "Booking readiness",
+                    text: "Availability logic, countering rules, and review context.",
+                  },
                 ].map((item) => (
-                  <div
-                    key={item}
-                    className="editorial-list-card px-4 py-3 text-sm text-[var(--brand-text-muted)]"
-                  >
-                    {item}
-                  </div>
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] p-4">
+                    <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                      {item.text}
+                    </p>
+                  </article>
                 ))}
               </div>
             </Surface>
@@ -1995,6 +2361,20 @@ export function VenuesIndexScreen() {
                       </div>
                       <ToneBadge tone="indigo">{lane.count}</ToneBadge>
                     </div>
+                  ))}
+                </div>
+                <div className="mt-5 grid gap-3 md:grid-cols-2">
+                  {sourcedPlaces.slice(0, 2).map((place) => (
+                    <article key={place.slug} className="editorial-list-card rounded-[1.3rem] p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="font-semibold text-[var(--brand-text)]">{place.name}</div>
+                        <ToneBadge tone="sage">{place.kindLabel}</ToneBadge>
+                      </div>
+                      <div className="mt-2 flex items-center gap-2 text-sm text-[var(--brand-text-muted)]">
+                        <MapPin className="h-4 w-4 text-[var(--brand-coral)]" />
+                        <span>{place.area || "Reykjavik"}</span>
+                      </div>
+                    </article>
                   ))}
                 </div>
               </Surface>
@@ -2068,6 +2448,37 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
         ]}
       />
 
+      <section className="section-shell py-8">
+        <ShowcaseBand
+          eyebrow="Room intelligence"
+          title="A venue page should help both organizers and members decide quickly."
+          description="Strong venue pages are not just visual. They explain room shape, operating windows, and commercial upside well enough that a host can shortlist the venue and a member can picture the night before arriving."
+          items={[
+            {
+              icon: Store,
+              title: "Format fit is clearer",
+              text: "Amenities, hours, and upcoming events show whether the venue is right for social flow, workshops, tastings, or repeat community nights.",
+              tone: "indigo",
+              badge: "Fit signal",
+            },
+            {
+              icon: HandCoins,
+              title: "Partnership value is explicit",
+              text: "Deals and repeat event inventory make the venue layer feel like a business system rather than a static directory listing.",
+              tone: "coral",
+              badge: "Revenue signal",
+            },
+            {
+              icon: CalendarDays,
+              title: "Operations are visible",
+              text: "Hours, access, and event history reduce booking friction because people can judge when the room actually works best.",
+              tone: "sage",
+              badge: "Ops signal",
+            },
+          ]}
+        />
+      </section>
+
       <section className="section-shell py-10">
         <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
           <div className="space-y-6">
@@ -2089,6 +2500,46 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
             </Surface>
 
             <Surface
+              eyebrow="Best-fit formats"
+              title="Where this room earns its keep"
+              description="Good venue pages should tell a host what kinds of nights this room can actually carry well."
+            >
+              <div className="grid gap-3 md:grid-cols-3">
+                {[
+                  {
+                    title: "Hosted socials",
+                    text: `${venue.capacity}-person capacity and clear room character make this venue stronger when there is visible hosting and warm arrival flow.`,
+                    icon: UsersRound,
+                  },
+                  {
+                    title: "Repeatable formats",
+                    text: `${venue.deal} and the visible event history make this a stronger candidate for series that need consistency, not novelty.`,
+                    icon: CalendarDays,
+                  },
+                  {
+                    title: "Commercial upside",
+                    text: `The ${venue.type.toLowerCase()} positioning helps justify paid seats when the format and room quality align cleanly.`,
+                    icon: HandCoins,
+                  },
+                ].map((item) => (
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] p-4">
+                    <div className="flex items-start gap-3">
+                      <span className="editorial-icon-chip">
+                        <item.icon className="h-4 w-4" />
+                      </span>
+                      <div>
+                        <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                        <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                          {item.text}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </Surface>
+
+            <Surface
               eyebrow="Amenities"
               title="Room and service profile"
               description="These cues help organizers understand whether the space actually supports the event format."
@@ -2097,7 +2548,7 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                 {venue.amenities.map((amenity) => (
                   <div
                     key={amenity}
-                    className="editorial-list-card px-4 py-3 text-sm text-[var(--brand-text-muted)]"
+                    className="editorial-list-card rounded-[1.2rem] px-4 py-3 text-sm text-[var(--brand-text-muted)]"
                   >
                     {amenity}
                   </div>
@@ -2129,15 +2580,28 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
               title="Access and operating context"
               description="The fact rail helps members, organizers, and venues converge on the same expectations."
             >
-              <KeyValueList
-                items={[
-                  { key: "type", label: "Type", value: venue.type },
-                  { key: "area", label: "Area", value: venue.area },
-                  { key: "address", label: "Address", value: venue.address },
-                  { key: "capacity", label: "Capacity", value: String(venue.capacity) },
-                  { key: "deal", label: "Partner deal", value: venue.deal },
-                ]}
-              />
+              <div className="grid gap-3">
+                {[
+                  { label: "Type", value: venue.type, icon: Store },
+                  { label: "Area", value: venue.area, icon: MapPin },
+                  { label: "Address", value: venue.address, icon: Compass },
+                  { label: "Capacity", value: String(venue.capacity), icon: UsersRound },
+                  { label: "Partner deal", value: venue.deal, icon: HandCoins },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="editorial-list-card flex items-center justify-between gap-4 rounded-[1.2rem] px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="editorial-icon-chip">
+                        <item.icon className="h-4 w-4" />
+                      </span>
+                      <div className="text-sm font-semibold text-[var(--brand-text)]">{item.label}</div>
+                    </div>
+                    <div className="text-right text-sm text-[var(--brand-text-muted)]">{item.value}</div>
+                  </div>
+                ))}
+              </div>
             </Surface>
 
             <Surface
@@ -2162,9 +2626,39 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
             </Surface>
 
             <Surface
+              eyebrow="Commercial read"
+              title="What this room communicates before anyone books"
+              description="The strongest venue pages help both sides understand the room posture immediately: quality, schedule fit, and monetization readiness."
+            >
+              <div className="grid gap-3">
+                {[
+                  {
+                    title: "Member expectation",
+                    text: "The room reads as a defined experience instead of a vague pin on a map, which improves trust before checkout.",
+                  },
+                  {
+                    title: "Organizer expectation",
+                    text: "Capacity, hours, and deal language help the host judge whether this room is worth the venue request effort.",
+                  },
+                  {
+                    title: "Operator expectation",
+                    text: "This page already behaves like the top of a paid venue workflow, not just a listing page waiting for backend work.",
+                  },
+                ].map((item) => (
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] p-4">
+                    <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                      {item.text}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </Surface>
+
+            <Surface
               eyebrow="Upcoming"
               title="Public events at this venue"
-              description="Upcoming events tie the venue page back into discovery."
+              description="Upcoming events tie the venue page back into live discovery and prove the room already has operating context."
             >
               <div className="space-y-4">
                 {upcomingEvents.map((event) => (
@@ -2295,22 +2789,31 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
               title="What we know about this place"
               description="The sourced venue detail page gives operators a real local place profile before the venue itself has formally claimed the account."
             >
-              <div className="space-y-3">
+              <div className="grid gap-3">
                 {[
-                  place.summary,
-                  place.address
-                    ? `Recorded address: ${place.address}.`
-                    : `Address is still incomplete, but the place is indexed in ${place.area}.`,
-                  place.website
-                    ? "A website is already attached, which makes this record a stronger candidate for verification."
-                    : "No verified website is attached yet, so this record should be reviewed before it is treated as an active partner.",
-                ].map((line) => (
-                  <div
-                    key={line}
-                    className="editorial-list-card px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
-                  >
-                    {line}
-                  </div>
+                  {
+                    title: "Recorded profile",
+                    text: place.summary,
+                  },
+                  {
+                    title: "Location state",
+                    text: place.address
+                      ? `Recorded address: ${place.address}.`
+                      : `Address is still incomplete, but the place is indexed in ${place.area}.`,
+                  },
+                  {
+                    title: "Verification posture",
+                    text: place.website
+                      ? "A website is already attached, which makes this record a stronger candidate for verification."
+                      : "No verified website is attached yet, so this record should be reviewed before it is treated as an active partner.",
+                  },
+                ].map((item) => (
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] p-4">
+                    <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                      {item.text}
+                    </p>
+                  </article>
                 ))}
               </div>
             </Surface>
@@ -2322,16 +2825,30 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
             >
               <div className="grid gap-3">
                 {[
-                  "Verify business identity and contact information.",
-                  "Confirm room capacity, available formats, and operating constraints.",
-                  "Move the venue into deal management, availability planning, and organizer matching.",
+                  {
+                    title: "Verify the operator",
+                    text: "Verify business identity and contact information so the record can move beyond source-only status.",
+                  },
+                  {
+                    title: "Confirm the room",
+                    text: "Confirm capacity, available formats, and operating constraints so hosts stop guessing what the venue can handle.",
+                  },
+                  {
+                    title: "Activate revenue tools",
+                    text: "Move the venue into deal management, availability planning, and organizer matching once the claim is clean.",
+                  },
                 ].map((item) => (
                   <div
-                    key={item}
-                    className="editorial-list-card flex items-start gap-3 px-4 py-3"
+                    key={item.title}
+                    className="editorial-list-card flex items-start gap-3 rounded-[1.3rem] px-4 py-3"
                   >
                     <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
-                    <span className="text-sm text-[var(--brand-text)]">{item}</span>
+                    <div>
+                      <div className="text-sm font-semibold text-[var(--brand-text)]">{item.title}</div>
+                      <p className="mt-1 text-sm leading-7 text-[var(--brand-text-muted)]">
+                        {item.text}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -2505,23 +3022,61 @@ export function BlogIndexScreen() {
           </div>
 
           <div className="space-y-6">
+            <ShowcaseBand
+              eyebrow="Editorial system"
+              title="The writing layer should make the company feel sharper, not softer."
+              description="A strong editorial layer is not there to fill space. It should clarify why the marketplace exists, what good local event design looks like, and why venue quality matters commercially."
+              items={[
+                {
+                  icon: FileText,
+                  title: "Product thinking stays visible",
+                  text: "The blog keeps the product thesis active between launches, features, and dashboard work instead of hiding it on one static about page.",
+                  tone: "indigo",
+                  badge: "Brand signal",
+                },
+                {
+                  icon: ShieldCheck,
+                  title: "Trust compounds through explanation",
+                  text: "When the brand explains room quality, host design, and local context clearly, users trust the marketplace faster.",
+                  tone: "sage",
+                  badge: "Trust signal",
+                },
+                {
+                  icon: Sparkles,
+                  title: "A local angle creates defensibility",
+                  text: "A Reykjavik-specific voice is stronger than generic event-tech content because it sounds like the city and the product at the same time.",
+                  tone: "coral",
+                  badge: "Defensibility signal",
+                },
+              ]}
+            />
+
             <Surface
               eyebrow="Editorial brief"
               title="What the content layer is doing"
               description="Blog content is not filler here. It reinforces product direction, community quality, and venue logic."
             >
-              <div className="space-y-3">
+              <div className="grid gap-3">
                 {[
-                  "Explain why structure matters for newcomers.",
-                  "Show how venue partnerships improve community quality.",
-                  "Give the brand a calm, city-specific editorial voice.",
+                  {
+                    title: "Explain structure",
+                    text: "Make it clear why better hosting, approvals, and venue fit matter more than raw feed volume.",
+                  },
+                  {
+                    title: "Reinforce venue logic",
+                    text: "Show how strong rooms improve trust, conversion, and repeat local business instead of just aesthetics.",
+                  },
+                  {
+                    title: "Build brand voice",
+                    text: "Keep the tone calm, premium, and city-specific so the product sounds like Reykjavik instead of generic growth content.",
+                  },
                 ].map((item) => (
-                  <div
-                    key={item}
-                    className="editorial-list-card px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
-                  >
-                    {item}
-                  </div>
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] p-4">
+                    <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                      {item.text}
+                    </p>
+                  </article>
                 ))}
               </div>
             </Surface>
@@ -2579,6 +3134,35 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
       <section className="section-shell py-10">
         <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-6">
+            <ShowcaseBand
+              eyebrow="Editorial lens"
+              title="A strong article should sharpen how the marketplace is understood."
+              description="The article page should not just display prose. It should make the brand point of view feel structured, confident, and directly connected to the product."
+              items={[
+                {
+                  icon: FileText,
+                  title: "Explain the system",
+                  text: "Every article should help the reader understand one layer of the product more clearly than before they arrived.",
+                  tone: "indigo",
+                  badge: "Clarity signal",
+                },
+                {
+                  icon: ShieldCheck,
+                  title: "Reduce uncertainty",
+                  text: "Good editorial makes the marketplace easier to trust because it explains what quality looks like in practical terms.",
+                  tone: "sage",
+                  badge: "Trust signal",
+                },
+                {
+                  icon: Sparkles,
+                  title: "Sound like the product",
+                  text: "The best posts feel consistent with the product voice: calm, local, premium, and specific instead of broad and generic.",
+                  tone: "coral",
+                  badge: "Voice signal",
+                },
+              ]}
+            />
+
             {post.sections.map((section) => (
               <Surface
                 key={section.heading}
@@ -2597,18 +3181,27 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
               title="Product context"
               description="Editorial content should always reinforce the product thesis instead of feeling disconnected from it."
             >
-              <div className="space-y-3">
+              <div className="grid gap-3">
                 {[
-                  "City-specific products win when they understand local context better than global feeds.",
-                  "Trust grows when event, group, and venue pages all tell the same story clearly.",
-                  "A good brand voice makes the product feel intentional before the account system is even live.",
+                  {
+                    title: "Local precision beats scale",
+                    text: "City-specific products win when they understand local context better than global feeds.",
+                  },
+                  {
+                    title: "Trust needs consistency",
+                    text: "Trust grows when event, group, and venue pages all tell the same quality story clearly.",
+                  },
+                  {
+                    title: "Voice is infrastructure too",
+                    text: "A good brand voice makes the product feel intentional before every backend workflow is fully live.",
+                  },
                 ].map((item) => (
-                  <div
-                    key={item}
-                    className="editorial-list-card px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
-                  >
-                    {item}
-                  </div>
+                  <article key={item.title} className="editorial-list-card rounded-[1.3rem] p-4">
+                    <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                      {item.text}
+                    </p>
+                  </article>
                 ))}
               </div>
             </Surface>
@@ -2914,7 +3507,7 @@ export function PricingScreen() {
           title="Member plans"
           description="Member access can stay low-friction while the operator side pays for the business. These plans support retention, priority access, and higher-intent usage."
         >
-          <div className="grid gap-6 xl:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
             {userTiers.map((tier, index) => (
               <TierCard
                 key={tier.name}
@@ -2934,7 +3527,7 @@ export function PricingScreen() {
             title="Creator plans"
             description="If someone is using MeetupReykjavik to publish, sell, and operate events, they should be paying for that operating layer."
           >
-            <div className="grid gap-6 xl:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
               {organizerTiers.map((tier, index) => (
                 <TierCard
                   key={tier.name}
@@ -2989,7 +3582,7 @@ export function PricingScreen() {
             title="Venue partnership plans"
             description="Venue pricing starts with visibility, then moves into operational tooling, featured inventory, and premium analytics."
           >
-            <div className="grid gap-6 xl:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 2xl:grid-cols-3">
               {venueTiers.map((tier, index) => (
                 <TierCard
                   key={tier.name}
@@ -4237,6 +4830,37 @@ export function ForOrganizersScreen() {
           ]}
         />
 
+        <div className="mt-8">
+          <ShowcaseBand
+            eyebrow="Operator flywheel"
+            title="The strongest organizer product makes commercial control visible."
+            description="This needs to sell confidence immediately: the host controls the room, the approval model, the venue fit, and the repeatable economics of the format."
+            items={[
+              {
+                icon: CalendarDays,
+                title: "Program the format",
+                text: "Recurring series, ticket floor, audience questions, and publishing mode all sit inside one product lane instead of scattered tools.",
+                tone: "indigo",
+                badge: "Format control",
+              },
+              {
+                icon: UsersRound,
+                title: "Shape who gets in",
+                text: "Approvals, waitlists, guest questions, and curated attendance let hosts protect event quality as formats scale.",
+                tone: "coral",
+                badge: "Audience control",
+              },
+              {
+                icon: Store,
+                title: "Choose the right room",
+                text: "Venue-fit logic turns booking from an afterthought into a conversion advantage for better nights and better repeat attendance.",
+                tone: "sage",
+                badge: "Venue control",
+              },
+            ]}
+          />
+        </div>
+
         <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
           <Surface
             eyebrow="Why this layout exists"
@@ -4474,6 +5098,37 @@ export function ForVenuesScreen() {
             },
           ]}
         />
+
+        <div className="mt-8">
+          <ShowcaseBand
+            eyebrow="Venue operating layer"
+            title="A serious venue page should feel like yield and booking software."
+            description="The venue product needs to communicate leverage fast: intake, response speed, room positioning, and deal logic all have to feel like paid infrastructure."
+            items={[
+              {
+                icon: FileText,
+                title: "Structured intake",
+                text: "Onboarding collects the business, room, and compliance details needed to make the marketplace safer and easier to operate.",
+                tone: "indigo",
+                badge: "Intake control",
+              },
+              {
+                icon: Ticket,
+                title: "Commercial inventory",
+                text: "Deals, featured placement, and organizer-fit signals turn venue pages into active revenue surfaces rather than passive profiles.",
+                tone: "coral",
+                badge: "Revenue control",
+              },
+              {
+                icon: CalendarDays,
+                title: "Booking control",
+                text: "Availability, counters, and acceptance cadence shape whether strong organizers come back and whether rooms actually monetize.",
+                tone: "sage",
+                badge: "Yield control",
+              },
+            ]}
+          />
+        </div>
 
         <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
           <Surface

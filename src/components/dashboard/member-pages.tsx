@@ -16,6 +16,7 @@ import {
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
+  AvatarStamp,
   CalendarMatrix,
   CommandCenterDeck,
   FilterChips,
@@ -26,7 +27,11 @@ import {
   Surface,
   ToneBadge,
 } from "@/components/dashboard/primitives";
-import { memberPortalData, memberProfile } from "@/lib/dashboard-data";
+import {
+  getDashboardAvatar,
+  memberPortalData,
+  memberProfile,
+} from "@/lib/dashboard-data";
 import { MemberSettingsStudio } from "@/components/dashboard/operations-panels";
 import type { ComponentProps } from "react";
 
@@ -333,25 +338,33 @@ export function MemberMessagesScreen() {
         >
           <div className="space-y-4">
             {memberPortalData.messages.map((message) => (
-              <article
+              <StreamCard
                 key={message.key}
-                className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <div className="font-semibold text-[var(--brand-text)]">{message.counterpart}</div>
-                    <div className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                      {message.role} · {message.channel}
-                    </div>
-                  </div>
-                  <ToneBadge tone={message.status === "Read" ? "sand" : "coral"}>{message.status}</ToneBadge>
-                </div>
-                <div className="font-editorial mt-4 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
-                  {message.subject}
-                </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">{message.preview}</p>
-                <div className="mt-4 text-sm font-semibold text-[var(--brand-indigo)]">{message.meta}</div>
-              </article>
+                avatarName={message.counterpart}
+                avatarSrc={getDashboardAvatar(message.counterpart)}
+                avatarTone={
+                  message.role.includes("Venue")
+                    ? "coral"
+                    : message.role.includes("Group")
+                      ? "sage"
+                      : "indigo"
+                }
+                eyebrow={
+                  <>
+                    <span className="text-[var(--brand-text)]">{message.counterpart}</span>
+                    <span className="mx-2 text-[var(--brand-border)]">·</span>
+                    {message.role} · {message.channel}
+                  </>
+                }
+                badge={
+                  <ToneBadge tone={message.status === "Read" ? "sand" : "coral"}>
+                    {message.status}
+                  </ToneBadge>
+                }
+                title={message.subject}
+                description={message.preview}
+                meta={message.meta}
+              />
             ))}
           </div>
         </Surface>
@@ -568,9 +581,12 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
         <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[1.5rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-5">
             <div className="flex items-center gap-4">
-              <div className="flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-[linear-gradient(135deg,rgba(79,70,229,0.92),rgba(232,97,77,0.82))] text-2xl font-bold text-white">
-                {profile.initials}
-              </div>
+              <AvatarStamp
+                name={profile.name}
+                src={getDashboardAvatar(profile.name)}
+                tone="indigo"
+                size="lg"
+              />
               <div>
                 <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
                   {profile.name}

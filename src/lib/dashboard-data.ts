@@ -54,6 +54,24 @@ const kex = must(getVenueBySlug("kex-hostel"), "kex-hostel");
 const grandiHub = must(getVenueBySlug("grandi-hub"), "grandi-hub");
 const bryggjuhusid = must(getVenueBySlug("bryggjuhusid"), "bryggjuhusid");
 
+const dashboardAvatarByName: Record<string, string> = {
+  "Kari Sigurdsson": "/demo-images/people/kari.jpg",
+  "Bjorn Olafsson": "/demo-images/people/bjorn.jpg",
+  "Marta Polak": "/demo-images/people/marta.jpg",
+  "Anna Sigga": "/demo-images/people/anna.jpg",
+  "Anna Jonsdottir": "/demo-images/people/anna.jpg",
+  "Helga Arnadottir": "/demo-images/people/helga.jpg",
+  "Sara Magnusdottir": "/demo-images/people/sara.jpg",
+  "Freya Lund": "/demo-images/people/freya.jpg",
+  "Diego Alvarez": "/demo-images/people/diego.jpg",
+  "Lebowski Bar": "/demo-images/venues/lebowski-bar.jpg",
+  "Kex Hostel": "/demo-images/venues/kex-hostel.jpg",
+};
+
+export function getDashboardAvatar(name: string) {
+  return dashboardAvatarByName[name];
+}
+
 export const memberProfile = {
   slug: "kari-sigurdsson",
   name: "Kari Sigurdsson",

@@ -4,9 +4,9 @@ export default function LoginPage() {
   return (
     <AuthPanel
       mode="login"
-      eyebrow="Login"
-      title="Return to your lane in the city"
-      description="Sign in with email and password now. The funnel already routes by role so members, organizers, venues, and admin all land in the correct product surface."
+      eyebrow="Welcome back"
+      title="Sign in to your account"
+      description="Enter your email and password to access your dashboard."
       primaryLabel="Sign in"
       secondaryHref="/signup"
       secondaryLabel="Need an account? Create one"

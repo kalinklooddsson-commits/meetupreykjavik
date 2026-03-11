@@ -97,7 +97,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
   return (
     <article className="paper-panel-premium group min-w-[308px] max-w-[308px] flex-shrink-0 overflow-hidden rounded-[1.35rem] transition-transform duration-300 hover:-translate-y-1">
       <div
-        className="grain-overlay relative flex h-52 flex-col justify-between px-5 py-5 text-white"
+        className="grain-overlay relative flex h-52 flex-col justify-between bg-cover bg-center px-5 py-5 text-white"
         style={{ backgroundImage: event.art }}
       >
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.04),rgba(30,27,46,0.58))]" />

@@ -92,9 +92,8 @@ export function SiteHeaderClient({
         </nav>
 
         <div className="site-header-actions justify-self-end">
-          <div className="site-header-utility-frame">
+          <div className="site-header-utility-row">
             <LocaleSwitcher compact />
-            <span className="site-header-utility-separator" aria-hidden="true" />
             {session && portalHref ? (
               <SignOutButton className="site-header-utility-link min-h-9 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-[rgba(79,70,229,0.08)]" />
             ) : (

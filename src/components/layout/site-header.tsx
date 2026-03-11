@@ -14,10 +14,12 @@ export async function SiteHeader() {
   const tNav = await getTranslations("nav");
   const tCta = await getTranslations("cta");
   const tHeader = await getTranslations("header");
-  const navigation = [
+  const primaryNavigation = [
     { href: "/events", label: tNav("events") },
     { href: "/groups", label: tNav("groups") },
     { href: "/venues", label: tNav("venues") },
+    { href: "/pricing", label: tNav("pricing") },
+    { href: "/faq", label: tNav("faq") },
   ] as const satisfies readonly { href: Route; label: string }[];
 
   return (
@@ -38,7 +40,7 @@ export async function SiteHeader() {
         </Link>
 
         <SiteHeaderClient
-          navigation={navigation}
+          navigation={primaryNavigation}
           session={session ? { accountType: session.accountType } : null}
           labels={{
             admin: tCta("admin"),
@@ -52,7 +54,7 @@ export async function SiteHeader() {
           }}
         />
       </div>
-      <SiteHeaderMobileNav navigation={navigation} />
+      <SiteHeaderMobileNav navigation={primaryNavigation} />
     </header>
   );
 }

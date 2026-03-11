@@ -110,11 +110,11 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h and 2h reminders with arrival note",
     hostContact: "Kari Sigurdsson via host inbox",
     shareLabel: "Share with one friend before checkout",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.95), rgba(79,70,229,0.82))",
+    art: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
     gallery: [
-      "linear-gradient(135deg, rgba(232,97,77,0.92), rgba(30,27,46,0.88))",
-      "linear-gradient(135deg, rgba(245,240,232,0.85), rgba(79,70,229,0.78))",
-      "linear-gradient(135deg, rgba(55,48,163,0.96), rgba(232,97,77,0.74))",
+      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
+      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+      "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
     ],
     comments: [
       { author: "Anna", text: "Love that this one has a host and not just a crowd.", postedAt: "2 hours ago" },
@@ -154,11 +154,11 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder plus weather update at 07:00",
     hostContact: "Helga Arnadottir via organizer notes",
     shareLabel: "Share with your hiking pair or ride-share thread",
-    art: "linear-gradient(135deg, rgba(124,154,130,0.95), rgba(42,38,56,0.82))",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(124,154,130,0.95), rgba(245,240,232,0.9))",
-      "linear-gradient(135deg, rgba(30,27,46,0.96), rgba(124,154,130,0.72))",
-      "linear-gradient(135deg, rgba(79,70,229,0.72), rgba(124,154,130,0.92))",
+      "linear-gradient(135deg, rgba(124,154,130,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(124,154,130,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(124,154,130,0.35)), url('/place-images/reykjavik/arb-jarsafn-c71d7348.jpg')",
     ],
     comments: [
       { author: "Brynjar", text: "Great host notes in advance. Easy to join solo.", postedAt: "5 hours ago" },
@@ -197,11 +197,11 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h, 2h, and post-event feedback prompt",
     hostContact: "Bjorn Olafsson via organizer inbox",
     shareLabel: "Share with your team before approval closes",
-    art: "linear-gradient(135deg, rgba(55,48,163,0.96), rgba(30,27,46,0.9))",
+    art: "linear-gradient(135deg, rgba(55,48,163,0.55), rgba(30,27,46,0.45)), url('/place-images/reykjavik/generated/grandi101.svg')",
     gallery: [
-      "linear-gradient(135deg, rgba(55,48,163,0.96), rgba(245,240,232,0.26))",
-      "linear-gradient(135deg, rgba(30,27,46,0.92), rgba(79,70,229,0.82))",
-      "linear-gradient(135deg, rgba(232,97,77,0.7), rgba(55,48,163,0.96))",
+      "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(245,240,232,0.2)), url('/place-images/reykjavik/generated/grandi101.svg')",
+      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/ufa-40055fa7.jpg')",
+      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(55,48,163,0.5)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
     ],
     comments: [
       { author: "Aron", text: "Nice to see a technical event with real implementation time.", postedAt: "3 hours ago" },
@@ -240,11 +240,11 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "48h menu note and same-day arrival briefing",
     hostContact: "Sara Magnusdottir via tasting concierge",
     shareLabel: "Share privately with your table or tasting partner",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.88), rgba(42,38,56,0.92))",
+    art: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(42,38,56,0.45)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.92), rgba(232,97,77,0.8))",
-      "linear-gradient(135deg, rgba(42,38,56,0.96), rgba(232,97,77,0.66))",
-      "linear-gradient(135deg, rgba(79,70,229,0.76), rgba(232,97,77,0.92))",
+      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
+      "linear-gradient(135deg, rgba(42,38,56,0.5), rgba(232,97,77,0.3)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(232,97,77,0.4)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
     ],
     comments: [
       { author: "Klara", text: "The seated format makes this feel premium, not rushed.", postedAt: "Today" },
@@ -282,11 +282,11 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h and 3h reminders with intro prompt",
     hostContact: "Marta Polak via newcomer host desk",
     shareLabel: "Share with other newcomers before seats fill",
-    art: "linear-gradient(135deg, rgba(245,240,232,0.82), rgba(79,70,229,0.78))",
+    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.4)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
     gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.96), rgba(79,70,229,0.72))",
-      "linear-gradient(135deg, rgba(232,97,77,0.84), rgba(245,240,232,0.8))",
-      "linear-gradient(135deg, rgba(30,27,46,0.9), rgba(79,70,229,0.7))",
+      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
+      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(79,70,229,0.35)), url('/place-images/reykjavik/o-inn-aca1fd38.JPG')",
     ],
     comments: [
       { author: "Diego", text: "Exactly the kind of structure newcomers need.", postedAt: "4 hours ago" },
@@ -325,11 +325,11 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder and doors-open alert",
     hostContact: "Elin Thors via cultural host channel",
     shareLabel: "Share with your live or remote group",
-    art: "linear-gradient(135deg, rgba(30,27,46,0.96), rgba(232,97,77,0.82))",
+    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/gamli-gaukurinn.svg')",
     gallery: [
-      "linear-gradient(135deg, rgba(30,27,46,0.96), rgba(79,70,229,0.72))",
-      "linear-gradient(135deg, rgba(232,97,77,0.88), rgba(30,27,46,0.92))",
-      "linear-gradient(135deg, rgba(245,240,232,0.78), rgba(232,97,77,0.84))",
+      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(79,70,229,0.35)), url('/place-images/reykjavik/generated/gamli-gaukurinn.svg')",
+      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
+      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
     ],
     comments: [
       { author: "Runa", text: "Love that the first set is streamable.", postedAt: "Today" },
@@ -353,7 +353,7 @@ export const publicGroups: PublicGroup[] = [
       "It is exactly the kind of durable local group the platform should spotlight: easy to understand, high trust, and strongly tied to place.",
     ],
     organizer: "Helga Arnadottir",
-    banner: "linear-gradient(135deg, rgba(124,154,130,0.95), rgba(79,70,229,0.72))",
+    banner: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
     tags: ["Hikes", "Day trips", "Coffee after"],
     upcomingEventSlugs: ["saturday-hike-mt-esja"],
     pastEvents: ["Sunset walk at Grotta", "Hot spring day trip", "Midweek valley loop"],
@@ -374,7 +374,7 @@ export const publicGroups: PublicGroup[] = [
       "As a platform anchor, this group demonstrates how onboarding, recurring events, and profile identity can work together.",
     ],
     organizer: "Marta Polak",
-    banner: "linear-gradient(135deg, rgba(232,97,77,0.92), rgba(245,240,232,0.88))",
+    banner: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(245,240,232,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
     tags: ["New in town", "Social", "Resources"],
     upcomingEventSlugs: ["speed-friending-newcomers"],
     pastEvents: ["Sunday bakery crawl", "Language exchange intro", "Local rent Q and A"],
@@ -395,7 +395,7 @@ export const publicGroups: PublicGroup[] = [
       "This is also one of the strongest cases for the organizer dashboard: recurring templates, attendee management, and analytics all matter here.",
     ],
     organizer: "Bjorn Olafsson",
-    banner: "linear-gradient(135deg, rgba(55,48,163,0.94), rgba(232,97,77,0.78))",
+    banner: "linear-gradient(135deg, rgba(55,48,163,0.55), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
     tags: ["Workshops", "Founders", "Product"],
     upcomingEventSlugs: ["react-server-components-workshop"],
     pastEvents: ["Edge functions deep dive", "Startup operator breakfast", "Design systems night"],
@@ -416,7 +416,7 @@ export const publicGroups: PublicGroup[] = [
       "Its events also show how venue partnerships can serve culture without making the product feel corporate or generic.",
     ],
     organizer: "Elin Thors",
-    banner: "linear-gradient(135deg, rgba(245,240,232,1), rgba(232,97,77,0.78))",
+    banner: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.4)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
     tags: ["Gallery walks", "Music", "Culture"],
     upcomingEventSlugs: ["harbor-jazz-social"],
     pastEvents: ["After-hours exhibition visit", "Sketchbook cafe session", "Studio open evening"],
@@ -454,11 +454,11 @@ export const publicVenues: PublicVenue[] = [
     deal: "2-for-1 welcome drink for MeetupReykjavik hosts before 21:00",
     upcomingEventSlugs: ["singles-night-25-35"],
     gallery: [
-      "linear-gradient(135deg, rgba(30,27,46,1), rgba(232,97,77,0.88))",
-      "linear-gradient(135deg, rgba(232,97,77,0.88), rgba(245,240,232,0.82))",
-      "linear-gradient(135deg, rgba(79,70,229,0.86), rgba(30,27,46,0.94))",
+      "linear-gradient(135deg, rgba(30,27,46,0.45), rgba(232,97,77,0.35)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
+      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(245,240,232,0.3)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(30,27,46,0.4)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
     ],
-    art: "linear-gradient(135deg, rgba(30,27,46,1), rgba(232,97,77,0.88))",
+    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
   },
   {
     slug: "kex-hostel",
@@ -486,11 +486,11 @@ export const publicVenues: PublicVenue[] = [
     deal: "Welcome drink for approved organizers and discounted group platters",
     upcomingEventSlugs: ["speed-friending-newcomers"],
     gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.82), rgba(79,70,229,0.82))",
-      "linear-gradient(135deg, rgba(79,70,229,0.78), rgba(245,240,232,0.88))",
-      "linear-gradient(135deg, rgba(232,97,77,0.82), rgba(245,240,232,0.92))",
+      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
+      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/o-inn-aca1fd38.JPG')",
     ],
-    art: "linear-gradient(135deg, rgba(245,240,232,0.82), rgba(79,70,229,0.82))",
+    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.4)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
   },
   {
     slug: "grandi-hub",
@@ -518,11 +518,11 @@ export const publicVenues: PublicVenue[] = [
     deal: "Free coffee service for workshop hosts on standard and premium plans",
     upcomingEventSlugs: ["react-server-components-workshop"],
     gallery: [
-      "linear-gradient(135deg, rgba(55,48,163,0.96), rgba(30,27,46,0.92))",
-      "linear-gradient(135deg, rgba(245,240,232,0.92), rgba(55,48,163,0.62))",
-      "linear-gradient(135deg, rgba(232,97,77,0.74), rgba(55,48,163,0.9))",
+      "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
+      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(55,48,163,0.3)), url('/place-images/reykjavik/ufa-40055fa7.jpg')",
+      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(55,48,163,0.4)), url('/place-images/reykjavik/listasafn-einars-jonssonar-e07f8c3b.JPG')",
     ],
-    art: "linear-gradient(135deg, rgba(55,48,163,0.96), rgba(30,27,46,0.92))",
+    art: "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
   },
   {
     slug: "bryggjuhusid",
@@ -550,11 +550,11 @@ export const publicVenues: PublicVenue[] = [
     deal: "Hosted tasting add-on menu for venue premium partners",
     upcomingEventSlugs: ["wine-tasting-volcanic-terroir"],
     gallery: [
-      "linear-gradient(135deg, rgba(232,97,77,0.86), rgba(42,38,56,0.94))",
-      "linear-gradient(135deg, rgba(245,240,232,0.9), rgba(232,97,77,0.76))",
-      "linear-gradient(135deg, rgba(79,70,229,0.72), rgba(232,97,77,0.84))",
+      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(42,38,56,0.4)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
+      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hafnarborg-1be7b43b.jpg')",
     ],
-    art: "linear-gradient(135deg, rgba(232,97,77,0.86), rgba(42,38,56,0.94))",
+    art: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
   },
 ] as const;
 
@@ -566,7 +566,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 10, 2026",
     excerpt: "A closer look at why local discovery should feel warmer, calmer, and more venue-aware than the generic event feed.",
     readTime: "6 min read",
-    hero: "linear-gradient(135deg, rgba(55,48,163,0.96), rgba(232,97,77,0.84))",
+    hero: "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
     sections: [
       {
         heading: "The problem with generic event products",
@@ -589,7 +589,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 8, 2026",
     excerpt: "The best social formats reduce friction on arrival, use host structure well, and make the first five minutes feel safe.",
     readTime: "4 min read",
-    hero: "linear-gradient(135deg, rgba(245,240,232,0.9), rgba(79,70,229,0.82))",
+    hero: "linear-gradient(135deg, rgba(245,240,232,0.55), rgba(79,70,229,0.45)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
     sections: [
       {
         heading: "Arrival is the product",
@@ -608,7 +608,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 4, 2026",
     excerpt: "Strong venues do more than host events. They shape the trust, pace, and repeatability of the community itself.",
     readTime: "5 min read",
-    hero: "linear-gradient(135deg, rgba(232,97,77,0.84), rgba(42,38,56,0.94))",
+    hero: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(42,38,56,0.55)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
     sections: [
       {
         heading: "The venue is part of the format",

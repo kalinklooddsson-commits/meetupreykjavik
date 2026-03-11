@@ -20,7 +20,12 @@ export async function createSupabaseServerClient() {
         },
         setAll(items) {
           items.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options);
+            try {
+              cookieStore.set(name, value, options);
+            } catch {
+              // Server component renders cannot mutate cookies; auth refresh is
+              // handled in route handlers where mutation is allowed.
+            }
           });
         },
       },

@@ -16,6 +16,7 @@ import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
   CommandCenterDeck,
+  DecisionStrip,
   DashboardTable,
   FilterChips,
   KeyValueList,
@@ -28,6 +29,7 @@ import {
   TrendChart,
 } from "@/components/dashboard/primitives";
 import {
+  getDashboardAvatar,
   getManagedOrganizerEvent,
   organizerPortalData,
 } from "@/lib/dashboard-data";
@@ -152,6 +154,15 @@ export function OrganizerMessagesScreen() {
             {organizerPortalData.messages.map((message) => (
               <StreamCard
                 key={message.key}
+                avatarName={message.counterpart}
+                avatarSrc={getDashboardAvatar(message.counterpart)}
+                avatarTone={
+                  message.role.includes("Venue")
+                    ? "coral"
+                    : message.role.includes("host")
+                      ? "sage"
+                      : "indigo"
+                }
                 eyebrow={
                   <>
                     <span className="text-[var(--brand-text)]">{message.counterpart}</span>
@@ -387,6 +398,35 @@ export function OrganizerOverviewScreen() {
         ]}
       />
 
+      <DecisionStrip
+        eyebrow="Host read"
+        title="What the organizer should decide before opening every subpage"
+        description="The top scan should force three calls: protect attendance quality, tighten venue fit, and focus the formats that can sustain repeat paid demand."
+        items={[
+          {
+            key: "attendance",
+            label: "Attendance call",
+            summary: "Protect room quality before chasing raw RSVP count.",
+            meta: "Approvals, waitlists, and arrival design usually matter more than a bigger but less coherent room.",
+            tone: "coral",
+          },
+          {
+            key: "venue",
+            label: "Venue call",
+            summary: "Use stronger rooms to raise conversion and repeat behavior.",
+            meta: "Venue fit changes how comfortable people feel buying, arriving, and recommending the format afterward.",
+            tone: "sage",
+          },
+          {
+            key: "revenue",
+            label: "Revenue call",
+            summary: "Invest in formats that justify both a ticket and an organizer plan.",
+            meta: "The host dashboard should keep attention on repeatable commercial formats, not activity that looks busy but never compounds.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1fr_0.95fr]">
         <Surface
           eyebrow="Trend"
@@ -563,6 +603,35 @@ export function OrganizerGroupsScreen() {
         ]}
       />
 
+      <DecisionStrip
+        eyebrow="Group operating read"
+        title="What the organizer should resolve before touching each community manually"
+        description="The group workspace should force three calls: protect cadence, clear join pressure, and keep co-host support strong enough that recurring formats do not depend on one person alone."
+        items={[
+          {
+            key: "cadence",
+            label: "Cadence call",
+            summary: "Rescue groups that are starting to lose visible rhythm before members feel drift.",
+            meta: "If recurring momentum slips, the group becomes harder to trust and the next event becomes harder to sell.",
+            tone: "coral",
+          },
+          {
+            key: "joins",
+            label: "Join call",
+            summary: "Clear pending members where fast approval will improve the room rather than dilute it.",
+            meta: "Join approvals are part of quality control, not just an inbox chore, especially for hosted communities.",
+            tone: "sage",
+          },
+          {
+            key: "support",
+            label: "Co-host call",
+            summary: "Strengthen co-host coverage where the format would suffer if one person missed a night.",
+            meta: "A serious recurring group should have enough host structure to survive schedule pressure and still feel well held.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <Surface
         eyebrow="Filters"
         title="Your groups"
@@ -609,6 +678,39 @@ export function OrganizerGroupsScreen() {
               ],
             }))}
           />
+        </div>
+      </Surface>
+
+      <Surface
+        eyebrow="Organizer standard"
+        title="What strong recurring groups should keep true"
+        description="This is the organizer-side quality bar: groups that feel intentional, easy to join correctly, and resilient enough to keep going."
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              title: "Visible host structure",
+              text: "Members should understand who is holding the room, what the join rules are, and how the group behaves before arriving.",
+            },
+            {
+              title: "Reliable next edition",
+              text: "The next event should always feel legible enough that members can picture returning, not wonder if the group is fading out.",
+            },
+            {
+              title: "Shared workload",
+              text: "Recurring communities get stronger when approvals, arrivals, and follow-up are not all trapped with one organizer.",
+            },
+          ].map((item) => (
+            <article
+              key={item.title}
+              className="rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+            >
+              <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                {item.text}
+              </p>
+            </article>
+          ))}
         </div>
       </Surface>
     </OrganizerShell>
@@ -672,6 +774,35 @@ export function OrganizerEventsScreen() {
             detail:
               "Paid events need a visible commercial readout or the product starts feeling like a free posting tool again.",
             tone: "coral",
+          },
+        ]}
+      />
+
+      <DecisionStrip
+        eyebrow="Event operating read"
+        title="What the organizer should resolve before editing the whole stack"
+        description="A stronger event workspace turns the first scan into three calls: curate the formats with pressure, watch the calendar where dates are stacking, and push the formats that already prove they can earn."
+        items={[
+          {
+            key: "curation",
+            label: "Curation call",
+            summary: "Handle waitlists and approvals before publishing more supply.",
+            meta: "The events carrying review pressure are where room quality can improve fast or drift if the organizer hesitates.",
+            tone: "coral",
+          },
+          {
+            key: "calendar",
+            label: "Calendar call",
+            summary: "Protect the dates where your own events can cannibalize each other.",
+            meta: "A better calendar read keeps the host from creating schedule friction that weakens attendance, venue fit, and staff focus.",
+            tone: "sage",
+          },
+          {
+            key: "commercial",
+            label: "Commercial call",
+            summary: "Repeat the templates and formats that already justify paid seats.",
+            meta: "The organizer product should keep attention on what compounds, not make every event feel like an equal fresh start.",
+            tone: "indigo",
           },
         ]}
       />

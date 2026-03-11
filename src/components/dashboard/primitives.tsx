@@ -4,6 +4,7 @@ import type { Route } from "next";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createAvatarDataUrl, initialsForName } from "@/lib/visuals";
 
 export type DashboardTone =
   | "indigo"
@@ -83,6 +84,19 @@ type SignalRailProps = {
   }>;
 };
 
+type DecisionStripProps = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  items: Array<{
+    key: string;
+    label: string;
+    summary: string;
+    meta: string;
+    tone?: DashboardTone;
+  }>;
+};
+
 type FeedItem = {
   key: string;
   title: string;
@@ -105,6 +119,9 @@ type StreamCardProps = {
   meta?: ReactNode;
   badge?: ReactNode;
   className?: string;
+  avatarName?: string;
+  avatarSrc?: string;
+  avatarTone?: DashboardTone;
 };
 
 type CalendarDay = {
@@ -395,6 +412,52 @@ export function SignalRail({ eyebrow, title, description, items }: SignalRailPro
   );
 }
 
+export function DecisionStrip({
+  eyebrow,
+  title,
+  description,
+  items,
+}: DecisionStripProps) {
+  return (
+    <section className="dashboard-decision-strip paper-panel overflow-hidden rounded-[1.9rem] border border-[rgba(255,255,255,0.72)] p-6 sm:p-7">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            {eyebrow}
+          </div>
+          <h2 className="font-editorial mt-3 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            {title}
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--brand-text-muted)]">
+            {description}
+          </p>
+        </div>
+      </div>
+      <div className="mt-6 grid gap-4 xl:grid-cols-3">
+        {items.map((item) => (
+          <article
+            key={item.key}
+            className="dashboard-decision-card rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(250,248,244,0.84))] p-5 shadow-[0_18px_34px_rgba(42,38,56,0.06)]"
+          >
+            <div
+              className={cn(
+                "inline-flex min-h-8 items-center rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]",
+                toneClasses[item.tone ?? "indigo"],
+              )}
+            >
+              {item.label}
+            </div>
+            <div className="mt-4 text-lg font-bold tracking-[-0.02em] text-[var(--brand-text)]">
+              {item.summary}
+            </div>
+            <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">{item.meta}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function StreamCard({
   eyebrow,
   title,
@@ -402,6 +465,9 @@ export function StreamCard({
   meta,
   badge,
   className,
+  avatarName,
+  avatarSrc,
+  avatarTone = "indigo",
 }: StreamCardProps) {
   return (
     <article
@@ -410,13 +476,23 @@ export function StreamCard({
         className,
       )}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="min-w-0">
-          {eyebrow ? (
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-              {eyebrow}
-            </div>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-3">
+          {avatarName ? (
+            <AvatarStamp
+              name={avatarName}
+              src={avatarSrc}
+              tone={avatarTone}
+              size="md"
+            />
           ) : null}
+          <div className="min-w-0">
+            {eyebrow ? (
+              <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                {eyebrow}
+              </div>
+            ) : null}
+          </div>
         </div>
         {badge}
       </div>
@@ -428,6 +504,45 @@ export function StreamCard({
         <div className="mt-4 text-sm font-semibold text-[var(--brand-indigo)]">{meta}</div>
       ) : null}
     </article>
+  );
+}
+
+export function AvatarStamp({
+  name,
+  src,
+  tone = "indigo",
+  size = "md",
+}: {
+  name: string;
+  src?: string;
+  tone?: DashboardTone;
+  size?: "sm" | "md" | "lg";
+}) {
+  const sizeClasses =
+    size === "sm"
+      ? "h-10 w-10 rounded-2xl text-xs"
+      : size === "lg"
+        ? "h-20 w-20 rounded-[1.8rem] text-2xl"
+        : "h-12 w-12 rounded-[1.1rem] text-sm";
+  const paletteKey =
+    tone === "coral" || tone === "sage" || tone === "sand"
+      ? tone
+      : "indigo";
+  const imageSrc = src || createAvatarDataUrl(name, paletteKey);
+
+  return (
+    <div
+      className={cn(
+        "shrink-0 overflow-hidden border border-white/70 bg-cover bg-center shadow-[0_14px_28px_rgba(42,38,56,0.12)]",
+        sizeClasses,
+      )}
+      style={{ backgroundImage: `url("${imageSrc}")` }}
+      aria-label={name}
+      role="img"
+      title={name}
+    >
+      <span className="sr-only">{initialsForName(name)}</span>
+    </div>
   );
 }
 

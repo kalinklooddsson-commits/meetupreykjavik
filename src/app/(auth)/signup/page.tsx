@@ -4,9 +4,9 @@ export default function SignupPage() {
   return (
     <AuthPanel
       mode="signup"
-      eyebrow="Signup"
-      title="Create the account that matches your role"
-      description="Choose whether you are joining as a member, organizer, venue partner, or admin. The next steps already reflect the business and dashboard structure of the platform."
+      eyebrow="Sign up"
+      title="Join Meetup Reykjavik"
+      description="Create your account and start discovering events, groups, and venues in the city."
       primaryLabel="Create account"
       secondaryHref="/login"
       secondaryLabel="Already have an account? Sign in"

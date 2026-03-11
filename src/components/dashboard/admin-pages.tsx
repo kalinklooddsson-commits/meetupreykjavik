@@ -11,7 +11,9 @@ import {
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
+  AvatarStamp,
   CommandCenterDeck,
+  DecisionStrip,
   DashboardTable,
   FilterChips,
   HeatGrid,
@@ -43,7 +45,7 @@ import {
   AdminCommsStudio,
   AdminContentControlCenter,
 } from "@/components/dashboard/operations-panels";
-import { adminPortalData } from "@/lib/dashboard-data";
+import { adminPortalData, getDashboardAvatar } from "@/lib/dashboard-data";
 import type { ComponentProps } from "react";
 
 function adminLinks(activeHref: Route) {
@@ -260,6 +262,35 @@ export function AdminOverviewScreen() {
         ]}
       />
 
+      <DecisionStrip
+        eyebrow="Executive read"
+        title="What admin should decide before opening the deeper tools"
+        description="The opening scan should turn the platform into three concrete calls: protect trust, reinforce supply, and keep the money loop coherent."
+        items={[
+          {
+            key: "trust",
+            label: "Trust call",
+            summary: "Clear urgent queues before forcing more growth through the system.",
+            meta: "Moderation, venue approvals, and flagged actors are the fastest way quality slips if they sit unresolved.",
+            tone: "coral",
+          },
+          {
+            key: "supply",
+            label: "Supply call",
+            summary: "Strengthen partner rooms where demand and category quality are already clustering.",
+            meta: "Venue quality affects event conversion, editorial confidence, and repeat behavior across the marketplace.",
+            tone: "sage",
+          },
+          {
+            key: "money",
+            label: "Money call",
+            summary: "Keep plans, commissions, and paid inventory aligned as one commercial system.",
+            meta: "If subscriptions and event monetization drift apart, the product starts to feel expensive in the wrong places and weak in the right ones.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <Surface
           eyebrow="Growth"
@@ -445,6 +476,35 @@ export function AdminUsersScreen() {
         ]}
       />
 
+      <DecisionStrip
+        eyebrow="Operator read"
+        title="What admin should decide before touching user rows one by one"
+        description="The user workspace should force three fast calls: protect trust posture, identify who deserves curation attention, and keep account power aligned with actual behavior."
+        items={[
+          {
+            key: "trust",
+            label: "Trust call",
+            summary: "Resolve flagged or ambiguous users before giving more reach or power.",
+            meta: "Admin should not curate, promote, or impersonate from a shallow read. Trust posture has to be legible first.",
+            tone: "coral",
+          },
+          {
+            key: "curation",
+            label: "Curation call",
+            summary: "Spot the clients and hosts who are worth hand-picking into stronger rooms and formats.",
+            meta: "This is where the platform stops being a passive directory and becomes an actively shaped marketplace.",
+            tone: "sage",
+          },
+          {
+            key: "power",
+            label: "Access call",
+            summary: "Keep account roles, monetization level, and operational privilege coherent.",
+            meta: "Role power should reflect actual usage, commercial context, and platform trust, not just what the user asked for once.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Directory"
@@ -475,9 +535,30 @@ export function AdminUsersScreen() {
               rows={adminPortalData.users.map((user) => ({
                 key: user.key,
                 cells: [
-                  user.name,
+                  <div key={`${user.key}-name`} className="flex items-center gap-3">
+                    <AvatarStamp
+                      name={user.name}
+                      src={getDashboardAvatar(user.name)}
+                      tone={
+                        user.type === "Venue"
+                          ? "coral"
+                          : user.type === "Organizer"
+                            ? "sage"
+                            : "indigo"
+                      }
+                      size="sm"
+                    />
+                    <div>
+                      <div className="font-semibold text-[var(--brand-text)]">{user.name}</div>
+                      <div className="text-xs uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                        {user.type}
+                      </div>
+                    </div>
+                  </div>,
                   user.email,
-                  user.type,
+                  <ToneBadge key={`${user.key}-type`} tone={user.type === "Venue" ? "coral" : user.type === "Organizer" ? "sage" : "indigo"}>
+                    {user.type}
+                  </ToneBadge>,
                   <ToneBadge key="status" tone={statusTone(user.status)}>
                     {user.status}
                   </ToneBadge>,
@@ -497,6 +578,22 @@ export function AdminUsersScreen() {
           title={adminPortalData.selectedUser.name}
           description={adminPortalData.selectedUser.bio}
         >
+          <div className="flex items-center gap-4 rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)] p-4">
+            <AvatarStamp
+              name={adminPortalData.selectedUser.name}
+              src={getDashboardAvatar(adminPortalData.selectedUser.name)}
+              tone="sage"
+              size="lg"
+            />
+            <div>
+              <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                {adminPortalData.selectedUser.name}
+              </div>
+              <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                {adminPortalData.selectedUser.notes}
+              </p>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-2">
             <ToneBadge tone="indigo">{adminPortalData.selectedUser.role}</ToneBadge>
             <ToneBadge tone="sage">Impersonate ready</ToneBadge>
@@ -536,6 +633,19 @@ export function AdminUsersScreen() {
               </div>
             </div>
           </div>
+          <div className="mt-5 grid gap-3">
+            {[
+              "Keep impersonation, monetization, and trust posture visible together before acting.",
+              "Treat this panel as a live operator dossier, not just a profile readout.",
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-[1.05rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+              >
+                {item}
+              </div>
+            ))}
+          </div>
         </Surface>
       </div>
 
@@ -553,6 +663,22 @@ export function AdminUsersScreen() {
           title={adminPortalData.clientDossier.name}
           description={adminPortalData.clientDossier.summary}
         >
+          <div className="flex items-center gap-4 rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)] p-4">
+            <AvatarStamp
+              name={adminPortalData.clientDossier.name}
+              src={getDashboardAvatar(adminPortalData.clientDossier.name)}
+              tone="indigo"
+              size="lg"
+            />
+            <div>
+              <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                {adminPortalData.clientDossier.name}
+              </div>
+              <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                Reliable client record with visible taste, room-fit logic, and strong trust markers.
+              </p>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-2">
             <ToneBadge tone="indigo">{adminPortalData.clientDossier.tier}</ToneBadge>
             <ToneBadge tone="sage">Low no-show risk</ToneBadge>
@@ -777,6 +903,35 @@ export function AdminGroupsScreen() {
         ]}
       />
 
+      <DecisionStrip
+        eyebrow="Group operating read"
+        title="What admin should decide before moderating community inventory row by row"
+        description="The groups workspace should force three calls: approve the right new communities, protect cadence where quality is slipping, and feature the groups that strengthen the marketplace thesis."
+        items={[
+          {
+            key: "approval",
+            label: "Approval call",
+            summary: "Move good new communities through faster while stopping weak or vague inventory early.",
+            meta: "Approval speed matters, but quality matters more. Admin should be shaping what the city sees, not just clearing a queue.",
+            tone: "coral",
+          },
+          {
+            key: "cadence",
+            label: "Cadence call",
+            summary: "Intervene where recurring energy is fading before the group starts looking dead.",
+            meta: "A group that loses rhythm damages trust, homepage quality, and eventual event demand all at once.",
+            tone: "sage",
+          },
+          {
+            key: "feature",
+            label: "Feature call",
+            summary: "Elevate the communities that best express the platform’s local quality standard.",
+            meta: "Featuring is not cosmetic. It is how admin teaches the marketplace what good looks like.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <Surface
           eyebrow="Approval queue"
@@ -784,15 +939,15 @@ export function AdminGroupsScreen() {
           description="New groups, feature candidates, and health flags stay visible together."
         >
           <div className="space-y-4">
-            {adminPortalData.groups.queue.map((group) => (
-              <div
-                key={group.key}
-                className="rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{group.name}</div>
-                  <ToneBadge tone={statusTone(group.status)}>{group.status}</ToneBadge>
-                </div>
+              {adminPortalData.groups.queue.map((group) => (
+                <div
+                  key={group.key}
+                  className="rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="font-semibold text-[var(--brand-text)]">{group.name}</div>
+                    <ToneBadge tone={statusTone(group.status)}>{group.status}</ToneBadge>
+                  </div>
                 <p className="mt-2 text-sm text-[var(--brand-text-muted)]">
                   Organizer: {group.organizer}
                 </p>
@@ -834,6 +989,39 @@ export function AdminGroupsScreen() {
           />
         </Surface>
       </div>
+
+      <Surface
+        eyebrow="Editorial lane"
+        title="What strong community inventory should signal"
+        description="Admin should keep a visible standard for what deserves reach, approval speed, and homepage gravity."
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {[
+            {
+              title: "Held by a real host",
+              text: "Good groups make organizer identity, cadence, and arrival expectations easy to read before anyone joins.",
+            },
+            {
+              title: "Capable of repeat energy",
+              text: "The best community inventory hints at recurring momentum, not just one launch spike and then silence.",
+            },
+            {
+              title: "Aligned with venue quality",
+              text: "Groups that work well with the city’s stronger rooms deserve more attention because they compound demand and trust together.",
+            },
+          ].map((item) => (
+            <article
+              key={item.title}
+              className="rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+            >
+              <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
+              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                {item.text}
+              </p>
+            </article>
+          ))}
+        </div>
+      </Surface>
 
       <Surface
         eyebrow="Batch group control"

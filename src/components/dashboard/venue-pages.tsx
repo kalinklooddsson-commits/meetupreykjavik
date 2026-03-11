@@ -14,6 +14,7 @@ import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
   CommandCenterDeck,
+  DecisionStrip,
   DashboardTable,
   FilterChips,
   KeyValueList,
@@ -25,7 +26,7 @@ import {
   ToneBadge,
   TrendChart,
 } from "@/components/dashboard/primitives";
-import { venuePortalData } from "@/lib/dashboard-data";
+import { getDashboardAvatar, venuePortalData } from "@/lib/dashboard-data";
 import {
   VenueAvailabilityStudio,
   VenueBookingCommandCenter,
@@ -174,6 +175,15 @@ export function VenueMessagesScreen() {
             {venuePortalData.messages.map((message) => (
               <StreamCard
                 key={message.key}
+                avatarName={message.counterpart}
+                avatarSrc={getDashboardAvatar(message.counterpart)}
+                avatarTone={
+                  message.role.includes("Organizer")
+                    ? "indigo"
+                    : message.role.includes("repeat")
+                      ? "sage"
+                      : "coral"
+                }
                 eyebrow={
                   <>
                     <span className="text-[var(--brand-text)]">{message.counterpart}</span>
@@ -461,6 +471,35 @@ export function VenueDashboardScreen() {
         ]}
       />
 
+      <DecisionStrip
+        eyebrow="Operator read"
+        title="What the venue team should decide before touching the booking tools"
+        description="The top scan should force three commercial calls: reply fast where premium slots matter, protect partner quality, and keep the room yield disciplined."
+        items={[
+          {
+            key: "booking",
+            label: "Booking call",
+            summary: "Prioritize reply speed on the requests that affect premium inventory.",
+            meta: "If the best room slots sit too long, the venue loses both money and organizer trust at the same time.",
+            tone: "coral",
+          },
+          {
+            key: "yield",
+            label: "Yield call",
+            summary: "Use deals and placement to support repeatable, higher-quality business.",
+            meta: "The venue layer should not reward random traffic. It should help the best recurring formats come back and spend again.",
+            tone: "sage",
+          },
+          {
+            key: "quality",
+            label: "Partner call",
+            summary: "Keep organizer-fit visible before accepting room pressure blindly.",
+            meta: "Better host quality leads to smoother nights, fewer support problems, and a stronger public-facing venue reputation.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         <Surface
           eyebrow="Lineup"
@@ -683,6 +722,35 @@ export function VenueBookingsScreen() {
             value: String(venuePortalData.bookings.guestFit.arrivalNotes.length),
             detail:
               "Arrival and layout cues help venues avoid weak accepts and make stronger counter-offers.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
+      <DecisionStrip
+        eyebrow="Booking operating read"
+        title="What the venue should decide before replying line by line"
+        description="A better booking surface turns the opening scan into three decisions: which requests need speed, which need a fit counter, and which are worth protecting because they build better repeat business."
+        items={[
+          {
+            key: "speed",
+            label: "Reply call",
+            summary: "Move fastest where timing affects premium inventory or same-week revenue.",
+            meta: "The best booking desks do not answer everything equally. They protect the requests that matter most to yield and trust.",
+            tone: "coral",
+          },
+          {
+            key: "fit",
+            label: "Fit call",
+            summary: "Counter or redirect bookings that are technically possible but wrong for the room.",
+            meta: "Availability alone is not enough. The right room shape, arrival flow, and guest profile matter more than an easy accept.",
+            tone: "sage",
+          },
+          {
+            key: "repeat",
+            label: "Repeat call",
+            summary: "Favor organizers and formats that are likely to come back stronger.",
+            meta: "The venue product should help operators build a better recurring book of business, not just a fuller one-off calendar.",
             tone: "indigo",
           },
         ]}

@@ -60,7 +60,7 @@ export const events: HomeEvent[] = [
     venue: "Lebowski Bar",
     attendees: 43,
     deal: "2-for-1 drinks",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.95), rgba(79,70,229,0.8))",
+    art: "linear-gradient(135deg, rgba(232,97,77,0.6), rgba(79,70,229,0.5)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
   },
   {
     id: 2,
@@ -71,7 +71,7 @@ export const events: HomeEvent[] = [
     time: "09:00",
     venue: "Esja Trailhead",
     attendees: 27,
-    art: "linear-gradient(135deg, rgba(124,154,130,0.9), rgba(42,38,56,0.82))",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.55), rgba(42,38,56,0.5)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
   },
   {
     id: 3,
@@ -83,7 +83,7 @@ export const events: HomeEvent[] = [
     venue: "Grandi Hub",
     attendees: 61,
     deal: "Free coffee",
-    art: "linear-gradient(135deg, rgba(55,48,163,0.95), rgba(30,27,46,0.88))",
+    art: "linear-gradient(135deg, rgba(55,48,163,0.6), rgba(30,27,46,0.5)), url('/place-images/reykjavik/generated/grandi101.svg')",
   },
 ] as const;
 
@@ -93,28 +93,28 @@ export const groups: HomeGroup[] = [
     category: "Outdoors",
     members: 284,
     description: "Weekly hikes around Iceland with welcoming hosts and low-pressure signups.",
-    art: "linear-gradient(135deg, rgba(124,154,130,0.95), rgba(79,70,229,0.72))",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
   },
   {
     name: "Expats in Iceland",
     category: "Expat",
     members: 512,
     description: "A landing spot for newcomers finding events, friends, and practical city tips.",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.9), rgba(245,240,232,0.9))",
+    art: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(245,240,232,0.3)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
   },
   {
     name: "Tech Community RVK",
     category: "Tech",
     members: 198,
     description: "Developers, founders, and designers sharing talks, demos, and open studio nights.",
-    art: "linear-gradient(135deg, rgba(55,48,163,0.92), rgba(232,97,77,0.78))",
+    art: "linear-gradient(135deg, rgba(55,48,163,0.55), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
   },
   {
     name: "Creative Reykjavik",
     category: "Arts",
     members: 203,
     description: "Gallery walks, sketchbook meetups, and after-hours openings around the city.",
-    art: "linear-gradient(135deg, rgba(245,240,232,1), rgba(232,97,77,0.76))",
+    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.4)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
   },
 ] as const;
 
@@ -126,7 +126,7 @@ export const venues: HomeVenue[] = [
     rating: 4.7,
     events: 31,
     deal: "Happy hour until 21:00",
-    art: "linear-gradient(135deg, rgba(30,27,46,1), rgba(232,97,77,0.88))",
+    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
   },
   {
     name: "Kex Hostel",
@@ -135,7 +135,7 @@ export const venues: HomeVenue[] = [
     rating: 4.8,
     events: 23,
     deal: "Welcome drink for hosts",
-    art: "linear-gradient(135deg, rgba(245,240,232,0.8), rgba(55,48,163,0.8))",
+    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(55,48,163,0.4)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
   },
   {
     name: "Stofan Cafe",
@@ -144,7 +144,7 @@ export const venues: HomeVenue[] = [
     rating: 4.9,
     events: 18,
     deal: "Coffee bundle for groups",
-    art: "linear-gradient(135deg, rgba(124,154,130,0.9), rgba(245,240,232,0.96))",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/generated/litla-kaffistofan.svg')",
   },
 ] as const;
 
