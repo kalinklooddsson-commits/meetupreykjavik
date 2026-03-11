@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { ZodError, type ZodType } from "zod";
 
-import { hasSupabaseEnv } from "@/lib/env";
+import { hasLiveSupabaseAuth } from "@/lib/env";
 import {
   clearMockSessionCookie,
   createMockSessionFromAccount,
@@ -236,7 +236,7 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
       return forbiddenResponse("Cross-site state changes are not allowed.");
     }
 
-    if (match.route.category === "auth" && !hasSupabaseEnv()) {
+    if (match.route.category === "auth" && !hasLiveSupabaseAuth()) {
       const response = await handleMockAuthRequest(request, key);
 
       if (response) {
