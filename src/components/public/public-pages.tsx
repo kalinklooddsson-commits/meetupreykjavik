@@ -45,6 +45,7 @@ import {
   type SourcedPlace,
 } from "@/lib/reykjavik-source-data";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/public/reveal";
 
 /* ── Formatters ────────────────────────────────────────── */
 
@@ -348,7 +349,7 @@ function EventCard({ event }: { event: PublicEvent }) {
   const imageUrl = extractImageUrl(event.art);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-48 bg-gray-200">
         {imageUrl ? (
           <>
@@ -360,7 +361,7 @@ function EventCard({ event }: { event: PublicEvent }) {
               src={imageUrl}
               unoptimized={imageUrl.startsWith("https://")}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
           </>
         ) : (
           <div className="absolute inset-0" style={{ background: event.art }} />
@@ -368,21 +369,19 @@ function EventCard({ event }: { event: PublicEvent }) {
         <div className="relative z-10 flex h-full flex-col justify-between p-4 text-white">
           <div className="flex items-start justify-between gap-3">
             <div className="rounded-lg bg-white px-3 py-1.5 text-center shadow-sm">
-              <div className="text-[0.6rem] font-bold uppercase tracking-wider text-[var(--brand-coral)]">
+              <div className="text-[0.6rem] font-bold uppercase tracking-wider text-[#E8614D]">
                 {badgeMonth}
               </div>
               <div className="text-xl font-bold text-gray-900">{badgeDay}</div>
             </div>
-            <div className="flex gap-2">
-              <ToneBadge tone={categoryTone(event.category)}>{event.category}</ToneBadge>
-            </div>
+            <ToneBadge tone={categoryTone(event.category)}>{event.category}</ToneBadge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-black/30 px-3 py-1 text-xs font-medium">
+            <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
               {event.priceLabel}
             </span>
             {event.ageLabel !== "All ages" ? (
-              <span className="rounded-full bg-black/20 px-3 py-1 text-xs font-medium">
+              <span className="rounded-full bg-black/40 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
                 {event.ageLabel}
               </span>
             ) : null}
@@ -446,7 +445,7 @@ function GroupCard({
   const imageUrl = extractImageUrl(group.banner);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-36 bg-gray-200">
         {imageUrl ? (
           <>
@@ -508,7 +507,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
   const imageUrl = extractImageUrl(venue.art);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-36 bg-gray-200">
         {imageUrl ? (
           <>
@@ -525,19 +524,17 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         ) : (
           <div className="absolute inset-0" style={{ background: venue.art }} />
         )}
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 text-white">
-          <div>
-            <div className="text-lg font-bold">{venue.name}</div>
-            <div className="text-sm text-white/80">{venue.type} · {venue.area}</div>
-          </div>
-          <span className="flex items-center gap-1 rounded-full bg-black/30 px-2.5 py-1 text-sm font-semibold">
+        <div className="absolute right-3 top-3">
+          <span className="flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-sm font-semibold text-white backdrop-blur-sm">
             <Star className="h-3.5 w-3.5 fill-current" />
             {venue.rating}
           </span>
         </div>
       </div>
       <div className="p-5">
-        <p className="text-sm text-gray-600">{venue.summary}</p>
+        <h3 className="text-lg font-bold text-gray-900">{venue.name}</h3>
+        <div className="mt-0.5 text-xs text-gray-500">{venue.type} · {venue.area}</div>
+        <p className="mt-2 text-sm text-gray-600">{venue.summary}</p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {venue.amenities.slice(0, 3).map((amenity) => (
             <span key={amenity} className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600">
@@ -566,7 +563,7 @@ function BlogCard({ post }: { post: BlogPost }) {
   const imageUrl = extractImageUrl(post.hero);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-44 bg-gray-200">
         {imageUrl ? (
           <>
@@ -611,7 +608,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
   const hasPhoto = place.image?.kind === "photo";
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-48 bg-gray-200">
         {imageSrc ? (
           <Image
@@ -858,7 +855,7 @@ export function EventsIndexScreen() {
       />
 
       {/* Featured event spotlight */}
-      <section className="section-shell py-10">
+      <section className="reveal section-shell py-10">
         <div className="mb-8 flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-[var(--brand-coral)]" />
           <h2 className="text-lg font-semibold text-gray-900">Featured event</h2>
@@ -872,10 +869,10 @@ export function EventsIndexScreen() {
               sizes="(max-width: 768px) 100vw, 50vw"
               src={featuredImage}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent md:bg-gradient-to-r" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent md:bg-gradient-to-r md:from-transparent md:via-black/20 md:to-black/60" />
             <div className="absolute bottom-4 left-4 flex gap-2">
               <ToneBadge tone={categoryTone(featured.category)}>{featured.category}</ToneBadge>
-              <span className="rounded-full bg-black/40 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+              <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
                 {featured.priceLabel}
               </span>
             </div>
@@ -935,7 +932,7 @@ export function EventsIndexScreen() {
             />
           </div>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="reveal-group mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {publicEvents.map((event) => (
               <EventCard key={event.slug} event={event} />
             ))}
@@ -949,7 +946,7 @@ export function EventsIndexScreen() {
             </p>
             <Link
               href="/signup"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[var(--brand-indigo)] transition hover:bg-white/90"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
             >
               Create free account
               <ArrowRight className="h-4 w-4" />
@@ -1217,7 +1214,7 @@ export function GroupsIndexScreen() {
       <section className="bg-[var(--brand-sand)]">
         <div className="section-shell py-10">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">Active groups</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="reveal-group grid gap-6 md:grid-cols-2">
             {publicGroups.map((group) => (
               <GroupCard
                 key={group.slug}
@@ -1428,7 +1425,7 @@ export function VenuesIndexScreen() {
       <section className="bg-[var(--brand-sand)]">
         <div className="section-shell py-10">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">Partner venues</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="reveal-group grid gap-6 md:grid-cols-2">
             {publicVenues.map((venue) => (
               <VenueCard key={venue.slug} venue={venue} />
             ))}
@@ -1938,7 +1935,7 @@ export function AboutScreen() {
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[var(--brand-indigo)] transition hover:bg-white/90"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
             >
               Create account
               <ArrowRight className="h-4 w-4" />
@@ -1976,7 +1973,7 @@ export function PricingScreen() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[var(--brand-indigo)] shadow-lg transition hover:bg-white/90"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#3730A3] shadow-lg transition hover:bg-white/90"
             >
               Get started free
               <ArrowRight className="h-4 w-4" />
@@ -2002,7 +1999,7 @@ export function PricingScreen() {
             <h2 className="mt-4 text-2xl font-bold text-gray-900">Member plans</h2>
             <p className="mt-2 text-sm text-gray-600">Browse free. Upgrade for priority access and premium features.</p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="reveal-group grid gap-6 md:grid-cols-3">
             {userTiers.map((tier, i) => (
               <article
                 key={tier.name}
@@ -2063,7 +2060,7 @@ export function PricingScreen() {
               Run events with real tools. Plus {ticketCommissionRate}% commission on paid ticket sales.
             </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="reveal-group grid gap-6 md:grid-cols-3">
             {organizerTiers.map((tier, i) => (
               <article
                 key={tier.name}
@@ -2124,7 +2121,7 @@ export function PricingScreen() {
               From basic listing to full partnership with booking tools and analytics.
             </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="reveal-group grid gap-6 md:grid-cols-3">
             {venueTiers.map((tier, i) => (
               <article
                 key={tier.name}
@@ -2758,7 +2755,7 @@ export function ForOrganizersScreen() {
           </p>
           <Link
             href="/signup"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[var(--brand-indigo)] transition hover:bg-white/90"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
           >
             Get started free
             <ArrowRight className="h-4 w-4" />
