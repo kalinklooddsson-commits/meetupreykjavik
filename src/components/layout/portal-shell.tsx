@@ -7,10 +7,8 @@ import {
   ArrowUpRight,
   CalendarRange,
   Compass,
-  LayoutDashboard,
   PanelLeftClose,
   PanelLeftOpen,
-  Sparkles,
   Store,
   UsersRound,
 } from "lucide-react";
@@ -48,39 +46,23 @@ type PortalShellProps = {
 
 const roleMeta = {
   member: {
-    chip: "Member flow",
-    note: "Built as a calm personal command surface: arrival details, trust signals, and the next good yes visible in one pass.",
-    posture: "Discovery and attendance",
     texture: "portal-shell-member",
     glyph: "Client mode",
-    lane: "Personal planning",
     icon: Compass,
   },
   organizer: {
-    chip: "Host revenue ops",
-    note: "Built as an event operating room: ticket pressure, venue negotiation, and host execution kept in one commercial workspace.",
-    posture: "Revenue and execution",
     texture: "portal-shell-organizer",
     glyph: "Organizer mode",
-    lane: "Host operations",
     icon: CalendarRange,
   },
   venue: {
-    chip: "Venue yield desk",
-    note: "Built as a room monetization surface: booking pressure, premium slots, and repeat-host quality visible before the room slips.",
-    posture: "Supply and yield",
     texture: "portal-shell-venue",
     glyph: "Venue mode",
-    lane: "Room monetization",
     icon: Store,
   },
   admin: {
-    chip: "Platform control",
-    note: "Built as a multi-queue control plane: fast enough for triage, dense enough for revenue, trust, supply, and policy decisions.",
-    posture: "Platform control",
     texture: "portal-shell-admin",
     glyph: "Admin mode",
-    lane: "Cross-platform control",
     icon: UsersRound,
   },
 } as const;
@@ -98,8 +80,6 @@ export function PortalShell({
   roleMode = variant === "admin" ? "admin" : "member",
 }: PortalShellProps) {
   const [collapsed, setCollapsed] = useState(false);
-  const activeLink = links.find((link) => link.active) ?? links[0];
-  const quickJumpLinks = links.filter((link) => !link.active).slice(0, 4);
   const isAdmin = variant === "admin";
   const currentRoleMeta = roleMeta[roleMode];
   const RoleIcon: LucideIcon = currentRoleMeta.icon;
@@ -137,9 +117,6 @@ export function PortalShell({
                 <div className="font-editorial text-2xl tracking-[-0.04em]">
                   {title}
                 </div>
-                <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/52">
-                  {currentRoleMeta.glyph}
-                </div>
               </div>
             </div>
             <button
@@ -155,41 +132,6 @@ export function PortalShell({
                 <PanelLeftClose className="h-5 w-5" />
               )}
             </button>
-          </div>
-
-          <p
-            className={cn(
-              "mt-4 text-sm leading-7 text-[var(--brand-text-muted)]",
-              collapsed && "lg:hidden",
-            )}
-          >
-            {description}
-          </p>
-
-          <div
-            className={cn(
-              "mt-4 flex flex-wrap gap-2",
-              collapsed && "lg:hidden",
-            )}
-          >
-            <span className="portal-chip">
-              <LayoutDashboard className="h-4 w-4 text-[var(--brand-indigo)]" />
-              <strong>{links.length}</strong>
-              routes
-            </span>
-            <span className="portal-chip">
-              <Sparkles className="h-4 w-4 text-[var(--brand-coral)]" />
-              {currentRoleMeta.chip}
-            </span>
-          </div>
-
-          <div
-            className={cn(
-              "mt-4 rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/74 px-4 py-3 text-sm text-[var(--brand-text-muted)]",
-              collapsed && "lg:hidden",
-            )}
-          >
-            {currentRoleMeta.note}
           </div>
 
           <nav className="mt-4 space-y-2">
@@ -211,7 +153,7 @@ export function PortalShell({
         <main className="space-y-6">
           <div className="portal-mobile-jumps lg:hidden">
             <div className="portal-mobile-jumps-header">
-              <span className="portal-mobile-jumps-label">{currentRoleMeta.lane}</span>
+              <span className="portal-mobile-jumps-label">{currentRoleMeta.glyph}</span>
               <span className="portal-mobile-jumps-label">{links.length} routes</span>
             </div>
             <div className="portal-mobile-jumps-row">
@@ -255,106 +197,27 @@ export function PortalShell({
                 <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)] sm:text-[2.9rem]">
                   {title}
                 </h1>
-                <p className="mt-4 max-w-3xl text-sm leading-8 text-[var(--brand-text-muted)]">
-                  {description}
-                </p>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2 xl:min-w-[320px]">
-                <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                    Section routes
-                  </div>
-                  <div className="font-editorial tabular-data mt-2 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
-                    {links.length}
-                  </div>
-                </div>
-                <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                    Workspace posture
-                  </div>
-                  <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
-                    {collapsed ? "Compact navigation" : currentRoleMeta.posture}
-                  </div>
-                </div>
-                <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                    Operating lane
-                  </div>
-                  <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
-                    {currentRoleMeta.lane}
-                  </div>
-                </div>
-                {primaryAction ? (
-                  <Link
-                    href={primaryAction.href}
-                    className={cn(
-                      "inline-flex min-h-[108px] flex-col justify-between rounded-[1.35rem] border px-4 py-4 text-left transition hover:-translate-y-0.5",
-                      isAdmin
-                        ? "border-[rgba(30,27,46,0.14)] bg-[linear-gradient(140deg,rgba(30,27,46,0.96),rgba(55,48,163,0.92),rgba(232,97,77,0.78))] text-white shadow-[0_22px_44px_rgba(42,38,56,0.18)]"
-                        : "border-[rgba(79,70,229,0.12)] bg-white text-[var(--brand-text)]",
-                    )}
-                  >
-                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-current/70">
-                      Primary action
-                    </div>
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-sm font-semibold">{primaryAction.label}</span>
-                      <ArrowUpRight className="h-4 w-4" />
-                    </div>
-                  </Link>
+                {description ? (
+                  <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--brand-text-muted)]">
+                    {description}
+                  </p>
                 ) : null}
               </div>
-            </div>
 
-            <div className="mt-6 flex flex-wrap gap-2">
-              {links.map((link) => (
+              {primaryAction ? (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  href={primaryAction.href}
                   className={cn(
-                    "portal-chip transition hover:-translate-y-0.5",
-                    link.active &&
-                      "border-[rgba(79,70,229,0.16)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-text)]",
+                    "inline-flex items-center gap-3 rounded-[1.35rem] border px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5",
+                    isAdmin
+                      ? "border-[rgba(30,27,46,0.14)] bg-[linear-gradient(140deg,rgba(30,27,46,0.96),rgba(55,48,163,0.92),rgba(232,97,77,0.78))] text-white shadow-[0_22px_44px_rgba(42,38,56,0.18)]"
+                      : "border-[rgba(79,70,229,0.12)] bg-white text-[var(--brand-text)]",
                   )}
                 >
-                  <ArrowUpRight className="h-4 w-4 text-[var(--brand-indigo)]" />
-                  <span>{link.label}</span>
+                  <span>{primaryAction.label}</span>
+                  <ArrowUpRight className="h-4 w-4" />
                 </Link>
-              ))}
-            </div>
-
-            <div className="mt-6 grid gap-3 xl:grid-cols-[0.9fr_1.1fr]">
-              <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                  Active section
-                </div>
-                <div className="mt-2 font-semibold text-[var(--brand-text)]">
-                  {activeLink?.label ?? "Overview"}
-                </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
-                  Keep the current lane visible while using quick jumps below to move between
-                  queues, reporting, and operating tools faster.
-                </p>
-              </div>
-
-              <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-4">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
-                  Quick jumps
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {quickJumpLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="portal-chip transition hover:-translate-y-0.5"
-                    >
-                      <ArrowUpRight className="h-4 w-4 text-[var(--brand-indigo)]" />
-                      <span>{link.label}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              ) : null}
             </div>
 
             {signalCards.length ? (
@@ -363,7 +226,7 @@ export function PortalShell({
                   <article
                     key={signal.label}
                     className={cn(
-                      "rounded-[1.25rem] border px-4 py-4",
+                      "rounded-[1.25rem] border px-4 py-3",
                       isAdmin
                         ? "border-[rgba(30,27,46,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(245,240,232,0.82))]"
                         : "border-[rgba(153,148,168,0.12)] bg-white/84",
@@ -372,10 +235,10 @@ export function PortalShell({
                     <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
                       {signal.label}
                     </div>
-                    <div className="font-editorial tabular-data mt-2 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                    <div className="font-editorial tabular-data mt-1 text-2xl tracking-[-0.05em] text-[var(--brand-text)]">
                       {signal.value}
                     </div>
-                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    <p className="mt-1 text-xs text-[var(--brand-text-muted)]">
                       {signal.detail}
                     </p>
                   </article>

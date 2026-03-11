@@ -5,12 +5,18 @@ import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   BadgeCheck,
+  Building2,
   CalendarDays,
+  CheckCircle2,
   Clock3,
   Globe2,
   MapPin,
+  Sparkles,
   Star,
+  Ticket,
+  TrendingUp,
   UsersRound,
+  Zap,
 } from "lucide-react";
 import { ContactForm } from "@/components/public/contact-form";
 import { KeyValueList, ToneBadge } from "@/components/dashboard/primitives";
@@ -354,7 +360,7 @@ function EventCard({ event }: { event: PublicEvent }) {
               src={imageUrl}
               unoptimized={imageUrl.startsWith("https://")}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
           </>
         ) : (
           <div className="absolute inset-0" style={{ background: event.art }} />
@@ -362,21 +368,19 @@ function EventCard({ event }: { event: PublicEvent }) {
         <div className="relative z-10 flex h-full flex-col justify-between p-4 text-white">
           <div className="flex items-start justify-between gap-3">
             <div className="rounded-lg bg-white px-3 py-1.5 text-center shadow-sm">
-              <div className="text-[0.6rem] font-bold uppercase tracking-wider text-[var(--brand-coral)]">
+              <div className="text-[0.6rem] font-bold uppercase tracking-wider text-[#E8614D]">
                 {badgeMonth}
               </div>
               <div className="text-xl font-bold text-gray-900">{badgeDay}</div>
             </div>
-            <div className="flex gap-2">
-              <ToneBadge tone={categoryTone(event.category)}>{event.category}</ToneBadge>
-            </div>
+            <ToneBadge tone={categoryTone(event.category)}>{event.category}</ToneBadge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-black/30 px-3 py-1 text-xs font-medium">
+            <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
               {event.priceLabel}
             </span>
             {event.ageLabel !== "All ages" ? (
-              <span className="rounded-full bg-black/20 px-3 py-1 text-xs font-medium">
+              <span className="rounded-full bg-black/40 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
                 {event.ageLabel}
               </span>
             ) : null}
@@ -519,19 +523,17 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         ) : (
           <div className="absolute inset-0" style={{ background: venue.art }} />
         )}
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-4 text-white">
-          <div>
-            <div className="text-lg font-bold">{venue.name}</div>
-            <div className="text-sm text-white/80">{venue.type} · {venue.area}</div>
-          </div>
-          <span className="flex items-center gap-1 rounded-full bg-black/30 px-2.5 py-1 text-sm font-semibold">
+        <div className="absolute right-3 top-3">
+          <span className="flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-sm font-semibold text-white backdrop-blur-sm">
             <Star className="h-3.5 w-3.5 fill-current" />
             {venue.rating}
           </span>
         </div>
       </div>
       <div className="p-5">
-        <p className="text-sm text-gray-600">{venue.summary}</p>
+        <h3 className="text-lg font-bold text-gray-900">{venue.name}</h3>
+        <div className="mt-0.5 text-xs text-gray-500">{venue.type} · {venue.area}</div>
+        <p className="mt-2 text-sm text-gray-600">{venue.summary}</p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {venue.amenities.slice(0, 3).map((amenity) => (
             <span key={amenity} className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600">
@@ -719,36 +721,236 @@ function FilterBar({
   );
 }
 
+/* ── Index hero (rich header with image) ──────────────── */
+
+function IndexHero({
+  eyebrow,
+  title,
+  description,
+  imageSrc,
+  stats,
+  actions,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  imageSrc: string;
+  stats?: Array<{ label: string; value: string }>;
+  actions?: Array<{ href: Route; label: string; primary?: boolean }>;
+}) {
+  return (
+    <section className="relative overflow-hidden bg-gray-900">
+      <Image
+        fill
+        alt=""
+        className="object-cover opacity-30"
+        sizes="100vw"
+        src={imageSrc}
+        priority
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-gray-900/60 to-gray-900/90" />
+      <div className="section-shell relative z-10 py-16 text-white sm:py-24">
+        <span className="text-xs font-semibold uppercase tracking-widest text-[var(--brand-coral)]">
+          {eyebrow}
+        </span>
+        <h1 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          {title}
+        </h1>
+        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/80">
+          {description}
+        </p>
+        {actions?.length ? (
+          <div className="mt-8 flex flex-wrap gap-3">
+            {actions.map((action) =>
+              action.primary ? (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-coral)] px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[var(--brand-coral)]/20 transition hover:opacity-90"
+                >
+                  {action.label}
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              ) : (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                >
+                  {action.label}
+                </Link>
+              ),
+            )}
+          </div>
+        ) : null}
+        {stats?.length ? (
+          <div className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <div className="text-3xl font-bold">{stat.value}</div>
+                <div className="mt-1 text-sm text-white/60">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+/* ── Stat counter row ────────────────────────────────── */
+
+function StatRow({
+  items,
+}: {
+  items: Array<{ icon: React.ElementType; label: string; value: string }>;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      {items.map((item) => (
+        <div
+          key={item.label}
+          className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-indigo-soft)]">
+            <item.icon className="h-5 w-5 text-[var(--brand-indigo)]" />
+          </div>
+          <div>
+            <div className="text-xl font-bold text-gray-900">{item.value}</div>
+            <div className="text-xs text-gray-500">{item.label}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════════════════════
    PAGE SCREENS
    ══════════════════════════════════════════════════════════ */
 
 export function EventsIndexScreen() {
+  const featured = publicEvents[0];
+  const totalAttendees = publicEvents.reduce((sum, e) => sum + e.attendees, 0);
+  const featuredImage = extractImageUrl(featured.art) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg";
+
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="Events"
         title="Events in Reykjavik"
-        description="Find hosted events, workshops, socials, and more happening across the city."
+        description="Hosted socials, workshops, tastings, and outdoor adventures — curated by real organizers in real venues across the city."
+        imageSrc="/place-images/reykjavik/reykjavik-871-2-78434189.jpg"
+        stats={[
+          { label: "Upcoming events", value: String(publicEvents.length) },
+          { label: "Total attendees", value: totalAttendees.toLocaleString() },
+          { label: "Partner venues", value: String(publicVenues.length) },
+          { label: "Active groups", value: String(publicGroups.length) },
+        ]}
         actions={[
-          { href: "/signup", label: "Create account", primary: true },
+          { href: "/signup", label: "Join the community", primary: true },
           { href: "/groups", label: "Explore groups" },
         ]}
       />
 
-      <section className="section-shell py-8">
-        <div className="space-y-4">
-          <FilterBar items={publicCategoryOptions} />
-          <FilterBar
-            items={["Today", "This Week", "Weekend", "Month"]}
-            activeIndex={1}
-          />
+      {/* Featured event spotlight */}
+      <section className="section-shell py-10">
+        <div className="mb-8 flex items-center gap-3">
+          <Sparkles className="h-5 w-5 text-[var(--brand-coral)]" />
+          <h2 className="text-lg font-semibold text-gray-900">Featured event</h2>
         </div>
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white md:grid md:grid-cols-2">
+          <div className="relative h-64 md:h-auto">
+            <Image
+              fill
+              alt={featured.title}
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              src={featuredImage}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent md:bg-gradient-to-r md:from-transparent md:via-black/20 md:to-black/60" />
+            <div className="absolute bottom-4 left-4 flex gap-2">
+              <ToneBadge tone={categoryTone(featured.category)}>{featured.category}</ToneBadge>
+              <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                {featured.priceLabel}
+              </span>
+            </div>
+          </div>
+          <div className="p-8">
+            <div className="text-sm font-medium text-[var(--brand-indigo)]">
+              {formatEventDate(featured.startsAt)} · {formatEventTimeRange(featured.startsAt, featured.endsAt)}
+            </div>
+            <h3 className="mt-2 text-2xl font-bold text-gray-900">{featured.title}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600">{featured.summary}</p>
+            <div className="mt-4 flex items-center gap-4 text-sm text-gray-500">
+              <span className="flex items-center gap-1.5">
+                <MapPin className="h-4 w-4" />
+                {featured.venueName}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <UsersRound className="h-4 w-4" />
+                {featured.attendees}/{featured.capacity}
+              </span>
+            </div>
+            <div className="mt-3">
+              <div className="h-1.5 rounded-full bg-gray-100">
+                <div
+                  className="h-1.5 rounded-full bg-[var(--brand-indigo)]"
+                  style={{ width: `${occupancyPercent(featured.attendees, featured.capacity)}%` }}
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex gap-3">
+              <Link
+                href={eventHref(featured.slug)}
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                View event
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href={groupHref(featured.groupSlug)}
+                className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+              >
+                {featured.groupName}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {publicEvents.map((event) => (
-            <EventCard key={event.slug} event={event} />
-          ))}
+      {/* Filters + grid */}
+      <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
+        <div className="section-shell py-10">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">All events</h2>
+          <div className="space-y-4">
+            <FilterBar items={publicCategoryOptions} />
+            <FilterBar
+              items={["Today", "This Week", "Weekend", "Month"]}
+              activeIndex={1}
+            />
+          </div>
+
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {publicEvents.map((event) => (
+              <EventCard key={event.slug} event={event} />
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div className="mt-12 rounded-2xl bg-[var(--brand-indigo)] p-8 text-center text-white sm:p-12">
+            <h3 className="text-2xl font-bold">Ready to find your next event?</h3>
+            <p className="mx-auto mt-3 max-w-lg text-sm text-white/80">
+              Join the community to RSVP, get reminders, and discover events matched to your interests.
+            </p>
+            <Link
+              href="/signup"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
+            >
+              Create free account
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
     </>
@@ -950,29 +1152,102 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
 }
 
 export function GroupsIndexScreen() {
+  const totalMembers = publicGroups.reduce((sum, g) => sum + g.members, 0);
+  const avgActivity = Math.round(publicGroups.reduce((sum, g) => sum + g.activity, 0) / publicGroups.length);
+
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="Groups"
         title="Community groups"
-        description="Find recurring communities with a purpose. Join groups that match your interests."
+        description="Recurring communities with a purpose. Find your people, join a group, and build real connections in Reykjavik."
+        imageSrc="/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg"
+        stats={[
+          { label: "Active groups", value: String(publicGroups.length) },
+          { label: "Total members", value: totalMembers.toLocaleString() },
+          { label: "Avg. activity", value: `${avgActivity}%` },
+          { label: "Weekly events", value: String(publicEvents.length) },
+        ]}
         actions={[
-          { href: "/groups/new", label: "Start a group", primary: true },
+          { href: "/signup", label: "Join a group", primary: true },
           { href: "/events", label: "See events" },
         ]}
       />
 
-      <section className="section-shell py-8">
-        <div className="grid gap-6 md:grid-cols-2">
-          {publicGroups.map((group) => (
-            <GroupCard
-              key={group.slug}
-              group={group}
-              upcomingTitle={
-                publicEvents.find((event) => group.upcomingEventSlugs.includes(event.slug))?.title
-              }
-            />
-          ))}
+      {/* How groups work */}
+      <section className="border-b border-gray-200 bg-white">
+        <div className="section-shell py-10">
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: UsersRound,
+                title: "Find your community",
+                text: "Browse groups by interest — outdoors, tech, social, arts, food, and more.",
+              },
+              {
+                icon: CalendarDays,
+                title: "Join recurring events",
+                text: "Groups host regular meetups with consistent formats, trusted hosts, and strong venues.",
+              },
+              {
+                icon: TrendingUp,
+                title: "Build connections",
+                text: "Members, discussions, and shared experiences that grow over time.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-indigo-soft)]">
+                  <item.icon className="h-5 w-5 text-[var(--brand-indigo)]" />
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">{item.title}</div>
+                  <p className="mt-1 text-sm text-gray-600">{item.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Groups grid */}
+      <section className="bg-[var(--brand-sand)]">
+        <div className="section-shell py-10">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">Active groups</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {publicGroups.map((group) => (
+              <GroupCard
+                key={group.slug}
+                group={group}
+                upcomingTitle={
+                  publicEvents.find((event) => group.upcomingEventSlugs.includes(event.slug))?.title
+                }
+              />
+            ))}
+          </div>
+
+          {/* Start a group CTA */}
+          <div className="mt-12 rounded-2xl border border-gray-200 bg-white p-8 sm:p-12">
+            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:gap-8">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[var(--brand-coral-soft)]">
+                <Zap className="h-7 w-7 text-[var(--brand-coral)]" />
+              </div>
+              <div className="mt-4 sm:mt-0">
+                <h3 className="text-xl font-bold text-gray-900">Start your own group</h3>
+                <p className="mt-2 max-w-lg text-sm text-gray-600">
+                  Have a community idea? Launch a group with member management, event tools, and venue matching built in.
+                </p>
+              </div>
+              <div className="mt-6 shrink-0 sm:mt-0 sm:ml-auto">
+                <Link
+                  href="/signup"
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-coral)] px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
+                >
+                  Get started
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </>
@@ -1088,38 +1363,116 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
 
 export function VenuesIndexScreen() {
   const sourcedPlaces = getFeaturedSourcedPlaces(6);
+  const avgRating = (publicVenues.reduce((sum, v) => sum + v.rating, 0) / publicVenues.length).toFixed(1);
+  const totalCapacity = publicVenues.reduce((sum, v) => sum + v.capacity, 0);
 
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="Venues"
         title="Venues in Reykjavik"
-        description="Discover partner venues that host community events across the city."
+        description="Partner venues that host community events, offer member deals, and make every meetup feel at home."
+        imageSrc="/place-images/reykjavik/hof-i-deccf755.jpg"
+        stats={[
+          { label: "Partner venues", value: String(publicVenues.length) },
+          { label: "Avg. rating", value: `${avgRating}/5` },
+          { label: "Total capacity", value: totalCapacity.toLocaleString() },
+          { label: "City locations", value: String(sourcedPlaces.length + publicVenues.length) },
+        ]}
         actions={[
           { href: "/venue/onboarding", label: "Become a partner", primary: true },
           { href: "/events", label: "See events" },
         ]}
       />
 
-      <section className="section-shell py-8">
-        <div className="grid gap-6 md:grid-cols-2">
-          {publicVenues.map((venue) => (
-            <VenueCard key={venue.slug} venue={venue} />
-          ))}
+      {/* Why venues matter */}
+      <section className="border-b border-gray-200 bg-white">
+        <div className="section-shell py-10">
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: Building2,
+                title: "Curated spaces",
+                text: "Every partner venue is selected for its community fit, layout quality, and hosting potential.",
+              },
+              {
+                icon: Ticket,
+                title: "Member deals",
+                text: "Partner venues offer exclusive deals for MeetupReykjavik members — from welcome drinks to group rates.",
+              },
+              {
+                icon: Star,
+                title: "Trusted reviews",
+                text: "Real ratings from community members who attended events at each venue.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-coral-soft)]">
+                  <item.icon className="h-5 w-5 text-[var(--brand-coral)]" />
+                </div>
+                <div>
+                  <div className="font-semibold text-gray-900">{item.title}</div>
+                  <p className="mt-1 text-sm text-gray-600">{item.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {sourcedPlaces.length > 0 ? (
-          <div className="mt-10">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">
-              More places in Reykjavik
-            </h2>
+      {/* Partner venues */}
+      <section className="bg-[var(--brand-sand)]">
+        <div className="section-shell py-10">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">Partner venues</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {publicVenues.map((venue) => (
+              <VenueCard key={venue.slug} venue={venue} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Sourced places */}
+      {sourcedPlaces.length > 0 ? (
+        <section className="border-t border-gray-200 bg-white">
+          <div className="section-shell py-10">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">More places in Reykjavik</h2>
+                <p className="mt-1 text-sm text-gray-600">Discover venues across the city that could host your next event.</p>
+              </div>
+              <Link
+                href="/venues"
+                className="hidden items-center gap-1.5 text-sm font-medium text-[var(--brand-indigo)] sm:inline-flex"
+              >
+                See all
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {sourcedPlaces.map((place) => (
                 <SourcedPlaceCard key={place.slug} place={place} />
               ))}
             </div>
           </div>
-        ) : null}
+        </section>
+      ) : null}
+
+      {/* Venue partner CTA */}
+      <section className="bg-gray-900">
+        <div className="section-shell py-12 text-center text-white sm:py-16">
+          <h3 className="text-2xl font-bold">Own a venue in Reykjavik?</h3>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-white/70">
+            Join our venue network to get bookings, host community events, and offer member deals.
+          </p>
+          <Link
+            href="/venue/onboarding"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--brand-coral)] px-8 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
+          >
+            Apply as a partner
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </section>
     </>
   );
@@ -1356,21 +1709,69 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
 }
 
 export function BlogIndexScreen() {
+  const featured = blogPosts[0];
+  const rest = blogPosts.slice(1);
+  const featuredImage = extractImageUrl(featured.hero) ?? "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
+
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="Blog"
         title="From the blog"
         description="Thoughts on community design, local events, and building a better social layer for Reykjavik."
+        imageSrc="/place-images/reykjavik/arb-jarsafn-c71d7348.jpg"
+        actions={[
+          { href: "/events", label: "Explore events", primary: true },
+        ]}
       />
 
-      <section className="section-shell py-8">
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {blogPosts.map((post) => (
-            <BlogCard key={post.slug} post={post} />
-          ))}
+      {/* Featured post */}
+      <section className="bg-white">
+        <div className="section-shell py-10">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 md:grid md:grid-cols-2">
+            <div className="relative h-64 md:h-auto">
+              <Image
+                fill
+                alt={featured.title}
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                src={featuredImage}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent md:bg-gradient-to-r" />
+            </div>
+            <div className="p-8">
+              <div className="flex items-center gap-2">
+                <ToneBadge tone="indigo">{featured.category}</ToneBadge>
+                <span className="text-xs text-gray-500">{featured.readTime}</span>
+              </div>
+              <h3 className="mt-3 text-2xl font-bold text-gray-900">{featured.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-gray-600">{featured.excerpt}</p>
+              <div className="mt-4 text-sm text-gray-500">{featured.publishedAt}</div>
+              <Link
+                href={blogHref(featured.slug)}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                Read article
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* More articles */}
+      {rest.length > 0 ? (
+        <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
+          <div className="section-shell py-10">
+            <h2 className="mb-6 text-2xl font-bold text-gray-900">More articles</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {rest.map((post) => (
+                <BlogCard key={post.slug} post={post} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
     </>
   );
 }
@@ -1438,69 +1839,112 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
 export function AboutScreen() {
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="About"
         title="About MeetupReykjavik"
-        description="A local platform for events, groups, and venue partnerships in Reykjavik."
-        actions={[{ href: "/events", label: "Explore events", primary: true }]}
+        description="A local platform for events, groups, and venue partnerships — built specifically for Reykjavik."
+        imageSrc="/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg"
+        stats={aboutStats.map((s) => ({ label: s.label, value: s.value }))}
+        actions={[
+          { href: "/events", label: "Explore events", primary: true },
+          { href: "/contact", label: "Get in touch" },
+        ]}
       />
 
-      <section className="section-shell py-8">
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {aboutStats.map((stat) => (
-            <div key={stat.label} className="rounded-xl border border-gray-200 bg-white p-5 text-center">
-              <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
-              <div className="mt-1 text-sm text-gray-500">{stat.label}</div>
-            </div>
-          ))}
+      {/* Mission */}
+      <section className="bg-white">
+        <div className="section-shell py-12">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-editorial text-3xl text-gray-900">Our mission</h2>
+            <p className="mt-6 text-lg leading-relaxed text-gray-600">
+              Reykjavik is small enough that quality matters fast. If events feel random, hosts
+              feel weak, or the rooms do not fit the format, people notice immediately.
+            </p>
+            <p className="mt-4 text-lg leading-relaxed text-gray-600">
+              We bring event context, group identity, and venue fit into one system. That is the
+              difference between a feed and an actual local product.
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* Mission */}
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <Section title="Our mission">
-            <div className="space-y-4 text-sm leading-relaxed text-gray-600">
-              <p>
-                Reykjavik is small enough that quality matters fast. If events feel random, hosts
-                feel weak, or the rooms do not fit the format, people notice immediately.
-              </p>
-              <p>
-                We bring event context, group identity, and venue fit into one system. That is the
-                difference between a feed and an actual local product.
-              </p>
-            </div>
-          </Section>
-
-          <Section title="How it works">
-            <div className="grid gap-4">
-              {[
-                { icon: UsersRound, title: "Members", text: "Find events, join groups, RSVP with confidence." },
-                { icon: CalendarDays, title: "Organizers", text: "Run recurring events with approval tools and venue matching." },
-                { icon: MapPin, title: "Venues", text: "Partner with the platform to host better community events." },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3">
-                  <item.icon className="mt-0.5 h-5 w-5 text-[var(--brand-indigo)]" />
-                  <div>
-                    <div className="font-medium text-gray-900">{item.title}</div>
-                    <p className="text-sm text-gray-600">{item.text}</p>
-                  </div>
+      {/* How it works */}
+      <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
+        <div className="section-shell py-12">
+          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">How it works</h2>
+          <div className="grid gap-8 md:grid-cols-3">
+            {[
+              {
+                icon: UsersRound,
+                title: "Members",
+                text: "Find events, join groups, RSVP with confidence. Free to browse, with premium tiers for deeper access.",
+                color: "bg-[var(--brand-indigo-soft)] text-[var(--brand-indigo)]",
+              },
+              {
+                icon: CalendarDays,
+                title: "Organizers",
+                text: "Run recurring events with approval tools, paid ticketing, analytics, and venue matching built in.",
+                color: "bg-[var(--brand-coral-soft)] text-[var(--brand-coral)]",
+              },
+              {
+                icon: Building2,
+                title: "Venues",
+                text: "Partner with the platform to get bookings, host better community events, and offer member deals.",
+                color: "bg-[rgba(124,154,130,0.12)] text-[var(--brand-sage)]",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-xl border border-gray-200 bg-white p-6 text-center">
+                <div className={cn("mx-auto flex h-14 w-14 items-center justify-center rounded-2xl", item.color)}>
+                  <item.icon className="h-6 w-6" />
                 </div>
-              ))}
-            </div>
-          </Section>
+                <h3 className="mt-4 text-lg font-bold text-gray-900">{item.title}</h3>
+                <p className="mt-2 text-sm text-gray-600">{item.text}</p>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* Team */}
-        <div className="mt-8">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Team</h2>
+      {/* Team */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="section-shell py-12">
+          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">Team</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {aboutTeam.map((member) => (
-              <Section key={member.name}>
-                <div className="text-xl font-bold text-gray-900">{member.name}</div>
+              <div key={member.name} className="rounded-xl border border-gray-200 bg-white p-6 text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[var(--brand-indigo-soft)] text-lg font-bold text-[var(--brand-indigo)]">
+                  {member.name.charAt(0)}
+                </div>
+                <div className="mt-4 text-xl font-bold text-gray-900">{member.name}</div>
                 <div className="mt-1 text-sm font-medium text-[var(--brand-indigo)]">{member.role}</div>
-                <p className="mt-2 text-sm text-gray-600">{member.note}</p>
-              </Section>
+                <p className="mt-3 text-sm text-gray-600">{member.note}</p>
+              </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-[var(--brand-indigo)]">
+        <div className="section-shell py-12 text-center text-white sm:py-16">
+          <h3 className="text-2xl font-bold">Join the Reykjavik community</h3>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-white/80">
+            Whether you want to attend, organize, or host — there is a place for you.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
+            >
+              Create account
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/events"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white transition hover:bg-white/20"
+            >
+              Browse events
+            </Link>
           </div>
         </div>
       </section>
@@ -1511,75 +1955,239 @@ export function AboutScreen() {
 export function PricingScreen() {
   return (
     <>
-      <PageHeader
-        eyebrow="Pricing"
-        title="Simple, transparent pricing"
-        description={`Members browse free. Organizers and venues pay for tools. ${ticketCommissionRate}% commission on paid tickets.`}
-        actions={[
-          { href: "/for-organizers", label: "For organizers", primary: true },
-          { href: "/for-venues", label: "For venues" },
-        ]}
-      />
+      {/* Pricing hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[var(--brand-indigo)] via-[#4338ca] to-[#312e81]">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+        <div className="section-shell relative z-10 py-16 text-center text-white sm:py-24">
+          <span className="text-xs font-semibold uppercase tracking-widest text-[var(--brand-coral)]">
+            Pricing
+          </span>
+          <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+            Simple, transparent pricing
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-white/80">
+            Members browse free. Organizers and venues pay for real tools.
+            {" "}{ticketCommissionRate}% commission on paid tickets keeps the platform aligned with your success.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#3730A3] shadow-lg transition hover:bg-white/90"
+            >
+              Get started free
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+            >
+              Talk to us
+            </Link>
+          </div>
+        </div>
+      </section>
 
-      <section className="section-shell py-8 space-y-10">
-        {/* Member plans */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Member plans</h2>
+      {/* Member plans */}
+      <section className="bg-white">
+        <div className="section-shell py-12">
+          <div className="mb-8 text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-indigo-soft)] px-4 py-1.5 text-xs font-semibold text-[var(--brand-indigo)]">
+              <UsersRound className="h-3.5 w-3.5" />
+              For members
+            </span>
+            <h2 className="mt-4 text-2xl font-bold text-gray-900">Member plans</h2>
+            <p className="mt-2 text-sm text-gray-600">Browse free. Upgrade for priority access and premium features.</p>
+          </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {userTiers.map((tier) => (
-              <TierCard
+            {userTiers.map((tier, i) => (
+              <article
                 key={tier.name}
-                title={tier.name}
-                price={tier.price}
-                description={tier.description}
-                features={tier.features}
-              />
+                className={cn(
+                  "rounded-xl border bg-white",
+                  i === 1
+                    ? "border-[var(--brand-indigo)] ring-2 ring-[var(--brand-indigo)]/10"
+                    : "border-gray-200",
+                )}
+              >
+                {i === 1 ? (
+                  <div className="rounded-t-xl bg-[var(--brand-indigo)] py-1.5 text-center text-xs font-semibold text-white">
+                    Most popular
+                  </div>
+                ) : null}
+                <div className="border-b border-gray-100 p-6">
+                  <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
+                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                </div>
+                <div className="p-6 space-y-3">
+                  {tier.features.map((feature) => (
+                    <div key={feature} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-6 pb-6">
+                  <Link
+                    href="/signup"
+                    className={cn(
+                      "flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold transition",
+                      i === 1
+                        ? "bg-[var(--brand-indigo)] text-white hover:opacity-90"
+                        : "border border-gray-300 text-gray-700 hover:bg-gray-50",
+                    )}
+                  >
+                    {tier.price === "0 ISK" ? "Join free" : "Get started"}
+                  </Link>
+                </div>
+              </article>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Organizer plans */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Organizer plans</h2>
+      {/* Organizer plans */}
+      <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
+        <div className="section-shell py-12">
+          <div className="mb-8 text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-coral-soft)] px-4 py-1.5 text-xs font-semibold text-[var(--brand-coral)]">
+              <CalendarDays className="h-3.5 w-3.5" />
+              For organizers
+            </span>
+            <h2 className="mt-4 text-2xl font-bold text-gray-900">Organizer plans</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Run events with real tools. Plus {ticketCommissionRate}% commission on paid ticket sales.
+            </p>
+          </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {organizerTiers.map((tier) => (
-              <TierCard
+            {organizerTiers.map((tier, i) => (
+              <article
                 key={tier.name}
-                title={tier.name}
-                price={tier.price}
-                description={tier.description}
-                features={tier.features}
-              />
+                className={cn(
+                  "rounded-xl border bg-white",
+                  i === 1
+                    ? "border-[var(--brand-coral)] ring-2 ring-[var(--brand-coral)]/10"
+                    : "border-gray-200",
+                )}
+              >
+                {i === 1 ? (
+                  <div className="rounded-t-xl bg-[var(--brand-coral)] py-1.5 text-center text-xs font-semibold text-white">
+                    Recommended
+                  </div>
+                ) : null}
+                <div className="border-b border-gray-100 p-6">
+                  <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
+                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                </div>
+                <div className="p-6 space-y-3">
+                  {tier.features.map((feature) => (
+                    <div key={feature} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-6 pb-6">
+                  <Link
+                    href="/signup"
+                    className={cn(
+                      "flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold transition",
+                      i === 1
+                        ? "bg-[var(--brand-coral)] text-white hover:opacity-90"
+                        : "border border-gray-300 text-gray-700 hover:bg-gray-50",
+                    )}
+                  >
+                    Start organizing
+                  </Link>
+                </div>
+              </article>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* Venue plans */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Venue plans</h2>
+      {/* Venue plans */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="section-shell py-12">
+          <div className="mb-8 text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(124,154,130,0.12)] px-4 py-1.5 text-xs font-semibold text-[var(--brand-sage)]">
+              <Building2 className="h-3.5 w-3.5" />
+              For venues
+            </span>
+            <h2 className="mt-4 text-2xl font-bold text-gray-900">Venue plans</h2>
+            <p className="mt-2 text-sm text-gray-600">
+              From basic listing to full partnership with booking tools and analytics.
+            </p>
+          </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {venueTiers.map((tier) => (
-              <TierCard
+            {venueTiers.map((tier, i) => (
+              <article
                 key={tier.name}
-                title={tier.name}
-                price={tier.price}
-                description={tier.description}
-                features={tier.features}
-              />
+                className={cn(
+                  "rounded-xl border bg-white",
+                  i === 1
+                    ? "border-[var(--brand-sage)] ring-2 ring-[var(--brand-sage)]/10"
+                    : "border-gray-200",
+                )}
+              >
+                {i === 1 ? (
+                  <div className="rounded-t-xl bg-[var(--brand-sage)] py-1.5 text-center text-xs font-semibold text-white">
+                    Best value
+                  </div>
+                ) : null}
+                <div className="border-b border-gray-100 p-6">
+                  <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
+                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                </div>
+                <div className="p-6 space-y-3">
+                  {tier.features.map((feature) => (
+                    <div key={feature} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-6 pb-6">
+                  <Link
+                    href="/venue/onboarding"
+                    className={cn(
+                      "flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold transition",
+                      i === 1
+                        ? "bg-[var(--brand-sage)] text-white hover:opacity-90"
+                        : "border border-gray-300 text-gray-700 hover:bg-gray-50",
+                    )}
+                  >
+                    {tier.price === "0 ISK" ? "List free" : "Apply now"}
+                  </Link>
+                </div>
+              </article>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* FAQ */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Common questions</h2>
-          <div className="grid gap-4 md:grid-cols-2">
+      {/* FAQ */}
+      <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
+        <div className="section-shell py-12">
+          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">Common questions</h2>
+          <div className="mx-auto max-w-3xl space-y-4">
             {pricingFaq.map((item) => (
-              <Section key={item.question}>
-                <div className="font-medium text-gray-900">{item.question}</div>
-                <p className="mt-2 text-sm text-gray-600">{item.answer}</p>
-              </Section>
+              <div key={item.question} className="rounded-xl border border-gray-200 bg-white p-6">
+                <div className="font-semibold text-gray-900">{item.question}</div>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.answer}</p>
+              </div>
             ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link
+              href="/faq"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--brand-indigo)]"
+            >
+              More questions? See full FAQ
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
       </section>
@@ -1784,10 +2392,11 @@ export function CategoriesIndexScreen() {
 
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="Categories"
         title="Browse by category"
         description="Find events, groups, and venues organized by what you are looking for."
+        imageSrc="/place-images/reykjavik/hafnarborg-1be7b43b.jpg"
         actions={[
           { href: "/events", label: "Browse events", primary: true },
           { href: "/groups", label: "See groups" },
@@ -2036,56 +2645,120 @@ export function FaqScreen() {
 export function ForOrganizersScreen() {
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="For organizers"
         title="Tools for event organizers"
         description={`Run groups and events with real tools: recurring series, paid tickets from ${minimumTicketPriceIsk} ISK, attendee approvals, and venue matching.`}
+        imageSrc="/place-images/reykjavik/ufa-40055fa7.jpg"
         actions={[
-          { href: "/groups/new", label: "Start a group", primary: true },
+          { href: "/signup", label: "Start organizing", primary: true },
           { href: "/pricing", label: "See pricing" },
         ]}
       />
 
-      <section className="section-shell py-8 space-y-8">
-        {/* What you get */}
-        <div className="grid gap-6 md:grid-cols-3">
-          {[
-            {
-              title: "Recurring groups",
-              text: "Build a community identity with member management, discussion threads, and co-host support.",
-            },
-            {
-              title: "Event tools",
-              text: "Create events with ticketing, approval workflows, attendee management, and reminders.",
-            },
-            {
-              title: "Venue matching",
-              text: "Find the right room for your format with capacity, amenity, and availability matching.",
-            },
-          ].map((item) => (
-            <Section key={item.title} title={item.title}>
-              <p className="text-sm text-gray-600">{item.text}</p>
-            </Section>
-          ))}
-        </div>
-
-        {/* Pricing */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Organizer plans</h2>
+      {/* Features */}
+      <section className="bg-white">
+        <div className="section-shell py-12">
+          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">Everything you need to run events</h2>
           <div className="grid gap-6 md:grid-cols-3">
-            {organizerTiers.map((tier) => (
-              <TierCard
-                key={tier.name}
-                title={tier.name}
-                price={tier.price}
-                description={tier.description}
-                features={tier.features}
-              />
+            {[
+              {
+                icon: UsersRound,
+                title: "Recurring groups",
+                text: "Build a community identity with member management, discussion threads, and co-host support.",
+              },
+              {
+                icon: Ticket,
+                title: "Event tools",
+                text: "Create events with ticketing, approval workflows, attendee management, and automated reminders.",
+              },
+              {
+                icon: Building2,
+                title: "Venue matching",
+                text: "Find the right room for your format with capacity, amenity, and availability matching.",
+              },
+              {
+                icon: TrendingUp,
+                title: "Analytics",
+                text: "Track attendance, revenue, and audience trends to improve your events over time.",
+              },
+              {
+                icon: CalendarDays,
+                title: "Recurring templates",
+                text: "Set up event series once and publish editions with pre-filled details and consistent branding.",
+              },
+              {
+                icon: Zap,
+                title: "Approval controls",
+                text: "Shape your room with manual approval, waitlists, and host-curated access.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-xl border border-gray-200 bg-white p-6">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--brand-coral-soft)]">
+                  <item.icon className="h-5 w-5 text-[var(--brand-coral)]" />
+                </div>
+                <h3 className="mt-4 font-semibold text-gray-900">{item.title}</h3>
+                <p className="mt-2 text-sm text-gray-600">{item.text}</p>
+              </div>
             ))}
           </div>
-          <p className="mt-4 text-sm text-gray-500">
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
+        <div className="section-shell py-12">
+          <h2 className="mb-2 text-center text-2xl font-bold text-gray-900">Organizer plans</h2>
+          <p className="mb-8 text-center text-sm text-gray-600">
             Plus {ticketCommissionRate}% commission on paid ticket sales.
           </p>
+          <div className="grid gap-6 md:grid-cols-3">
+            {organizerTiers.map((tier, i) => (
+              <article
+                key={tier.name}
+                className={cn(
+                  "rounded-xl border bg-white",
+                  i === 1 ? "border-[var(--brand-coral)] ring-2 ring-[var(--brand-coral)]/10" : "border-gray-200",
+                )}
+              >
+                {i === 1 ? (
+                  <div className="rounded-t-xl bg-[var(--brand-coral)] py-1.5 text-center text-xs font-semibold text-white">
+                    Recommended
+                  </div>
+                ) : null}
+                <div className="border-b border-gray-100 p-6">
+                  <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
+                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                </div>
+                <div className="p-6 space-y-3">
+                  {tier.features.map((feature) => (
+                    <div key={feature} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-[var(--brand-indigo)]">
+        <div className="section-shell py-12 text-center text-white sm:py-16">
+          <h3 className="text-2xl font-bold">Ready to start organizing?</h3>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-white/80">
+            Create your account, start a group, and publish your first event in minutes.
+          </p>
+          <Link
+            href="/signup"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
+          >
+            Get started free
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
     </>
@@ -2095,53 +2768,117 @@ export function ForOrganizersScreen() {
 export function ForVenuesScreen() {
   return (
     <>
-      <PageHeader
+      <IndexHero
         eyebrow="For venues"
         title="Partner with MeetupReykjavik"
         description="Turn your venue into a community hub with booking tools, availability management, deals, and analytics."
+        imageSrc="/place-images/reykjavik/dill-0aeca160.jpg"
         actions={[
-          { href: "/venue/onboarding", label: "Apply as a venue", primary: true },
+          { href: "/venue/onboarding", label: "Apply as a partner", primary: true },
           { href: "/venues", label: "Browse venues" },
         ]}
       />
 
-      <section className="section-shell py-8 space-y-8">
-        {/* What you get */}
-        <div className="grid gap-6 md:grid-cols-3">
-          {[
-            {
-              title: "Onboarding",
-              text: "Structured intake covering business identity, capacity, hours, media, and billing.",
-            },
-            {
-              title: "Bookings",
-              text: "Manage incoming requests, counter offers, and booking history in one place.",
-            },
-            {
-              title: "Deals and analytics",
-              text: "Create partner offers, track event performance, and understand your organizer mix.",
-            },
-          ].map((item) => (
-            <Section key={item.title} title={item.title}>
-              <p className="text-sm text-gray-600">{item.text}</p>
-            </Section>
-          ))}
-        </div>
-
-        {/* Pricing */}
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Venue plans</h2>
+      {/* Features */}
+      <section className="bg-white">
+        <div className="section-shell py-12">
+          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">Why venues partner with us</h2>
           <div className="grid gap-6 md:grid-cols-3">
-            {venueTiers.map((tier) => (
-              <TierCard
-                key={tier.name}
-                title={tier.name}
-                price={tier.price}
-                description={tier.description}
-                features={tier.features}
-              />
+            {[
+              {
+                icon: CheckCircle2,
+                title: "Structured onboarding",
+                text: "Guided intake covering business identity, capacity, hours, media, and billing setup.",
+              },
+              {
+                icon: CalendarDays,
+                title: "Booking management",
+                text: "Manage incoming requests, counter offers, availability, and booking history in one place.",
+              },
+              {
+                icon: TrendingUp,
+                title: "Analytics & deals",
+                text: "Create member deals, track event performance, and understand your organizer mix and audience.",
+              },
+              {
+                icon: UsersRound,
+                title: "Community exposure",
+                text: "Get discovered by organizers and members actively looking for the right venue for their events.",
+              },
+              {
+                icon: Star,
+                title: "Reviews & ratings",
+                text: "Build trust with authentic reviews from community members who attended events at your space.",
+              },
+              {
+                icon: Sparkles,
+                title: "Featured placement",
+                text: "Premium partners get highlighted placement in search results and curated venue recommendations.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-xl border border-gray-200 bg-white p-6">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[rgba(124,154,130,0.12)]">
+                  <item.icon className="h-5 w-5 text-[var(--brand-sage)]" />
+                </div>
+                <h3 className="mt-4 font-semibold text-gray-900">{item.title}</h3>
+                <p className="mt-2 text-sm text-gray-600">{item.text}</p>
+              </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
+        <div className="section-shell py-12">
+          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">Venue plans</h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            {venueTiers.map((tier, i) => (
+              <article
+                key={tier.name}
+                className={cn(
+                  "rounded-xl border bg-white",
+                  i === 1 ? "border-[var(--brand-sage)] ring-2 ring-[var(--brand-sage)]/10" : "border-gray-200",
+                )}
+              >
+                {i === 1 ? (
+                  <div className="rounded-t-xl bg-[var(--brand-sage)] py-1.5 text-center text-xs font-semibold text-white">
+                    Best value
+                  </div>
+                ) : null}
+                <div className="border-b border-gray-100 p-6">
+                  <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
+                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                </div>
+                <div className="p-6 space-y-3">
+                  {tier.features.map((feature) => (
+                    <div key={feature} className="flex items-start gap-2">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-gray-900">
+        <div className="section-shell py-12 text-center text-white sm:py-16">
+          <h3 className="text-2xl font-bold">Ready to join the venue network?</h3>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-white/70">
+            Apply today and start receiving booking requests from community organizers.
+          </p>
+          <Link
+            href="/venue/onboarding"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--brand-coral)] px-8 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
+          >
+            Apply as a partner
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
     </>
