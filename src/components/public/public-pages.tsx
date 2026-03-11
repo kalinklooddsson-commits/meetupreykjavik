@@ -369,7 +369,7 @@ function EventCard({ event }: { event: PublicEvent }) {
         <div className="relative z-10 flex h-full flex-col justify-between p-4 text-white">
           <div className="flex items-start justify-between gap-3">
             <div className="rounded-lg bg-white px-3 py-1.5 text-center shadow-sm">
-              <div className="text-[0.6rem] font-bold uppercase tracking-wider text-[#E8614D]">
+              <div className="text-[0.6rem] font-bold uppercase tracking-wider " style={{ color: "#E8614D" }}>
                 {badgeMonth}
               </div>
               <div className="text-xl font-bold text-gray-900">{badgeDay}</div>
@@ -946,7 +946,7 @@ export function EventsIndexScreen() {
             </p>
             <Link
               href="/signup"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold transition hover:bg-white/90" style={{ color: "#3730A3" }}
             >
               Create free account
               <ArrowRight className="h-4 w-4" />
@@ -1935,7 +1935,7 @@ export function AboutScreen() {
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold transition hover:bg-white/90" style={{ color: "#3730A3" }}
             >
               Create account
               <ArrowRight className="h-4 w-4" />
@@ -1973,7 +1973,7 @@ export function PricingScreen() {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#3730A3] shadow-lg transition hover:bg-white/90"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90" style={{ color: "#3730A3" }}
             >
               Get started free
               <ArrowRight className="h-4 w-4" />
@@ -2755,7 +2755,7 @@ export function ForOrganizersScreen() {
           </p>
           <Link
             href="/signup"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-[#3730A3] transition hover:bg-white/90"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold transition hover:bg-white/90" style={{ color: "#3730A3" }}
           >
             Get started free
             <ArrowRight className="h-4 w-4" />
