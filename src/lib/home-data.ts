@@ -9,6 +9,7 @@ export type HomeEvent = {
   attendees: number;
   deal?: string;
   art: string;
+  photo: string;
 };
 
 export type HomeGroup = {
@@ -60,7 +61,8 @@ export const events: HomeEvent[] = [
     venue: "Lebowski Bar",
     attendees: 43,
     deal: "2-for-1 drinks",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.6), rgba(79,70,229,0.5)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
+    art: "linear-gradient(135deg, rgba(232,97,77,0.6), rgba(79,70,229,0.5))",
+    photo: "/demo-images/venues/lebowski-bar.jpg",
   },
   {
     id: 2,
@@ -71,7 +73,8 @@ export const events: HomeEvent[] = [
     time: "09:00",
     venue: "Esja Trailhead",
     attendees: 27,
-    art: "linear-gradient(135deg, rgba(124,154,130,0.55), rgba(42,38,56,0.5)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.55), rgba(42,38,56,0.5))",
+    photo: "/demo-images/events/esja.jpg",
   },
   {
     id: 3,
@@ -83,7 +86,8 @@ export const events: HomeEvent[] = [
     venue: "Grandi Hub",
     attendees: 61,
     deal: "Free coffee",
-    art: "linear-gradient(135deg, rgba(55,48,163,0.6), rgba(30,27,46,0.5)), url('/place-images/reykjavik/generated/grandi101.svg')",
+    art: "linear-gradient(135deg, rgba(55,48,163,0.6), rgba(30,27,46,0.5))",
+    photo: "/demo-images/venues/grandi-restaurant.jpg",
   },
 ] as const;
 
