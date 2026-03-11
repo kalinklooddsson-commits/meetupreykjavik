@@ -2169,6 +2169,142 @@ export function PricingScreen() {
         </div>
       </section>
 
+      {/* Feature comparison */}
+      <section className="border-t border-gray-200 bg-[var(--brand-basalt)]">
+        <div className="section-shell py-12">
+          <h2 className="mb-2 text-center text-2xl font-bold text-white">Compare plans at a glance</h2>
+          <p className="mb-8 text-center text-sm text-gray-400">
+            Every feature across every tier — so you pick the right plan the first time.
+          </p>
+
+          {/* Member comparison */}
+          <div className="reveal mb-10">
+            <h3 className="mb-4 text-lg font-semibold text-white">Member plans</h3>
+            <div className="overflow-x-auto rounded-xl border border-white/10">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="px-5 py-3 font-medium text-gray-400">Feature</th>
+                    {userTiers.map((t) => (
+                      <th key={t.name} className="px-5 py-3 font-semibold text-white">{t.name}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300">
+                  {[
+                    ["Browse events & venues", true, true, true],
+                    ["Ticket checkout", true, true, true],
+                    ["Standard RSVP", true, true, true],
+                    ["Priority waitlist", false, true, true],
+                    ["Direct messaging", false, true, true],
+                    ["Premium badge", false, true, true],
+                    ["Advanced filters", false, false, true],
+                    ["Early access features", false, false, true],
+                  ].map(([feature, ...vals], ri) => (
+                    <tr key={ri} className="border-b border-white/5 last:border-0">
+                      <td className="px-5 py-2.5">{feature as string}</td>
+                      {(vals as boolean[]).map((v, ci) => (
+                        <td key={ci} className="px-5 py-2.5">
+                          {v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Organizer comparison */}
+          <div className="reveal mb-10">
+            <h3 className="mb-4 text-lg font-semibold text-white">Organizer plans</h3>
+            <div className="overflow-x-auto rounded-xl border border-white/10">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="px-5 py-3 font-medium text-gray-400">Feature</th>
+                    {organizerTiers.map((t) => (
+                      <th key={t.name} className="px-5 py-3 font-semibold text-white">{t.name.replace("Organizer ", "")}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300">
+                  {[
+                    ["Active public events", "Up to 3", "Unlimited", "Unlimited"],
+                    ["Public ticketing", true, true, true],
+                    ["5% ticket commission", true, true, true],
+                    ["Basic event analytics", true, true, true],
+                    ["Recurring events", false, true, true],
+                    ["Approval & waitlist controls", false, true, true],
+                    ["Venue request workflows", false, true, true],
+                    ["Revenue reporting", false, true, true],
+                    ["Priority support", false, false, true],
+                    ["Featured placement", false, false, true],
+                    ["Sponsor inventory", false, false, true],
+                    ["Audience segmentation", false, false, true],
+                  ].map(([feature, ...vals], ri) => (
+                    <tr key={ri} className="border-b border-white/5 last:border-0">
+                      <td className="px-5 py-2.5">{feature as string}</td>
+                      {vals.map((v, ci) => (
+                        <td key={ci} className="px-5 py-2.5">
+                          {typeof v === "string" ? (
+                            <span className="text-white font-medium">{v}</span>
+                          ) : v ? (
+                            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                          ) : (
+                            <span className="text-gray-600">—</span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Venue comparison */}
+          <div className="reveal">
+            <h3 className="mb-4 text-lg font-semibold text-white">Venue plans</h3>
+            <div className="overflow-x-auto rounded-xl border border-white/10">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/5">
+                    <th className="px-5 py-3 font-medium text-gray-400">Feature</th>
+                    {venueTiers.map((t) => (
+                      <th key={t.name} className="px-5 py-3 font-semibold text-white">{t.name.replace("Venue ", "")}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="text-gray-300">
+                  {[
+                    ["Public listing", true, true, true],
+                    ["Application review", true, true, true],
+                    ["Booking inbox", false, true, true],
+                    ["Availability planning", false, true, true],
+                    ["Partner deal management", false, true, true],
+                    ["Organizer-fit insights", false, true, true],
+                    ["Featured placement", false, false, true],
+                    ["Premium analytics", false, false, true],
+                    ["Priority venue matching", false, false, true],
+                    ["Sponsored inventory", false, false, true],
+                  ].map(([feature, ...vals], ri) => (
+                    <tr key={ri} className="border-b border-white/5 last:border-0">
+                      <td className="px-5 py-2.5">{feature as string}</td>
+                      {(vals as boolean[]).map((v, ci) => (
+                        <td key={ci} className="px-5 py-2.5">
+                          {v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
       <section className="border-t border-gray-200 bg-[var(--brand-sand)]">
         <div className="section-shell py-12">
