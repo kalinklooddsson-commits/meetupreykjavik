@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Route } from "next";
-import { Globe2 } from "lucide-react";
 
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
@@ -67,8 +66,10 @@ export function SiteHeaderClient({
 
   return (
     <>
-      <div className="hidden flex-1 items-center justify-end gap-4 lg:flex">
-        <nav className="site-header-nav-frame flex items-center gap-1">
+      <div className="hidden flex-1 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-5">
+        <div aria-hidden="true" />
+
+        <nav className="site-header-nav-frame justify-self-center">
           {navigation.map((item) => {
             const active = isActivePath(activePath, item.href);
 
@@ -80,7 +81,7 @@ export function SiteHeaderClient({
                 className={cn(
                   "site-header-nav-link inline-flex min-h-11 items-center rounded-full px-4 py-2.5 text-sm font-semibold transition",
                   active
-                    ? "site-header-nav-link-active bg-[var(--brand-indigo)] text-white shadow-[0_16px_30px_rgba(79,70,229,0.18)]"
+                    ? "site-header-nav-link-active bg-[var(--brand-indigo)] text-white"
                     : "text-[var(--brand-text-muted)] hover:bg-white hover:text-[var(--brand-indigo)]",
                 )}
               >
@@ -90,36 +91,36 @@ export function SiteHeaderClient({
           })}
         </nav>
 
-        <div className="site-header-actions flex items-center gap-3">
-          <div className="site-utility-pill flex items-center gap-2 rounded-full border border-[rgba(221,215,203,0.82)] bg-white/82 px-3 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
-            <Globe2 className="h-4 w-4" />
-            <LocaleSwitcher />
-          </div>
-          {session && portalHref ? (
-            <>
-              <Link
-                href={portalHref}
-                className="site-header-cta rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(79,70,229,0.18)] transition-transform hover:-translate-y-0.5"
-              >
-                {portalLabel(session.accountType, labels)}
-              </Link>
-              <SignOutButton />
-            </>
-          ) : (
-            <>
+        <div className="site-header-actions justify-self-end">
+          <div className="site-header-utility-frame">
+            <LocaleSwitcher compact />
+            <span className="site-header-utility-separator" aria-hidden="true" />
+            {session && portalHref ? (
+              <SignOutButton className="site-header-utility-link min-h-9 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-[rgba(79,70,229,0.08)]" />
+            ) : (
               <Link
                 href="/login"
-                className="text-sm font-semibold text-[var(--brand-indigo)] transition-colors hover:text-[var(--brand-indigo-light)]"
+                className="site-header-utility-link text-sm font-semibold text-[var(--brand-text)] transition-colors hover:text-[var(--brand-indigo)]"
               >
                 {labels.signin}
               </Link>
-              <Link
-                href="/signup"
-                className="site-header-cta rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.22)] transition-transform hover:-translate-y-0.5"
-              >
-                {labels.signup}
-              </Link>
-            </>
+            )}
+          </div>
+
+          {session && portalHref ? (
+            <Link
+              href={portalHref}
+              className="site-header-cta inline-flex items-center justify-center rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(79,70,229,0.18)] transition-transform hover:-translate-y-0.5"
+            >
+              {portalLabel(session.accountType, labels)}
+            </Link>
+          ) : (
+            <Link
+              href="/signup"
+              className="site-header-cta inline-flex items-center justify-center rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.22)] transition-transform hover:-translate-y-0.5"
+            >
+              {labels.signup}
+            </Link>
           )}
         </div>
       </div>
@@ -127,14 +128,14 @@ export function SiteHeaderClient({
       {session && portalHref ? (
         <Link
           href={portalHref}
-          className="rounded-full bg-[var(--brand-indigo)] px-4 py-2.5 text-sm font-bold text-white lg:hidden"
+          className="inline-flex items-center justify-center rounded-full bg-[var(--brand-indigo)] px-4 py-2.5 text-sm font-bold text-white lg:hidden"
         >
           {labels.portal}
         </Link>
       ) : (
         <Link
           href="/signup"
-          className="site-header-cta rounded-full bg-[var(--brand-coral)] px-4 py-2.5 text-sm font-bold text-white lg:hidden"
+          className="site-header-cta inline-flex items-center justify-center rounded-full bg-[var(--brand-coral)] px-4 py-2.5 text-sm font-bold text-white lg:hidden"
         >
           {labels.join}
         </Link>
