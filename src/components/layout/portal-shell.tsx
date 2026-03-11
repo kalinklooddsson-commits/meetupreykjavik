@@ -46,39 +46,27 @@ type PortalShellProps = {
 
 const roleMeta = {
   member: {
-    chip: "Member flow",
-    note: "Built as a calm personal command surface: arrival details, trust signals, and the next good yes visible in one pass.",
-    posture: "Discovery and attendance",
+    chip: "Member",
+    posture: "Discovery",
     texture: "portal-shell-member",
-    glyph: "Client mode",
-    lane: "Personal planning",
     icon: Compass,
   },
   organizer: {
-    chip: "Host revenue ops",
-    note: "Built as an event operating room: ticket pressure, venue negotiation, and host execution kept in one commercial workspace.",
-    posture: "Revenue and execution",
+    chip: "Organizer",
+    posture: "Events",
     texture: "portal-shell-organizer",
-    glyph: "Organizer mode",
-    lane: "Host operations",
     icon: CalendarRange,
   },
   venue: {
-    chip: "Venue yield desk",
-    note: "Built as a room monetization surface: booking pressure, premium slots, and repeat-host quality visible before the room slips.",
-    posture: "Supply and yield",
+    chip: "Venue",
+    posture: "Bookings",
     texture: "portal-shell-venue",
-    glyph: "Venue mode",
-    lane: "Room monetization",
     icon: Store,
   },
   admin: {
-    chip: "Platform control",
-    note: "Built as a multi-queue control plane: fast enough for triage, dense enough for revenue, trust, supply, and policy decisions.",
-    posture: "Platform control",
+    chip: "Admin",
+    posture: "Platform",
     texture: "portal-shell-admin",
-    glyph: "Admin mode",
-    lane: "Cross-platform control",
     icon: UsersRound,
   },
 } as const;
@@ -104,95 +92,61 @@ export function PortalShell({
     <div className={cn("portal-shell", currentRoleMeta.texture)}>
       <div
         className={cn(
-          "portal-stage section-shell grid gap-6 py-8",
-          collapsed ? "lg:grid-cols-[104px_1fr]" : "lg:grid-cols-[280px_1fr]",
+          "portal-stage section-shell grid gap-5 py-6",
+          collapsed ? "lg:grid-cols-[64px_1fr]" : "lg:grid-cols-[240px_1fr]",
         )}
       >
         <aside
           className={cn(
-            "portal-aside paper-panel h-fit rounded-[2rem] p-4 lg:sticky lg:top-6 lg:p-5",
-            isAdmin && "portal-aside-admin",
+            "portal-aside h-fit rounded-xl border border-[var(--brand-border-light)] bg-white p-3 lg:sticky lg:top-4",
           )}
         >
-          <div
-            className={cn(
-              "flex items-start justify-between gap-3 rounded-[1.5rem] p-5 text-white",
-              isAdmin
-                ? "bg-[linear-gradient(145deg,rgba(30,27,46,1),rgba(46,40,144,0.94),rgba(79,70,229,0.88),rgba(232,97,77,0.72))]"
-                : "bg-[linear-gradient(135deg,rgba(55,48,163,1),rgba(79,70,229,0.94),rgba(232,97,77,0.84))]",
-            )}
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/14">
-                <RoleIcon className="h-5 w-5" />
+          <div className="flex items-center justify-between gap-2 border-b border-[var(--brand-border-light)] pb-3">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[rgba(55,48,163,0.08)] text-[var(--brand-indigo)]">
+                <RoleIcon className="h-4 w-4" />
               </span>
               <div className={cn(collapsed && "lg:hidden")}>
-                <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/55">
-                  {eyebrow}
-                </div>
-                <div className="font-editorial text-2xl tracking-[-0.04em]">
+                <div className="text-sm font-semibold text-[var(--brand-text)]">
                   {title}
                 </div>
-                <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.24em] text-white/52">
-                  {currentRoleMeta.glyph}
+                <div className="text-xs text-[var(--brand-text-muted)]">
+                  {currentRoleMeta.chip}
                 </div>
               </div>
             </div>
             <button
               type="button"
               onClick={() => setCollapsed((value) => !value)}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-2xl bg-white/12 text-white transition hover:bg-white/18 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--brand-text-muted)] transition hover:bg-[var(--brand-sand)] hover:text-[var(--brand-text)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand-indigo)]"
               aria-expanded={!collapsed}
               aria-label={collapsed ? "Expand dashboard navigation" : "Collapse dashboard navigation"}
             >
               {collapsed ? (
-                <PanelLeftOpen className="h-5 w-5" />
+                <PanelLeftOpen className="h-4 w-4" />
               ) : (
-                <PanelLeftClose className="h-5 w-5" />
+                <PanelLeftClose className="h-4 w-4" />
               )}
             </button>
           </div>
 
-          <p
-            className={cn(
-              "mt-4 text-sm leading-7 text-[var(--brand-text-muted)]",
-              collapsed && "lg:hidden",
-            )}
-          >
-            {description}
-          </p>
-
-          <div
-            className={cn(
-              "mt-4 rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/74 px-4 py-3",
-              collapsed && "lg:hidden",
-            )}
-          >
-            <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--brand-text-light)]">
-              {currentRoleMeta.chip}
-            </div>
-            <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
-              {currentRoleMeta.lane}
-            </div>
-          </div>
-
-          <nav className="mt-5 space-y-2">
+          <nav className="mt-2 space-y-0.5">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={cn("portal-nav-link", collapsed && "lg:justify-center lg:px-3")}
+                className={cn("portal-nav-link", collapsed && "lg:justify-center lg:px-2")}
                 data-active={link.active ? "true" : "false"}
                 title={link.label}
               >
-                <ArrowUpRight className="h-4 w-4" />
+                <ArrowUpRight className="h-3.5 w-3.5" />
                 <span className={cn(collapsed && "lg:hidden")}>{link.label}</span>
               </Link>
             ))}
           </nav>
         </aside>
 
-        <main className="space-y-6">
+        <main className="space-y-4">
           <div className="portal-mobile-jumps lg:hidden">
             <div className="portal-mobile-jumps-row">
               {links.map((link) => (
@@ -210,14 +164,13 @@ export function PortalShell({
 
           <section
             className={cn(
-              "portal-stage-header rounded-[2rem] p-6 sm:p-7",
-              isAdmin && "portal-stage-header-admin",
+              "portal-stage-header rounded-xl p-5 sm:p-6",
             )}
           >
             {breadcrumbs?.length ? (
               <nav
                 aria-label="Breadcrumb"
-                className="portal-breadcrumbs mb-5 flex flex-wrap items-center gap-2"
+                className="portal-breadcrumbs mb-3 flex flex-wrap items-center gap-1.5"
               >
                 {breadcrumbs.map((item, index) => (
                   <span key={`${item}-${index}`} className="portal-breadcrumb-item">
@@ -227,60 +180,44 @@ export function PortalShell({
               </nav>
             ) : null}
 
-            <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div>
-                <div className="eyebrow bg-[rgba(79,70,229,0.08)] px-4 py-2 text-[var(--brand-indigo)]">
+                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-indigo)]">
                   {eyebrow}
                 </div>
-                <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)] sm:text-[2.9rem]">
+                <h1 className="mt-1 text-xl font-semibold text-[var(--brand-text)] sm:text-2xl">
                   {title}
                 </h1>
-                <p className="mt-4 max-w-3xl text-sm leading-8 text-[var(--brand-text-muted)]">
+                <p className="mt-1 max-w-3xl text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {description}
                 </p>
               </div>
 
-              <div className="flex min-w-0 flex-col items-start gap-3 xl:min-w-[300px] xl:items-end">
-                <div className="flex flex-wrap gap-2 xl:justify-end">
-                  <span className="portal-context-pill">{currentRoleMeta.posture}</span>
-                  <span className="portal-context-pill">{currentRoleMeta.lane}</span>
-                </div>
-                {primaryAction ? (
-                  <Link
-                    href={primaryAction.href}
-                    className={cn(
-                      "inline-flex min-h-12 items-center gap-3 rounded-full border px-5 py-3 text-left text-sm font-semibold transition hover:-translate-y-0.5",
-                      isAdmin
-                        ? "border-[rgba(30,27,46,0.14)] bg-[linear-gradient(140deg,rgba(30,27,46,0.96),rgba(55,48,163,0.92),rgba(232,97,77,0.78))] text-white shadow-[0_22px_44px_rgba(42,38,56,0.18)]"
-                        : "border-[rgba(79,70,229,0.12)] bg-white text-[var(--brand-text)]",
-                    )}
-                  >
-                    <span>{primaryAction.label}</span>
-                    <ArrowUpRight className="h-4 w-4" />
-                  </Link>
-                ) : null}
-              </div>
+              {primaryAction ? (
+                <Link
+                  href={primaryAction.href}
+                  className="inline-flex items-center gap-2 rounded-lg bg-[var(--brand-indigo)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--brand-indigo-dark)]"
+                >
+                  <span>{primaryAction.label}</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              ) : null}
             </div>
 
             {signalCards.length ? (
-              <div className="mt-6 grid gap-3 lg:grid-cols-3">
+              <div className="mt-4 grid gap-3 lg:grid-cols-3">
                 {signalCards.map((signal) => (
                   <article
                     key={signal.label}
-                    className={cn(
-                      "rounded-[1.25rem] border px-4 py-4",
-                      isAdmin
-                        ? "border-[rgba(30,27,46,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(245,240,232,0.82))]"
-                        : "border-[rgba(153,148,168,0.12)] bg-white/84",
-                    )}
+                    className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
                   >
-                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                       {signal.label}
                     </div>
-                    <div className="font-editorial tabular-data mt-2 text-[2rem] tracking-[-0.05em] text-[var(--brand-text)]">
+                    <div className="tabular-nums mt-1 text-xl font-semibold text-[var(--brand-text)]">
                       {signal.value}
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-[var(--brand-text-muted)]">
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--brand-text-muted)]">
                       {signal.detail}
                     </p>
                   </article>

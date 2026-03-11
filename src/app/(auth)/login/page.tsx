@@ -6,7 +6,7 @@ export default function LoginPage() {
       mode="login"
       eyebrow="Welcome back"
       title="Sign in to your account"
-      description="Enter your email and password to access your dashboard."
+      description="Access your events, groups, and dashboard."
       primaryLabel="Sign in"
       secondaryHref="/signup"
       secondaryLabel="Need an account? Create one"
