@@ -17,8 +17,31 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "MeetupReykjavik",
-  description: "Discover events, groups, and venue partners across Reykjavik.",
+  title: {
+    default: "MeetupReykjavik — Find your people in Reykjavik",
+    template: "%s | MeetupReykjavik",
+  },
+  description:
+    "Discover events, join groups, and explore venue partners across Reykjavik. Free to join, built for the local community.",
+  metadataBase: new URL("https://meetupreykjavik.vercel.app"),
+  openGraph: {
+    type: "website",
+    locale: "en_IS",
+    siteName: "MeetupReykjavik",
+    title: "MeetupReykjavik — Find your people in Reykjavik",
+    description:
+      "Discover events, join groups, and explore venue partners across Reykjavik. Free to join, built for the local community.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MeetupReykjavik — Find your people in Reykjavik",
+    description:
+      "Discover events, join groups, and explore venue partners across Reykjavik.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default async function RootLayout({
