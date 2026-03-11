@@ -48,9 +48,31 @@ export function Reveal({
 /**
  * Drop this once in a layout. It auto-observes any element with
  * class `.reveal` or `.reveal-group` and adds `.revealed` on scroll.
+ * Elements already in the viewport get revealed instantly (no animation).
  */
 export function AutoReveal() {
   useEffect(() => {
+    const targets = document.querySelectorAll<HTMLElement>(".reveal, .reveal-group");
+
+    // Immediately reveal anything already in the viewport (no animation)
+    targets.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add("revealed");
+        el.style.animation = "none";
+        el.style.opacity = "1";
+        el.style.transform = "none";
+        // Also reveal children for reveal-group
+        if (el.classList.contains("reveal-group")) {
+          el.querySelectorAll<HTMLElement>(":scope > *").forEach((child) => {
+            child.style.animation = "none";
+            child.style.opacity = "1";
+          });
+        }
+      }
+    });
+
+    // Observe remaining (below-fold) elements for scroll reveal
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -63,8 +85,11 @@ export function AutoReveal() {
       { threshold: 0.1 },
     );
 
-    const targets = document.querySelectorAll(".reveal, .reveal-group");
-    targets.forEach((el) => observer.observe(el));
+    targets.forEach((el) => {
+      if (!el.classList.contains("revealed")) {
+        observer.observe(el);
+      }
+    });
 
     return () => observer.disconnect();
   }, []);
