@@ -223,7 +223,7 @@ create table if not exists public.blocked_users (
   scope_id uuid,
   reason text,
   created_at timestamptz not null default now(),
-  constraint blocked_users_scope_check check (
+  constraint blocked_users_scope_guard check (
     (scope = 'platform' and scope_id is null)
     or (scope <> 'platform' and scope_id is not null)
   )
