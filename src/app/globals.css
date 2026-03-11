@@ -460,72 +460,12 @@ select:focus-visible,
     0 10px 24px rgba(42, 38, 56, 0.05);
 }
 
-.site-header-nav-frame {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.18rem;
-  border: 1px solid rgba(221, 215, 203, 0.82);
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 248, 244, 0.9)),
-    rgba(255, 255, 255, 0.84);
-  box-shadow: 0 12px 28px rgba(42, 38, 56, 0.05);
-  padding: 0.35rem 0.4rem;
-}
-
-.site-header-nav-link {
-  letter-spacing: -0.01em;
-  justify-content: center;
-  min-width: 4.7rem;
-}
-
-.site-header-nav-link-active {
-  box-shadow: 0 14px 28px rgba(79, 70, 229, 0.16);
-}
-
-.site-header-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-
-.site-header-cta {
-  box-shadow: 0 18px 36px rgba(42, 38, 56, 0.12);
-  white-space: nowrap;
-}
-
-.site-header-utility-row {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.site-header-utility-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.25rem;
-  border-radius: 999px;
-  padding: 0.5rem 0.72rem;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-
 .dashboard-decision-strip {
   background: #fff;
 }
 
 .dashboard-decision-card {
   min-height: 100%;
-}
-
-.site-mobile-nav-shell {
-  scroll-snap-type: x proximity;
-}
-
-.site-mobile-nav-link {
-  scroll-snap-align: start;
-  white-space: nowrap;
 }
 
 .site-footer-signals {

@@ -69,7 +69,7 @@ export function SiteHeaderClient({
       <div className="hidden flex-1 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-5">
         <div aria-hidden="true" />
 
-        <nav className="site-header-nav-frame justify-self-center">
+        <nav className="flex items-center gap-1 justify-self-center">
           {navigation.map((item) => {
             const active = isActivePath(activePath, item.href);
 
@@ -79,10 +79,10 @@ export function SiteHeaderClient({
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "site-header-nav-link inline-flex min-h-11 items-center rounded-full px-4 py-2.5 text-sm font-semibold transition",
+                  "inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium transition",
                   active
-                    ? "site-header-nav-link-active bg-[var(--brand-indigo)] text-white"
-                    : "text-[var(--brand-text-muted)] hover:bg-white hover:text-[var(--brand-indigo)]",
+                    ? "bg-[var(--brand-indigo)] text-white"
+                    : "text-[var(--brand-text-muted)] hover:bg-[rgba(79,70,229,0.06)] hover:text-[var(--brand-text)]",
                 )}
               >
                 {item.label}
@@ -91,35 +91,33 @@ export function SiteHeaderClient({
           })}
         </nav>
 
-        <div className="site-header-actions justify-self-end">
-          <div className="site-header-utility-row">
-            <LocaleSwitcher compact />
-            {session && portalHref ? (
-              <SignOutButton className="site-header-utility-link min-h-9 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-[rgba(79,70,229,0.08)]" />
-            ) : (
+        <div className="flex items-center gap-3 justify-self-end">
+          <LocaleSwitcher compact />
+          {session && portalHref ? (
+            <>
+              <SignOutButton className="min-h-9 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-[rgba(79,70,229,0.08)]" />
+              <Link
+                href={portalHref}
+                className="inline-flex items-center justify-center rounded-full bg-[var(--brand-indigo)] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                {portalLabel(session.accountType, labels)}
+              </Link>
+            </>
+          ) : (
+            <>
               <Link
                 href="/login"
-                className="site-header-utility-link text-sm font-semibold text-[var(--brand-text)] transition-colors hover:text-[var(--brand-indigo)]"
+                className="text-sm font-medium text-[var(--brand-text)] transition-colors hover:text-[var(--brand-indigo)]"
               >
                 {labels.signin}
               </Link>
-            )}
-          </div>
-
-          {session && portalHref ? (
-            <Link
-              href={portalHref}
-              className="site-header-cta inline-flex items-center justify-center rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(79,70,229,0.18)] transition-transform hover:-translate-y-0.5"
-            >
-              {portalLabel(session.accountType, labels)}
-            </Link>
-          ) : (
-            <Link
-              href="/signup"
-              className="site-header-cta inline-flex items-center justify-center rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.22)] transition-transform hover:-translate-y-0.5"
-            >
-              {labels.signup}
-            </Link>
+              <Link
+                href="/signup"
+                className="inline-flex items-center justify-center rounded-full bg-[var(--brand-coral)] px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                {labels.signup}
+              </Link>
+            </>
           )}
         </div>
       </div>
@@ -152,8 +150,8 @@ export function SiteHeaderMobileNav({
   const activePath = pathname ?? "/";
 
   return (
-    <div className="section-shell pb-3 lg:hidden">
-      <nav className="site-mobile-nav-shell flex gap-3 overflow-x-auto pb-1">
+    <div className="section-shell pb-2 lg:hidden">
+      <nav className="flex gap-2 overflow-x-auto">
         {navigation.map((item) => {
           const active = isActivePath(activePath, item.href);
 
@@ -163,10 +161,10 @@ export function SiteHeaderMobileNav({
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "site-mobile-nav-link min-h-11 rounded-full border px-4 py-2 text-sm font-medium shadow-[0_10px_24px_rgba(42,38,56,0.05)] transition",
+                "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition",
                 active
                   ? "border-[var(--brand-indigo)] bg-[var(--brand-indigo)] text-white"
-                  : "border-[var(--brand-border)] bg-white/74 text-[var(--brand-text-muted)]",
+                  : "border-[var(--brand-border)] bg-white text-[var(--brand-text-muted)]",
               )}
             >
               {item.label}

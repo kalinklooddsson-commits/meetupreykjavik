@@ -18,7 +18,7 @@ export async function SiteHeader() {
     { href: "/events", label: tNav("events") },
     { href: "/groups", label: tNav("groups") },
     { href: "/venues", label: tNav("venues") },
-    { href: "/blog", label: tNav("blog") },
+    { href: "/pricing", label: tNav("pricing") },
   ] as const satisfies readonly { href: Route; label: string }[];
 
   return (
