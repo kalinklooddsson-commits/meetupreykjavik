@@ -248,7 +248,7 @@ export function VenueOnboardingScreen() {
               {venuePortalData.onboarding.requiredDocs.map((doc) => (
                 <div
                   key={doc}
-                  className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/78 px-4 py-3 text-sm font-semibold text-[var(--brand-text)]"
+                  className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm font-semibold text-[var(--brand-text)]"
                 >
                   {doc}
                 </div>
@@ -262,7 +262,7 @@ export function VenueOnboardingScreen() {
             description={venuePortalData.venue.summary}
           >
             <div
-              className="h-48 rounded-[1.45rem]"
+              className="h-48 rounded-lg"
               style={{ background: venuePortalData.venue.art }}
               aria-hidden="true"
             />
@@ -301,20 +301,20 @@ export function VenueDashboardScreen() {
             {venuePortalData.upcomingEvents.map(({ event, organizer, status, note }) => (
               <div
                 key={`${event.slug}-${organizer}`}
-                className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+                    <div className="text-sm font-semibold text-[var(--brand-text)]">
                       {event.title}
                     </div>
-                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                       {organizer} · {event.venueName}
                     </p>
                   </div>
                   <ToneBadge tone={statusTone(status)}>{status}</ToneBadge>
                 </div>
-                <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">{note}</p>
+                <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">{note}</p>
               </div>
             ))}
           </div>
@@ -431,7 +431,7 @@ export function VenueBookingsScreen() {
             {venuePortalData.bookings.history.map((item) => (
               <div
                 key={item.key}
-                className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">
@@ -439,7 +439,7 @@ export function VenueBookingsScreen() {
                   </div>
                   <ToneBadge tone={statusTone(item.result)}>{item.result}</ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {item.note}
                 </p>
               </div>
@@ -465,7 +465,7 @@ export function VenueBookingsScreen() {
             {venuePortalData.bookings.guestFit.signals.map((signal) => (
               <article
                 key={signal.key}
-                className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{signal.label}</div>
@@ -481,7 +481,7 @@ export function VenueBookingsScreen() {
                     {signal.score}%
                   </ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {signal.note}
                 </p>
               </article>
@@ -504,7 +504,7 @@ export function VenueBookingsScreen() {
             {venuePortalData.bookings.guestFit.roomGuidance.map((item) => (
               <div
                 key={item}
-                className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
               >
                 {item}
               </div>
@@ -533,7 +533,7 @@ export function VenueAvailabilityScreen() {
             {venuePortalData.availability.recurring.map((rule) => (
               <div
                 key={rule}
-                className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/80 px-4 py-3 text-sm font-semibold text-[var(--brand-text)]"
+                className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm font-semibold text-[var(--brand-text)]"
               >
                 {rule}
               </div>
@@ -549,7 +549,7 @@ export function VenueAvailabilityScreen() {
             {venuePortalData.availability.weeklyGrid.map((day) => (
               <div
                 key={day.day}
-                className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{day.day}</div>
@@ -618,7 +618,7 @@ export function VenueDealsScreen() {
           {venuePortalData.deals.map((deal, index) => (
             <article
               key={deal.key}
-              className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-5"
+              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5"
             >
               <div className="flex items-center justify-between gap-3">
                 <ToneBadge tone={deal.tier === "Gold" ? "coral" : deal.tier === "Silver" ? "indigo" : "sage"}>
@@ -633,14 +633,14 @@ export function VenueDealsScreen() {
                   ) : null}
                 </span>
               </div>
-              <div className="font-editorial mt-4 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+              <div className="mt-2 text-base font-semibold text-[var(--brand-text)]">
                 {deal.title}
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 <ToneBadge tone={statusTone(deal.status)}>{deal.status}</ToneBadge>
                 <ToneBadge tone="sand">{deal.type}</ToneBadge>
               </div>
-              <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                 {deal.note}
               </p>
               <div className="mt-4 text-sm font-semibold text-[var(--brand-text)]">
@@ -709,7 +709,7 @@ export function VenueAnalyticsScreen() {
           {venuePortalData.analytics.topReferrers.map((referrer) => (
             <div
               key={referrer}
-              className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4 text-sm font-semibold text-[var(--brand-text)]"
+              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4 text-sm font-semibold text-[var(--brand-text)]"
             >
               {referrer}
             </div>
@@ -735,7 +735,7 @@ export function VenueProfileScreen() {
           description={venuePortalData.venue.summary}
         >
           <div
-            className="h-52 rounded-[1.45rem]"
+            className="h-52 rounded-lg"
             style={{ background: venuePortalData.venue.art }}
             aria-hidden="true"
           />

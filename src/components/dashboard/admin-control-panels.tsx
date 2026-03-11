@@ -378,7 +378,7 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4">
+      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4">
         <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-end">
           <label className="ops-search-shell flex items-center gap-3 rounded-full border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3">
             <Search className="h-4 w-4 text-[var(--brand-text-light)]" />
@@ -426,16 +426,16 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
           </div>
         </div>
 
-        <div className="mt-4 rounded-[1.35rem] bg-[linear-gradient(140deg,rgba(30,27,46,0.98),rgba(55,48,163,0.94),rgba(232,97,77,0.74))] p-5 text-white">
+        <div className="mt-4 rounded-lg bg-[var(--brand-indigo)] p-5 text-white">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
-              <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/58">
+              <div className="text-xs font-medium uppercase tracking-wider text-white/58">
                 Bulk control
               </div>
-              <div className="font-editorial mt-3 text-3xl tracking-[-0.05em] text-white">
+              <div className="mt-2 text-lg font-semibold text-white">
                 Act on account cohorts, not one row at a time
               </div>
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-white/74">
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/74">
                 This turns user admin into a real operations surface: select people in groups,
                 change posture quickly, and keep a visible note of what was staged.
               </p>
@@ -453,9 +453,9 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-[1.15rem] border border-white/12 bg-white/10 px-4 py-3"
+                  className="rounded-md border border-white/12 bg-white/10 px-4 py-3"
                 >
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/54">
+                  <div className="text-xs font-medium uppercase tracking-wider text-white/54">
                     {item.label}
                   </div>
                   <div className="mt-2 text-lg font-semibold text-white">{item.value}</div>
@@ -545,7 +545,7 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
           <div
             role="status"
             aria-live="polite"
-            className="mt-4 rounded-[1.1rem] border border-white/12 bg-white/10 px-4 py-3 text-sm leading-7 text-white/76"
+            className="mt-4 rounded-md border border-white/12 bg-white/10 px-4 py-3 text-sm leading-relaxed text-white/76"
           >
             {bulkMessage}
           </div>
@@ -567,10 +567,10 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
               role="button"
               tabIndex={0}
               className={cn(
-                "ops-selection-card block w-full cursor-pointer rounded-[1.2rem] border p-4 text-left transition",
+                "ops-selection-card block w-full cursor-pointer rounded-md border p-4 text-left transition",
                 user.key === selectedUser?.key
                   ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                  : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -589,7 +589,7 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
                       pillBase,
                       selectedKeys.includes(user.key)
                         ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                        : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                        : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                     )}
                   >
                     {selectedKeys.includes(user.key) ? "Selected" : "Select"}
@@ -597,7 +597,7 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
                   <span
                     className={cn(
                       pillBase,
-                      "border-[rgba(79,70,229,0.16)] bg-white/80 text-[var(--brand-text-muted)]",
+                      "border-[rgba(79,70,229,0.16)] bg-white text-[var(--brand-text-muted)]",
                     )}
                   >
                     {user.type}
@@ -616,13 +616,13 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
         </div>
 
         {selectedUser ? (
-          <div className="ops-detail-panel rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+          <div className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {selectedUser.name}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {selectedUser.email}
                 </p>
               </div>
@@ -652,9 +652,9 @@ export function AdminUserCommandCenter({ users }: { users: AdminUser[] }) {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3"
+                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
                 >
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {item.label}
                   </div>
                   <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
@@ -812,13 +812,13 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               {audience.eventTitle}
             </div>
-            <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {audience.target}
             </p>
           </div>
@@ -872,7 +872,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                   pillBase,
                   mode === key
                     ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                    : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                    : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                 )}
               >
                 {label}
@@ -894,12 +894,12 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                 key={candidate.id}
                 onClick={() => setActiveId(candidate.id)}
                 className={cn(
-                  "rounded-[1.3rem] border p-4 transition cursor-pointer",
+                  "rounded-lg border p-4 transition cursor-pointer",
                   selected
                     ? "border-[rgba(79,70,229,0.22)] bg-[rgba(79,70,229,0.08)]"
                     : active
                       ? "border-[rgba(232,97,77,0.18)] bg-[rgba(232,97,77,0.05)]"
-                      : "border-[rgba(153,148,168,0.12)] bg-white/82",
+                      : "border-[var(--brand-border-light)] bg-white",
                 )}
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -927,7 +927,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                     </button>
                   </div>
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {candidate.reason}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -936,7 +936,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                       key={tag}
                       className={cn(
                         pillBase,
-                        "border-[rgba(153,148,168,0.14)] bg-white/78 text-[var(--brand-text-muted)]",
+                        "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                       )}
                     >
                       {tag}
@@ -956,7 +956,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                         pillBase,
                         lane === nextLane
                           ? laneClasses(nextLane)
-                          : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                          : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                       )}
                     >
                       {laneLabel(nextLane)}
@@ -968,15 +968,15 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
           })}
         </div>
 
-        <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           {activeCandidate ? (
-            <div className="rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4">
+            <div className="rounded-lg border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+                  <div className="text-sm font-semibold text-[var(--brand-text)]">
                     {activeCandidate.name}
                   </div>
-                  <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                     {activeCandidate.reason}
                   </p>
                 </div>
@@ -985,16 +985,16 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                 </span>
               </div>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-3">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     Fit score
                   </div>
                   <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
                     {activeCandidate.fitScore}% · {activeCandidate.tier}
                   </div>
                 </div>
-                <div className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-white/84 px-4 py-3">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     Last active
                   </div>
                   <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
@@ -1006,10 +1006,10 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
           ) : null}
 
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               Selected clients
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               Admin can hand-pick people, assign an action lane, and manage room shape without leaving the event.
             </p>
           </div>
@@ -1039,9 +1039,9 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
             ].map((item) => (
               <div
                 key={item.label}
-                className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 px-4 py-3"
+                className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3"
               >
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                   {item.label}
                 </div>
                 <div className={cn("mt-2 text-sm font-semibold", item.tone === "sage"
@@ -1061,7 +1061,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
             {selectedCandidates.map((candidate) => (
               <div
                 key={candidate.id}
-                className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3"
+                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -1089,7 +1089,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                         pillBase,
                         (laneById[candidate.id] ?? "invite") === lane
                           ? laneClasses(lane)
-                          : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                          : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                       )}
                     >
                       {laneLabel(lane)}
@@ -1101,7 +1101,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
           </div>
 
           <div>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Audience mix
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -1110,7 +1110,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                   key={tag}
                   className={cn(
                     pillBase,
-                    "border-[rgba(79,70,229,0.18)] bg-white/80 text-[var(--brand-text-muted)]",
+                    "border-[rgba(79,70,229,0.18)] bg-white text-[var(--brand-text-muted)]",
                   )}
                 >
                   {tag} · {count}
@@ -1119,7 +1119,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
             </div>
           </div>
 
-          <div className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             {batchNote}
           </div>
 
@@ -1227,13 +1227,13 @@ export function AdminClientCurationWorkbench({
     <div className="grid gap-5">
       <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
         <div className="space-y-4">
-          <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+          <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {dossier.name}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   Admin curation stance, trust flags, and fit scoring all stay editable here.
                 </p>
               </div>
@@ -1278,7 +1278,7 @@ export function AdminClientCurationWorkbench({
                     pillBase,
                     disposition === value
                       ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                      : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                      : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                   )}
                 >
                   {label}
@@ -1291,7 +1291,7 @@ export function AdminClientCurationWorkbench({
             {dossier.fitBreakdown.map((signal) => (
               <article
                 key={signal.key}
-                className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{signal.label}</div>
@@ -1312,7 +1312,7 @@ export function AdminClientCurationWorkbench({
                     style={{ width: `${signal.score}%` }}
                   />
                 </div>
-                <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {signal.note}
                 </p>
               </article>
@@ -1320,12 +1320,12 @@ export function AdminClientCurationWorkbench({
           </div>
         </div>
 
-        <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               Access and flags
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               These flags tell admin and organizers how to treat this profile during invite and approval workflows.
             </p>
           </div>
@@ -1333,9 +1333,9 @@ export function AdminClientCurationWorkbench({
             {dossier.accessRules.map((rule) => (
               <div
                 key={rule.label}
-                className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3"
+                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
               >
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                   {rule.label}
                 </div>
                 <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
@@ -1346,7 +1346,7 @@ export function AdminClientCurationWorkbench({
           </div>
 
           <div>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Admin flags
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -1365,7 +1365,7 @@ export function AdminClientCurationWorkbench({
                     pillBase,
                     flags.includes(flag)
                       ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                      : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                      : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                   )}
                 >
                   {flag}
@@ -1375,7 +1375,7 @@ export function AdminClientCurationWorkbench({
           </div>
 
           <label className="block">
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Admin note
             </div>
             <textarea
@@ -1385,7 +1385,7 @@ export function AdminClientCurationWorkbench({
                 startTransition(() => setNote(value));
               }}
               rows={5}
-              className="mt-3 w-full rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text)] outline-none"
+              className="mt-3 w-full rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text)] outline-none"
             />
           </label>
         </div>
@@ -1396,7 +1396,7 @@ export function AdminClientCurationWorkbench({
           {dossier.playbook.map((item, index) => (
             <div
               key={`${item}-${index}`}
-              className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/80 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+              className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
             >
               {item}
             </div>
@@ -1404,7 +1404,7 @@ export function AdminClientCurationWorkbench({
           {dossier.adminNotes.map((item, index) => (
             <div
               key={`${item}-${index}`}
-              className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
             >
               {item}
             </div>
@@ -1415,15 +1415,15 @@ export function AdminClientCurationWorkbench({
           {dossier.curationTimeline.map((entry) => (
             <div
               key={entry.key}
-              className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+              className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{entry.title}</div>
-                <span className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <span className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                   {entry.meta}
                 </span>
               </div>
-              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                 {entry.detail}
               </p>
             </div>
@@ -1488,13 +1488,13 @@ export function AdminGroupOperationsDesk({
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               Group operations desk
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               Admin can feature, cool down, archive, or rescue groups from one place instead of
               working line by line across separate views.
             </p>
@@ -1546,7 +1546,7 @@ export function AdminGroupOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="mt-4 rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+          className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -1567,10 +1567,10 @@ export function AdminGroupOperationsDesk({
               role="button"
               tabIndex={0}
               className={cn(
-                "cursor-pointer rounded-[1.2rem] border p-4 transition",
+                "cursor-pointer rounded-md border p-4 transition",
                 group.key === selectedGroup?.key
                   ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-white/82",
+                  : "border-[var(--brand-border-light)] bg-white",
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -1585,7 +1585,7 @@ export function AdminGroupOperationsDesk({
                     pillBase,
                     selectedKeys.includes(group.key)
                       ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                      : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                      : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                   )}
                 >
                   {selectedKeys.includes(group.key) ? "Selected" : "Select"}
@@ -1606,12 +1606,12 @@ export function AdminGroupOperationsDesk({
           ))}
         </div>
 
-        <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               Approval and recovery queue
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               Work new communities, feature opportunities, and groups that need help without
               leaving the dashboard.
             </p>
@@ -1620,7 +1620,7 @@ export function AdminGroupOperationsDesk({
             {activeQueue.map((group) => (
               <div
                 key={group.key}
-                className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{group.name}</div>
@@ -1631,7 +1631,7 @@ export function AdminGroupOperationsDesk({
                 <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
                   Organizer: {group.organizer}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {group.note}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -1711,13 +1711,13 @@ export function AdminEventOperationsDesk({
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               Event control desk
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               Admin can approve, feature, pause, or hold monetized events in batches while keeping
               venue, date, and category context attached.
             </p>
@@ -1780,7 +1780,7 @@ export function AdminEventOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="mt-4 rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+          className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -1801,10 +1801,10 @@ export function AdminEventOperationsDesk({
               role="button"
               tabIndex={0}
               className={cn(
-                "cursor-pointer rounded-[1.2rem] border p-4 transition",
+                "cursor-pointer rounded-md border p-4 transition",
                 event.key === selectedEvent?.key
                   ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-white/82",
+                  : "border-[var(--brand-border-light)] bg-white",
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -1819,7 +1819,7 @@ export function AdminEventOperationsDesk({
                     pillBase,
                     selectedKeys.includes(event.key)
                       ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                      : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                      : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                   )}
                 >
                   {selectedKeys.includes(event.key) ? "Selected" : "Select"}
@@ -1840,13 +1840,13 @@ export function AdminEventOperationsDesk({
         </div>
 
         {selectedEvent ? (
-          <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+          <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {selectedEvent.title}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   Category, venue, and admin action posture stay attached while moderation moves.
                 </p>
               </div>
@@ -1867,9 +1867,9 @@ export function AdminEventOperationsDesk({
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3"
+                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
                 >
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {item.label}
                   </div>
                   <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
@@ -1920,12 +1920,12 @@ export function AdminRevenueControlDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[0.96fr_1.04fr]">
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Plan controls
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Change pricing posture, rewrite positioning, and keep the commercial stack coherent.
           </p>
         </div>
@@ -1937,17 +1937,17 @@ export function AdminRevenueControlDesk({
               type="button"
               onClick={() => setSelectedPlanName(plan.name)}
               className={cn(
-                "block w-full rounded-[1.2rem] border p-4 text-left transition",
+                "block w-full rounded-md border p-4 text-left transition",
                 plan.name === selectedPlan?.name
                   ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-white/82",
+                  : "border-[var(--brand-border-light)] bg-white",
               )}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{plan.name}</div>
                 <ToneBadge tone="sand">{plan.price}</ToneBadge>
               </div>
-              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                 {plan.description}
               </p>
             </button>
@@ -1955,7 +1955,7 @@ export function AdminRevenueControlDesk({
         </div>
 
         {selectedPlan ? (
-          <div className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
             <div className="font-semibold text-[var(--brand-text)]">{selectedPlan.name}</div>
             <label className="mt-4 block text-sm font-semibold text-[var(--brand-text)]">
               Price
@@ -1968,7 +1968,7 @@ export function AdminRevenueControlDesk({
                     `${selectedPlan.name} pricing updated to ${event.target.value}.`,
                   )
                 }
-                className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
             <label className="mt-4 block text-sm font-semibold text-[var(--brand-text)]">
@@ -1983,19 +1983,19 @@ export function AdminRevenueControlDesk({
                   )
                 }
                 rows={4}
-                className="mt-2 w-full rounded-[1.2rem] border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           </div>
         ) : null}
       </div>
 
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Policy guardrail editor
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Keep minimum ticket price, commission, and platform rules editable in the dashboard.
           </p>
         </div>
@@ -2004,13 +2004,13 @@ export function AdminRevenueControlDesk({
           {policyInventory.map((policy) => (
             <label
               key={policy.label}
-              className="block rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+              className="block rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="text-sm font-semibold text-[var(--brand-text)]">{policy.label}</div>
               <input
                 value={policy.value}
                 onChange={(event) => updatePolicy(policy.label, event.target.value)}
-                className="mt-3 w-full rounded-[1rem] border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="mt-3 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           ))}
@@ -2019,7 +2019,7 @@ export function AdminRevenueControlDesk({
         <div
           role="status"
           aria-live="polite"
-          className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+          className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -2073,37 +2073,37 @@ export function AdminRevenueOperationsDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[0.96fr_1.04fr]">
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Money movement desk
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Review live captures, payout holds, and fee anomalies without leaving admin revenue.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3">
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Captured
             </div>
-            <div className="font-editorial tabular-data mt-2 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+            <div className="tabular-nums mt-1 text-xl font-semibold text-[var(--brand-text)]">
               {capturedCount}
             </div>
           </div>
-          <div className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3">
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Payout watch
             </div>
-            <div className="font-editorial tabular-data mt-2 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+            <div className="tabular-nums mt-1 text-xl font-semibold text-[var(--brand-text)]">
               {payoutWatchCount}
             </div>
           </div>
-          <div className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3">
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Top source
             </div>
-            <div className="font-editorial tabular-data mt-2 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+            <div className="tabular-nums mt-1 text-xl font-semibold text-[var(--brand-text)]">
               {sources[0]?.value ?? 0}%
             </div>
           </div>
@@ -2115,10 +2115,10 @@ export function AdminRevenueOperationsDesk({
               type="button"
               onClick={() => setSelectedKey(entry.key)}
               className={cn(
-                "block w-full rounded-[1.1rem] border p-4 text-left transition",
+                "block w-full rounded-md border p-4 text-left transition",
                 entry.key === selected?.key
                   ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)]",
+                  : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -2137,13 +2137,13 @@ export function AdminRevenueOperationsDesk({
 
       <div className="space-y-4">
         {selected ? (
-          <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {selected.source}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   Work the selected money event directly from the dashboard.
                 </p>
               </div>
@@ -2178,14 +2178,14 @@ export function AdminRevenueOperationsDesk({
           </article>
         ) : null}
 
-        <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-sm font-semibold text-[var(--brand-text)]">
             Finance action journal
           </div>
           <div
             role="status"
             aria-live="polite"
-            className="mt-4 rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+            className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
           >
             {message}
           </div>
@@ -2193,11 +2193,11 @@ export function AdminRevenueOperationsDesk({
             {actionLog.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+                className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="text-sm font-semibold text-[var(--brand-text)]">{entry.action}</div>
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {entry.meta}
                   </div>
                 </div>
@@ -2242,12 +2242,12 @@ export function AdminAnalyticsOperationsDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[0.92fr_1.08fr]">
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Signal watch list
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Promote important charts into a watch lane when marketplace shape, supply quality, or conversion needs hands-on attention.
           </p>
         </div>
@@ -2255,7 +2255,7 @@ export function AdminAnalyticsOperationsDesk({
           {watchList.map((chart) => (
             <div
               key={chart.key}
-              className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4"
+              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{chart.title}</div>
@@ -2289,25 +2289,25 @@ export function AdminAnalyticsOperationsDesk({
       </div>
 
       <div className="space-y-4">
-        <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-sm font-semibold text-[var(--brand-text)]">
             Marketplace pressure summary
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3">
-              <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 Hottest slot
               </div>
-              <div className="font-editorial tabular-data mt-2 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+              <div className="tabular-nums mt-1 text-xl font-semibold text-[var(--brand-text)]">
                 {hottestSlot?.value ?? 0}
               </div>
               <div className="mt-2 text-sm text-[var(--brand-text-muted)]">{hottestSlot?.slot ?? "n/a"}</div>
             </div>
-            <div className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3">
-              <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 Strongest geography
               </div>
-              <div className="font-editorial tabular-data mt-2 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+              <div className="tabular-nums mt-1 text-xl font-semibold text-[var(--brand-text)]">
                 {strongestGeo?.value ?? "n/a"}
               </div>
               <div className="mt-2 text-sm text-[var(--brand-text-muted)]">{strongestGeo?.label ?? "n/a"}</div>
@@ -2316,14 +2316,14 @@ export function AdminAnalyticsOperationsDesk({
           <div
             role="status"
             aria-live="polite"
-            className="mt-4 rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+            className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
           >
             {message}
           </div>
         </article>
 
-        <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-sm font-semibold text-[var(--brand-text)]">
             Operator prompts
           </div>
           <div className="mt-4 space-y-3">
@@ -2334,7 +2334,7 @@ export function AdminAnalyticsOperationsDesk({
             ].map((prompt) => (
               <div
                 key={prompt}
-                className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4 text-sm leading-7 text-[var(--brand-text-muted)]"
+                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4 text-sm leading-relaxed text-[var(--brand-text-muted)]"
               >
                 {prompt}
               </div>
@@ -2372,12 +2372,12 @@ export function AdminOpsInboxDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Ops inbox
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             One queue for the work that cannot be dropped: money, trust, supply, and editorial execution.
           </p>
         </div>
@@ -2388,10 +2388,10 @@ export function AdminOpsInboxDesk({
               type="button"
               onClick={() => setSelectedKey(item.key)}
               className={cn(
-                "block w-full rounded-[1.1rem] border p-4 text-left transition",
+                "block w-full rounded-md border p-4 text-left transition",
                 item.key === selected?.key
                   ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)]",
+                  : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -2410,13 +2410,13 @@ export function AdminOpsInboxDesk({
 
       <div className="space-y-4">
         {selected ? (
-          <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {selected.title}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">{selected.note}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">{selected.note}</p>
               </div>
               <ToneBadge tone="indigo">{selected.lane}</ToneBadge>
             </div>
@@ -2443,14 +2443,14 @@ export function AdminOpsInboxDesk({
           </article>
         ) : null}
 
-        <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-sm font-semibold text-[var(--brand-text)]">
             Handoff log
           </div>
           <div
             role="status"
             aria-live="polite"
-            className="mt-4 rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+            className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
           >
             {message}
           </div>
@@ -2458,18 +2458,18 @@ export function AdminOpsInboxDesk({
             {handoffs.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+                className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{entry.actor}</div>
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {entry.when}
                   </div>
                 </div>
-                <div className="mt-2 text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="mt-2 text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                   {entry.lane}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {entry.summary}
                 </p>
               </div>
@@ -2517,12 +2517,12 @@ export function AdminIncidentCommandDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Incident command
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Keep reliability, trust, and supply incidents inside one visible admin command queue.
           </p>
         </div>
@@ -2533,10 +2533,10 @@ export function AdminIncidentCommandDesk({
               type="button"
               onClick={() => setSelectedKey(item.key)}
               className={cn(
-                "block w-full rounded-[1.1rem] border p-4 text-left transition",
+                "block w-full rounded-md border p-4 text-left transition",
                 item.key === selected?.key
                   ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)]",
+                  : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -2555,13 +2555,13 @@ export function AdminIncidentCommandDesk({
 
       <div className="space-y-4">
         {selected ? (
-          <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {selected.title}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">{selected.note}</p>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">{selected.note}</p>
               </div>
               <ToneBadge tone="indigo">{selected.owner}</ToneBadge>
             </div>
@@ -2588,14 +2588,14 @@ export function AdminIncidentCommandDesk({
           </article>
         ) : null}
 
-        <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+        <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-sm font-semibold text-[var(--brand-text)]">
             Ownership board
           </div>
           <div
             role="status"
             aria-live="polite"
-            className="mt-4 rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+            className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
           >
             {message}
           </div>
@@ -2603,7 +2603,7 @@ export function AdminIncidentCommandDesk({
             {owners.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+                className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{entry.lane}</div>
@@ -2621,7 +2621,7 @@ export function AdminIncidentCommandDesk({
                               : load === "Medium"
                                 ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
                                 : "border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] text-[var(--brand-sage)]"
-                            : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                            : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                         )}
                       >
                         {load}
@@ -2692,12 +2692,12 @@ export function AdminVenueOperationsDesk({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_1fr]">
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Venue supply desk
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Batch-handle venue applications, push them into the right lane, and keep supply
             quality visible from one dashboard surface.
           </p>
@@ -2741,7 +2741,7 @@ export function AdminVenueOperationsDesk({
           {queue.map((application) => (
             <article
               key={application.key}
-              className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{application.name}</div>
@@ -2752,7 +2752,7 @@ export function AdminVenueOperationsDesk({
                     pillBase,
                     selectedKeys.includes(application.key)
                       ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                      : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                      : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                   )}
                 >
                   {selectedKeys.includes(application.key) ? "Selected" : "Select"}
@@ -2764,7 +2764,7 @@ export function AdminVenueOperationsDesk({
                   {application.status}
                 </ToneBadge>
               </div>
-              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                 {application.note}
               </p>
             </article>
@@ -2773,18 +2773,18 @@ export function AdminVenueOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+          className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
       </div>
 
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div>
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Live partner steering
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Keep active partner notes current so event matching stays deliberate.
           </p>
         </div>
@@ -2792,7 +2792,7 @@ export function AdminVenueOperationsDesk({
           {partners.slice(0, 4).map((partner) => (
             <label
               key={partner.key}
-              className="block rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+              className="block rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{partner.name}</div>
@@ -2804,7 +2804,7 @@ export function AdminVenueOperationsDesk({
               <input
                 value={partner.note}
                 onChange={(event) => updatePartner(partner.key, event.target.value)}
-                className="mt-3 w-full rounded-[1rem] border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="mt-3 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           ))}
@@ -2851,13 +2851,13 @@ export function AdminModerationOperationsDesk({
 
   return (
     <div className="grid gap-5">
-      <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               Moderation batch desk
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               Work multiple reports in one flow when the platform is under pressure instead of
               handling every incident separately.
             </p>
@@ -2902,7 +2902,7 @@ export function AdminModerationOperationsDesk({
           {queue.map((report) => (
             <article
               key={report.key}
-              className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+              className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="font-semibold text-[var(--brand-text)]">{report.subject}</div>
@@ -2913,7 +2913,7 @@ export function AdminModerationOperationsDesk({
                     pillBase,
                     selectedKeys.includes(report.key)
                       ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                      : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                      : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                   )}
                 >
                   {selectedKeys.includes(report.key) ? "Selected" : "Select"}
@@ -2925,7 +2925,7 @@ export function AdminModerationOperationsDesk({
                   {report.status}
                 </ToneBadge>
               </div>
-              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                 {report.note}
               </p>
             </article>
@@ -2934,7 +2934,7 @@ export function AdminModerationOperationsDesk({
         <div
           role="status"
           aria-live="polite"
-          className="mt-4 rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/82 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+          className="mt-4 rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
         >
           {message}
         </div>
@@ -2965,7 +2965,7 @@ export function AdminVenueApprovalConsole({
       {queue.map((venue) => (
         <article
           key={venue.key}
-          className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+          className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
         >
           <div className="flex items-center justify-between gap-3">
             <div className="font-semibold text-[var(--brand-text)]">{venue.name}</div>
@@ -2974,7 +2974,7 @@ export function AdminVenueApprovalConsole({
             </span>
           </div>
           <p className="mt-2 text-sm text-[var(--brand-text-muted)]">{venue.type}</p>
-          <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             {venue.note}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -3023,7 +3023,7 @@ export function AdminModerationConsole({
         {reportQueue.map((report) => (
           <article
             key={report.key}
-            className="rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+            className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{report.subject}</div>
@@ -3031,7 +3031,7 @@ export function AdminModerationConsole({
                 {report.priority}
               </span>
             </div>
-            <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {report.note}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -3043,14 +3043,14 @@ export function AdminModerationConsole({
         ))}
       </div>
 
-      <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-        <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+      <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="text-lg font-semibold text-[var(--brand-text)]">
           Banned and appeals
         </div>
         {banList.map((entry) => (
           <div
             key={entry.key}
-            className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4"
+            className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{entry.name}</div>
@@ -3219,15 +3219,15 @@ export function AdminSettingsControlCenter({
         ].map((item) => (
           <article
             key={item.label}
-            className="rounded-[1.3rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-4"
+            className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
           >
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               {item.label}
             </div>
-            <div className="font-editorial tabular-data mt-2 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="tabular-nums mt-1 text-xl font-semibold text-[var(--brand-text)]">
               {item.value}
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">{item.detail}</p>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">{item.detail}</p>
           </article>
         ))}
       </div>
@@ -3235,15 +3235,15 @@ export function AdminSettingsControlCenter({
       <div
         role="status"
         aria-live="polite"
-        className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+        className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
       >
         {message}
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
         <div className="space-y-6">
-          <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-            <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+            <div className="text-sm font-semibold text-[var(--brand-text)]">
               Settings domains
             </div>
             <div className="mt-4 space-y-3">
@@ -3253,10 +3253,10 @@ export function AdminSettingsControlCenter({
                   type="button"
                   onClick={() => setSelectedSectionKey(section.key)}
                   className={cn(
-                    "block w-full rounded-[1.1rem] border px-4 py-4 text-left transition",
+                    "block w-full rounded-md border px-4 py-4 text-left transition",
                     section.key === selectedSection?.key
                       ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                      : "border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)]",
+                      : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)]",
                   )}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -3265,7 +3265,7 @@ export function AdminSettingsControlCenter({
                       {section.items.length} rules
                     </ToneBadge>
                   </div>
-                  <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                     {section.items.map((item) => item.label).slice(0, 2).join(" · ")}
                   </p>
                 </button>
@@ -3273,8 +3273,8 @@ export function AdminSettingsControlCenter({
             </div>
           </article>
 
-          <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-            <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+          <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+            <div className="text-sm font-semibold text-[var(--brand-text)]">
               Emergency controls
             </div>
             <div className="mt-4 grid gap-3">
@@ -3336,13 +3336,13 @@ export function AdminSettingsControlCenter({
 
         <div className="space-y-6">
           {selectedSection ? (
-            <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+            <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                  <div className="text-lg font-semibold text-[var(--brand-text)]">
                     {selectedSection.title}
                   </div>
-                  <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                     Edit values directly, then use the toggle when the rule should be fully on or off.
                   </p>
                 </div>
@@ -3352,7 +3352,7 @@ export function AdminSettingsControlCenter({
                 {selectedSection.items.map((item) => (
                   <div
                     key={item.label}
-                    className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4"
+                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-semibold text-[var(--brand-text)]">{item.label}</div>
@@ -3363,7 +3363,7 @@ export function AdminSettingsControlCenter({
                           "inline-flex h-7 w-12 rounded-full border p-1 transition",
                           item.enabled
                             ? "border-[rgba(124,154,130,0.24)] bg-[rgba(124,154,130,0.16)]"
-                            : "border-[rgba(153,148,168,0.18)] bg-white/72",
+                            : "border-[var(--brand-border-light)] bg-white",
                         )}
                         aria-label={`${item.enabled ? "Disable" : "Enable"} ${item.label}`}
                       >
@@ -3382,7 +3382,7 @@ export function AdminSettingsControlCenter({
                       onChange={(event) =>
                         updateItemValue(selectedSection.key, item.label, event.target.value)
                       }
-                      className="mt-3 w-full rounded-[1rem] border border-[var(--brand-border)] bg-white px-4 py-3 text-sm outline-none transition focus:border-[var(--brand-coral)]"
+                      className="mt-3 w-full rounded-md border border-[var(--brand-border)] bg-white px-4 py-3 text-sm outline-none transition focus:border-[var(--brand-coral)]"
                     />
                   </div>
                 ))}
@@ -3391,15 +3391,15 @@ export function AdminSettingsControlCenter({
           ) : null}
 
           <div className="grid gap-6 xl:grid-cols-[0.96fr_1.04fr]">
-            <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-              <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+            <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+              <div className="text-sm font-semibold text-[var(--brand-text)]">
                 Access matrix
               </div>
               <div className="mt-4 space-y-3">
                 {accessMatrix.map((entry) => (
                   <div
                     key={entry.capability}
-                    className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4"
+                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                   >
                     <div className="text-sm font-semibold text-[var(--brand-text)]">
                       {entry.capability}
@@ -3414,7 +3414,7 @@ export function AdminSettingsControlCenter({
                             pillBase,
                             entry[role]
                               ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                              : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                              : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                           )}
                         >
                           {role}
@@ -3426,23 +3426,23 @@ export function AdminSettingsControlCenter({
               </div>
             </article>
 
-            <article className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-              <div className="font-editorial text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+            <article className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+              <div className="text-sm font-semibold text-[var(--brand-text)]">
                 Change journal
               </div>
               <div className="mt-4 space-y-3">
                 {changeLog.map((entry) => (
                   <div
                     key={entry.key}
-                    className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4"
+                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-semibold text-[var(--brand-text)]">{entry.actor}</div>
-                      <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                      <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                         {entry.when}
                       </div>
                     </div>
-                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                       {entry.action}
                     </p>
                   </div>

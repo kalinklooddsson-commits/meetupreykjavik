@@ -165,10 +165,10 @@ export function MemberOverviewScreen() {
             {memberPortalData.recommendations.map(({ event, reason, score }) => (
               <article
                 key={event.slug}
-                className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div
-                  className="h-28 rounded-[1.2rem]"
+                  className="h-28 rounded-md"
                   style={{ background: event.art }}
                   aria-hidden="true"
                 />
@@ -176,10 +176,10 @@ export function MemberOverviewScreen() {
                   <ToneBadge tone="coral">{score} match</ToneBadge>
                   <ToneBadge tone="sand">{event.category}</ToneBadge>
                 </div>
-                <div className="font-editorial mt-4 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+                <div className="mt-2 text-base font-semibold text-[var(--brand-text)]">
                   {event.title}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {reason}
                 </p>
               </article>
@@ -237,21 +237,21 @@ export function MemberMessagesScreen() {
             {memberPortalData.messages.map((message) => (
               <article
                 key={message.key}
-                className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <div className="font-semibold text-[var(--brand-text)]">{message.counterpart}</div>
-                    <div className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    <div className="mt-1 text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                       {message.role} · {message.channel}
                     </div>
                   </div>
                   <ToneBadge tone={message.status === "Read" ? "sand" : "coral"}>{message.status}</ToneBadge>
                 </div>
-                <div className="font-editorial mt-4 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+                <div className="mt-2 text-base font-semibold text-[var(--brand-text)]">
                   {message.subject}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">{message.preview}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">{message.preview}</p>
                 <div className="mt-4 text-sm font-semibold text-[var(--brand-indigo)]">{message.meta}</div>
               </article>
             ))}
@@ -305,18 +305,18 @@ export function MemberNotificationsScreen() {
             {memberPortalData.notifications.map((item) => (
               <article
                 key={item.key}
-                className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {item.channel}
                   </div>
                   <ToneBadge tone={item.tone}>{item.status}</ToneBadge>
                 </div>
-                <div className="font-editorial mt-4 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+                <div className="mt-2 text-base font-semibold text-[var(--brand-text)]">
                   {item.title}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">{item.detail}</p>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">{item.detail}</p>
                 <div className="mt-4 text-sm font-semibold text-[var(--brand-indigo)]">{item.meta}</div>
               </article>
             ))}
@@ -373,13 +373,13 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
         actionHref="/settings"
       >
         <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[1.5rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-5">
+          <div className="rounded-xl border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex items-center gap-4">
-              <div className="flex h-20 w-20 items-center justify-center rounded-[1.8rem] bg-[linear-gradient(135deg,rgba(79,70,229,0.92),rgba(232,97,77,0.82))] text-2xl font-bold text-white">
+              <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-[var(--brand-indigo)] text-2xl font-bold text-white">
                 {profile.initials}
               </div>
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {profile.name}
                 </div>
                 <p className="mt-2 text-sm text-[var(--brand-text-muted)]">
@@ -398,12 +398,12 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
               {profile.stats.map((stat) => (
                 <div
                   key={stat.key}
-                  className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-3"
+                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
                 >
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {stat.label}
                   </div>
-                  <div className="font-editorial mt-2 text-2xl tracking-[-0.04em] text-[var(--brand-text)]">
+                  <div className="mt-1 text-lg font-semibold text-[var(--brand-text)]">
                     {stat.value}
                   </div>
                 </div>
@@ -424,8 +424,8 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
                 { key: "city", label: "Home base", value: profile.city },
               ]}
             />
-            <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-4">
-              <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 Interests
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -464,10 +464,10 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
             {memberPortalData.groups.map(({ group, nextEvent }) => (
               <div
                 key={group.slug}
-                className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/78 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="font-semibold text-[var(--brand-text)]">{group.name}</div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {group.summary}
                 </p>
                 <div className="mt-3 text-sm font-semibold text-[var(--brand-text)]">
@@ -488,13 +488,13 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
             {profile.recentAttendance.map((item) => (
               <div
                 key={item.title}
-                className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/78 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
                 <div className="mt-1 text-sm text-[var(--brand-text-muted)]">
                   {item.venue}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {item.note}
                 </p>
               </div>
@@ -508,17 +508,17 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
         >
           <div className="space-y-5">
             <div>
-              <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 Preferred venues
               </div>
               <div className="mt-3 space-y-3">
                 {profile.venuePreferences.map((item) => (
                   <div
                     key={item.venue}
-                    className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-white/78 p-4"
+                    className="rounded-md border border-[var(--brand-border-light)] bg-white p-4"
                   >
                     <div className="font-semibold text-[var(--brand-text)]">{item.venue}</div>
-                    <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                       {item.reason}
                     </p>
                   </div>
@@ -526,7 +526,7 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
               </div>
             </div>
             <div>
-              <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 Privacy and messaging
               </div>
               <div className="mt-3">
@@ -552,7 +552,7 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
             {profile.formatAffinities.map((affinity) => (
               <article
                 key={affinity.key}
-                className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{affinity.label}</div>
@@ -580,7 +580,7 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
                     style={{ width: `${affinity.score}%` }}
                   />
                 </div>
-                <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {affinity.note}
                 </p>
               </article>
@@ -602,14 +602,14 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
             />
 
             <div>
-              <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 Organizer guidance
               </div>
               <div className="mt-3 space-y-3">
                 {profile.organizerGuidance.map((item) => (
                   <div
                     key={item}
-                    className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-white/78 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                    className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
                   >
                     {item}
                   </div>
@@ -618,7 +618,7 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
             </div>
 
             <div>
-              <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 Relationship timeline
               </div>
               <div className="mt-3">
@@ -664,7 +664,7 @@ export function MemberSettingsScreen() {
           {memberPortalData.settingsSections.map((section, index) => (
             <article
               key={section.key}
-              className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/80 p-5"
+              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5"
             >
               <div className="flex items-center gap-3">
                 <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]">
@@ -686,7 +686,7 @@ export function MemberSettingsScreen() {
                 {section.items.map((item) => (
                   <div
                     key={item.label}
-                    className="flex items-start justify-between gap-4 rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-3"
+                    className="flex items-start justify-between gap-4 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
                   >
                     <div className="text-sm text-[var(--brand-text-muted)]">{item.label}</div>
                     <div className="text-right text-sm font-semibold text-[var(--brand-text)]">
@@ -738,13 +738,13 @@ export function MemberCalendarScreen() {
             {memberPortalData.upcomingEvents.map(({ event, status, note }) => (
               <div
                 key={event.slug}
-                className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/78 p-4"
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{event.title}</div>
                   <ToneBadge tone={statusTone(status)}>{status}</ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   {note}
                 </p>
               </div>

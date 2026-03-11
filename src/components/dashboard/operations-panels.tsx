@@ -244,13 +244,13 @@ export function OrganizerAttendeeControlCenter({
         ].map((item) => (
           <div
             key={item.label}
-            className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-3"
+            className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
           >
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               {item.label}
             </div>
             <div className="mt-2 flex items-center justify-between gap-3">
-              <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+              <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {item.value}
               </div>
               <ToneBadge tone={item.tone}>{item.label}</ToneBadge>
@@ -259,7 +259,7 @@ export function OrganizerAttendeeControlCenter({
         ))}
       </div>
 
-      <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-4">
+      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4">
         <label className="ops-search-shell flex items-center gap-3 rounded-full border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3">
           <Search className="h-4 w-4 text-[var(--brand-text-light)]" />
           <input
@@ -287,10 +287,10 @@ export function OrganizerAttendeeControlCenter({
               type="button"
               onClick={() => setSelectedName(attendee.name)}
               className={cn(
-                "ops-selection-card block w-full rounded-[1.2rem] border p-4 text-left transition",
+                "ops-selection-card block w-full rounded-md border p-4 text-left transition",
                 attendee.name === selected?.name
                   ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                  : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -306,13 +306,13 @@ export function OrganizerAttendeeControlCenter({
         </div>
 
         {selected ? (
-          <div className="ops-detail-panel rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+          <div className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-[var(--brand-text)]">
                   {selected.name}
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                   Ticket status and event-fit notes stay here so approvals do not happen blindly.
                 </p>
               </div>
@@ -331,9 +331,9 @@ export function OrganizerAttendeeControlCenter({
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] px-4 py-3"
+                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
                 >
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                     {item.label}
                   </div>
                   <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
@@ -418,10 +418,10 @@ export function VenueBookingCommandCenter({
             type="button"
             onClick={() => setSelectedKey(booking.key)}
               className={cn(
-                "ops-selection-card block w-full rounded-[1.2rem] border p-4 text-left transition",
+                "ops-selection-card block w-full rounded-md border p-4 text-left transition",
                 booking.key === selected?.key
                   ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                  : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
               )}
             >
             <div className="flex items-center justify-between gap-3">
@@ -439,24 +439,24 @@ export function VenueBookingCommandCenter({
       </div>
 
       {selected ? (
-        <div className="ops-detail-panel rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+              <div className="text-lg font-semibold text-[var(--brand-text)]">
                 {selected.event}
               </div>
-              <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                 {selected.organizer} wants {selected.attendance} on {selected.date}.
               </p>
             </div>
             <ToneBadge tone={toneForStatus(selected.status)}>{selected.status}</ToneBadge>
           </div>
 
-          <div className="mt-5 rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4">
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+          <div className="mt-5 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Organizer note
             </div>
-            <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {selected.message}
             </p>
           </div>
@@ -467,7 +467,7 @@ export function VenueBookingCommandCenter({
               value={replyDraft}
               onChange={(event) => setReplyDraft(event.target.value)}
               rows={5}
-              className="mt-2 w-full rounded-[1.2rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -571,10 +571,10 @@ export function VenueAvailabilityStudio({
             type="button"
             onClick={() => setSelectedDay(day.day)}
             className={cn(
-              "block w-full rounded-[1.2rem] border p-4 text-left transition",
+              "block w-full rounded-md border p-4 text-left transition",
               day.day === selected?.day
                 ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="flex items-center justify-between gap-3">
@@ -589,9 +589,9 @@ export function VenueAvailabilityStudio({
       </div>
 
       {selected ? (
-        <div className="space-y-5 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               {selected.day} availability
             </div>
             <ToneBadge tone="indigo">Editable locally</ToneBadge>
@@ -601,7 +601,7 @@ export function VenueAvailabilityStudio({
             {selected.blocks.map((block) => (
               <div
                 key={block}
-                className="flex items-center justify-between gap-3 rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-3"
+                className="flex items-center justify-between gap-3 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
               >
                 <div className="text-sm font-semibold text-[var(--brand-text)]">{block}</div>
                 <button
@@ -637,8 +637,8 @@ export function VenueAvailabilityStudio({
             />
           </div>
 
-          <div className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/78 p-4">
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-white p-4">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Exceptions
             </div>
             <label className="mt-3 block text-sm font-semibold text-[var(--brand-text)]">
@@ -646,7 +646,7 @@ export function VenueAvailabilityStudio({
               <input
                 value={newException}
                 onChange={(event) => setNewException(event.target.value)}
-                className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -700,10 +700,10 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
             type="button"
             onClick={() => setSelectedKey(deal.key)}
             className={cn(
-              "block w-full rounded-[1.2rem] border p-4 text-left transition",
+              "block w-full rounded-md border p-4 text-left transition",
               deal.key === selected?.key
                 ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="flex items-center justify-between gap-3">
@@ -721,9 +721,9 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
       </div>
 
       {selected ? (
-        <div className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               {selected.title}
             </div>
             <div className="flex flex-wrap gap-2">
@@ -738,7 +738,7 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
               value={selected.note}
               onChange={(event) => mutateSelected({ note: event.target.value })}
               rows={5}
-              className="mt-2 w-full rounded-[1.2rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -747,7 +747,7 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
             <input
               value={selected.redemption}
               onChange={(event) => mutateSelected({ redemption: event.target.value })}
-              className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -816,10 +816,10 @@ export function VenueProfileSectionEditor({
             type="button"
             onClick={() => setSelectedKey(section.key)}
             className={cn(
-              "block w-full rounded-[1.2rem] border p-4 text-left transition",
+              "block w-full rounded-md border p-4 text-left transition",
               section.key === selected?.key
                 ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="font-semibold text-[var(--brand-text)]">{section.title}</div>
@@ -831,8 +831,8 @@ export function VenueProfileSectionEditor({
       </div>
 
       {selected ? (
-        <div className="space-y-4 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+        <div className="space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             {selected.title}
           </div>
           {selected.items.map((item) => (
@@ -844,7 +844,7 @@ export function VenueProfileSectionEditor({
               <input
                 value={item.value}
                 onChange={(event) => updateItem(item.label, event.target.value)}
-                className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
               />
             </label>
           ))}
@@ -901,13 +901,13 @@ export function AdminContentControlCenter({
         {sectionState.map((section) => (
           <article
             key={section.key}
-            className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white/82 p-4"
+            className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{section.title}</div>
               <ToneBadge tone={toneForStatus(section.status)}>{section.status}</ToneBadge>
             </div>
-            <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {section.note}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -935,11 +935,11 @@ export function AdminContentControlCenter({
       </div>
 
       <div className="space-y-5">
-        <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Featured categories
           </div>
-          <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Pick which categories should dominate the discovery and homepage rails.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -952,7 +952,7 @@ export function AdminContentControlCenter({
                   pillBase,
                   featuredCategories.includes(category.key)
                     ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                    : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                    : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
                 )}
               >
                 {category.name}
@@ -961,15 +961,15 @@ export function AdminContentControlCenter({
           </div>
         </div>
 
-        <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Editorial queue actions
           </div>
           <div className="mt-4 space-y-3">
             {blogState.map((post) => (
               <div
                 key={post.key}
-                className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
@@ -1069,8 +1069,8 @@ export function AdminCommsStudio({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
-      <div className="space-y-5 rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-        <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+      <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="text-lg font-semibold text-[var(--brand-text)]">
           Compose message
         </div>
         <div className="flex flex-wrap gap-2">
@@ -1083,7 +1083,7 @@ export function AdminCommsStudio({
                 pillBase,
                 selectedAudiences.includes(audience)
                   ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                  : "border-[rgba(153,148,168,0.14)] bg-white/80 text-[var(--brand-text-muted)]",
+                  : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
               )}
             >
               {audience}
@@ -1098,7 +1098,7 @@ export function AdminCommsStudio({
             onChange={(event) =>
               setComposer((current) => ({ ...current, subject: event.target.value }))
             }
-            className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
           />
         </label>
 
@@ -1109,7 +1109,7 @@ export function AdminCommsStudio({
             onChange={(event) =>
               setComposer((current) => ({ ...current, preheader: event.target.value }))
             }
-            className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
           />
         </label>
 
@@ -1120,7 +1120,7 @@ export function AdminCommsStudio({
             onChange={(event) =>
               setComposer((current) => ({ ...current, headline: event.target.value }))
             }
-            className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
           />
         </label>
 
@@ -1132,7 +1132,7 @@ export function AdminCommsStudio({
               setComposer((current) => ({ ...current, preview: event.target.value }))
             }
             rows={6}
-            className="mt-2 w-full rounded-[1.2rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
           />
         </label>
 
@@ -1144,7 +1144,7 @@ export function AdminCommsStudio({
               onChange={(event) =>
                 setComposer((current) => ({ ...current, ctaLabel: event.target.value }))
               }
-              className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
           <label className="block text-sm font-semibold text-[var(--brand-text)]">
@@ -1154,7 +1154,7 @@ export function AdminCommsStudio({
               onChange={(event) =>
                 setComposer((current) => ({ ...current, footer: event.target.value }))
               }
-              className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
         </div>
@@ -1176,8 +1176,8 @@ export function AdminCommsStudio({
       </div>
 
       <div className="space-y-5">
-        <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Templates
           </div>
           <div className="mt-4 grid gap-3">
@@ -1187,10 +1187,10 @@ export function AdminCommsStudio({
                 type="button"
                 onClick={() => applyTemplate(template)}
                 className={cn(
-                  "rounded-[1.1rem] border px-4 py-3 text-left transition",
+                  "rounded-md border px-4 py-3 text-left transition",
                   selectedTemplateKey === template.key
                     ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)]"
-                    : "border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] hover:border-[rgba(79,70,229,0.16)]",
+                    : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] hover:border-[rgba(79,70,229,0.16)]",
                 )}
               >
                 <div className="flex items-center justify-between gap-3">
@@ -1207,29 +1207,29 @@ export function AdminCommsStudio({
           </div>
         </div>
 
-        <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Email preview
           </div>
-          <div className="mt-4 rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.68)] p-4">
-            <div className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-white p-5">
-              <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+          <div className="mt-4 rounded-lg border border-[var(--brand-border-light)] bg-[rgba(245,240,232,0.68)] p-4">
+            <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+              <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
                 {selectedTemplate?.audience ?? "Audience"}
               </div>
               <div className="mt-3 text-xs leading-6 text-[var(--brand-text-light)]">
                 {composer.preheader}
               </div>
-              <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+              <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
                 {composer.headline}
               </div>
-              <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                 {composer.preview}
               </p>
               <div className="mt-4 space-y-2">
                 {(selectedTemplate?.bullets ?? []).map((bullet) => (
                   <div
                     key={bullet}
-                    className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)] px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
                   >
                     {bullet}
                   </div>
@@ -1245,15 +1245,15 @@ export function AdminCommsStudio({
           </div>
         </div>
 
-        <div className="rounded-[1.4rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
-          <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="text-lg font-semibold text-[var(--brand-text)]">
             Latest outbound
           </div>
           <div className="mt-4 space-y-3">
             {historyState.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="font-semibold text-[var(--brand-text)]">{entry.title}</div>
@@ -1329,14 +1329,14 @@ export function MemberSettingsStudio({
             type="button"
             onClick={() => setSelectedKey(section.key)}
             className={cn(
-              "block w-full rounded-[1.2rem] border p-4 text-left transition",
+              "block w-full rounded-md border p-4 text-left transition",
               section.key === selected?.key
                 ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="font-semibold text-[var(--brand-text)]">{section.title}</div>
-            <div className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <div className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {section.description}
             </div>
           </button>
@@ -1344,12 +1344,12 @@ export function MemberSettingsStudio({
       </div>
 
       {selected ? (
-        <div className="space-y-5 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               {selected.title}
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {selected.description}
             </p>
           </div>
@@ -1364,7 +1364,7 @@ export function MemberSettingsStudio({
                 <input
                   value={item.value}
                   onChange={(event) => updateItem(item.label, event.target.value)}
-                  className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
                 />
               </label>
             ))}
@@ -1389,7 +1389,7 @@ export function MemberSettingsStudio({
             <div
               role="status"
               aria-live="polite"
-              className="rounded-[1rem] border border-[rgba(124,154,130,0.2)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-[var(--brand-sage)]"
+              className="rounded-md border border-[rgba(124,154,130,0.2)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-[var(--brand-sage)]"
             >
               {message}
             </div>
@@ -1448,13 +1448,13 @@ export function OrganizerVenueRequestStudio({
               setRequestDate(match.nextSlot);
             }}
             className={cn(
-              "block w-full rounded-[1.2rem] border p-4 text-left transition",
+              "block w-full rounded-md border p-4 text-left transition",
               match.venue.slug === selected?.venue.slug
                 ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[rgba(153,148,168,0.12)] bg-white/78 hover:border-[rgba(79,70,229,0.16)]",
+                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
-            <div className="h-24 rounded-[1rem]" style={{ background: match.venue.art }} />
+            <div className="h-24 rounded-md" style={{ background: match.venue.art }} />
             <div className="mt-4 flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{match.venue.name}</div>
               <ToneBadge tone="sage">{match.score} fit</ToneBadge>
@@ -1467,12 +1467,12 @@ export function OrganizerVenueRequestStudio({
       </div>
 
       {selected ? (
-        <div className="space-y-5 rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5">
+        <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
           <div>
-            <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-[var(--brand-text)]">
               {selected.venue.name}
             </div>
-            <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {selected.fit}
             </p>
           </div>
@@ -1482,7 +1482,7 @@ export function OrganizerVenueRequestStudio({
             <input
               value={requestDate}
               onChange={(event) => setRequestDate(event.target.value)}
-              className="mt-2 w-full rounded-[1rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -1492,7 +1492,7 @@ export function OrganizerVenueRequestStudio({
               value={requestNote}
               onChange={(event) => setRequestNote(event.target.value)}
               rows={5}
-              className="mt-2 w-full rounded-[1.2rem] border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
             />
           </label>
 
@@ -1505,15 +1505,15 @@ export function OrganizerVenueRequestStudio({
             />
           </div>
 
-          <div className="rounded-[1.2rem] border border-[rgba(153,148,168,0.12)] bg-white/78 p-4">
-            <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-white p-4">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
               Request pipeline
             </div>
             <div className="mt-3 space-y-3">
               {pipelineState.map((item) => (
                 <div
                   key={item.key}
-                  className="rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4"
+                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="font-semibold text-[var(--brand-text)]">{item.venue}</div>
@@ -1522,7 +1522,7 @@ export function OrganizerVenueRequestStudio({
                   <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
                     {item.date}
                   </div>
-                  <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
                     {item.note}
                   </p>
                 </div>
