@@ -1,32 +1,36 @@
 export type HomeEvent = {
   id: number;
+  slug: string;
   title: string;
   tag: string;
   day: string;
   date: string;
   time: string;
   venue: string;
+  venueSlug: string;
   attendees: number;
   deal?: string;
-  art: string;
+  photo: string;
 };
 
 export type HomeGroup = {
+  slug: string;
   name: string;
   category: string;
   members: number;
   description: string;
-  art: string;
+  photo: string;
 };
 
 export type HomeVenue = {
+  slug: string;
   name: string;
   type: string;
   area: string;
   rating: number;
   events: number;
   deal?: string;
-  art: string;
+  photo: string;
 };
 
 export const heroStats = [
@@ -52,99 +56,112 @@ export const categories = [
 export const events: HomeEvent[] = [
   {
     id: 1,
+    slug: "singles-night-25-35",
     title: "Singles Night - Ages 25-35",
     tag: "Social",
     day: "Thu 15 Mar",
     date: "15",
     time: "20:00",
     venue: "Lebowski Bar",
+    venueSlug: "lebowski-bar",
     attendees: 43,
     deal: "2-for-1 drinks",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.95), rgba(79,70,229,0.8))",
+    photo: "/place-images/reykjavik/reykjavik-871-2-78434189.jpg",
   },
   {
     id: 2,
+    slug: "saturday-hike-mt-esja",
     title: "Saturday Hike to Mt. Esja",
     tag: "Outdoors",
     day: "Sat 16 Mar",
     date: "16",
     time: "09:00",
     venue: "Esja Trailhead",
+    venueSlug: "grandi-hub",
     attendees: 27,
-    art: "linear-gradient(135deg, rgba(124,154,130,0.9), rgba(42,38,56,0.82))",
+    photo: "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
   },
   {
     id: 3,
+    slug: "react-server-components-workshop",
     title: "React Server Components Workshop",
     tag: "Tech",
     day: "Tue 19 Mar",
     date: "19",
     time: "18:30",
     venue: "Grandi Hub",
+    venueSlug: "grandi-hub",
     attendees: 61,
     deal: "Free coffee",
-    art: "linear-gradient(135deg, rgba(55,48,163,0.95), rgba(30,27,46,0.88))",
+    photo: "/place-images/reykjavik/hof-i-deccf755.jpg",
   },
 ] as const;
 
 export const groups: HomeGroup[] = [
   {
+    slug: "reykjavik-hikers",
     name: "Reykjavik Hikers",
     category: "Outdoors",
     members: 284,
     description: "Weekly hikes around Iceland with welcoming hosts and low-pressure signups.",
-    art: "linear-gradient(135deg, rgba(124,154,130,0.95), rgba(79,70,229,0.72))",
+    photo: "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
   },
   {
+    slug: "expats-in-iceland",
     name: "Expats in Iceland",
     category: "Expat",
     members: 512,
     description: "A landing spot for newcomers finding events, friends, and practical city tips.",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.9), rgba(245,240,232,0.9))",
+    photo: "/place-images/reykjavik/reykjavik-871-2-78434189.jpg",
   },
   {
+    slug: "tech-community-rvk",
     name: "Tech Community RVK",
     category: "Tech",
     members: 198,
     description: "Developers, founders, and designers sharing talks, demos, and open studio nights.",
-    art: "linear-gradient(135deg, rgba(55,48,163,0.92), rgba(232,97,77,0.78))",
+    photo: "/place-images/reykjavik/hof-i-deccf755.jpg",
   },
   {
+    slug: "creative-reykjavik",
     name: "Creative Reykjavik",
     category: "Arts",
     members: 203,
     description: "Gallery walks, sketchbook meetups, and after-hours openings around the city.",
-    art: "linear-gradient(135deg, rgba(245,240,232,1), rgba(232,97,77,0.76))",
+    photo: "/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg",
   },
 ] as const;
 
 export const venues: HomeVenue[] = [
   {
+    slug: "lebowski-bar",
     name: "Lebowski Bar",
     type: "Bar & Grill",
     area: "Laugavegur",
     rating: 4.7,
     events: 31,
     deal: "Happy hour until 21:00",
-    art: "linear-gradient(135deg, rgba(30,27,46,1), rgba(232,97,77,0.88))",
+    photo: "/place-images/reykjavik/ufa-40055fa7.jpg",
   },
   {
+    slug: "kex-hostel",
     name: "Kex Hostel",
     type: "Bar & Venue",
     area: "Skulagata",
     rating: 4.8,
     events: 23,
     deal: "Welcome drink for hosts",
-    art: "linear-gradient(135deg, rgba(245,240,232,0.8), rgba(55,48,163,0.8))",
+    photo: "/place-images/reykjavik/dill-0aeca160.jpg",
   },
   {
+    slug: "grandi-hub",
     name: "Stofan Cafe",
     type: "Cafe & Lounge",
     area: "Vesturgata",
     rating: 4.9,
     events: 18,
     deal: "Coffee bundle for groups",
-    art: "linear-gradient(135deg, rgba(124,154,130,0.9), rgba(245,240,232,0.96))",
+    photo: "/place-images/reykjavik/hafnarborg-1be7b43b.jpg",
   },
 ] as const;
 

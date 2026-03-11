@@ -5,7 +5,6 @@ import {
   CalendarCheck2,
   CalendarRange,
   Gift,
-  Mail,
   MessageSquareMore,
   ShieldCheck,
   Users,
@@ -13,12 +12,10 @@ import {
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
-  CommandCenterDeck,
   DashboardTable,
   FilterChips,
   KeyValueList,
   ProgressSteps,
-  SignalRail,
   StatCard,
   StreamCard,
   Surface,
@@ -120,55 +117,14 @@ export function VenueMessagesScreen() {
   return (
     <VenueShell
       eyebrow="Venue messages"
-      title="Booking threads, compliance follow-ups, and repeat host requests"
-      description="Venue teams need their own communications desk because the booking layer is half negotiation, half operations."
+      title="Messages"
+      description="Booking threads, compliance, and host requests."
       links={venueLinks("/venue/messages")}
     >
-      <CommandCenterDeck
-        eyebrow="Message command"
-        title="Handle booking conversations before they become room problems"
-        description="This workspace keeps incoming organizer asks, admin follow-ups, and repeat-host context together so the room can be run commercially."
-        prompt="Scan which message affects tonight's staffing, which one changes premium slot value, and what needs a fast answer."
-        action={{ href: "/venue/bookings", label: "Open bookings" }}
-        secondaryAction={{ href: "/venue/notifications", label: "Open notifications" }}
-        suggestions={["needs reply", "premium slot", "repeat host", "compliance", "room fit", "today"]}
-        stats={[
-          {
-            icon: MessageSquareMore,
-            label: "Open threads",
-            value: String(venuePortalData.messages.length),
-            detail: "Venue conversation volume should be handled as operating work, not left inside booking notes alone.",
-            tone: "indigo",
-          },
-          {
-            icon: BellRing,
-            label: "Needs reply",
-            value: String(venuePortalData.messages.filter((item) => item.status !== "Open").length),
-            detail: "The real pressure is reply-needed threads that can block bookings or verification.",
-            tone: "coral",
-          },
-          {
-            icon: Mail,
-            label: "Comms lanes",
-            value: "3",
-            detail: "Organizer booking, platform compliance, and repeat-host requests each need different handling speed.",
-            tone: "sage",
-          },
-          {
-            icon: CalendarRange,
-            label: "Booking-linked",
-            value: "2",
-            detail: "Most venue messages should stay directly attached to concrete room and time decisions.",
-            tone: "indigo",
-          },
-        ]}
-      />
-
       <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
         <Surface
           eyebrow="Inbox"
           title="Current message queue"
-          description="Surface counterpart, channel, and urgency immediately so venue operators can answer with the right commercial context."
         >
           <div className="space-y-4">
             {venuePortalData.messages.map((message) => (
@@ -197,8 +153,7 @@ export function VenueMessagesScreen() {
         <div className="space-y-6">
           <Surface
             eyebrow="Lanes"
-            title="Venue message filters"
-            description="Use clear message lanes so sales, compliance, and repeat-host work stay legible."
+            title="Message filters"
           >
             <FilterChips
               items={[
@@ -212,8 +167,7 @@ export function VenueMessagesScreen() {
 
           <Surface
             eyebrow="Linked alerts"
-            title="Venue notification pressure"
-            description="Booking urgency, profile visibility, and deal performance stay nearby so every reply carries context."
+            title="Related notifications"
           >
             <ActivityFeed items={venuePortalData.notifications} />
           </Surface>
@@ -227,55 +181,14 @@ export function VenueNotificationsScreen() {
   return (
     <VenueShell
       eyebrow="Venue notifications"
-      title="Booking urgency, revenue movement, and visibility signals"
-      description="Venue notifications need their own operational layer because room scheduling, deal performance, and public visibility all move on different clocks."
+      title="Notifications"
+      description="Booking urgency, revenue, and visibility signals."
       links={venueLinks("/venue/notifications")}
     >
-      <CommandCenterDeck
-        eyebrow="Alert command"
-        title="Separate urgent booking pressure from growth signals"
-        description="This view keeps venue operators focused on what blocks revenue now versus what improves the partner position over time."
-        prompt="Scan urgent replies, commercial wins, and platform visibility changes without forcing the team to infer severity from generic dashboard cards."
-        action={{ href: "/venue/messages", label: "Open messages" }}
-        secondaryAction={{ href: "/venue/bookings", label: "Open booking queue" }}
-        suggestions={["urgent", "booking holds", "deal uplift", "visibility", "today", "premium nights"]}
-        stats={[
-          {
-            icon: BellRing,
-            label: "Alert stream",
-            value: String(venuePortalData.notifications.length),
-            detail: "Venue operators need a dedicated alert layer to avoid missing time-sensitive commercial decisions.",
-            tone: "coral",
-          },
-          {
-            icon: CalendarRange,
-            label: "Booking urgent",
-            value: String(venuePortalData.notifications.filter((item) => item.status === "Urgent").length),
-            detail: "Urgent booking pressure is the first thing a venue team should see in the morning.",
-            tone: "coral",
-          },
-          {
-            icon: Gift,
-            label: "Revenue wins",
-            value: String(venuePortalData.notifications.filter((item) => item.status === "Good").length),
-            detail: "Deal and conversion improvements are working signals and should stay visible, not hidden in analytics.",
-            tone: "sage",
-          },
-          {
-            icon: ShieldCheck,
-            label: "Platform notes",
-            value: "1",
-            detail: "Visibility and verification changes affect supply quality and public conversion.",
-            tone: "indigo",
-          },
-        ]}
-      />
-
       <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
         <Surface
           eyebrow="Alert stream"
-          title="Recent venue notifications"
-          description="Show urgency, channel, and timing clearly so venue operators know what changes room economics first."
+          title="Recent notifications"
         >
           <div className="space-y-4">
             {venuePortalData.notifications.map((item) => (
@@ -294,7 +207,6 @@ export function VenueNotificationsScreen() {
         <Surface
           eyebrow="Filters"
           title="Notification lanes"
-          description="Keep booking urgency, growth, and platform signals separated so the venue team can prioritize correctly."
         >
           <FilterChips
             items={[
@@ -314,8 +226,8 @@ export function VenueOnboardingScreen() {
   return (
     <VenueShell
       eyebrow="Venue partner onboarding"
-      title="Ten-step venue application"
-      description="This onboarding view now mirrors the spec with progress, reviewer context, outstanding documents, and the exact areas still blocking verification."
+      title="Venue application"
+      description="Progress, documents, and verification status."
       links={venueLinks("/venue/onboarding")}
     >
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
@@ -331,7 +243,6 @@ export function VenueOnboardingScreen() {
           <Surface
             eyebrow="Requirements"
             title="Remaining documents"
-            description="The final proof points to clear before the verified badge can be issued."
           >
             <div className="space-y-3">
               {venuePortalData.onboarding.requiredDocs.map((doc) => (
@@ -367,7 +278,7 @@ export function VenueDashboardScreen() {
     <VenueShell
       eyebrow="Venue dashboard"
       title="Availability, bookings, and deals"
-      description="The venue home now exposes stats, upcoming event context, the booking queue, and partnership tier performance instead of placeholder copy."
+      description="Your venue overview."
       links={venueLinks("/venue/dashboard")}
     >
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -381,91 +292,10 @@ export function VenueDashboardScreen() {
         ))}
       </div>
 
-      <CommandCenterDeck
-        eyebrow="Venue command"
-        title="Protect room quality, response time, and partner revenue"
-        description="The venue overview should feel like operational infrastructure: incoming requests, live room usage, deal performance, and staffing pressure all visible before the first reply."
-        prompt="Scan bookings that need a reply, confirmed lineup pressure, availability constraints, and the deals that actually improve partner value."
-        action={{ href: "/venue/bookings", label: "Open booking queue" }}
-        secondaryAction={{ href: "/venue/availability", label: "Adjust availability" }}
-        suggestions={[
-          "reply today",
-          "counter offers",
-          "deal redemption",
-          "staffing windows",
-          "organizer fit",
-          "featured nights",
-        ]}
-        stats={[
-          {
-            icon: CalendarCheck2,
-            label: "Live lineup",
-            value: String(venuePortalData.upcomingEvents.length),
-            detail:
-              "Confirmed and in-flight events stay visible here so room planning does not depend on opening multiple pages.",
-            tone: "indigo",
-          },
-          {
-            icon: Users,
-            label: "Incoming bookings",
-            value: String(venuePortalData.bookings.incoming.length),
-            detail:
-              "The booking queue is the most time-sensitive venue workflow, so it belongs near the top of the dashboard.",
-            tone: "coral",
-          },
-          {
-            icon: Gift,
-            label: "Active deals",
-            value: String(venuePortalData.deals.length),
-            detail:
-              "Deals are part of the partnership model and should feel like working commercial inventory, not sidebar extras.",
-            tone: "sage",
-          },
-          {
-            icon: BadgeEuro,
-            label: "Partner tier",
-            value: venuePortalData.partnershipTier,
-            detail:
-              "Tier context keeps availability, visibility, and response expectations grounded in the actual commercial relationship.",
-            tone: "coral",
-          },
-        ]}
-      />
-
-      <SignalRail
-        eyebrow="Commercial lanes"
-        title="Keep booking pressure, partner quality, and yield visible"
-        description="The venue overview should surface the three things that matter commercially: how fast the room must respond, how strong the partner mix is, and whether the venue is monetizing well."
-        items={[
-          {
-            key: "booking",
-            label: "Booking lane",
-            value: String(venuePortalData.bookings.incoming.length),
-            detail: "Incoming requests are the live commercial queue and should stay above the fold.",
-            tone: "coral",
-          },
-          {
-            key: "quality",
-            label: "Partner quality",
-            value: venuePortalData.metrics[2]?.value ?? "4.8",
-            detail: "Venue reputation and repeat-host quality shape pricing power more than raw volume alone.",
-            tone: "sage",
-          },
-          {
-            key: "yield",
-            label: "Yield lane",
-            value: venuePortalData.partnershipTier,
-            detail: "Tier, deals, and featured nights are the commercial context that determines how the room should be sold.",
-            tone: "indigo",
-          },
-        ]}
-      />
-
       <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         <Surface
           eyebrow="Lineup"
-          title="Upcoming confirmed and in-flight events"
-          description="Venue teams need to see both confirmed bookings and active counters to manage operations cleanly."
+          title="Upcoming events"
         >
           <div className="space-y-4">
             {venuePortalData.upcomingEvents.map(({ event, organizer, status, note }) => (
@@ -493,7 +323,6 @@ export function VenueDashboardScreen() {
         <Surface
           eyebrow="Tier"
           title={venuePortalData.partnershipTier}
-          description="Partnership positioning, current deal usage, and next operational asks stay visible on the front page."
         >
           <KeyValueList
             items={[
@@ -514,75 +343,13 @@ export function VenueEventsScreen() {
     <VenueShell
       eyebrow="Venue events"
       title="Events at this venue"
-      description="This view combines hosted events, requested bookings, and quick calendar context so venue partners can plan staffing and room layout."
+      description="Hosted events, bookings, and calendar context."
       links={venueLinks("/venue/events")}
     >
-      <CommandCenterDeck
-        eyebrow="Events command"
-        title="See what is confirmed, premium, and operationally risky before service starts"
-        description="Venue event management should open with room pressure, event status, and commercial quality so operators do not need to inspect every booking one row at a time."
-        prompt="Scan the hosted-event lineup, find counters or transfers, and compare what is confirmed against what deserves staffing or pricing attention."
-        action={{ href: "/venue/bookings", label: "Open booking queue" }}
-        secondaryAction={{ href: "/venue/analytics", label: "Review venue analytics" }}
-        suggestions={[
-          "confirmed tonight",
-          "countered events",
-          "premium formats",
-          "staffing pressure",
-          "layout risk",
-          "repeat winners",
-        ]}
-        stats={[
-          {
-            icon: CalendarRange,
-            label: "Hosted events",
-            value: String(venuePortalData.upcomingEvents.length),
-            detail:
-              "The venue team should be able to scan how many live events are on the board before reading the detail column.",
-            tone: "indigo",
-          },
-          {
-            icon: CalendarCheck2,
-            label: "Confirmed status",
-            value: String(
-              venuePortalData.upcomingEvents.filter((item) =>
-                item.status.toLowerCase().includes("confirm"),
-              ).length,
-            ),
-            detail:
-              "Confirmed events are the clearest staffing and room-read signal, so they should stand out from counters and pending changes.",
-            tone: "sage",
-          },
-          {
-            icon: BadgeEuro,
-            label: "Premium-led nights",
-            value: String(
-              venuePortalData.upcomingEvents.filter(
-                (item) =>
-                  item.status.toLowerCase().includes("premium") ||
-                  item.note.toLowerCase().includes("premium"),
-              ).length,
-            ),
-            detail:
-              "Premium and higher-margin formats need explicit visibility or the venue loses the commercial signal inside generic scheduling data.",
-            tone: "coral",
-          },
-          {
-            icon: Gift,
-            label: "Repeat-fit signals",
-            value: String(venuePortalData.analytics.topReferrers.length),
-            detail:
-              "The repeat-booking story matters because venue operators care about which formats reliably turn into future revenue, not only tonight's occupancy.",
-            tone: "indigo",
-          },
-        ]}
-      />
-
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Events"
           title="Event pipeline"
-          description="Confirmed, countered, and draft venue-created events all sit in one table."
         >
           <FilterChips
             items={[
@@ -612,17 +379,13 @@ export function VenueEventsScreen() {
 
         <Surface
           eyebrow="Past stats"
-          title="What performed recently"
-          description="Past event context stays visible beside the active lineup so venues can compare which formats are worth repeating."
+          title="Recent performance"
         >
           <TrendChart
             data={venuePortalData.analytics.eventTypes}
             tone="coral"
             formatValue={(value) => `${value}`}
           />
-          <div className="mt-5 text-sm leading-7 text-[var(--brand-text-muted)]">
-            Social and expat-led events are still the strongest repeat-booking drivers, while smaller premium formats create the best per-seat revenue.
-          </div>
         </Surface>
       </div>
     </VenueShell>
@@ -633,66 +396,14 @@ export function VenueBookingsScreen() {
   return (
     <VenueShell
       eyebrow="Venue bookings"
-      title="Requests, counters, and approvals"
-      description="The booking workflow now has an explicit incoming queue, status actions, and history context for venue operators."
+      title="Booking queue"
+      description="Requests, counters, and approvals."
       links={venueLinks("/venue/bookings")}
     >
-      <CommandCenterDeck
-        eyebrow="Bookings command"
-        title="Reply quickly without sacrificing room fit"
-        description="Venue bookings should feel like operations software: incoming requests, response urgency, guest-fit guidance, and room constraints all visible before a venue says yes."
-        prompt="Scan incoming requests, compare them to room guidance, and respond with the right accept, counter, hold, or decline stance."
-        action={{ href: "/venue/availability", label: "Check availability" }}
-        secondaryAction={{ href: "/venue/events", label: "Review venue events" }}
-        suggestions={[
-          "reply today",
-          "counter offer",
-          "guest fit",
-          "layout guidance",
-          "room constraints",
-          "deal alignment",
-        ]}
-        stats={[
-          {
-            icon: CalendarRange,
-            label: "Incoming requests",
-            value: String(venuePortalData.bookings.incoming.length),
-            detail:
-              "The queue should tell the venue team how much active decision work is in front of them before they start opening rows.",
-            tone: "coral",
-          },
-          {
-            icon: CalendarCheck2,
-            label: "Recent outcomes",
-            value: String(venuePortalData.bookings.history.length),
-            detail:
-              "History matters because venue operators need to compare new requests against what has worked or failed recently.",
-            tone: "indigo",
-          },
-          {
-            icon: Users,
-            label: "Guest-fit signals",
-            value: String(venuePortalData.bookings.guestFit.signals.length),
-            detail:
-              "The best booking products give venues a clear read on whether the room and audience actually fit each other.",
-            tone: "sage",
-          },
-          {
-            icon: ShieldCheck,
-            label: "Arrival guidance",
-            value: String(venuePortalData.bookings.guestFit.arrivalNotes.length),
-            detail:
-              "Arrival and layout cues help venues avoid weak accepts and make stronger counter-offers.",
-            tone: "indigo",
-          },
-        ]}
-      />
-
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Incoming"
-          title="Booking request queue"
-          description="Organizer, event, date, attendance, and message all stay in one operational table."
+          title="Booking requests"
         >
           <DashboardTable
             columns={["Organizer", "Event", "Date", "Attendance", "Status", "Message"]}
@@ -714,8 +425,7 @@ export function VenueBookingsScreen() {
 
         <Surface
           eyebrow="History"
-          title="Recent booking outcomes"
-          description="Past accepts, declines, and counters remain visible for operator context."
+          title="Recent outcomes"
         >
           <div className="space-y-4">
             {venuePortalData.bookings.history.map((item) => (
@@ -740,8 +450,7 @@ export function VenueBookingsScreen() {
 
       <Surface
         eyebrow="Action desk"
-        title="Respond to incoming requests"
-        description="This local control center lets venue operators accept, counter, hold, or decline bookings with explicit reply copy."
+        title="Respond to requests"
       >
         <VenueBookingCommandCenter bookings={venuePortalData.bookings.incoming} />
       </Surface>
@@ -749,7 +458,7 @@ export function VenueBookingsScreen() {
       <div className="grid gap-6 xl:grid-cols-[0.96fr_1.04fr]">
         <Surface
           eyebrow="Guest fit"
-          title="What kind of attendee this room serves best"
+          title="Attendee fit for this room"
           description={venuePortalData.bookings.guestFit.summary}
         >
           <div className="space-y-4">
@@ -783,7 +492,6 @@ export function VenueBookingsScreen() {
         <Surface
           eyebrow="Room guidance"
           title="Arrival and layout cues"
-          description="Operators can use this to decide whether to accept a booking, counter it, or move it into a better room or time block."
         >
           <KeyValueList
             items={venuePortalData.bookings.guestFit.arrivalNotes.map((item) => ({
@@ -812,15 +520,14 @@ export function VenueAvailabilityScreen() {
   return (
     <VenueShell
       eyebrow="Venue availability"
-      title="Set hours and open slots"
-      description="Recurring availability, exceptions, and day-by-day blocks are all present here as a practical calendar editor shell."
+      title="Hours and open slots"
+      description="Recurring availability, exceptions, and day-by-day blocks."
       links={venueLinks("/venue/availability")}
     >
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <Surface
           eyebrow="Recurring"
           title="Availability rules"
-          description="Recurring patterns are the backbone of faster organizer booking."
         >
           <div className="space-y-3">
             {venuePortalData.availability.recurring.map((rule) => (
@@ -837,7 +544,6 @@ export function VenueAvailabilityScreen() {
         <Surface
           eyebrow="Weekly editor"
           title="Open and blocked windows"
-          description="The weekly view is enough to make the availability workflow concrete before full calendar state is wired."
         >
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1">
             {venuePortalData.availability.weeklyGrid.map((day) => (
@@ -878,7 +584,6 @@ export function VenueAvailabilityScreen() {
       <Surface
         eyebrow="Editor"
         title="Weekly availability studio"
-        description="Adjust day blocks and add one-off exceptions without leaving the availability page."
       >
         <VenueAvailabilityStudio
           weeklyGrid={venuePortalData.availability.weeklyGrid}
@@ -893,73 +598,13 @@ export function VenueDealsScreen() {
   return (
     <VenueShell
       eyebrow="Venue deals"
-      title="Member offers and partnership perks"
-      description="Deals are now represented as a proper management surface with type, tier, status, and redemption context."
+      title="Deals and perks"
+      description="Member offers and partnership perks."
       links={venueLinks("/venue/deals")}
     >
-      <CommandCenterDeck
-        eyebrow="Deals command"
-        title="Treat offers like revenue tools, not decorative perks"
-        description="Venue deals should open as a commercial control surface: active ladder, redemption quality, draft offers, and partnership tier all visible before anyone edits copy."
-        prompt="Review which offers are live, which tiers are missing, and whether the deal stack is actually helping bookings and repeat organizer behavior."
-        action={{ href: "/venue/analytics", label: "Review venue analytics" }}
-        secondaryAction={{ href: "/venue/profile", label: "Tune public profile" }}
-        suggestions={[
-          "active offers",
-          "gold tier",
-          "draft deals",
-          "redemption rate",
-          "repeat hosts",
-          "arrival perks",
-        ]}
-        stats={[
-          {
-            icon: Gift,
-            label: "Deal inventory",
-            value: String(venuePortalData.deals.length),
-            detail:
-              "The venue team should immediately see how many offers are on the board before they start editing individual cards.",
-            tone: "indigo",
-          },
-          {
-            icon: CalendarCheck2,
-            label: "Live offers",
-            value: String(
-              venuePortalData.deals.filter((deal) => deal.status.toLowerCase() === "active")
-                .length,
-            ),
-            detail:
-              "Only live offers can influence bookings and member behavior, so they need to stand apart from drafts.",
-            tone: "sage",
-          },
-          {
-            icon: BadgeEuro,
-            label: "Premium tiers",
-            value: String(
-              venuePortalData.deals.filter((deal) => deal.tier !== "Bronze").length,
-            ),
-            detail:
-              "Silver and Gold offers carry more commercial weight and should be visible as part of the venue's monetization posture.",
-            tone: "coral",
-          },
-          {
-            icon: Users,
-            label: "Draft backlog",
-            value: String(
-              venuePortalData.deals.filter((deal) => deal.status.toLowerCase() === "draft")
-                .length,
-            ),
-            detail:
-              "Draft count matters because unused offer ideas are often where a venue can unlock the next revenue step without changing the whole profile.",
-            tone: "indigo",
-          },
-        ]}
-      />
-
       <Surface
         eyebrow="Offers"
         title="Active and draft deals"
-        description="Bronze, silver, and gold offers are visible together with clear operational notes."
       >
         <FilterChips
           items={[
@@ -1008,8 +653,7 @@ export function VenueDealsScreen() {
 
       <Surface
         eyebrow="Deal editor"
-        title="Status, copy, and redemption controls"
-        description="The venue team can tune each offer locally instead of only reading the current state."
+        title="Status and redemption controls"
       >
         <VenueDealStudio deals={venuePortalData.deals} />
       </Surface>
@@ -1022,70 +666,13 @@ export function VenueAnalyticsScreen() {
     <VenueShell
       eyebrow="Venue analytics"
       title="Performance and conversion"
-      description="Profile views, events hosted, attendees, rating trend, top event types, and booking conversion are all surfaced here."
+      description="Profile views, events hosted, and booking conversion."
       links={venueLinks("/venue/analytics")}
     >
-      <CommandCenterDeck
-        eyebrow="Analytics command"
-        title="Watch conversion, format strength, and partner demand from one place"
-        description="Venue analytics should feel operational and commercial: funnel health, top-performing formats, and demand sources all visible before the venue starts reacting to bookings."
-        prompt="Read the booking funnel, compare event-type strength, and decide which offers or room formats deserve more attention next."
-        action={{ href: "/venue/deals", label: "Open deal controls" }}
-        secondaryAction={{ href: "/venue/bookings", label: "Review booking queue" }}
-        suggestions={[
-          "booking funnel",
-          "repeat hosts",
-          "top formats",
-          "referrer mix",
-          "conversion drop",
-          "demand signals",
-        ]}
-        stats={[
-          {
-            icon: CalendarRange,
-            label: "Funnel stages",
-            value: String(venuePortalData.analytics.funnel.length),
-            detail:
-              "The funnel should read as a practical business instrument, not only a decorative chart block.",
-            tone: "indigo",
-          },
-          {
-            icon: BadgeEuro,
-            label: "Best format volume",
-            value: String(
-              Math.max(...venuePortalData.analytics.eventTypes.map((item) => item.value)),
-            ),
-            detail:
-              "The strongest event type should be explicit because it points directly at what the venue should keep supplying and pricing well.",
-            tone: "coral",
-          },
-          {
-            icon: Users,
-            label: "Referral lanes",
-            value: String(venuePortalData.analytics.topReferrers.length),
-            detail:
-              "Demand sources matter because the venue needs to know whether traffic is coming from discovery, partners, or outbound communications.",
-            tone: "sage",
-          },
-          {
-            icon: ShieldCheck,
-            label: "Confirmed bookings",
-            value: String(
-              venuePortalData.analytics.funnel.find((item) => item.label === "Confirmed bookings")
-                ?.value ?? 0,
-            ),
-            detail:
-              "Confirmed-booking volume is the clearest bottom-funnel signal and should stay visible above the chart grid.",
-            tone: "indigo",
-          },
-        ]}
-      />
-
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <Surface
           eyebrow="Funnel"
           title="Booking conversion"
-          description="The funnel view explains how venue profile attention translates into real bookings."
         >
           <FilterChips
             items={[
@@ -1105,7 +692,6 @@ export function VenueAnalyticsScreen() {
         <Surface
           eyebrow="Event types"
           title="Top formats hosted"
-          description="The venue can quickly see which categories deserve more supply and which ones are underperforming."
         >
           <TrendChart
             data={venuePortalData.analytics.eventTypes}
@@ -1117,8 +703,7 @@ export function VenueAnalyticsScreen() {
 
       <Surface
         eyebrow="Referrers"
-        title="Where bookings are coming from"
-        description="A compact referrer list gives venue partners a practical explanation for demand, even before live analytics queries are connected."
+        title="Where bookings come from"
       >
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {venuePortalData.analytics.topReferrers.map((referrer) => (
@@ -1139,8 +724,8 @@ export function VenueProfileScreen() {
   return (
     <VenueShell
       eyebrow="Venue profile"
-      title="Public-facing partner profile"
-      description="Photos, description, amenities, hours, social links, and preview context all live here now as a real editing surface."
+      title="Public profile"
+      description="Photos, description, amenities, and hours."
       links={venueLinks("/venue/profile")}
     >
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
@@ -1166,7 +751,6 @@ export function VenueProfileScreen() {
         <Surface
           eyebrow="Editor"
           title="Profile sections"
-          description="Each block maps directly to the editable public venue fields from the spec."
         >
           <VenueProfileSectionEditor sections={venuePortalData.profileSections} />
         </Surface>

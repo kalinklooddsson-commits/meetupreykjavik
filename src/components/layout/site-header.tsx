@@ -18,20 +18,21 @@ export async function SiteHeader() {
     { href: "/events", label: tNav("events") },
     { href: "/groups", label: tNav("groups") },
     { href: "/venues", label: tNav("venues") },
+    { href: "/blog", label: tNav("blog") },
   ] as const satisfies readonly { href: Route; label: string }[];
 
   return (
-    <header className="grain-overlay sticky top-0 z-50 border-b border-[rgba(221,215,203,0.82)] bg-[rgba(250,248,244,0.84)] shadow-[0_10px_28px_rgba(42,38,56,0.06)] backdrop-blur-2xl">
-      <div className="section-shell flex min-h-[4.75rem] items-center justify-between gap-6 py-3">
-        <Link href="/" className="flex items-center gap-3 no-underline">
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--brand-indigo)] text-white shadow-[0_10px_30px_rgba(55,48,163,0.22)]">
-            <Compass className="h-5 w-5" />
+    <header className="sticky top-0 z-50 border-b border-[rgba(221,215,203,0.7)] bg-[rgba(250,248,244,0.92)] backdrop-blur-xl">
+      <div className="section-shell flex min-h-16 items-center justify-between gap-6 py-2">
+        <Link href="/" className="flex items-center gap-2.5 no-underline">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--brand-indigo)] text-white">
+            <Compass className="h-4 w-4" />
           </span>
           <div className="leading-tight">
-            <div className="text-base font-extrabold tracking-[-0.02em] text-[var(--brand-text)]">
+            <div className="text-sm font-extrabold tracking-[-0.02em] text-[var(--brand-text)]">
               {tHeader("brandTop")}
             </div>
-            <div className="font-editorial text-lg tracking-[-0.03em] text-[var(--brand-indigo)]">
+            <div className="font-editorial text-sm tracking-[-0.02em] text-[var(--brand-indigo)]">
               {tHeader("brandBottom")}
             </div>
           </div>

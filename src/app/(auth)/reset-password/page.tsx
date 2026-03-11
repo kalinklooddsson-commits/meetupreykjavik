@@ -5,8 +5,8 @@ export default function ResetPasswordPage() {
     <AuthPanel
       mode="reset-password"
       eyebrow="Reset password"
-      title="Set a new password and get back in"
-      description="This reset screen accepts the recovery token from the email link and returns the user to login without redesigning the auth flow."
+      title="Set a new password"
+      description="Enter your reset token and choose a new password."
       primaryLabel="Set new password"
       secondaryHref="/login"
       secondaryLabel="Back to login"

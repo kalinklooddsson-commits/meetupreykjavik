@@ -11,16 +11,22 @@ import {
 
 export const MOCK_SESSION_COOKIE = "meetupreykjavik-session";
 
-function getMockSessionSecret() {
+let _cachedSecret: string | null = null;
+
+function getMockSessionSecret(): string {
+  if (_cachedSecret) return _cachedSecret;
+
   const configuredSecret =
     process.env.MOCK_SESSION_SECRET ?? process.env.AUTH_SECRET;
 
   if (configuredSecret) {
-    return configuredSecret;
+    _cachedSecret = configuredSecret;
+    return _cachedSecret;
   }
 
   if (process.env.NODE_ENV !== "production") {
-    return "meetupreykjavik-local-mock-session-secret";
+    _cachedSecret = "meetupreykjavik-local-mock-session-secret";
+    return _cachedSecret;
   }
 
   throw new Error(
@@ -28,11 +34,9 @@ function getMockSessionSecret() {
   );
 }
 
-const mockSessionSecret = getMockSessionSecret();
-
 function encodeSession(session: MockSession) {
   const payload = Buffer.from(JSON.stringify(session), "utf8").toString("base64url");
-  const signature = createHmac("sha256", mockSessionSecret).update(payload).digest("base64url");
+  const signature = createHmac("sha256", getMockSessionSecret()).update(payload).digest("base64url");
 
   return `${payload}.${signature}`;
 }
@@ -49,7 +53,7 @@ function decodeSession(value?: string) {
       return null;
     }
 
-    const expectedSignature = createHmac("sha256", mockSessionSecret)
+    const expectedSignature = createHmac("sha256", getMockSessionSecret())
       .update(payload)
       .digest("base64url");
 
