@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   CalendarDays,
@@ -92,7 +92,7 @@ const modeHighlights: Record<
   login: [
     {
       title: "Role redirect is already wired",
-      text: "Mock auth routes into member, organizer, venue, and admin portals right now so the product can be tested end to end before Supabase is live.",
+      text: "Email auth routes into member, organizer, venue, and admin portals so the product lands in the correct working surface immediately.",
       Icon: ShieldCheck,
     },
     {
@@ -131,7 +131,7 @@ const modeHighlights: Record<
     },
     {
       title: "The route already exists",
-      text: "This recovery surface is in place now so the final vendor wiring can happen later without redesigning the frontend.",
+      text: "This recovery surface is already in place so live email delivery can slot in without redesigning the frontend.",
       Icon: Mail,
     },
     {
@@ -171,6 +171,7 @@ export function AuthPanel({
   secondaryLabel,
 }: AuthPanelProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -179,7 +180,7 @@ export function AuthPanel({
     email: "",
     password: MOCK_PASSWORD_HINT,
     confirmPassword: MOCK_PASSWORD_HINT,
-    token: "mock-reset-token",
+    token: "",
     locale: "en",
     requestedAccountType: "user",
   });
@@ -187,6 +188,8 @@ export function AuthPanel({
   const isSignup = mode === "signup";
   const isForgot = mode === "forgot-password";
   const isReset = mode === "reset-password";
+  const urlResetToken = searchParams.get("token_hash") ?? searchParams.get("token") ?? "";
+  const resolvedResetToken = form.token || urlResetToken;
   const activeRole =
     roleOptions.find((option) => option.value === form.requestedAccountType) ?? roleOptions[0];
   const nextRoute = portalPathForRole(activeRole.value);
@@ -196,8 +199,8 @@ export function AuthPanel({
       : mode === "login"
         ? ["Email", "Password", "Role redirect"]
         : mode === "forgot-password"
-          ? ["Email", "Recovery email", "Reset route"]
-          : ["Token", "New password", "Portal return"];
+        ? ["Email", "Recovery email", "Reset route"]
+        : ["Token", "New password", "Portal return"];
 
   function updateField(field: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -227,7 +230,7 @@ export function AuthPanel({
         ? { email: form.email }
         : isReset
           ? {
-              token: form.token,
+              token: resolvedResetToken,
               password: form.password,
               confirmPassword: form.confirmPassword,
             }
@@ -499,7 +502,7 @@ export function AuthPanel({
                   <input
                     id="auth-reset-token"
                     name="token"
-                    value={form.token}
+                    value={resolvedResetToken}
                     onChange={(event) => updateField("token", event.target.value)}
                     placeholder="Token from recovery email"
                     autoComplete="one-time-code"
@@ -620,12 +623,12 @@ export function AuthPanel({
             </div>
             <p className="mt-2">
               {mode === "signup"
-                ? "Signup creates a mock session immediately, then continues into onboarding so role-based portals can be tested before Supabase goes live."
+                ? "Signup stores the selected role, creates the account, and continues into onboarding so the correct portal opens afterward."
                 : mode === "forgot-password"
-                  ? "Recovery currently returns a mock confirmation message. Final reset emails will be sent through Supabase and Resend."
+                  ? "Recovery sends a reset email when live auth is enabled and keeps the same route shape during local fallback."
                   : mode === "reset-password"
-                    ? "Reset accepts a mock token right now so the final route and form state exist before live recovery is connected."
-                    : "Login accepts the demo accounts shown on the left and redirects by role into the appropriate dashboard."}
+                    ? "Reset accepts the recovery token from the email link and returns the user to login once the password is updated."
+                    : "Login accepts the seeded demo accounts shown on the left and redirects by role into the appropriate dashboard."}
             </p>
           </div>
         </div>

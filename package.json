@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "fetch:places": "node scripts/fetch-reykjavik-places.mjs",
-    "seed:venues": "node scripts/sync-sourced-venues.mjs"
+    "seed:venues": "node scripts/sync-sourced-venues.mjs",
+    "seed:auth": "node scripts/bootstrap-supabase-auth.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

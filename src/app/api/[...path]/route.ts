@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { ZodError, type ZodType } from "zod";
 
-import { hasLiveSupabaseAuth } from "@/lib/env";
+import { env, hasLiveSupabaseAuth } from "@/lib/env";
 import {
   clearMockSessionCookie,
   createMockSessionFromAccount,
@@ -11,6 +11,7 @@ import {
   readMockSessionFromRequest,
   withMockSessionCookie,
 } from "@/lib/auth/mock-auth";
+import { getOrCreateSessionForSupabaseUser } from "@/lib/auth/session";
 import { loginSchema, forgotPasswordSchema, resetPasswordSchema, signupSchema } from "@/lib/validators/auth";
 import {
   eventCommentSchema,
@@ -31,6 +32,7 @@ import {
 import { findApiSpecRoute, routeKey, type ApiMethod } from "@/lib/api/spec-routes";
 import { mockAdminSettings, mockCatalog } from "@/lib/api/mock-data";
 import { hasTrustedOrigin } from "@/lib/security/request";
+import { createSupabaseRouteClient } from "@/lib/supabase/route";
 import {
   notFoundResponse,
   scaffoldResponse,
@@ -72,6 +74,17 @@ async function parseValidatedBody(request: NextRequest, key: string) {
 
   const body = await request.json();
   return schema.parse(body);
+}
+
+function validationMessage(message: string, field?: string) {
+  return validationErrorResponse({
+    formErrors: [message],
+    fieldErrors: field ? { [field]: [message] } : {},
+  });
+}
+
+function isMissingAuthSessionMessage(message: string | undefined) {
+  return message?.toLowerCase().includes("auth session missing") ?? false;
 }
 
 function getMockResponse(
@@ -123,6 +136,49 @@ function getMockResponse(
         note: "This endpoint is marked mock in the manifest but has not been given a custom payload yet.",
       });
   }
+}
+
+async function getLiveSessionResponse(request: NextRequest) {
+  const routeClient = createSupabaseRouteClient(request);
+
+  if (!routeClient) {
+    return serviceUnavailableResponse(
+      findApiSpecRoute("GET", "/api/auth/me")!,
+    );
+  }
+
+  const {
+    data: { user },
+    error,
+  } = await routeClient.supabase.auth.getUser();
+
+  if (error && !isMissingAuthSessionMessage(error.message)) {
+    return validationMessage(error.message);
+  }
+
+  if (!user) {
+    return successResponse({
+      user: null,
+      accountType: null,
+      redirectTo: null,
+      note: "No active session yet.",
+    });
+  }
+
+  const session = await getOrCreateSessionForSupabaseUser(user);
+
+  if (!session) {
+    return serviceUnavailableResponse(findApiSpecRoute("GET", "/api/auth/me")!);
+  }
+
+  return routeClient.applyCookies(
+    successResponse({
+      user: session,
+      accountType: session.accountType,
+      redirectTo: portalPathForRole(session.accountType),
+      note: "Supabase session active.",
+    }),
+  );
 }
 
 async function handleMockAuthRequest(request: NextRequest, key: string) {
@@ -217,12 +273,187 @@ async function handleMockAuthRequest(request: NextRequest, key: string) {
   }
 }
 
+async function handleLiveAuthRequest(request: NextRequest, key: string) {
+  const routeClient = createSupabaseRouteClient(request);
+
+  if (!routeClient) {
+    return null;
+  }
+
+  switch (key) {
+    case "POST /api/auth/login": {
+      const body = (await parseValidatedBody(request, key)) as {
+        email: string;
+        password: string;
+      };
+      const { data, error } = await routeClient.supabase.auth.signInWithPassword({
+        email: body.email,
+        password: body.password,
+      });
+
+      if (error || !data.user) {
+        return validationMessage(
+          error?.message ?? "Unable to sign in with those credentials.",
+          "email",
+        );
+      }
+
+      const session = await getOrCreateSessionForSupabaseUser(data.user);
+
+      if (!session) {
+        return serviceUnavailableResponse(findApiSpecRoute("POST", "/api/auth/login")!);
+      }
+
+      return routeClient.applyCookies(
+        successResponse({
+          user: session,
+          accountType: session.accountType,
+          redirectTo: portalPathForRole(session.accountType),
+        }),
+      );
+    }
+
+    case "POST /api/auth/signup": {
+      const body = (await parseValidatedBody(request, key)) as {
+        displayName: string;
+        email: string;
+        password: string;
+        locale?: "en" | "is";
+        requestedAccountType?: "admin" | "venue" | "organizer" | "user";
+      };
+
+      const requestedAccountType =
+        body.requestedAccountType === "admin" && process.env.ALLOW_MOCK_ADMIN_SIGNUP !== "true"
+          ? "user"
+          : body.requestedAccountType;
+
+      const { data, error } = await routeClient.supabase.auth.signUp({
+        email: body.email,
+        password: body.password,
+        options: {
+          emailRedirectTo: `${env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/login`,
+          data: {
+            display_name: body.displayName,
+            locale: body.locale ?? "en",
+            requestedAccountType: requestedAccountType ?? "user",
+          },
+        },
+      });
+
+      if (error || !data.user) {
+        return validationMessage(
+          error?.message ?? "Unable to create the account right now.",
+          "email",
+        );
+      }
+
+      const session = await getOrCreateSessionForSupabaseUser(
+        data.user,
+        requestedAccountType ?? "user",
+      );
+
+      if (!session) {
+        return serviceUnavailableResponse(findApiSpecRoute("POST", "/api/auth/signup")!);
+      }
+
+      return routeClient.applyCookies(
+        successResponse(
+          {
+            user: session,
+            accountType: session.accountType,
+            redirectTo: data.session ? "/onboarding" : "/login",
+            message: data.session
+              ? "Account created. Continue into onboarding."
+              : "Account created. Check your email if confirmation is required before signing in.",
+          },
+          { status: 201 },
+        ),
+      );
+    }
+
+    case "POST /api/auth/logout": {
+      const { error } = await routeClient.supabase.auth.signOut();
+
+      if (error) {
+        return validationMessage(error.message);
+      }
+
+      return routeClient.applyCookies(
+        successResponse({
+          user: null,
+          accountType: null,
+          redirectTo: "/login",
+        }),
+      );
+    }
+
+    case "POST /api/auth/forgot-password": {
+      const body = (await parseValidatedBody(request, key)) as { email: string };
+      const { error } = await routeClient.supabase.auth.resetPasswordForEmail(body.email, {
+        redirectTo: `${env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/reset-password`,
+      });
+
+      if (error) {
+        return validationMessage(error.message, "email");
+      }
+
+      return routeClient.applyCookies(
+        successResponse({
+          message:
+            "If that email exists, a recovery link has been sent with a route back to reset-password.",
+        }),
+      );
+    }
+
+    case "POST /api/auth/reset-password": {
+      const body = (await parseValidatedBody(request, key)) as {
+        token: string;
+        password: string;
+      };
+
+      const { error: verifyError } = await routeClient.supabase.auth.verifyOtp({
+        token_hash: body.token,
+        type: "recovery",
+      });
+
+      if (verifyError) {
+        return validationMessage(
+          "That recovery token is invalid or expired. Open the latest recovery email and try again.",
+          "token",
+        );
+      }
+
+      const { error: updateError } = await routeClient.supabase.auth.updateUser({
+        password: body.password,
+      });
+
+      if (updateError) {
+        return validationMessage(updateError.message, "password");
+      }
+
+      return routeClient.applyCookies(
+        successResponse({
+          message: "Password updated. You can sign in with the new password now.",
+          redirectTo: "/login",
+        }),
+      );
+    }
+
+    default:
+      return null;
+  }
+}
+
 async function handleApiRequest(request: NextRequest, method: ApiMethod) {
   const path = request.nextUrl.pathname;
   const match = findApiSpecRoute(method, path);
 
   if (!match) {
     return notFoundResponse(path, method);
+  }
+
+  if (routeKey(match.route) === "GET /api/auth/me" && hasLiveSupabaseAuth()) {
+    return getLiveSessionResponse(request);
   }
 
   if (match.route.implementation === "mock") {
@@ -236,8 +467,10 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
       return forbiddenResponse("Cross-site state changes are not allowed.");
     }
 
-    if (match.route.category === "auth" && !hasLiveSupabaseAuth()) {
-      const response = await handleMockAuthRequest(request, key);
+    if (match.route.category === "auth") {
+      const response = hasLiveSupabaseAuth()
+        ? await handleLiveAuthRequest(request, key)
+        : await handleMockAuthRequest(request, key);
 
       if (response) {
         return response;

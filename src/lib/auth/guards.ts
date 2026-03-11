@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import type { AccountType } from "@/types/domain";
-import { portalPathForRole, readServerMockSession } from "@/lib/auth/mock-auth";
+import { getCurrentAppSession, portalPathForRole } from "@/lib/auth/session";
 
 export async function getCurrentSession() {
-  return readServerMockSession();
+  return getCurrentAppSession();
 }
 
 export async function redirectIfAuthenticated() {

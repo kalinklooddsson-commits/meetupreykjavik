@@ -6,7 +6,7 @@ export default function ForgotPasswordPage() {
       mode="forgot-password"
       eyebrow="Password reset"
       title="Recover access without losing the flow"
-      description="This mocked recovery surface already holds the final route and UX shape. Live recovery email delivery can be connected later without changing the frontend."
+      description="Send a recovery email, keep the same route shape, and return people to the correct portal without changing the frontend design."
       primaryLabel="Send recovery email"
       secondaryHref="/login"
       secondaryLabel="Back to login"

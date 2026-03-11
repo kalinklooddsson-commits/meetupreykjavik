@@ -6,7 +6,7 @@ export default function ResetPasswordPage() {
       mode="reset-password"
       eyebrow="Reset password"
       title="Set a new password and get back in"
-      description="This reset screen already mirrors the final recovery step. It accepts a mock token tonight and can later be wired to Supabase recovery tokens without redesign."
+      description="This reset screen accepts the recovery token from the email link and returns the user to login without redesigning the auth flow."
       primaryLabel="Set new password"
       secondaryHref="/login"
       secondaryLabel="Back to login"
