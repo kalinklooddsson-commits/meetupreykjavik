@@ -38,9 +38,7 @@ export async function SiteFooter() {
   ] as const;
 
   return (
-    <footer className="grain-overlay relative overflow-hidden bg-[linear-gradient(160deg,var(--brand-basalt)_0%,rgba(45,41,69,1)_42%,rgba(55,48,163,0.92)_100%)] px-4 py-14 text-white">
-      <div className="ambient-orb left-[-4rem] top-[-4rem] h-44 w-44 bg-[rgba(232,97,77,0.18)]" />
-      <div className="ambient-orb bottom-[-5rem] right-[-4rem] h-64 w-64 bg-[rgba(245,240,232,0.08)]" />
+    <footer className="relative overflow-hidden bg-[var(--brand-basalt)] px-4 py-14 text-white">
       <div className="section-shell relative z-10 grid gap-10 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
         <div>
           <div className="mb-4 flex items-center gap-3">
@@ -56,26 +54,15 @@ export async function SiteFooter() {
               </div>
             </div>
           </div>
-          <p className="max-w-sm text-sm leading-7 text-white/66">
+          <p className="max-w-sm text-sm leading-7 text-white/60">
             {tFooter("description")}
           </p>
           <Link
             href="/signup"
-            className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.22)] transition hover:-translate-y-0.5"
+            className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
           >
             {tCta("signup")}
           </Link>
-
-          <div className="site-footer-signals mt-6 grid gap-3 sm:grid-cols-2">
-            <div className="site-footer-signal-card">
-              <div className="site-footer-signal-label">Business model</div>
-              <div className="site-footer-signal-value">Paid events, organizer SaaS, venue SaaS</div>
-            </div>
-            <div className="site-footer-signal-card">
-              <div className="site-footer-signal-label">City posture</div>
-              <div className="site-footer-signal-value">Built for Reykjavik rooms, hosts, and repeat attendance</div>
-            </div>
-          </div>
         </div>
 
         {footerColumns.map((column) => (
