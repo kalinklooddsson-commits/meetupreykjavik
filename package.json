@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "fetch:places": "node scripts/fetch-reykjavik-places.mjs"
+    "fetch:places": "node scripts/fetch-reykjavik-places.mjs",
+    "seed:venues": "node scripts/sync-sourced-venues.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

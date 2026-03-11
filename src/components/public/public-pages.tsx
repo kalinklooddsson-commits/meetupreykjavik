@@ -818,16 +818,23 @@ function BlogCard({ post }: { post: BlogPost }) {
 }
 
 function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
+  const imageSrc = place.image?.localPath || place.image?.remoteUrl;
+  const hasPhoto = place.image?.kind === "photo";
+  const photoCredit = hasPhoto
+    ? `Photo credit: ${place.image?.credit || "Wikimedia Commons"} · ${place.image?.license || "See source"}`
+    : "";
+
   return (
     <article className="photo-card">
       <div className="relative h-52 bg-[linear-gradient(135deg,rgba(30,27,46,0.96),rgba(79,70,229,0.84),rgba(232,97,77,0.72))]">
-        {place.image?.localPath ? (
+        {imageSrc ? (
           <Image
             fill
-            alt={place.name}
+            alt={`${place.name} in ${place.area}`}
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 33vw"
-            src={place.image.localPath}
+            src={imageSrc}
+            unoptimized={imageSrc.startsWith("https://")}
           />
         ) : null}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.08),rgba(30,27,46,0.62))]" />
@@ -835,6 +842,9 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
           <div className="flex flex-wrap items-center gap-2">
             <ToneBadge tone="sand">{place.laneLabel}</ToneBadge>
             <ToneBadge tone="coral">{place.kindLabel}</ToneBadge>
+            {place.image?.kind === "generated" ? (
+              <ToneBadge tone="indigo">Local cover</ToneBadge>
+            ) : null}
           </div>
           <h3 className="font-editorial mt-3 text-3xl tracking-[-0.05em]">
             {place.name}
@@ -863,11 +873,22 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
             </a>
           ) : null}
         </div>
-        {place.image ? (
+        {hasPhoto ? (
           <div className="rounded-[1.1rem] bg-[rgba(245,240,232,0.92)] px-4 py-3 text-xs leading-6 text-[var(--brand-text-muted)]">
-            Photo credit: {place.image.credit || "Wikimedia Commons"} · {place.image.license}
+            {photoCredit}
+          </div>
+        ) : place.image?.kind === "generated" ? (
+          <div className="rounded-[1.1rem] bg-[rgba(245,240,232,0.92)] px-4 py-3 text-xs leading-6 text-[var(--brand-text-muted)]">
+            Local branded cover is in place while a sourced venue photo is still pending.
           </div>
         ) : null}
+        <Link
+          href={venueHref(place.slug)}
+          className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+        >
+          View sourced venue
+          <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     </article>
   );
@@ -1956,6 +1977,11 @@ export function VenuesIndexScreen() {
                       label: "Downloaded locally",
                       value: String(sourceReport.counts.downloadedImages),
                     },
+                    {
+                      key: "generated",
+                      label: "Generated covers",
+                      value: String(sourceReport.counts.generatedCovers),
+                    },
                   ]}
                 />
                 <div className="mt-5 grid gap-3">
@@ -2153,6 +2179,225 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                     </p>
                   </Link>
                 ))}
+              </div>
+            </Surface>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
+  const imageSrc = place.image?.localPath || place.image?.remoteUrl;
+  const hasPhoto = place.image?.kind === "photo";
+
+  return (
+    <>
+      <section className="relative overflow-hidden border-b border-[rgba(221,215,203,0.76)] bg-[linear-gradient(160deg,rgba(30,27,46,1),rgba(79,70,229,0.94),rgba(232,97,77,0.78))]">
+        {imageSrc ? (
+          <>
+            <Image
+              fill
+              alt={`${place.name} in ${place.area}`}
+              className="object-cover opacity-30"
+              sizes="100vw"
+              src={imageSrc}
+              unoptimized={imageSrc.startsWith("https://")}
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.22),rgba(30,27,46,0.84))]" />
+          </>
+        ) : null}
+        <div className="section-shell relative z-10 py-16 text-white sm:py-20">
+          <span className="eyebrow bg-white/10 px-4 py-2 text-white/70">
+            Sourced venue
+          </span>
+          <div className="mt-6 grid gap-10 xl:grid-cols-[1.05fr_0.95fr] xl:items-end">
+            <div>
+              <h1 className="font-editorial max-w-4xl text-5xl leading-[0.95] tracking-[-0.06em] sm:text-6xl lg:text-[4.8rem]">
+                {place.name}
+              </h1>
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-white/72">
+                {place.summary}
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/venue/onboarding"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[var(--brand-coral)] px-6 py-3 text-sm font-bold text-white shadow-[0_18px_40px_rgba(232,97,77,0.28)] transition hover:-translate-y-0.5"
+                >
+                  Claim or partner with this venue
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                {place.website ? (
+                  <a
+                    href={place.website}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/18 bg-white/8 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Visit website
+                  </a>
+                ) : null}
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                { label: "Lane", value: place.laneLabel },
+                { label: "Format", value: place.kindLabel },
+                { label: "Area", value: place.area || "Reykjavik" },
+                { label: "Image", value: hasPhoto ? "Sourced photo" : "Local cover" },
+              ].map((metric) => (
+                <div key={metric.label} className="glass-panel rounded-[1.4rem] p-5">
+                  <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/54">
+                    {metric.label}
+                  </div>
+                  <div className="font-editorial mt-3 text-3xl tracking-[-0.05em] text-white">
+                    {metric.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <MarketConfidenceStrip
+        items={[
+          {
+            icon: Store,
+            title: "Imported into the venue layer",
+            description:
+              "This place now exists inside the live Reykjavik source inventory instead of only in a mock card set.",
+            tone: "indigo",
+          },
+          {
+            icon: Globe2,
+            title: "Open data with usable presentation",
+            description:
+              "The record comes from the city intake pipeline, with either a sourced photo or a local fallback cover so the frontend never breaks visually.",
+            tone: "sage",
+          },
+          {
+            icon: HandCoins,
+            title: "Ready for partner activation",
+            description:
+              "The next step is operational: claim, verify, and move the venue into the booking and deal workflow.",
+            tone: "coral",
+          },
+        ]}
+      />
+
+      <section className="section-shell py-10">
+        <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
+          <div className="space-y-6">
+            <Surface
+              eyebrow="Venue summary"
+              title="What we know about this place"
+              description="The sourced venue detail page gives operators a real local place profile before the venue itself has formally claimed the account."
+            >
+              <div className="space-y-3">
+                {[
+                  place.summary,
+                  place.address
+                    ? `Recorded address: ${place.address}.`
+                    : `Address is still incomplete, but the place is indexed in ${place.area}.`,
+                  place.website
+                    ? "A website is already attached, which makes this record a stronger candidate for verification."
+                    : "No verified website is attached yet, so this record should be reviewed before it is treated as an active partner.",
+                ].map((line) => (
+                  <div
+                    key={line}
+                    className="editorial-list-card px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                  >
+                    {line}
+                  </div>
+                ))}
+              </div>
+            </Surface>
+
+            <Surface
+              eyebrow="Next step"
+              title="How this sourced venue becomes a real partner"
+              description="The place is already in the inventory. Claiming it is the step that turns it into an operational venue record."
+            >
+              <div className="grid gap-3">
+                {[
+                  "Verify business identity and contact information.",
+                  "Confirm room capacity, available formats, and operating constraints.",
+                  "Move the venue into deal management, availability planning, and organizer matching.",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="editorial-list-card flex items-start gap-3 px-4 py-3"
+                  >
+                    <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
+                    <span className="text-sm text-[var(--brand-text)]">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </Surface>
+          </div>
+
+          <div className="space-y-6">
+            <Surface
+              eyebrow="At a glance"
+              title="Record details"
+              description="This is the raw venue context the platform can already display before the commercial workflow is connected."
+            >
+              <KeyValueList
+                items={[
+                  { key: "lane", label: "Lane", value: place.laneLabel },
+                  { key: "format", label: "Type", value: place.kindLabel },
+                  { key: "area", label: "Area", value: place.area || "Reykjavik" },
+                  {
+                    key: "address",
+                    label: "Address",
+                    value: place.address || "Needs manual enrichment",
+                  },
+                  {
+                    key: "website",
+                    label: "Website",
+                    value: place.website ? "Present" : "Not attached yet",
+                  },
+                ]}
+              />
+            </Surface>
+
+            <Surface
+              eyebrow="Image handling"
+              title={hasPhoto ? "Photo attribution is available" : "Local fallback art is active"}
+              description={
+                hasPhoto
+                  ? "This record has an attached sourced image, so attribution and license are shown clearly."
+                  : "This record uses a branded local cover so the product can stay visually complete while real venue imagery is still pending."
+              }
+            >
+              <div className="space-y-3">
+                {hasPhoto ? (
+                  <>
+                    <div className="editorial-list-card px-4 py-3 text-sm text-[var(--brand-text-muted)]">
+                      {place.image?.credit || "Wikimedia Commons"}
+                    </div>
+                    <div className="editorial-list-card px-4 py-3 text-sm text-[var(--brand-text-muted)]">
+                      {place.image?.license || "See source"}
+                    </div>
+                  </>
+                ) : (
+                  <div className="editorial-list-card px-4 py-3 text-sm text-[var(--brand-text-muted)]">
+                    Generated cover is stored locally under the Reykjavik place image set.
+                  </div>
+                )}
+                {place.website ? (
+                  <a
+                    href={place.website}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[var(--brand-border)] bg-white/84 px-4 py-2 text-sm font-semibold text-[var(--brand-indigo)] transition hover:-translate-y-0.5"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Open venue website
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                ) : null}
               </div>
             </Surface>
           </div>

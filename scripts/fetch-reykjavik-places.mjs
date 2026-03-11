@@ -6,6 +6,7 @@ const USER_AGENT = "meetupreykjavik-seeder/0.1";
 const ROOT = process.cwd();
 const DATA_DIR = join(ROOT, "data", "external");
 const IMAGE_DIR = join(ROOT, "public", "place-images", "reykjavik");
+const GENERATED_IMAGE_DIR = join(IMAGE_DIR, "generated");
 const NOMINATIM_URL =
   "https://nominatim.openstreetmap.org/search?city=Reykjavik&country=Iceland&format=jsonv2&limit=1";
 const OVERPASS_ENDPOINTS = [
@@ -140,6 +141,110 @@ function csvEscape(value) {
   }
 
   return stringValue;
+}
+
+function escapeXml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function imagePaletteForLane(laneKey) {
+  if (laneKey === "social-nightlife") {
+    return {
+      background:
+        "linear-gradient(135deg, rgba(30,27,46,0.98) 0%, rgba(79,70,229,0.92) 48%, rgba(232,97,77,0.86) 100%)",
+      accent: "#F18D7E",
+      chip: "#FDE8E4",
+      chipText: "#B33D2C",
+    };
+  }
+
+  if (laneKey === "food-and-drink") {
+    return {
+      background:
+        "linear-gradient(135deg, rgba(42,38,56,0.96) 0%, rgba(232,97,77,0.88) 56%, rgba(245,240,232,0.94) 100%)",
+      accent: "#F5F0E8",
+      chip: "#FFF1EC",
+      chipText: "#B33D2C",
+    };
+  }
+
+  if (laneKey === "culture") {
+    return {
+      background:
+        "linear-gradient(135deg, rgba(30,27,46,0.98) 0%, rgba(55,48,163,0.9) 46%, rgba(245,240,232,0.9) 100%)",
+      accent: "#F5F0E8",
+      chip: "#EDE9FE",
+      chipText: "#3730A3",
+    };
+  }
+
+  if (laneKey === "fitness-outdoors") {
+    return {
+      background:
+        "linear-gradient(135deg, rgba(42,38,56,0.94) 0%, rgba(124,154,130,0.9) 52%, rgba(245,240,232,0.92) 100%)",
+      accent: "#D4E4D7",
+      chip: "#EAF4EC",
+      chipText: "#2D5F3A",
+    };
+  }
+
+  return {
+    background:
+      "linear-gradient(135deg, rgba(30,27,46,0.98) 0%, rgba(79,70,229,0.84) 42%, rgba(124,154,130,0.72) 100%)",
+    accent: "#F5F0E8",
+    chip: "#F5F0E8",
+    chipText: "#2A2638",
+  };
+}
+
+function buildFallbackCover(place) {
+  const palette = imagePaletteForLane(place.laneKey);
+  const label = escapeXml(place.laneLabel);
+  const title = escapeXml(place.name);
+  const area = escapeXml(place.area || "Reykjavik");
+  const kind = escapeXml(place.kindLabel);
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">${title}</title>
+  <desc id="desc">${kind} cover for ${title} in ${area}</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E1B2E" />
+      <stop offset="45%" stop-color="#3730A3" />
+      <stop offset="100%" stop-color="#E8614D" />
+    </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="26" />
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="${palette.background}" />
+  <circle cx="1280" cy="180" r="180" fill="rgba(255,255,255,0.12)" filter="url(#blur)" />
+  <circle cx="260" cy="700" r="230" fill="rgba(245,240,232,0.18)" filter="url(#blur)" />
+  <circle cx="1120" cy="760" r="140" fill="rgba(232,97,77,0.2)" filter="url(#blur)" />
+  <rect x="110" y="110" width="240" height="52" rx="26" fill="${palette.chip}" />
+  <text x="230" y="143" text-anchor="middle" font-family="DM Sans, Arial, sans-serif" font-size="22" font-weight="700" fill="${palette.chipText}" letter-spacing="1.4">${label}</text>
+  <text x="110" y="640" font-family="Fraunces, Georgia, serif" font-size="116" font-weight="600" fill="#FFFFFF" letter-spacing="-4">${title}</text>
+  <text x="110" y="714" font-family="DM Sans, Arial, sans-serif" font-size="30" fill="rgba(255,255,255,0.82)">${kind} · ${area}</text>
+  <text x="110" y="796" font-family="DM Sans, Arial, sans-serif" font-size="22" fill="${palette.accent}" letter-spacing="1.8">MEETUP REYKJAVIK VENUE SOURCEBOOK</text>
+  <path d="M1170 620c66-54 144-81 234-81 0 62-16 119-48 171-32 52-73 95-124 128-37-54-58-115-62-183z" fill="rgba(245,240,232,0.16)" />
+</svg>`;
+}
+
+function createFallbackImage(place) {
+  const fileName = `${place.slug}.svg`;
+  const filePath = join(GENERATED_IMAGE_DIR, fileName);
+
+  if (!existsSync(filePath)) {
+    writeFileSync(filePath, buildFallbackCover(place));
+  }
+
+  return `/place-images/reykjavik/generated/${fileName}`;
 }
 
 async function fetchJson(url, options = {}) {
@@ -347,6 +452,55 @@ function dedupePlaces(places) {
     }));
 }
 
+function ensureUniqueSlugs(places) {
+  const groups = new Map();
+
+  for (const place of places) {
+    const group = groups.get(place.slug) ?? [];
+    group.push(place);
+    groups.set(place.slug, group);
+  }
+
+  return [...groups.entries()].flatMap(([baseSlug, group]) => {
+    if (group.length === 1) {
+      return group;
+    }
+
+    const ranked = [...group].sort((left, right) => {
+      const leftScore =
+        (left.address ? 2 : 0) + (left.website ? 1 : 0) + left.priority;
+      const rightScore =
+        (right.address ? 2 : 0) + (right.website ? 1 : 0) + right.priority;
+
+      return rightScore - leftScore;
+    });
+    const seen = new Set();
+
+    return ranked.map((place, index) => {
+      if (index === 0) {
+        seen.add(baseSlug);
+        return place;
+      }
+
+      const suffixSource =
+        place.address || place.area || place.rawKind || `${index + 1}`;
+      let candidate = `${baseSlug}-${slugify(suffixSource)}`;
+      let attempt = 2;
+
+      while (!candidate || seen.has(candidate)) {
+        candidate = `${baseSlug}-${slugify(suffixSource)}-${attempt}`;
+        attempt += 1;
+      }
+
+      seen.add(candidate);
+      return {
+        ...place,
+        slug: candidate,
+      };
+    });
+  });
+}
+
 function readJsonCache(pathname) {
   if (!existsSync(pathname)) {
     return null;
@@ -478,7 +632,9 @@ async function enrichPlacesWithImages(places) {
     }
 
     const image = {
+      kind: "photo",
       localPath: "",
+      remoteUrl: metadata.thumbnailUrl ?? "",
       license: metadata.license || "See source",
       sourceUrl: metadata.sourceUrl,
       credit: metadata.credit || "Wikimedia Commons",
@@ -520,6 +676,28 @@ async function enrichPlacesWithImages(places) {
   };
 }
 
+function attachFallbackImages(places) {
+  let generatedCovers = 0;
+
+  for (const place of places) {
+    if (place.image?.localPath || place.image?.remoteUrl) {
+      continue;
+    }
+
+    place.image = {
+      kind: "generated",
+      localPath: createFallbackImage(place),
+      remoteUrl: "",
+      license: "",
+      sourceUrl: "",
+      credit: "",
+    };
+    generatedCovers += 1;
+  }
+
+  return generatedCovers;
+}
+
 function toCsv(rows) {
   const headers = [
     "name",
@@ -531,8 +709,10 @@ function toCsv(rows) {
     "lat",
     "lon",
     "wikidata",
+    "image_kind",
     "image_license",
     "image_local_path",
+    "image_remote_url",
   ];
 
   const lines = [
@@ -548,8 +728,10 @@ function toCsv(rows) {
         row.lat,
         row.lon,
         row.wikidata,
+        row.image?.kind ?? "",
         row.image?.license ?? "",
         row.image?.localPath ?? "",
+        row.image?.remoteUrl ?? "",
       ]
         .map(csvEscape)
         .join(","),
@@ -559,7 +741,13 @@ function toCsv(rows) {
   return `${lines.join("\n")}\n`;
 }
 
-function buildReport({ city, south, west, north, east }, places, imageCandidates, downloadedImages) {
+function buildReport(
+  { city, south, west, north, east },
+  places,
+  imageCandidates,
+  downloadedImages,
+  generatedCovers,
+) {
   const lanes = [...new Map(places.map((place) => [place.laneKey, place.laneLabel])).entries()]
     .map(([key, label]) => ({
       key,
@@ -569,7 +757,14 @@ function buildReport({ city, south, west, north, east }, places, imageCandidates
     .sort((left, right) => right.count - left.count);
 
   const featuredPlaces = places
-    .filter((place) => place.image?.localPath)
+    .filter((place) => place.image)
+    .sort((left, right) => {
+      if ((left.image?.kind ?? "") !== (right.image?.kind ?? "")) {
+        return left.image?.kind === "photo" ? -1 : 1;
+      }
+
+      return right.priority - left.priority;
+    })
     .slice(0, 6)
     .map((place) => ({
       slug: place.slug,
@@ -595,6 +790,7 @@ function buildReport({ city, south, west, north, east }, places, imageCandidates
       withWikidata: places.filter((place) => place.wikidata).length,
       imageCandidates: imageCandidates.length,
       downloadedImages,
+      generatedCovers,
     },
     lanes,
     featuredPlaces,
@@ -604,14 +800,22 @@ function buildReport({ city, south, west, north, east }, places, imageCandidates
 async function main() {
   ensureDir(DATA_DIR);
   ensureDir(IMAGE_DIR);
+  ensureDir(GENERATED_IMAGE_DIR);
 
   const bbox = await getCityBoundingBox();
   const rawPlaces = await fetchOverpassPlaces(bbox);
   const normalized = rawPlaces.map(normalizePlace).filter(Boolean);
-  const deduped = dedupePlaces(normalized);
+  const deduped = ensureUniqueSlugs(dedupePlaces(normalized));
   const { places, imageCandidates, downloadedImages } =
     await enrichPlacesWithImages(deduped);
-  const report = buildReport(bbox, places, imageCandidates, downloadedImages);
+  const generatedCovers = attachFallbackImages(places);
+  const report = buildReport(
+    bbox,
+    places,
+    imageCandidates,
+    downloadedImages,
+    generatedCovers,
+  );
 
   writeFileSync(
     join(DATA_DIR, "reykjavik-places.json"),
@@ -634,6 +838,7 @@ async function main() {
         totalPlaces: report.counts.totalPlaces,
         imageCandidates: report.counts.imageCandidates,
         downloadedImages: report.counts.downloadedImages,
+        generatedCovers: report.counts.generatedCovers,
         topLanes: report.lanes.slice(0, 5),
       },
       null,

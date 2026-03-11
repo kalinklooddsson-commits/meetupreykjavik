@@ -67,8 +67,8 @@ export function SiteHeaderClient({
 
   return (
     <>
-      <div className="hidden items-center gap-7 md:flex">
-        <nav className="flex items-center gap-3">
+      <div className="hidden flex-1 items-center justify-end gap-4 lg:flex">
+        <nav className="site-header-nav-frame flex items-center gap-1">
           {navigation.map((item) => {
             const active = isActivePath(activePath, item.href);
 
@@ -78,10 +78,10 @@ export function SiteHeaderClient({
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex min-h-11 items-center rounded-full px-4 py-2.5 text-sm font-semibold transition",
+                  "site-header-nav-link inline-flex min-h-11 items-center rounded-full px-4 py-2.5 text-sm font-semibold transition",
                   active
-                    ? "bg-[var(--brand-indigo)] text-white shadow-[0_16px_30px_rgba(79,70,229,0.18)]"
-                    : "text-[var(--brand-text-muted)] hover:bg-white/66 hover:text-[var(--brand-indigo)]",
+                    ? "site-header-nav-link-active bg-[var(--brand-indigo)] text-white shadow-[0_16px_30px_rgba(79,70,229,0.18)]"
+                    : "text-[var(--brand-text-muted)] hover:bg-white hover:text-[var(--brand-indigo)]",
                 )}
               >
                 {item.label}
@@ -90,10 +90,8 @@ export function SiteHeaderClient({
           })}
         </nav>
 
-        <div className="h-5 w-px bg-[var(--brand-border)]" />
-
-        <div className="flex items-center gap-3">
-          <div className="site-utility-pill flex items-center gap-2 rounded-full border border-[rgba(221,215,203,0.82)] bg-white/72 px-3 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+        <div className="site-header-actions flex items-center gap-3">
+          <div className="site-utility-pill flex items-center gap-2 rounded-full border border-[rgba(221,215,203,0.82)] bg-white/82 px-3 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
             <Globe2 className="h-4 w-4" />
             <LocaleSwitcher />
           </div>
@@ -129,14 +127,14 @@ export function SiteHeaderClient({
       {session && portalHref ? (
         <Link
           href={portalHref}
-          className="rounded-full bg-[var(--brand-indigo)] px-4 py-2.5 text-sm font-bold text-white md:hidden"
+          className="rounded-full bg-[var(--brand-indigo)] px-4 py-2.5 text-sm font-bold text-white lg:hidden"
         >
           {labels.portal}
         </Link>
       ) : (
         <Link
           href="/signup"
-          className="site-header-cta rounded-full bg-[var(--brand-coral)] px-4 py-2.5 text-sm font-bold text-white md:hidden"
+          className="site-header-cta rounded-full bg-[var(--brand-coral)] px-4 py-2.5 text-sm font-bold text-white lg:hidden"
         >
           {labels.join}
         </Link>
@@ -154,7 +152,7 @@ export function SiteHeaderMobileNav({
   const activePath = pathname ?? "/";
 
   return (
-    <div className="section-shell pb-3 md:hidden">
+    <div className="section-shell pb-3 lg:hidden">
       <nav className="site-mobile-nav-shell flex gap-3 overflow-x-auto pb-1">
         {navigation.map((item) => {
           const active = isActivePath(activePath, item.href);

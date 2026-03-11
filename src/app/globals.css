@@ -333,36 +333,26 @@ select:focus-visible,
   background: linear-gradient(90deg, rgba(79, 70, 229, 0.92), rgba(232, 97, 77, 0.82));
 }
 
-.site-header-signal {
-  min-width: 18rem;
-  align-items: center;
+.site-header-nav-frame {
   border: 1px solid rgba(221, 215, 203, 0.82);
   border-radius: 999px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 248, 244, 0.82)),
-    rgba(255, 255, 255, 0.82);
-  box-shadow: 0 14px 28px rgba(42, 38, 56, 0.05);
-  padding: 0.6rem 1rem;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 248, 244, 0.9)),
+    rgba(255, 255, 255, 0.84);
+  box-shadow: 0 12px 28px rgba(42, 38, 56, 0.05);
+  padding: 0.35rem;
 }
 
-.site-header-signal-copy {
-  display: grid;
-  gap: 0.15rem;
+.site-header-nav-link {
+  letter-spacing: -0.01em;
 }
 
-.site-header-signal-label {
-  color: var(--brand-text-light);
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+.site-header-nav-link-active {
+  box-shadow: 0 14px 28px rgba(79, 70, 229, 0.16);
 }
 
-.site-header-signal-title {
-  color: var(--brand-text);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+.site-header-actions {
+  padding-left: 0.25rem;
 }
 
 .site-utility-pill {

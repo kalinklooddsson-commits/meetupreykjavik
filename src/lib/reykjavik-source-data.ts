@@ -2,7 +2,9 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 export type SourcedPlaceImage = {
+  kind?: "photo" | "generated";
   localPath: string;
+  remoteUrl?: string;
   license: string;
   sourceUrl: string;
   credit: string;
@@ -31,6 +33,7 @@ export type ReykjavikSourceReport = {
     withWikidata: number;
     imageCandidates: number;
     downloadedImages: number;
+    generatedCovers: number;
   };
   lanes: Array<{
     key: string;
@@ -50,12 +53,14 @@ const defaultReport: ReykjavikSourceReport = {
     withWikidata: 0,
     imageCandidates: 0,
     downloadedImages: 0,
+    generatedCovers: 0,
   },
   lanes: [],
   featuredPlaces: [],
 };
 
 let cachedReport: ReykjavikSourceReport | null = null;
+let cachedPlaces: SourcedPlace[] | null = null;
 
 export function getReykjavikSourceReport(): ReykjavikSourceReport {
   if (cachedReport) {
@@ -100,4 +105,35 @@ export function getReykjavikSourceReport(): ReykjavikSourceReport {
 
 export function getFeaturedSourcedPlaces(limit = 6): SourcedPlace[] {
   return getReykjavikSourceReport().featuredPlaces.slice(0, limit);
+}
+
+export function getSourcedPlaces(): SourcedPlace[] {
+  if (cachedPlaces) {
+    return cachedPlaces;
+  }
+
+  const placesPath = join(
+    process.cwd(),
+    "data",
+    "external",
+    "reykjavik-places.json",
+  );
+
+  if (!existsSync(placesPath)) {
+    cachedPlaces = [];
+    return cachedPlaces;
+  }
+
+  try {
+    const places = JSON.parse(readFileSync(placesPath, "utf8")) as SourcedPlace[];
+    cachedPlaces = Array.isArray(places) ? places : [];
+  } catch {
+    cachedPlaces = [];
+  }
+
+  return cachedPlaces;
+}
+
+export function getSourcedPlaceBySlug(slug: string): SourcedPlace | undefined {
+  return getSourcedPlaces().find((place) => place.slug === slug);
 }

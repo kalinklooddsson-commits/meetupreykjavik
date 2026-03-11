@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
-import { VenueDetailScreen } from "@/components/public/public-pages";
+import {
+  SourcedVenueDetailScreen,
+  VenueDetailScreen,
+} from "@/components/public/public-pages";
 import { getVenueBySlug } from "@/lib/public-data";
+import { getSourcedPlaceBySlug } from "@/lib/reykjavik-source-data";
 
 export default async function VenueDetailPage({
   params,
@@ -9,10 +13,15 @@ export default async function VenueDetailPage({
 }) {
   const { slug } = await params;
   const venue = getVenueBySlug(slug);
+  const sourcedPlace = venue ? null : getSourcedPlaceBySlug(slug);
 
-  if (!venue) {
+  if (!venue && !sourcedPlace) {
     notFound();
   }
 
-  return <VenueDetailScreen venue={venue} />;
+  if (venue) {
+    return <VenueDetailScreen venue={venue} />;
+  }
+
+  return <SourcedVenueDetailScreen place={sourcedPlace!} />;
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-10T21:56:45.765Z",
+  "generatedAt": "2026-03-11T13:58:54.291Z",
   "city": "Reykjavíkurborg, Höfuðborgarsvæðið, Ísland",
   "bbox": {
     "south": 64.0404021,
@@ -13,7 +13,8 @@
     "withAddress": 354,
     "withWikidata": 52,
     "imageCandidates": 26,
-    "downloadedImages": 3
+    "downloadedImages": 12,
+    "generatedCovers": 610
   },
   "lanes": [
     {
@@ -64,7 +65,9 @@
       "website": "https://www.dillrestaurant.is/",
       "summary": "Restaurant in Laugavegur. Website listed. Hours not listed.",
       "image": {
+        "kind": "photo",
         "localPath": "/place-images/reykjavik/dill-0aeca160.jpg",
+        "remoteUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/DILL_IMG_2923_%2830924865650%29.jpg/1920px-DILL_IMG_2923_%2830924865650%29.jpg",
         "license": "CC BY 2.0",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:DILL_IMG_2923_(30924865650).jpg",
         "credit": "IMG_2923"
@@ -81,27 +84,88 @@
       "website": "https://leikhusid.is/",
       "summary": "Theatre in Hverfisgata. Website listed. Hours not listed.",
       "image": {
+        "kind": "photo",
         "localPath": "/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg",
+        "remoteUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Iceland-Reykjavik-National-Theatre-1.jpg/1920px-Iceland-Reykjavik-National-Theatre-1.jpg",
         "license": "CC BY-SA 3.0",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iceland-Reykjavik-National-Theatre-1.jpg",
         "credit": "Own work"
       }
     },
     {
-      "slug": "hof-i",
-      "name": "Höfði",
+      "slug": "a-alstr-ti-10",
+      "name": "Aðalstræti 10",
       "laneKey": "culture",
       "laneLabel": "Culture & live arts",
       "kindLabel": "Museum",
-      "area": "Félagstún",
-      "address": "Félagstún 1, 105",
-      "website": "",
-      "summary": "Museum in Félagstún. Website not listed yet. Hours not listed.",
+      "area": "Aðalstræti",
+      "address": "Aðalstræti 10, 101 Reykjavík",
+      "website": "https://borgarsogusafn.is/is/borgarsogusafn-reykjavikur/um-borgarsogusafn/frettir/adalstraeti-10-elsta-hus-midborgarinnar-opnad",
+      "summary": "Museum in Aðalstræti. Website listed. Hours listed.",
       "image": {
-        "localPath": "/place-images/reykjavik/hof-i-deccf755.jpg",
-        "license": "CC BY-SA 3.0",
-        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hofdi_House_Reykjavik_(cropped).jpg",
+        "kind": "photo",
+        "localPath": "/place-images/reykjavik/a-alstr-ti-10-f3bd2736.JPG",
+        "remoteUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Fogitinn10.JPG/1920px-Fogitinn10.JPG",
+        "license": "Public domain",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fogitinn10.JPG",
         "credit": "Own work"
+      }
+    },
+    {
+      "slug": "arb-jarsafn",
+      "name": "Árbæjarsafn",
+      "laneKey": "culture",
+      "laneLabel": "Culture & live arts",
+      "kindLabel": "Museum",
+      "area": "Reykjavik",
+      "address": "",
+      "website": "",
+      "summary": "Museum in Reykjavik. Website not listed yet. Hours listed.",
+      "image": {
+        "kind": "photo",
+        "localPath": "/place-images/reykjavik/arb-jarsafn-c71d7348.jpg",
+        "remoteUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/%C3%81rb%C3%A6jarsafn.jpg/1920px-%C3%81rb%C3%A6jarsafn.jpg",
+        "license": "CC BY 4.0",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:%C3%81rb%C3%A6jarsafn.jpg",
+        "credit": "Own work"
+      }
+    },
+    {
+      "slug": "hafnarborg",
+      "name": "Hafnarborg",
+      "laneKey": "culture",
+      "laneLabel": "Culture & live arts",
+      "kindLabel": "Gallery",
+      "area": "Reykjavik",
+      "address": "",
+      "website": "https://hafnarborg.is/",
+      "summary": "Gallery in Reykjavik. Website listed. Hours listed.",
+      "image": {
+        "kind": "photo",
+        "localPath": "/place-images/reykjavik/hafnarborg-1be7b43b.jpg",
+        "remoteUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Hafnarborg-_image.jpg",
+        "license": "CC BY-SA 4.0",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hafnarborg-_image.jpg",
+        "credit": "http://www.touristlink.com/iceland/hafnarborg/overview.html"
+      }
+    },
+    {
+      "slug": "hallgrimskirkja",
+      "name": "Hallgrímskirkja",
+      "laneKey": "culture",
+      "laneLabel": "Culture & live arts",
+      "kindLabel": "Attraction",
+      "area": "Hallgrímstorg",
+      "address": "Hallgrímstorg 1, 101 Reykjavík",
+      "website": "",
+      "summary": "Attraction in Hallgrímstorg. Website not listed yet. Hours listed.",
+      "image": {
+        "kind": "photo",
+        "localPath": "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
+        "remoteUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Leifur_Eir%C3%ADksson_and_Hallgr%C3%ADmskirkja_%2814527191932%29.jpg/1920px-Leifur_Eir%C3%ADksson_and_Hallgr%C3%ADmskirkja_%2814527191932%29.jpg",
+        "license": "CC BY-SA 2.0",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leifur_Eir%C3%ADksson_and_Hallgr%C3%ADmskirkja_(14527191932).jpg",
+        "credit": "Leifur Eiríksson and Hallgrímskirkja"
       }
     }
   ]
