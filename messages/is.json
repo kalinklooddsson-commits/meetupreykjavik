@@ -1,0 +1,365 @@
+{
+  "locale": {
+    "switcher": "Skipta um tungumal",
+    "en": "EN",
+    "is": "IS"
+  },
+  "nav": {
+    "events": "Vidburdir",
+    "groups": "Hopar",
+    "venues": "Stadir",
+    "about": "Um okkur",
+    "pricing": "Verdskra",
+    "blog": "Blogg",
+    "privacy": "Personuvernd"
+  },
+  "cta": {
+    "signup": "Stofna adgang",
+    "signin": "Skrá inn",
+    "join": "Skráning",
+    "portal": "Mina sida",
+    "dashboard": "Yfirlit",
+    "admin": "Admin",
+    "venuePortal": "Stadagatt",
+    "organizerHub": "Skipuleggjandi",
+    "explore": "Skoða",
+    "exploreEvents": "Skoða vidburdi",
+    "startGroup": "Stofna hop",
+    "seeAllEvents": "Sjå alla vidburdi",
+    "seeAllGroups": "Sjå alla hopa",
+    "becomePartner": "Verda samstarfsaðili",
+    "partnerVenue": "Samstarf fyrir stadi",
+    "signupFreeLong": "Stofna adgang",
+    "rsvp": "Skrá",
+    "viewGroup": "Skoða hop",
+    "exploreVenue": "Skoða stad"
+  },
+  "header": {
+    "brandTop": "Meetup",
+    "brandBottom": "Reykjavik"
+  },
+  "footer": {
+    "description": "Finndu vidburdi, hittu folk og stydu vid stadina. Okeypis ad ganga i og byggt fyrir Reykjavik.",
+    "explore": "Skoða",
+    "company": "Fyrirtaekid",
+    "legal": "Lagalegt",
+    "categories": "Flokkar",
+    "forVenues": "Fyrir stadi",
+    "terms": "Skilmalar",
+    "contact": "Samband",
+    "copyright": "Byggt i Reykjavik, Islandi."
+  },
+  "home": {
+    "hero": {
+      "badge": "Nuna i Reykjavik",
+      "titleLead": "Finndu folkið thitt i",
+      "titleAccent": "Reykjavik",
+      "subtitleTop": "Finndu vidburdi. Hittu folk. Stydu vid lokal stadir.",
+      "subtitleBottom": "Okeypis ad ganga i. Greiddir vidburdir og samstarfsstadir halda senunni gangandi.",
+      "searchPlaceholder": "Leita ad vidburdum, hopum eða stodum...",
+      "commandEyebrow": "Leitardrifin borgaruppgotvun",
+      "commandTitle": "Byrjadu a rýminu, hostinum og verdmerkinu.",
+      "commandDescription": "Bestu lokal vörurnar minnka núningskostnad i leit. Leit er kallid til adgerda, traust er synilegt og naesta skref er alltaf ljost.",
+      "chipSafety": "samthykkt af host",
+      "chipVenue": "studt af stadi",
+      "chipPremium": "premium format",
+      "chipSocial": "felagskvold",
+      "chipWorkshops": "vinnustofur",
+      "noteOneLabel": "Traustsía",
+      "noteOneValue": "Hostud format og rólegri koma a staðinn gera einstaklingum auðveldara að taka ákvörðun um að mæta.",
+      "noteTwoLabel": "Lágmarksverd",
+      "noteTwoValue": "Greitt opinbert inventory byrjar i 500 ISK svo jafnvel minni format hafi raunverulegan vidskiptagrunn.",
+      "noteThreeLabel": "Stadalag",
+      "noteThreeValue": "Samstarfsrymi auka gaedi vidburda, bokunaroryggi og lokal vidskiptavirdi a sama tima.",
+      "noteFourLabel": "I vikunni",
+      "noteFourValue": "Sterkasta inventoryid er nu i social, expat og nytilegum workshop formatum."
+    },
+    "stats": {
+      "members": "Medlimir",
+      "groups": "Hopar",
+      "thisWeek": "I vikunni",
+      "venuePartners": "Stadasamstarf"
+    },
+    "sections": {
+      "thisWeekEyebrow": "I vikunni",
+      "thisWeekTitle": "Hvad er ad gerast",
+      "thisWeekDescription": "Valdir vidburdir med stadatilbodum, vinalegum hostum og lokal stemningu.",
+      "categoriesEyebrow": "Flokkar",
+      "categoriesTitle": "Finndu thitt samfelag",
+      "signalTrustTitle": "Traust byrjar fyrir checkout",
+      "signalTrustDescription": "Skyr host-einkenni, stadarfit og rólegri komuupplifun gera alla vöruna trúverðugri.",
+      "signalRevenueTitle": "Þetta er byggt til tekna",
+      "signalRevenueDescription": "Lágmarksmiðaverð, áskriftir skipuleggjenda og áætlanir fyrir staði eru sýnilegar í framendanum, ekki faldar seinna.",
+      "signalVenueTitle": "Borgin sjálf er hluti af vörunni",
+      "signalVenueDescription": "Betri rými bæta uppgötvun, móta format viðburða og skapa sterkari lokal lykkju.",
+      "businessEyebrow": "Byggt til reksturs",
+      "businessTitle": "Hannað fyrir meðlimi, skipuleggjendur og samstarfsstaði á sama tíma.",
+      "businessDescription": "Varan virkar vegna þess að hvert hlutverk sér skýra ástæðu til þátttöku: betri uppgötvun fyrir meðlimi, rekstrartól fyrir skipuleggjendur og raunverulegt verkflæðisvirði fyrir staði.",
+      "businessCta": "Sja vidskiptalikanið",
+      "memberLaneTitle": "Medlimir",
+      "memberLaneDescription": "Uppgötvun verður skýrari þegar fólk getur metið rýmið, hostinn og formatið án þess að giska.",
+      "memberLanePointOne": "Leitardrifin vafur med synilegum traustsmerkjum",
+      "memberLanePointTwo": "Greidd og okeypis format med skyrari vaentingum",
+      "memberLanePointThree": "Hopur og stadarsamhengi tengt beint vid hvern vidburd",
+      "organizerLaneTitle": "Skipuleggjendur",
+      "organizerLaneDescription": "Endurteknir hostar þurfa meira en birtingarform. Þeir þurfa samþykktir, endurtekningarsnið og tekjulogik i vörunni sjálfri.",
+      "organizerLanePointOne": "Opinber midasala fra 500 ISK og upp",
+      "organizerLanePointTwo": "Endurtekid hopaauðkenni og audience rekstur",
+      "organizerLanePointThree": "Stadamatching og sterkari vidskiptarammi",
+      "venueLaneTitle": "Samstarfsstadir",
+      "venueLaneDescription": "Samstarfsrymi eru hluti af rekstrarkerfinu, ekki bara passivar skraningar a yfirlitssidu.",
+      "venueLanePointOne": "Bokunar-, tilboðs- og framboðsverkflæði",
+      "venueLanePointTwo": "Premium kynning og skyr event-fit merki",
+      "venueLanePointThree": "Meira virði i endurteknum vidskiptum fra sterkari hostum",
+      "flywheelEyebrow": "Lokal lykja",
+      "flywheelTitle": "Sterkari lokal lykja vex a hverri síðu.",
+      "flywheelDescription": "Besta útgáfan af þessari vöru er ekki bara falleg. Hún tengir uppgötvun, rekstur og tekjur nógu skýrt til að hver hlið markaðarins styrki hina.",
+      "flywheelPointOneTitle": "Betri uppgotvun",
+      "flywheelPointOneDescription": "Medlimir finna format hraðar þegar varan sýnir traust, verð, stað og hostgæði saman.",
+      "flywheelPointTwoTitle": "Betri rekstur",
+      "flywheelPointTwoDescription": "Skipuleggjendur og stadir halda sig vid kerfid thegar tólid líða eins og vidskiptainnviðir, ekki samfélagshobbý.",
+      "flywheelPointThreeTitle": "Betri tekjur",
+      "flywheelPointThreeDescription": "Greidd sæti, staðaáætlanir og áskriftir skipuleggjenda virka betur þegar framendinn rammar inn gildið rétt frá byrjun.",
+      "howEyebrow": "Hvernig virkar thad",
+      "howTitle": "Rólegri leid til ad uppgötva borgina",
+      "howDescription": "Vörulogikin er einföld: skoða, skrá sig og mæta. Engin feed-óreiða og ekkert endalaust swipe.",
+      "groupsEyebrow": "Hopar",
+      "groupsTitle": "Samfelog med raunverulegum hostum",
+      "groupsDescription": "Hver hopur byggir a raunverulegum hosti, endurteknum rytma og skyrum tilgangi.",
+      "venuesEyebrow": "Samstarfsstadir",
+      "venuesTitle": "Bestu stadirnir i borginni",
+      "venuesDescription": "Samstarfsstadir fa meiri synileika, betri bokunarferil og premium kynningu.",
+      "joinEyebrow": "Taktu thatt i borginni",
+      "joinTitle": "Tilbuid/adur ad finna folkid thitt?",
+      "joinDescription": "Vertu med i hopi sem uppgötvar allt sem Reykjavik hefur upp a ad bjóda og styrkir lokal senu i leidinni.",
+      "closingTitle": "Ritstjornarlegt, lokalt og hlýtt",
+      "memberFirst": "Fyrir medlimi fyrst",
+      "memberFirstDescription": "Einföld skráning, gegnsætt RSVP flæði og skýr mynd af thvi sem er virkt i vikunni.",
+      "venueAware": "Med stadi i huga",
+      "venueAwareDescription": "Kynntir stadir, tilbod, framboð og innvidir fyrir seinni byggingarstig."
+    },
+    "cards": {
+      "going": "ad fara",
+      "memberDeal": "Medlimatilbod",
+      "hostedEvents": "haldnir vidburdir"
+    },
+    "steps": {
+      "discoverTitle": "Uppgötva",
+      "discoverDescription": "Skoðaðu vidburdi og hopa eftir ahugasvidi, degi og hverfi.",
+      "joinTitle": "Skrá sig",
+      "joinDescription": "Skrádu thig med einum smelli, fylgdu hopi og slepptu óreiðunni i feedi.",
+      "connectTitle": "Tengjast",
+      "connectDescription": "Maettu, hittu raunverulegt folk og styrktu stadina i Reykjavik a sama tima."
+    }
+  },
+  "privacyPage": {
+    "hero": {
+      "eyebrow": "Personuvernd",
+      "title": "Skyr datameohondlun er hluti af trausti, ekki aukaatriði.",
+      "description": "Thessi sida dekkar helstu stefnuhaetti vörunnar: reikningsgogn, samfelagsvirkni, skilabod, greiningar og rettindi notenda.",
+      "metrics": {
+        "visibility": "Sjalfgefin synileiki",
+        "analytics": "Varveisla greininga",
+        "export": "Utflutningsleid",
+        "locale": "Tungumal"
+      },
+      "values": {
+        "visibility": "Adeins medlimir",
+        "analytics": "12 manudir",
+        "export": "Yfirferd admin",
+        "locale": "IS / EN"
+      }
+    },
+    "sectionsEyebrow": "Stefnukafli",
+    "sections": {
+      "identity": {
+        "title": "Auðkenni og reikningsgogn",
+        "copy": "Kerfid geymir profilgogn, reikningsupplýsingar og hlutverk sem þarf til ad keyra medlimastig, skipuleggjendaflæði og samstarf med stadi. Thad felur i ser birtingarnafn, einkanetfang og stillingar sem stjorna hver ser virkni thina.",
+        "point1": "Synileiki profils fylgir personuverndarstillingum medlima.",
+        "point2": "Skipuleggjendur og stadir safna frekari rekstrarupplýsingum fyrir traust og yfirferd.",
+        "point3": "Adgangur admin er fraeskilinn fyrir modun, support og rekstur."
+      },
+      "activity": {
+        "title": "Virkni i vidburdum, hopum og stodum",
+        "copy": "RSVP, biðlistar, samþykktir, maetingarmerki og samskipti vid stadi eru notud til ad halda vidburdum traustum og hjalpa skipuleggjendum og admin ad taka betri akvardanir. Varan er medvitaed um gaedi og traust, thannig ad rekstrarvirkni er hluti af gagnaskraningunni.",
+        "point1": "Saga RSVP og samþykkta getur verid synileg skipuleggjendum eða admin thar sem vid a.",
+        "point2": "Samskipti vid stadi og vidburdi geta verid notud til ad baeta medmaeli og minnka miskun.",
+        "point3": "Greidslu- og utborgunargogn verda varveitt fyrir bokhald og yfirferd þegar lifandi veitendur tengjast."
+      },
+      "comms": {
+        "title": "Skilabod og greiningar",
+        "copy": "Kerfid sendir virk skilabod eins og samþykktir, bithlista-uppfaerslur, aeminningar og umsagnir um stadi. Thad fylgist einnig med sameiginlegum greiningum svo varan skilji hvaða format, hverfi og stadasamstarf virkar best.",
+        "point1": "Yfirlit og markadsskilaabod eru stjornanleg i reikningsstillingum.",
+        "point2": "Greiningar eru notadar til vörubaeta, ekki fyrir almennar auglýsinganetssniðgreiningar.",
+        "point3": "Adgangs-, utflutnings- og eyðingarbeidnir fara i gegnum admin-yfirferd."
+      }
+    },
+    "rightsEyebrow": "Rettindi medlima",
+    "rightsTitle": "Adgangur, leidretting, utflutningur og eyðing",
+    "rightsDescription": "Lifandi admin- og stillingasvæði eru thar fyrir til ad styðja thessar adgerdir þegar bakendatenging er komin.",
+    "rights": {
+      "access": {
+        "title": "Sja eigin skra",
+        "text": "Haegt er ad birta profil, RSVP, medlimastig og reikningsstillingar fyrir utflutning."
+      },
+      "correct": {
+        "title": "Leidretta profilgogn",
+        "text": "Medlimir, skipuleggjendur og stadir geta uppfaert rekstrarauðkenni sitt yfir tid."
+      },
+      "billing": {
+        "title": "Yfirferd greidslna og vidskipta",
+        "text": "Thegar greidslur fara i loftid geymir kerfid thau gogn sem tharf fyrir reikninga og utborgun."
+      },
+      "locale": {
+        "title": "Tungumalssnid policy",
+        "text": "Personuvernd og reikningsstjornun eru aetlad i baedi ensku og islensku."
+      }
+    }
+  },
+  "termsPage": {
+    "hero": {
+      "eyebrow": "Skilmalar",
+      "title": "Skyrar reglur fyrir vandad borgarkerfi.",
+      "description": "Thessir skilmalar skyr aetlud vinnubrögd fyrir medlimi, skipuleggjendur, stadasamstarf, modun og framtidar greidsluflæði.",
+      "primaryCta": "Hafa samband",
+      "secondaryCta": "Lesa personuvernd",
+      "metrics": {
+        "roles": "Notendahlutverk",
+        "domains": "Modunarsvid",
+        "principle": "Kjarnahugsun",
+        "support": "Supportleid"
+      },
+      "values": {
+        "roles": "4",
+        "domains": "Notendur, vidburdir, hopar, stadir",
+        "principle": "Traust og skyrliki",
+        "support": "Yfirfarid af admin"
+      }
+    },
+    "sectionsEyebrow": "Skilmalkafli",
+    "sections": {
+      "accounts": {
+        "title": "Reikningar og medlimastig",
+        "copy": "Medlimir, skipuleggjendur og stadapartners nyta sama kjarna kerfisins en bera mismunandi abyrgd. Reikningar skulu nota rett auðkennis- og samskiptagogn og kerfid getur takmarkad adgang ef traust eða öryggi krefst thess.",
+        "point1": "Medlimir bera abyrgd a rettum profílgognum og virðingarrikri thattöku.",
+        "point2": "Skipuleggjendur bera abyrgd a sannri lysingu vidburda og skyrri hosthegðun.",
+        "point3": "Stadapartners bera abyrgd a rettum upplysingum um frambod, tilbod og bokun."
+      },
+      "events": {
+        "title": "Vidburdir, greidslur og afbokanir",
+        "copy": "Opinberir vidburdir eru aetladir til ad byrja i 500 ISK eða meira nema their se studdir af sponsorum eða serstaklega samthykktir. Bokunarhald, biðlistar og greidslustadfestingar eru hluti af rekstrarlikani kerfisins og thegar lifandi veitendur tengjast fylgir gjaldtaka, endurgreidslur og utborgun samkomulagi.",
+        "point1": "Stadfest sæti eða bokun getur farid eftir greidslu, samþykki eða baedi.",
+        "point2": "Endurgreidslur og afbokanir geta verid mismunandi eftir vidburdi, stadi eða medlimastigi.",
+        "point3": "Admin getur gripid inn i ef gaedi, traust eða miskun hefur áhrif a skraningu eða vidskipti."
+      },
+      "moderation": {
+        "title": "Modun og pallstjorn",
+        "copy": "Varan er viljandi vandud. Admin getur frestad, takmarkad eða fjarlægt notendur, hopa, vidburdi eða stadaskraningar þegar öryggi, traust, spam, areitni eða endurtekin gæðavandamal réttlaeta inngrip.",
+        "point1": "Modunaraðgerdir geta verid timabundnar, varanlegar eða skilyrtar yfirferd.",
+        "point2": "Synileiki skipuleggjenda og stada getur verid takmarkadur ef gaedi eða aedicni hrapar.",
+        "point3": "Kærur og supportbeidnir fara i gegnum rekstrarleid kerfisins."
+      }
+    },
+    "stanceEyebrow": "Rekstrarstaða",
+    "stanceTitle": "Hvernig varan medhöndlar gaedi",
+    "stanceDescription": "MeetupReykjavik a ad finnast markvisst. Thad thydir ad adgerdir admin, skipuleggjenda og stada eru ekki eingongu mekaniskar.",
+    "stance": {
+      "trust": {
+        "label": "Traustslag",
+        "value": "Profiler, samþykktir, maeting og modun skipta ollu mali."
+      },
+      "rooms": {
+        "label": "Gaedi rymis",
+        "value": "Admin og hostar geta môtad attendance til ad baeta öryggi og fit."
+      },
+      "providers": {
+        "label": "Veitendur",
+        "value": "Email og greidslur bætast vid seinna an thess ad breyta kjarnareglunum."
+      },
+      "appeals": {
+        "label": "Kaerur",
+        "value": "Meðhöndladar i support- og modunarleidum."
+      }
+    },
+    "remindersEyebrow": "Hagnýt aeminning",
+    "remindersTitle": "Staeda buildsins",
+    "remindersDescription": "Thessi local build inniheldur heildarform vörunnar en ekki allar lifandi tengingar.",
+    "reminders": {
+      "one": "Reiknings-, greidslu- og samskiptaveitendur eru ekki enn tengdir framleidslu.",
+      "two": "Local dashboards og stjornborð likja eftir heildarrekstrarforminu fyrir deployment.",
+      "three": "Sum lifandi lagaleg og viðskiptaleg atridi verda klárud thegar veitendur eru tilbunir."
+    }
+  },
+  "contactPage": {
+    "hero": {
+      "eyebrow": "Samband",
+      "title": "Finndu rett teymi an thess ad fara i gegnum venjulega support-villu.",
+      "description": "Support, skipuleggjendaadstod, stadasamstarf og personuverndarspurningar hafa skyrar leid svo varan haldist hjalpsoem og abyrg.",
+      "primaryCta": "Bua til reikning",
+      "secondaryCta": "Lesa skilmala",
+      "metrics": {
+        "lanes": "Supportleid",
+        "reply": "Markmid um fyrsta svar",
+        "organizer": "Skipuleggjendaaðstod",
+        "trust": "Traustyfirferd"
+      },
+      "values": {
+        "lanes": "4",
+        "reply": "1 virkur dagur",
+        "organizer": "Samdægurs ef bratt",
+        "trust": "Fer eftir forgangi"
+      }
+    },
+    "channelsEyebrow": "Leidir",
+    "channelsTitle": "Vid hvern a ad hafa samband",
+    "channelsDescription": "Hver leid samsvarar raunverulegu rekstrarhlutverki i vörunni.",
+    "channels": {
+      "general": {
+        "title": "Almenn support",
+        "note": "Hjalp med reikning, vöruspurningar og onboarding."
+      },
+      "organizer": {
+        "title": "Skipuleggjendaadstod",
+        "note": "Samthykktir vidburda, hopastofnun og samfelagsadstod."
+      },
+      "venue": {
+        "title": "Stadasamstarf",
+        "note": "Umsoknir stada, tilbod og spurningar um bokunarflæði."
+      },
+      "trust": {
+        "title": "Personuvernd og traust",
+        "note": "Modun, personuverndarbeidnir og viðkvæm reikningsmal."
+      }
+    },
+    "expectationsEyebrow": "Svarstimar",
+    "expectationsTitle": "Vid hverju ma buast",
+    "expectationsDescription": "Thad heldur væntingum skyrum aoudur en lifandi email-innvidir tengjast.",
+    "expectations": {
+      "one": "Markmid fyrir almenna support: innan eins virks dags.",
+      "two": "Stada- og skipuleggjendamal: yfirleitt sama dag.",
+      "three": "Modunar- og personuverndarmal: svarstimi fer eftir alvarleika og gæðum gagna."
+    }
+  },
+  "contactForm": {
+    "title": "Hafa samband vid teymid",
+    "description": "Thessi local form endurskapar supportflæðid. Thad geymir drög a thessari vel svo strukturnar se til stadar aoudur en emailsending er tengd.",
+    "fields": {
+      "name": "Nafn",
+      "email": "Netfang",
+      "topic": "Efni",
+      "message": "Skilabod"
+    },
+    "topics": {
+      "general": "Almenn spurning",
+      "organizer": "Skipuleggjendaadstod",
+      "venue": "Stadasamstarf",
+      "billing": "Greidslur og bokhald",
+      "privacy": "Personuvernd eða modun"
+    },
+    "submit": "Vista local supportdrog",
+    "status": {
+      "incomplete": "Baettu vid nafni, netfangi og skilabodum aoudur en local drög eru vistud.",
+      "saved": "Vistað local sem supportdrog. Engin lifandi skilabod voru send ur thessu buildi."
+    }
+  }
+}

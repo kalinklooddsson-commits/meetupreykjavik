@@ -1,0 +1,939 @@
+"use client";
+
+import { startTransition, useMemo, useState } from "react";
+import {
+  CalendarClock,
+  CheckCheck,
+  ImagePlus,
+  ListChecks,
+  MapPinned,
+  ScrollText,
+  Ticket,
+  UsersRound,
+} from "lucide-react";
+import { categories } from "@/lib/home-data";
+import {
+  minimumTicketPriceIsk,
+  publicGroups,
+  publicVenues,
+  ticketCommissionRate,
+} from "@/lib/public-data";
+import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
+import { writeSessionDraft } from "@/lib/storage/session-drafts";
+import { cn } from "@/lib/utils";
+
+type OrganizerEventWizardProps = {
+  organizerName: string;
+};
+
+const steps = [
+  { key: "basics", label: "Basics", icon: ScrollText },
+  { key: "schedule", label: "Date & recurring", icon: CalendarClock },
+  { key: "location", label: "Location", icon: MapPinned },
+  { key: "capacity", label: "Capacity & access", icon: UsersRound },
+  { key: "ticketing", label: "Ticketing", icon: Ticket },
+  { key: "media", label: "Media & copy", icon: ImagePlus },
+  { key: "review", label: "Review", icon: CheckCheck },
+] as const;
+const iskFormatter = new Intl.NumberFormat("is-IS");
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function stepIsReady(stepIndex: number, form: ReturnType<typeof createInitialForm>) {
+  switch (stepIndex) {
+    case 0:
+      return Boolean(form.title.trim() && form.groupSlug);
+    case 1:
+      return Boolean(form.startsOn && form.startTime);
+    case 2:
+      return form.locationMode === "venue"
+        ? Boolean(form.venueSlug)
+        : form.locationMode === "custom"
+          ? Boolean(form.venueAddress.trim())
+          : Boolean(form.onlineLink.trim());
+    case 3:
+      return form.attendeeLimit > 0;
+    case 4:
+      return form.isFree || getTicketPriceIsk(form.ticketPrice) >= minimumTicketPriceIsk;
+    case 5:
+      return Boolean(form.description.trim().length >= 100);
+    case 6:
+      return true;
+    default:
+      return false;
+  }
+}
+
+function getTicketPriceIsk(value: string) {
+  const digits = value.replace(/[^\d]/g, "");
+
+  return digits ? Number.parseInt(digits, 10) : 0;
+}
+
+function formatIsk(value: number) {
+  return `${iskFormatter.format(value)} ISK`;
+}
+
+function createInitialForm() {
+  return {
+    title: "",
+    groupSlug: publicGroups[0]?.slug ?? "",
+    category: (categories[0]?.name ?? "Nightlife & Social") as string,
+    eventType: "in_person",
+    tags: "community, curated",
+    startsOn: "2026-03-24",
+    startTime: "18:30",
+    endTime: "21:00",
+    recurring: false,
+    recurrenceRule: "Weekly on Thursdays",
+    recurrenceEnds: "2026-06-01",
+    locationMode: "venue",
+    venueSlug: publicVenues[0]?.slug ?? "",
+    venueAddress: "",
+    onlineLink: "",
+    attendeeLimit: 60,
+    guestLimit: 0,
+    rsvpMode: "approval",
+    visibilityMode: "public",
+    ageRestriction: "18+",
+    ageMin: "18",
+    ageMax: "",
+    isFree: false,
+    ticketPrice: "950 ISK",
+    ticketLabel: "General admission",
+    refundPolicy: "Refunds allowed up to 24h before the event.",
+    coHosts: "Helga Arnadottir",
+    guestQuestion:
+      "What are you hoping to get from this session, and who would you like to meet?",
+    reminderCadence: "24h and 2h before start",
+    featuredPlacement: true,
+    description:
+      "A hosted event designed for people who want clarity on arrival, a strong main session, and enough social room afterward to actually meet the right people.",
+    featuredPhotoUrl: "",
+    galleryNotes: "Warm editorial photo direction with one venue-wide shot and one tighter crowd image.",
+    commentsEnabled: true,
+    launchNotes: "Priority invite reliable attendees first, then promote from the waitlist.",
+  };
+}
+
+const sectionClassName =
+  "conversion-panel rounded-[1.5rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5";
+
+export function OrganizerEventWizard({
+  organizerName,
+}: OrganizerEventWizardProps) {
+  const [step, setStep] = useState(0);
+  const [form, setForm] = useState(createInitialForm);
+  const [message, setMessage] = useState("");
+  const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(createInitialForm()));
+
+  const selectedGroup =
+    publicGroups.find((group) => group.slug === form.groupSlug) ?? publicGroups[0];
+  const selectedVenue =
+    publicVenues.find((venue) => venue.slug === form.venueSlug) ?? publicVenues[0];
+  const slug = useMemo(() => slugify(form.title), [form.title]);
+  const tags = form.tags
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean)
+    .slice(0, 8);
+  const ticketPriceIsk = useMemo(() => getTicketPriceIsk(form.ticketPrice), [form.ticketPrice]);
+  const estimatedGrossAtCapacity = form.isFree ? 0 : ticketPriceIsk * form.attendeeLimit;
+  const estimatedPlatformFee = form.isFree
+    ? 0
+    : Math.round((estimatedGrossAtCapacity * ticketCommissionRate) / 100);
+  const isPaidTicketValid = form.isFree || ticketPriceIsk >= minimumTicketPriceIsk;
+  const isDirty = JSON.stringify(form) !== savedSnapshot;
+  const completion = Math.round(
+    (steps.filter((_, index) => stepIsReady(index, form)).length / steps.length) * 100,
+  );
+
+  useUnsavedChangesWarning(isDirty);
+
+  function updateField<K extends keyof typeof form>(field: K, value: (typeof form)[K]) {
+    setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  function moveStep(direction: "back" | "forward") {
+    startTransition(() => {
+      setStep((current) => {
+        if (direction === "back") {
+          return Math.max(current - 1, 0);
+        }
+
+        return Math.min(current + 1, steps.length - 1);
+      });
+    });
+  }
+
+  function saveDraft(action: "draft" | "publish-ready") {
+    startTransition(() => {
+      writeSessionDraft(
+        "meetupreykjavik-event-draft",
+        {
+          ...form,
+          slug,
+          tags,
+          ticketPriceIsk,
+          organizerName,
+          status: action === "publish-ready" ? "ready_for_review" : "draft",
+        },
+      );
+      setSavedSnapshot(JSON.stringify(form));
+      setMessage(
+        action === "publish-ready"
+          ? "Event draft saved locally and marked ready for review."
+          : "Event draft saved locally. Nothing has been published or deployed.",
+      );
+    });
+  }
+
+  return (
+    <div className="section-shell py-10">
+      <div className="grid gap-6 xl:grid-cols-[290px_1fr_350px]">
+        <aside className={sectionClassName}>
+          <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            Seven-step wizard
+          </div>
+          <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)]">
+            Create a new event
+          </h1>
+          <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+            Work through the full organizer flow: group selection, recurring setup,
+            venue or online location, attendee controls, ticketing, media, and final review.
+          </p>
+
+          <div className="mt-6 rounded-[1.3rem] bg-[rgba(245,240,232,0.84)] p-4">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                Completion
+              </span>
+              <span className="text-sm font-semibold text-[var(--brand-text)]">
+                {completion}%
+              </span>
+            </div>
+            <div className="mt-3 h-2 rounded-full bg-white/80">
+              <div
+                className="h-2 rounded-full bg-[linear-gradient(90deg,var(--brand-indigo),var(--brand-coral))]"
+                style={{ width: `${completion}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 space-y-3">
+            {steps.map((item, index) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => setStep(index)}
+                className={cn(
+                  "wizard-step-card flex w-full items-center gap-3 rounded-[1.1rem] border px-4 py-3 text-left transition",
+                  step === index
+                    ? "wizard-step-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                    : "border-[rgba(153,148,168,0.12)] bg-white/78",
+                )}
+              >
+                <span
+                  className={cn(
+                    "inline-flex h-10 w-10 items-center justify-center rounded-2xl",
+                    stepIsReady(index, form)
+                      ? "bg-[rgba(124,154,130,0.14)] text-[var(--brand-sage)]"
+                      : "bg-[rgba(245,240,232,0.94)] text-[var(--brand-text-muted)]",
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <div className="text-sm font-semibold text-[var(--brand-text)]">
+                    Step {index + 1}
+                  </div>
+                  <div className="text-xs text-[var(--brand-text-muted)]">{item.label}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </aside>
+
+        <div className="space-y-6">
+          {step === 0 ? (
+            <section className={sectionClassName}>
+              <div className="grid gap-5 md:grid-cols-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Event title
+                  <input
+                    id="event-title"
+                    name="title"
+                    value={form.title}
+                    onChange={(event) => updateField("title", event.target.value)}
+                    placeholder="React systems night"
+                    autoComplete="off"
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Group
+                  <select
+                    value={form.groupSlug}
+                    onChange={(event) => updateField("groupSlug", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  >
+                    {publicGroups.map((group) => (
+                      <option key={group.slug} value={group.slug}>
+                        {group.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Category
+                  <select
+                    value={form.category}
+                    onChange={(event) => updateField("category", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  >
+                    {categories.map((category) => (
+                      <option key={category.name} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Event type
+                  <select
+                    value={form.eventType}
+                    onChange={(event) => updateField("eventType", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  >
+                    <option value="in_person">In person</option>
+                    <option value="hybrid">Hybrid</option>
+                    <option value="online">Online</option>
+                  </select>
+                </label>
+              </div>
+
+              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                  Tags
+                  <input
+                    id="event-tags"
+                    name="tags"
+                    value={form.tags}
+                    onChange={(event) => updateField("tags", event.target.value)}
+                    placeholder="react, architecture, systems"
+                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                />
+              </label>
+
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Visibility mode
+                  <select
+                    value={form.visibilityMode}
+                    onChange={(event) => updateField("visibilityMode", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  >
+                    <option value="public">Public discovery</option>
+                    <option value="approval">Public with host approval</option>
+                    <option value="members_only">Members only</option>
+                    <option value="invite_only">Invite only</option>
+                  </select>
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Co-hosts
+                  <input
+                    id="event-cohosts"
+                    name="coHosts"
+                    value={form.coHosts}
+                    onChange={(event) => updateField("coHosts", event.target.value)}
+                    placeholder="Name one or more co-hosts"
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              </div>
+            </section>
+          ) : null}
+
+          {step === 1 ? (
+            <section className={sectionClassName}>
+              <div className="grid gap-5 md:grid-cols-3">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Start date
+                  <input
+                    type="date"
+                    value={form.startsOn}
+                    onChange={(event) => updateField("startsOn", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Start time
+                  <input
+                    type="time"
+                    value={form.startTime}
+                    onChange={(event) => updateField("startTime", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  End time
+                  <input
+                    type="time"
+                    value={form.endTime}
+                    onChange={(event) => updateField("endTime", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              </div>
+
+              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+                <input
+                  type="checkbox"
+                  checked={form.recurring}
+                  onChange={(event) => updateField("recurring", event.target.checked)}
+                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                />
+                Make this a recurring event
+              </label>
+
+              {form.recurring ? (
+                <div className="mt-5 grid gap-5 md:grid-cols-2">
+                  <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                    Recurrence rule
+                    <input
+                      value={form.recurrenceRule}
+                      onChange={(event) => updateField("recurrenceRule", event.target.value)}
+                      className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    />
+                  </label>
+                  <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                    Recurrence end
+                    <input
+                      type="date"
+                      value={form.recurrenceEnds}
+                      onChange={(event) => updateField("recurrenceEnds", event.target.value)}
+                      className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    />
+                  </label>
+                </div>
+              ) : null}
+            </section>
+          ) : null}
+
+          {step === 2 ? (
+            <section className={sectionClassName}>
+              <div className="flex flex-wrap gap-3">
+                {[
+                  ["venue", "Partner venue"],
+                  ["custom", "Custom address"],
+                  ["online", "Online"],
+                ].map(([key, label]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => updateField("locationMode", key)}
+                    className={cn(
+                      "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                      form.locationMode === key
+                        ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
+                        : "border-[rgba(153,148,168,0.14)] bg-white/78 text-[var(--brand-text-muted)]",
+                    )}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {form.locationMode === "venue" ? (
+                <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                  Venue partner
+                  <select
+                    value={form.venueSlug}
+                    onChange={(event) => updateField("venueSlug", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  >
+                    {publicVenues.map((venue) => (
+                      <option key={venue.slug} value={venue.slug}>
+                        {venue.name} · {venue.area}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+
+              {form.locationMode === "custom" ? (
+                <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                  Venue address
+                  <input
+                    value={form.venueAddress}
+                    onChange={(event) => updateField("venueAddress", event.target.value)}
+                    placeholder="Tryggvagata 12, 101 Reykjavik"
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              ) : null}
+
+              {form.locationMode === "online" ? (
+                <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                  Online link
+                  <input
+                    id="event-online-link"
+                    name="onlineLink"
+                    type="url"
+                    value={form.onlineLink}
+                    onChange={(event) => updateField("onlineLink", event.target.value)}
+                    placeholder="https://meet.google.com/example"
+                    autoComplete="url"
+                    autoCapitalize="none"
+                    inputMode="url"
+                    spellCheck={false}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              ) : null}
+            </section>
+          ) : null}
+
+          {step === 3 ? (
+            <section className={sectionClassName}>
+              <div className="grid gap-5 md:grid-cols-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Attendee limit
+                  <input
+                    type="number"
+                    min={1}
+                    value={form.attendeeLimit}
+                    onChange={(event) =>
+                      updateField("attendeeLimit", Number(event.target.value))
+                    }
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Guest limit
+                  <input
+                    type="number"
+                    min={0}
+                    value={form.guestLimit}
+                    onChange={(event) =>
+                      updateField("guestLimit", Number(event.target.value))
+                    }
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              </div>
+              <div className="mt-5 grid gap-5 md:grid-cols-3">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  RSVP mode
+                  <select
+                    value={form.rsvpMode}
+                    onChange={(event) => updateField("rsvpMode", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  >
+                    <option value="open">Open</option>
+                    <option value="approval">Approval</option>
+                    <option value="invite_only">Invite only</option>
+                  </select>
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Age label
+                  <input
+                    value={form.ageRestriction}
+                    onChange={(event) => updateField("ageRestriction", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Minimum age
+                  <input
+                    value={form.ageMin}
+                    onChange={(event) => updateField("ageMin", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              </div>
+            </section>
+          ) : null}
+
+          {step === 4 ? (
+            <section className={sectionClassName}>
+              <label className="flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+                <input
+                  type="checkbox"
+                  checked={form.isFree}
+                  onChange={(event) => updateField("isFree", event.target.checked)}
+                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                />
+                Free or sponsor-backed event
+              </label>
+              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                Reserve free publishing for sponsor-backed launches, invite-only formats,
+                or admin-approved community exceptions. Public paid events should start at{" "}
+                <span className="font-semibold text-[var(--brand-text)]">
+                  {formatIsk(minimumTicketPriceIsk)}
+                </span>
+                .
+              </p>
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Ticket label
+                  <input
+                    value={form.ticketLabel}
+                    onChange={(event) => updateField("ticketLabel", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Ticket price
+                  <input
+                    id="event-ticket-price"
+                    name="ticketPrice"
+                    inputMode="numeric"
+                    value={form.ticketPrice}
+                    onChange={(event) => updateField("ticketPrice", event.target.value)}
+                    disabled={form.isFree}
+                    placeholder={formatIsk(minimumTicketPriceIsk)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)] disabled:opacity-60"
+                  />
+                </label>
+              </div>
+              <div className="mt-5 grid gap-4 md:grid-cols-3">
+                <div className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-4">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    Ticket floor
+                  </div>
+                  <div className="mt-2 font-semibold text-[var(--brand-text)]">
+                    {formatIsk(minimumTicketPriceIsk)}
+                  </div>
+                </div>
+                <div className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-4">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    Platform commission
+                  </div>
+                  <div className="mt-2 font-semibold text-[var(--brand-text)]">
+                    {ticketCommissionRate}% of paid sales
+                  </div>
+                </div>
+                <div className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-4">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    Capacity gross
+                  </div>
+                  <div className="mt-2 font-semibold text-[var(--brand-text)]">
+                    {form.isFree ? "Sponsor-backed" : formatIsk(estimatedGrossAtCapacity)}
+                  </div>
+                </div>
+              </div>
+              {!isPaidTicketValid ? (
+                <div className="mt-5 rounded-[1.1rem] border border-[rgba(232,97,77,0.22)] bg-[rgba(232,97,77,0.1)] px-4 py-3 text-sm leading-7 text-[var(--brand-coral-dark)]">
+                  Public paid events must be priced at {formatIsk(minimumTicketPriceIsk)} or
+                  above to protect platform revenue and avoid low-signal inventory.
+                </div>
+              ) : null}
+              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                Refund policy
+                <textarea
+                  value={form.refundPolicy}
+                  onChange={(event) => updateField("refundPolicy", event.target.value)}
+                  rows={4}
+                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                />
+              </label>
+            </section>
+          ) : null}
+
+          {step === 5 ? (
+            <section className={sectionClassName}>
+              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                Event description
+                <textarea
+                  value={form.description}
+                  onChange={(event) => updateField("description", event.target.value)}
+                  rows={8}
+                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                />
+              </label>
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Featured photo URL
+                  <input
+                    id="event-featured-photo"
+                    name="featuredPhotoUrl"
+                    type="url"
+                    value={form.featuredPhotoUrl}
+                    onChange={(event) => updateField("featuredPhotoUrl", event.target.value)}
+                    placeholder="Optional for now"
+                    autoComplete="url"
+                    autoCapitalize="none"
+                    inputMode="url"
+                    spellCheck={false}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Gallery notes
+                  <input
+                    value={form.galleryNotes}
+                    onChange={(event) => updateField("galleryNotes", event.target.value)}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              </div>
+              <div className="mt-5 grid gap-5 md:grid-cols-2">
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Guest question
+                  <textarea
+                    value={form.guestQuestion}
+                    onChange={(event) => updateField("guestQuestion", event.target.value)}
+                    rows={4}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+                <div className="space-y-5">
+                  <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                    Reminder cadence
+                    <select
+                      value={form.reminderCadence}
+                      onChange={(event) =>
+                        updateField("reminderCadence", event.target.value)
+                      }
+                      className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    >
+                      <option value="24h and 2h before start">24h and 2h before start</option>
+                      <option value="48h, 24h, and 2h before start">
+                        48h, 24h, and 2h before start
+                      </option>
+                      <option value="Same day only">Same day only</option>
+                    </select>
+                  </label>
+                  <label className="flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+                    <input
+                      type="checkbox"
+                      checked={form.featuredPlacement}
+                      onChange={(event) =>
+                        updateField("featuredPlacement", event.target.checked)
+                      }
+                      className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                    />
+                    Request featured placement in discovery
+                  </label>
+                </div>
+              </div>
+              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+                <input
+                  type="checkbox"
+                  checked={form.commentsEnabled}
+                  onChange={(event) =>
+                    updateField("commentsEnabled", event.target.checked)
+                  }
+                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                />
+                Enable event comments
+              </label>
+            </section>
+          ) : null}
+
+          {step === 6 ? (
+            <section className={sectionClassName}>
+              <div className="grid gap-5 md:grid-cols-2">
+                <div className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    Final event summary
+                  </div>
+                  <div className="font-editorial mt-3 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                    {form.title || "Event title"}
+                  </div>
+                  <div className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    {selectedGroup?.name} · {form.startsOn} · {form.startTime}
+                  </div>
+                  <div className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    {form.locationMode === "venue"
+                      ? `${selectedVenue?.name} · ${selectedVenue?.area}`
+                      : form.locationMode === "custom"
+                        ? form.venueAddress || "Custom address"
+                        : form.onlineLink || "Online link"}
+                  </div>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                      {form.isFree ? "Sponsor-backed / free" : `Ticket ${form.ticketPrice}`}
+                    </div>
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                      {form.isFree
+                        ? "No commission on free issue"
+                        : `${formatIsk(estimatedPlatformFee)} estimated platform fee at capacity`}
+                    </div>
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                      Visibility: {form.visibilityMode.replaceAll("_", " ")}
+                    </div>
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                      Reminders: {form.reminderCadence}
+                    </div>
+                  </div>
+                </div>
+                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  Launch notes
+                  <textarea
+                    value={form.launchNotes}
+                    onChange={(event) => updateField("launchNotes", event.target.value)}
+                    rows={6}
+                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  />
+                </label>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => saveDraft("draft")}
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.18)] bg-white px-5 py-3 text-sm font-bold text-[var(--brand-indigo)] transition hover:-translate-y-0.5"
+                >
+                  Save local draft
+                  <ListChecks className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => saveDraft("publish-ready")}
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
+                >
+                  Mark ready for review
+                  <CheckCheck className="h-4 w-4" />
+                </button>
+              </div>
+              {message ? (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="mt-4 rounded-[1.1rem] border border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-[var(--brand-sage-dark)]"
+                >
+                  {message}
+                </div>
+              ) : null}
+            </section>
+          ) : null}
+
+          <div className="flex items-center justify-between gap-4">
+            <button
+              type="button"
+              onClick={() => moveStep("back")}
+              disabled={step === 0}
+              className="inline-flex min-h-11 items-center rounded-full border border-[rgba(153,148,168,0.18)] bg-white/78 px-4 py-2 text-sm font-semibold text-[var(--brand-text)] disabled:opacity-50"
+            >
+              Back
+            </button>
+            <div className="text-sm text-[var(--brand-text-muted)]">
+              Step {step + 1} of {steps.length}
+            </div>
+            <button
+              type="button"
+              onClick={() => moveStep("forward")}
+              disabled={step === steps.length - 1 || !stepIsReady(step, form)}
+              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-indigo)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              Next step
+            </button>
+          </div>
+        </div>
+
+        <aside className="space-y-6">
+          <section className={sectionClassName}>
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+              Live event card
+            </div>
+            <div className="mt-4 overflow-hidden rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white">
+              <div
+                className="h-40 bg-[linear-gradient(135deg,rgba(55,48,163,0.96),rgba(232,97,77,0.78))]"
+                aria-hidden="true"
+              />
+              <div className="p-5">
+                <div className="flex flex-wrap gap-2">
+                  <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-[var(--brand-indigo)]">
+                    {form.category}
+                  </span>
+                  <span className="rounded-full bg-[rgba(245,240,232,0.9)] px-3 py-1 text-xs font-semibold text-[var(--brand-text)]">
+                    {form.isFree ? "Free RSVP" : form.ticketPrice || "Paid"}
+                  </span>
+                  <span className="rounded-full bg-[rgba(124,154,130,0.12)] px-3 py-1 text-xs font-semibold text-[var(--brand-sage)]">
+                    {form.visibilityMode.replaceAll("_", " ")}
+                  </span>
+                  {form.featuredPlacement ? (
+                    <span className="rounded-full bg-[rgba(232,97,77,0.12)] px-3 py-1 text-xs font-semibold text-[var(--brand-coral)]">
+                      Featured request
+                    </span>
+                  ) : null}
+                </div>
+                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                  {form.title || "Event title"}
+                </div>
+                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  {form.description}
+                </p>
+                <div className="mt-4 grid gap-3">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                    {selectedGroup?.name} · hosted by {organizerName}
+                  </div>
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                    {form.startsOn} · {form.startTime}-{form.endTime}
+                  </div>
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                    {form.locationMode === "venue"
+                      ? `${selectedVenue?.name} · ${selectedVenue?.area}`
+                      : form.locationMode === "custom"
+                        ? form.venueAddress || "Custom address"
+                        : form.onlineLink || "Online event"}
+                  </div>
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                    {form.isFree
+                      ? "Free / sponsor-backed event"
+                      : `${form.ticketPrice || formatIsk(minimumTicketPriceIsk)} · ${ticketCommissionRate}% platform commission`}
+                  </div>
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                    Reminder flow: {form.reminderCadence}
+                  </div>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-[rgba(153,148,168,0.14)] px-3 py-1 text-xs font-semibold text-[var(--brand-text-muted)]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className={sectionClassName}>
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+              Organizer notes
+            </div>
+            <div className="mt-4 space-y-3">
+              {[
+                "Approval mode is best for quality-sensitive formats and premium room inventory.",
+                "Recurring sessions should keep timing identical so venue and attendee habits can form.",
+                `Use ${formatIsk(minimumTicketPriceIsk)} as the minimum public ticket unless the event is sponsor-backed or invite-only.`,
+                "Visibility, reminders, and host contact should be clear enough that a first-time attendee can commit without chasing details.",
+                "Launch notes are saved locally with the draft so nothing gets lost before Supabase is connected.",
+              ].map((note) => (
+                <div
+                  key={note}
+                  className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/78 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                >
+                  {note}
+                </div>
+              ))}
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+  );
+}

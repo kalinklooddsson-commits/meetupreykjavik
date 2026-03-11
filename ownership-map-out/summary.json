@@ -1,0 +1,100 @@
+{
+  "generated_at": "2026-03-11T10:16:10.106287+00:00",
+  "repo": "/Users/baldvinoddsson/Desktop/Meetupreykjavik",
+  "parameters": {
+    "since": null,
+    "until": null,
+    "half_life_days": 180.0,
+    "bus_factor_threshold": 1,
+    "stale_days": 365,
+    "owner_threshold": 0.5,
+    "sensitive_config": null,
+    "identity": "author",
+    "date_field": "author",
+    "include_merges": false,
+    "cochange_enabled": true,
+    "cochange_max_files": 50,
+    "cochange_min_count": 2,
+    "cochange_min_jaccard": 0.05,
+    "cochange_default_excludes": true,
+    "cochange_excludes": [
+      "**/Cargo.lock",
+      "**/Cargo.toml",
+      "**/package-lock.json",
+      "**/yarn.lock",
+      "**/pnpm-lock.yaml",
+      "**/go.sum",
+      "**/go.mod",
+      "**/Gemfile.lock",
+      "**/Pipfile.lock",
+      "**/poetry.lock",
+      "**/composer.lock",
+      "**/.github/**",
+      "**/.gitignore",
+      "**/.gitattributes",
+      "**/.gitmodules",
+      "**/.editorconfig",
+      "**/.vscode/**",
+      "**/.idea/**"
+    ],
+    "author_default_excludes": true,
+    "author_exclude_regexes": [
+      "dependabot"
+    ],
+    "community_top_owners": 5
+  },
+  "orphaned_sensitive_code": [],
+  "hidden_owners": [
+    {
+      "person": "baldvinoddsson@Baldvins-MacBook-Air.local",
+      "name": "Baldvin Oddsson",
+      "controls": "100% of auth code",
+      "category": "auth",
+      "share": 1.0
+    }
+  ],
+  "bus_factor_hotspots": [
+    {
+      "path": "Desktop/artist-booking-os/src/components/auth/AdminMfaPanel.tsx",
+      "bus_factor": 1,
+      "last_touch": "2026-02-24T13:48:53+00:00",
+      "sensitivity_tags": [
+        "auth"
+      ],
+      "top_owner": "baldvinoddsson@Baldvins-MacBook-Air.local"
+    },
+    {
+      "path": "Desktop/artist-booking-os/src/components/auth/MagicLinkSentPanel.tsx",
+      "bus_factor": 1,
+      "last_touch": "2026-02-24T13:48:53+00:00",
+      "sensitivity_tags": [
+        "auth"
+      ],
+      "top_owner": "baldvinoddsson@Baldvins-MacBook-Air.local"
+    },
+    {
+      "path": "Desktop/artist-booking-os/src/components/auth/RoleRadioSelector.tsx",
+      "bus_factor": 1,
+      "last_touch": "2026-02-24T13:48:53+00:00",
+      "sensitivity_tags": [
+        "auth"
+      ],
+      "top_owner": "baldvinoddsson@Baldvins-MacBook-Air.local"
+    }
+  ],
+  "stats": {
+    "commits": 68,
+    "commits_seen": 68,
+    "commits_excluded_identities": 0,
+    "commits_excluded_merges": 0,
+    "edges": 171,
+    "people": 2,
+    "files": 85,
+    "cochange_pairs_total": 330,
+    "cochange_edges": 20,
+    "cochange_commits_used": 29,
+    "cochange_commits_skipped": 0,
+    "cochange_commits_filtered": 0,
+    "cochange_files_excluded": 0
+  }
+}

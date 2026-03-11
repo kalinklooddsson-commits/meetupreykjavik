@@ -1,0 +1,108 @@
+{
+  "generatedAt": "2026-03-10T21:56:45.765Z",
+  "city": "Reykjavíkurborg, Höfuðborgarsvæðið, Ísland",
+  "bbox": {
+    "south": 64.0404021,
+    "west": -21.9838299,
+    "north": 64.3153711,
+    "east": -21.4019991
+  },
+  "counts": {
+    "totalPlaces": 636,
+    "withWebsite": 291,
+    "withAddress": 354,
+    "withWikidata": 52,
+    "imageCandidates": 26,
+    "downloadedImages": 3
+  },
+  "lanes": [
+    {
+      "key": "food-and-drink",
+      "label": "Food & drink",
+      "count": 312
+    },
+    {
+      "key": "culture",
+      "label": "Culture & live arts",
+      "count": 111
+    },
+    {
+      "key": "social-nightlife",
+      "label": "Social & nightlife",
+      "count": 91
+    },
+    {
+      "key": "fitness-outdoors",
+      "label": "Fitness & outdoors",
+      "count": 84
+    },
+    {
+      "key": "stays-social",
+      "label": "Stay & social",
+      "count": 19
+    },
+    {
+      "key": "community-learning",
+      "label": "Community & learning",
+      "count": 18
+    },
+    {
+      "key": "coworking-learning",
+      "label": "Coworking & learning",
+      "count": 1
+    }
+  ],
+  "featuredPlaces": [
+    {
+      "slug": "dill",
+      "name": "Dill",
+      "laneKey": "food-and-drink",
+      "laneLabel": "Food & drink",
+      "kindLabel": "Restaurant",
+      "area": "Laugavegur",
+      "address": "Laugavegur 59, 101 Reykjavík",
+      "website": "https://www.dillrestaurant.is/",
+      "summary": "Restaurant in Laugavegur. Website listed. Hours not listed.",
+      "image": {
+        "localPath": "/place-images/reykjavik/dill-0aeca160.jpg",
+        "license": "CC BY 2.0",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:DILL_IMG_2923_(30924865650).jpg",
+        "credit": "IMG_2923"
+      }
+    },
+    {
+      "slug": "jo-leikhusi",
+      "name": "Þjóðleikhúsið",
+      "laneKey": "culture",
+      "laneLabel": "Culture & live arts",
+      "kindLabel": "Theatre",
+      "area": "Hverfisgata",
+      "address": "Hverfisgata 19, 101 Reykjavík",
+      "website": "https://leikhusid.is/",
+      "summary": "Theatre in Hverfisgata. Website listed. Hours not listed.",
+      "image": {
+        "localPath": "/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg",
+        "license": "CC BY-SA 3.0",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iceland-Reykjavik-National-Theatre-1.jpg",
+        "credit": "Own work"
+      }
+    },
+    {
+      "slug": "hof-i",
+      "name": "Höfði",
+      "laneKey": "culture",
+      "laneLabel": "Culture & live arts",
+      "kindLabel": "Museum",
+      "area": "Félagstún",
+      "address": "Félagstún 1, 105",
+      "website": "",
+      "summary": "Museum in Félagstún. Website not listed yet. Hours not listed.",
+      "image": {
+        "localPath": "/place-images/reykjavik/hof-i-deccf755.jpg",
+        "license": "CC BY-SA 3.0",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hofdi_House_Reykjavik_(cropped).jpg",
+        "credit": "Own work"
+      }
+    }
+  ]
+}

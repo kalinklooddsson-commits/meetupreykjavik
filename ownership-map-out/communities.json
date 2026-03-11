@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "size": 5,
+    "files": [
+      "Desktop/artist-booking-os/src/app/(public)/pricing/page.tsx",
+      "Desktop/artist-booking-os/src/components/help/HelpContactForm.tsx",
+      "Desktop/artist-booking-os/src/components/landing/final-cta-section.tsx",
+      "Desktop/artist-booking-os/src/components/landing/hero-section.tsx",
+      "Desktop/artist-booking-os/src/components/pricing/PricingEstimator.tsx"
+    ],
+    "maintainers": [
+      {
+        "person_id": "baldvinoddsson@Baldvins-MacBook-Air.local",
+        "name": "Baldvin Oddsson",
+        "touches": 20,
+        "touch_share": 0.8333,
+        "recency_share": 0.8335,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      },
+      {
+        "person_id": "baldvinoddsson@MacBookAir.c.is",
+        "name": "Baldvin Oddsson",
+        "touches": 4,
+        "touch_share": 0.1667,
+        "recency_share": 0.1665,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 24,
+      "recency_weight": 22.660461,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 2,
+    "size": 5,
+    "files": [
+      "Desktop/artist-booking-os/.env.example",
+      "Desktop/artist-booking-os/README.md",
+      "Desktop/artist-booking-os/middleware.ts",
+      "Desktop/artist-booking-os/src/lib/health.ts",
+      "Desktop/artist-booking-os/tests/unit/health.test.ts"
+    ],
+    "maintainers": [
+      {
+        "person_id": "baldvinoddsson@Baldvins-MacBook-Air.local",
+        "name": "Baldvin Oddsson",
+        "touches": 8,
+        "touch_share": 0.5714,
+        "recency_share": 0.5716,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      },
+      {
+        "person_id": "baldvinoddsson@MacBookAir.c.is",
+        "name": "Baldvin Oddsson",
+        "touches": 6,
+        "touch_share": 0.4286,
+        "recency_share": 0.4284,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 14,
+      "recency_weight": 13.209406,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 3,
+    "size": 4,
+    "files": [
+      "Desktop/artist-booking-os/src/app/(public)/about/page.tsx",
+      "Desktop/artist-booking-os/src/app/(public)/system/page.tsx",
+      "Desktop/artist-booking-os/src/lib/directory-demo-data.ts",
+      "Desktop/artist-booking-os/src/messages/en.json"
+    ],
+    "maintainers": [
+      {
+        "person_id": "baldvinoddsson@Baldvins-MacBook-Air.local",
+        "name": "Baldvin Oddsson",
+        "touches": 11,
+        "touch_share": 0.8462,
+        "recency_share": 0.8462,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      },
+      {
+        "person_id": "baldvinoddsson@MacBookAir.c.is",
+        "name": "Baldvin Oddsson",
+        "touches": 2,
+        "touch_share": 0.1538,
+        "recency_share": 0.1538,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 13,
+      "recency_weight": 12.270057,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 4,
+    "size": 2,
+    "files": [
+      "Desktop/artist-booking-os/src/app/(auth)/login/page.tsx",
+      "Desktop/artist-booking-os/src/app/(auth)/register/page.tsx"
+    ],
+    "maintainers": [
+      {
+        "person_id": "baldvinoddsson@Baldvins-MacBook-Air.local",
+        "name": "Baldvin Oddsson",
+        "touches": 6,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 6,
+      "recency_weight": 5.667792,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 5,
+    "size": 2,
+    "files": [
+      "Desktop/artist-booking-os/src/components/landing/how-it-works-section.tsx",
+      "Desktop/artist-booking-os/src/components/landing/role-tabs-section.tsx"
+    ],
+    "maintainers": [
+      {
+        "person_id": "baldvinoddsson@Baldvins-MacBook-Air.local",
+        "name": "Baldvin Oddsson",
+        "touches": 6,
+        "touch_share": 1.0,
+        "recency_share": 1.0,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      }
+    ],
+    "bus_factor": 1,
+    "owner_count": 1,
+    "totals": {
+      "touches": 6,
+      "recency_weight": 5.665462,
+      "sensitive_weight": 0
+    }
+  },
+  {
+    "id": 6,
+    "size": 2,
+    "files": [
+      "Desktop/artist-booking-os/src/app/(dashboard)/dashboard/page.tsx",
+      "Desktop/artist-booking-os/src/app/(public)/artists/[slug]/page.tsx"
+    ],
+    "maintainers": [
+      {
+        "person_id": "baldvinoddsson@MacBookAir.c.is",
+        "name": "Baldvin Oddsson",
+        "touches": 8,
+        "touch_share": 0.8889,
+        "recency_share": 0.8889,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      },
+      {
+        "person_id": "baldvinoddsson@Baldvins-MacBook-Air.local",
+        "name": "Baldvin Oddsson",
+        "touches": 1,
+        "touch_share": 0.1111,
+        "recency_share": 0.1111,
+        "sensitive_share": 0.0,
+        "primary_tz_offset": "+00:00"
+      }
+    ],
+    "bus_factor": 2,
+    "owner_count": 2,
+    "totals": {
+      "touches": 9,
+      "recency_weight": 8.486099,
+      "sensitive_weight": 0
+    }
+  }
+]

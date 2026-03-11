@@ -1,0 +1,365 @@
+{
+  "locale": {
+    "switcher": "Change language",
+    "en": "EN",
+    "is": "IS"
+  },
+  "nav": {
+    "events": "Events",
+    "groups": "Groups",
+    "venues": "Venues",
+    "about": "About",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "privacy": "Privacy"
+  },
+  "cta": {
+    "signup": "Create account",
+    "signin": "Sign in",
+    "join": "Join",
+    "portal": "Portal",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "venuePortal": "Venue portal",
+    "organizerHub": "Organizer hub",
+    "explore": "Explore",
+    "exploreEvents": "Explore events",
+    "startGroup": "Start a group",
+    "seeAllEvents": "See all events",
+    "seeAllGroups": "See all groups",
+    "becomePartner": "Become a partner",
+    "partnerVenue": "Partner with a venue",
+    "signupFreeLong": "Create your account",
+    "rsvp": "RSVP",
+    "viewGroup": "View group",
+    "exploreVenue": "Explore venue"
+  },
+  "header": {
+    "brandTop": "Meetup",
+    "brandBottom": "Reykjavik"
+  },
+  "footer": {
+    "description": "Discover events. Meet people. Support local venues. Free to join, built for Reykjavik.",
+    "explore": "Explore",
+    "company": "Company",
+    "legal": "Legal",
+    "categories": "Categories",
+    "forVenues": "For Venues",
+    "terms": "Terms",
+    "contact": "Contact",
+    "copyright": "Built in Reykjavik, Iceland."
+  },
+  "home": {
+    "hero": {
+      "badge": "Now live in Reykjavik",
+      "titleLead": "Find your people in",
+      "titleAccent": "Reykjavik",
+      "subtitleTop": "Discover events. Meet people. Support local venues.",
+      "subtitleBottom": "Free to join. Paid events and venue partners keep the city moving.",
+      "searchPlaceholder": "Search events, groups, or venues...",
+      "commandEyebrow": "Search-led city discovery",
+      "commandTitle": "Start with the room, the host, and the price signal.",
+      "commandDescription": "The strongest local products reduce browsing friction. Search is the CTA, trust is visible, and the next action is always obvious.",
+      "chipSafety": "host-approved",
+      "chipVenue": "venue-backed",
+      "chipPremium": "premium formats",
+      "chipSocial": "social nights",
+      "chipWorkshops": "workshops",
+      "noteOneLabel": "Trust filter",
+      "noteOneValue": "Host-led formats and calmer arrival logic help solo attendees commit faster.",
+      "noteTwoLabel": "Ticket floor",
+      "noteTwoValue": "Paid public inventory starts at 500 ISK so even smaller formats have a real commercial baseline.",
+      "noteThreeLabel": "Venue layer",
+      "noteThreeValue": "Partner rooms increase event quality, booking confidence, and local business value at the same time.",
+      "noteFourLabel": "This week",
+      "noteFourValue": "The best inventory clusters around social, expat, and practical workshop formats."
+    },
+    "stats": {
+      "members": "Members",
+      "groups": "Groups",
+      "thisWeek": "This Week",
+      "venuePartners": "Venue Partners"
+    },
+    "sections": {
+      "thisWeekEyebrow": "This week",
+      "thisWeekTitle": "What's happening",
+      "thisWeekDescription": "Curated events with venue-backed perks, friendly hosts, and enough texture to feel local.",
+      "categoriesEyebrow": "Categories",
+      "categoriesTitle": "Find your community",
+      "signalTrustTitle": "Trust starts before checkout",
+      "signalTrustDescription": "Clear host identity, venue fit, and calmer arrival cues make the whole product feel more credible.",
+      "signalRevenueTitle": "This is built to monetize",
+      "signalRevenueDescription": "Ticket floors, organizer subscriptions, and venue plans are part of the frontend story, not hidden later.",
+      "signalVenueTitle": "The city itself is a feature",
+      "signalVenueDescription": "Better rooms improve discovery, shape the event format, and create a stronger local loop.",
+      "businessEyebrow": "Built to operate",
+      "businessTitle": "Designed for members, organizers, and venue partners at the same time.",
+      "businessDescription": "The product works because each role sees a clear reason to participate: better discovery for members, operating tools for organizers, and real workflow value for venues.",
+      "businessCta": "See the business model",
+      "memberLaneTitle": "Members",
+      "memberLaneDescription": "Discovery is cleaner when people can judge the room, the host, and the format without guesswork.",
+      "memberLanePointOne": "Search-first browsing with visible trust signals",
+      "memberLanePointTwo": "Paid and free formats presented with clearer expectations",
+      "memberLanePointThree": "Group and venue context attached directly to each event",
+      "organizerLaneTitle": "Organizers",
+      "organizerLaneDescription": "Recurring hosts need more than a listing form. They need approvals, repeat formats, and revenue logic in the product itself.",
+      "organizerLanePointOne": "Public ticketing from 500 ISK and up",
+      "organizerLanePointTwo": "Recurring group identity and audience operations",
+      "organizerLanePointThree": "Venue matching and better commercial framing",
+      "venueLaneTitle": "Venue partners",
+      "venueLaneDescription": "Partner rooms are part of the operating system, not just passive listings on a directory page.",
+      "venueLanePointOne": "Booking, deal, and availability workflows",
+      "venueLanePointTwo": "Premium storefront presentation and event fit cues",
+      "venueLanePointThree": "Higher-value repeat business from better organizers",
+      "flywheelEyebrow": "Local flywheel",
+      "flywheelTitle": "A stronger local loop compounds across every page.",
+      "flywheelDescription": "The best version of this product is not just beautiful. It connects discovery, operations, and revenue clearly enough that each side of the marketplace reinforces the others.",
+      "flywheelPointOneTitle": "Better discovery",
+      "flywheelPointOneDescription": "Members find formats faster when the product shows trust, price, venue, and host quality together.",
+      "flywheelPointTwoTitle": "Better operations",
+      "flywheelPointTwoDescription": "Organizers and venues stay because the tooling feels like business infrastructure, not community hobbyware.",
+      "flywheelPointThreeTitle": "Better revenue",
+      "flywheelPointThreeDescription": "Paid seats, venue plans, and organizer subscriptions work better when the frontend already frames the value correctly.",
+      "howEyebrow": "How it works",
+      "howTitle": "A calmer way to discover the city",
+      "howDescription": "The product logic stays straightforward: browse, RSVP, and show up. No feed clutter, no endless swiping.",
+      "groupsEyebrow": "Groups",
+      "groupsTitle": "People-led communities",
+      "groupsDescription": "Every group is built around a real host, a repeatable rhythm, and clear community intent.",
+      "venuesEyebrow": "Venue partners",
+      "venuesTitle": "Best spots in the city",
+      "venuesDescription": "Partner venues get more visibility, better booking flow, and a storefront that feels premium.",
+      "joinEyebrow": "Join the city",
+      "joinTitle": "Ready to find your people?",
+      "joinDescription": "Join thousands discovering what Reykjavik has to offer and help the local scene grow at the same time.",
+      "closingTitle": "Editorial, local, and warm",
+      "memberFirst": "Member-first",
+      "memberFirstDescription": "Simple onboarding, transparent RSVP flow, and a real sense of what is active this week.",
+      "venueAware": "Venue-aware",
+      "venueAwareDescription": "Featured venues, deals, availability, and admin-ready infrastructure for the later build phases."
+    },
+    "cards": {
+      "going": "going",
+      "memberDeal": "Member deal",
+      "hostedEvents": "hosted events"
+    },
+    "steps": {
+      "discoverTitle": "Discover",
+      "discoverDescription": "Browse events and groups by interest, date, and neighborhood.",
+      "joinTitle": "Join",
+      "joinDescription": "RSVP in one click, follow a group, and skip the algorithmic feed noise.",
+      "connectTitle": "Connect",
+      "connectDescription": "Show up, meet real people, and support local Reykjavik venues at the same time."
+    }
+  },
+  "privacyPage": {
+    "hero": {
+      "eyebrow": "Privacy",
+      "title": "Clear data handling is part of trust, not a legal afterthought.",
+      "description": "This page covers the major policy surfaces the platform needs: account data, community activity, communications, analytics, and member rights.",
+      "metrics": {
+        "visibility": "Default visibility",
+        "analytics": "Analytics retention",
+        "export": "Export path",
+        "locale": "Locale scope"
+      },
+      "values": {
+        "visibility": "Members only",
+        "analytics": "12 months",
+        "export": "Admin review",
+        "locale": "IS / EN"
+      }
+    },
+    "sectionsEyebrow": "Policy section",
+    "sections": {
+      "identity": {
+        "title": "Identity and account data",
+        "copy": "The platform stores the profile, account, and role information needed to run memberships, organizer flows, and venue partnerships. That includes your public display name, your private email account, and the settings that control who can view your activity.",
+        "point1": "Profile visibility stays aligned with member privacy settings.",
+        "point2": "Organizer and venue accounts collect extra operational details for trust and review.",
+        "point3": "Admin access is reserved for moderation, support, and platform operations."
+      },
+      "activity": {
+        "title": "Event, group, and venue activity",
+        "copy": "RSVPs, waitlist movement, approvals, attendance signals, and venue interactions are used to keep events reliable and to help organizers and admins make better decisions. The product is opinionated about trust and quality, so operational activity is part of the product record.",
+        "point1": "RSVP and approval history may be visible to organizers or admins where relevant.",
+        "point2": "Venue and event interactions can be used to improve recommendations and reduce abuse.",
+        "point3": "Payment and payout records are retained for billing and audit once live providers are connected."
+      },
+      "comms": {
+        "title": "Communications and analytics",
+        "copy": "The platform sends transactional messages such as approvals, waitlist updates, reminders, and venue reviews. It also tracks aggregate analytics so the product can understand what formats, neighborhoods, and venue partnerships are working.",
+        "point1": "Digest and marketing preferences remain configurable in account settings.",
+        "point2": "Analytics are used for product improvement, not generic ad-network profiling.",
+        "point3": "Access, export, and deletion requests will be handled through admin review flows."
+      }
+    },
+    "rightsEyebrow": "Member rights",
+    "rightsTitle": "Access, correction, export, and deletion",
+    "rightsDescription": "The live admin and settings surfaces are already built to support these operations once backend wiring is connected.",
+    "rights": {
+      "access": {
+        "title": "Access your record",
+        "text": "Profiles, RSVPs, memberships, and account settings can be surfaced for export."
+      },
+      "correct": {
+        "title": "Correct profile data",
+        "text": "Members, organizers, and venues can update their operational identity over time."
+      },
+      "billing": {
+        "title": "Billing and transaction review",
+        "text": "Once payments are live, the platform will retain the records needed for invoices and payouts."
+      },
+      "locale": {
+        "title": "Bilingual policy surface",
+        "text": "Privacy and account controls are intended to work in both English and Icelandic."
+      }
+    }
+  },
+  "termsPage": {
+    "hero": {
+      "eyebrow": "Terms",
+      "title": "Clear rules for a curated city platform.",
+      "description": "These terms explain how membership, organizer activity, venue partnerships, moderation, and future payment flows are expected to work.",
+      "primaryCta": "Contact support",
+      "secondaryCta": "Read privacy",
+      "metrics": {
+        "roles": "User roles",
+        "domains": "Moderation domains",
+        "principle": "Core principle",
+        "support": "Support channel"
+      },
+      "values": {
+        "roles": "4",
+        "domains": "Users, events, groups, venues",
+        "principle": "Trust and clarity",
+        "support": "Admin-reviewed"
+      }
+    },
+    "sectionsEyebrow": "Terms section",
+    "sections": {
+      "accounts": {
+        "title": "Accounts and membership",
+        "copy": "Members, organizers, and venue partners use the same platform core, but each role carries different responsibilities. Accounts must use accurate identity and contact information, and the platform can restrict access when trust or safety signals require it.",
+        "point1": "Members are responsible for profile accuracy and respectful participation.",
+        "point2": "Organizers are responsible for truthful event listings and clear host behavior.",
+        "point3": "Venue partners are responsible for accurate availability, deal, and booking information."
+      },
+      "events": {
+        "title": "Events, payments, and cancellations",
+        "copy": "Public events are designed to start at 500 ISK or higher unless they are sponsor-backed or specially approved. Booking holds, waitlists, and payment confirmations are part of the operating model, and once live providers are connected, fee handling, refunds, and payout timing will follow the configured commercial terms.",
+        "point1": "A confirmed seat or booking can depend on payment, approval, or both.",
+        "point2": "Refund and cancellation treatment can differ by event, venue, or subscription state.",
+        "point3": "Admin can intervene when quality, trust, or abuse issues affect a listing or transaction."
+      },
+      "moderation": {
+        "title": "Moderation and platform control",
+        "copy": "The product is intentionally curated. Admin may suspend, restrict, or remove users, groups, events, or venue listings when safety, trust, spam, harassment, or repeated quality failures justify intervention.",
+        "point1": "Moderation actions can be temporary, permanent, or conditional on review.",
+        "point2": "Organizer and venue visibility can be limited if quality or reliability drops.",
+        "point3": "Appeals and support requests are reviewed through platform operations channels."
+      }
+    },
+    "stanceEyebrow": "Operating stance",
+    "stanceTitle": "How the platform treats quality",
+    "stanceDescription": "MeetupReykjavik is meant to feel intentional. That means admin, organizer, and venue actions are not purely mechanical.",
+    "stance": {
+      "trust": {
+        "label": "Trust layer",
+        "value": "Profiles, approvals, attendance, and moderation all matter."
+      },
+      "rooms": {
+        "label": "Room quality",
+        "value": "Admin and hosts may shape attendance to improve safety and fit."
+      },
+      "providers": {
+        "label": "Providers",
+        "value": "Email and payments are added later without changing the core rules."
+      },
+      "appeals": {
+        "label": "Appeals",
+        "value": "Handled through support and moderation channels."
+      }
+    },
+    "remindersEyebrow": "Practical reminder",
+    "remindersTitle": "Current build state",
+    "remindersDescription": "This local build contains the full product structure, but not all live integrations.",
+    "reminders": {
+      "one": "Account, payment, and communication providers are not yet wired to production.",
+      "two": "Local dashboards and control panels simulate the full operating shape before deployment.",
+      "three": "Some live commercial and legal details will be finalized when provider setup is complete."
+    }
+  },
+  "contactPage": {
+    "hero": {
+      "eyebrow": "Contact",
+      "title": "Reach the right team without the usual support maze.",
+      "description": "Support, organizer operations, venue partnerships, and privacy questions each have a clear lane so the product stays helpful and accountable.",
+      "primaryCta": "Create an account",
+      "secondaryCta": "Read terms",
+      "metrics": {
+        "lanes": "Support lanes",
+        "reply": "Target first reply",
+        "organizer": "Organizer ops",
+        "trust": "Trust review"
+      },
+      "values": {
+        "lanes": "4",
+        "reply": "1 business day",
+        "organizer": "Same-day when urgent",
+        "trust": "Priority-based"
+      }
+    },
+    "channelsEyebrow": "Channels",
+    "channelsTitle": "Who to contact",
+    "channelsDescription": "Each lane below matches a real operating function in the product.",
+    "channels": {
+      "general": {
+        "title": "General support",
+        "note": "Account help, product questions, and onboarding guidance."
+      },
+      "organizer": {
+        "title": "Organizer operations",
+        "note": "Event approvals, group setup, and community support."
+      },
+      "venue": {
+        "title": "Venue partnerships",
+        "note": "Venue applications, deal setup, and booking workflow questions."
+      },
+      "trust": {
+        "title": "Privacy and trust",
+        "note": "Moderation, privacy requests, and sensitive account concerns."
+      }
+    },
+    "expectationsEyebrow": "Response times",
+    "expectationsTitle": "What to expect",
+    "expectationsDescription": "This keeps expectations clear before live email infrastructure is connected.",
+    "expectations": {
+      "one": "General support target: within one working day.",
+      "two": "Venue and organizer operational questions: usually within the same business day.",
+      "three": "Moderation and privacy cases: response timing depends on severity and evidence quality."
+    }
+  },
+  "contactForm": {
+    "title": "Contact the team",
+    "description": "This local form mirrors the support flow. It stores a draft on this machine so the structure is in place before email delivery is wired.",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "topic": "Topic",
+      "message": "Message"
+    },
+    "topics": {
+      "general": "General question",
+      "organizer": "Organizer support",
+      "venue": "Venue partnership",
+      "billing": "Payments and billing",
+      "privacy": "Privacy or moderation"
+    },
+    "submit": "Save local support draft",
+    "status": {
+      "incomplete": "Add your name, email, and message before saving this local draft.",
+      "saved": "Saved locally as a contact draft. No live message was sent from this build."
+    }
+  }
+}
