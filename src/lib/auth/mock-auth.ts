@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import type { AccountType, Locale } from "@/types/domain";
 import {
@@ -10,10 +10,25 @@ import {
 } from "@/lib/auth/mock-auth-config";
 
 export const MOCK_SESSION_COOKIE = "meetupreykjavik-session";
-const mockSessionSecret =
-  process.env.MOCK_SESSION_SECRET ??
-  process.env.AUTH_SECRET ??
-  randomBytes(32).toString("hex");
+
+function getMockSessionSecret() {
+  const configuredSecret =
+    process.env.MOCK_SESSION_SECRET ?? process.env.AUTH_SECRET;
+
+  if (configuredSecret) {
+    return configuredSecret;
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    return "meetupreykjavik-local-mock-session-secret";
+  }
+
+  throw new Error(
+    "MOCK_SESSION_SECRET or AUTH_SECRET must be configured while mock auth is enabled.",
+  );
+}
+
+const mockSessionSecret = getMockSessionSecret();
 
 function encodeSession(session: MockSession) {
   const payload = Buffer.from(JSON.stringify(session), "utf8").toString("base64url");
