@@ -45,6 +45,7 @@ import {
   type SourcedPlace,
 } from "@/lib/reykjavik-source-data";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/public/reveal";
 
 /* ── Formatters ────────────────────────────────────────── */
 
@@ -348,7 +349,7 @@ function EventCard({ event }: { event: PublicEvent }) {
   const imageUrl = extractImageUrl(event.art);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-48 bg-gray-200">
         {imageUrl ? (
           <>
@@ -444,7 +445,7 @@ function GroupCard({
   const imageUrl = extractImageUrl(group.banner);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-36 bg-gray-200">
         {imageUrl ? (
           <>
@@ -506,7 +507,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
   const imageUrl = extractImageUrl(venue.art);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-36 bg-gray-200">
         {imageUrl ? (
           <>
@@ -562,7 +563,7 @@ function BlogCard({ post }: { post: BlogPost }) {
   const imageUrl = extractImageUrl(post.hero);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-44 bg-gray-200">
         {imageUrl ? (
           <>
@@ -607,7 +608,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
   const hasPhoto = place.image?.kind === "photo";
 
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-48 bg-gray-200">
         {imageSrc ? (
           <Image
@@ -854,7 +855,7 @@ export function EventsIndexScreen() {
       />
 
       {/* Featured event spotlight */}
-      <section className="section-shell py-10">
+      <section className="reveal section-shell py-10">
         <div className="mb-8 flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-[var(--brand-coral)]" />
           <h2 className="text-lg font-semibold text-gray-900">Featured event</h2>
@@ -931,7 +932,7 @@ export function EventsIndexScreen() {
             />
           </div>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="reveal-group mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {publicEvents.map((event) => (
               <EventCard key={event.slug} event={event} />
             ))}
@@ -1213,7 +1214,7 @@ export function GroupsIndexScreen() {
       <section className="bg-[var(--brand-sand)]">
         <div className="section-shell py-10">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">Active groups</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="reveal-group grid gap-6 md:grid-cols-2">
             {publicGroups.map((group) => (
               <GroupCard
                 key={group.slug}
@@ -1424,7 +1425,7 @@ export function VenuesIndexScreen() {
       <section className="bg-[var(--brand-sand)]">
         <div className="section-shell py-10">
           <h2 className="mb-6 text-2xl font-bold text-gray-900">Partner venues</h2>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="reveal-group grid gap-6 md:grid-cols-2">
             {publicVenues.map((venue) => (
               <VenueCard key={venue.slug} venue={venue} />
             ))}
@@ -1998,7 +1999,7 @@ export function PricingScreen() {
             <h2 className="mt-4 text-2xl font-bold text-gray-900">Member plans</h2>
             <p className="mt-2 text-sm text-gray-600">Browse free. Upgrade for priority access and premium features.</p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="reveal-group grid gap-6 md:grid-cols-3">
             {userTiers.map((tier, i) => (
               <article
                 key={tier.name}
@@ -2059,7 +2060,7 @@ export function PricingScreen() {
               Run events with real tools. Plus {ticketCommissionRate}% commission on paid ticket sales.
             </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="reveal-group grid gap-6 md:grid-cols-3">
             {organizerTiers.map((tier, i) => (
               <article
                 key={tier.name}
@@ -2120,7 +2121,7 @@ export function PricingScreen() {
               From basic listing to full partnership with booking tools and analytics.
             </p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="reveal-group grid gap-6 md:grid-cols-3">
             {venueTiers.map((tier, i) => (
               <article
                 key={tier.name}

@@ -40,6 +40,36 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ── Scroll-reveal animation ──────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.reveal.revealed {
+  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Staggered children inside a reveal-group */
+.reveal-group.revealed > * { opacity: 0; animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.reveal-group.revealed > *:nth-child(1) { animation-delay: 0ms; }
+.reveal-group.revealed > *:nth-child(2) { animation-delay: 80ms; }
+.reveal-group.revealed > *:nth-child(3) { animation-delay: 160ms; }
+.reveal-group.revealed > *:nth-child(4) { animation-delay: 240ms; }
+.reveal-group.revealed > *:nth-child(5) { animation-delay: 320ms; }
+.reveal-group.revealed > *:nth-child(6) { animation-delay: 400ms; }
+
 body {
   margin: 0;
   min-height: 100vh;
