@@ -809,33 +809,64 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
   }
 
   const remaining = Math.max(audience.seatsRemaining - selectedIds.length, 0);
+  const overviewStats = [
+    {
+      label: "Selected",
+      value: String(selectedIds.length),
+      tone:
+        "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]",
+    },
+    {
+      label: "Seats left",
+      value: String(remaining),
+      tone:
+        "border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] text-[var(--brand-sage)]",
+    },
+    {
+      label: "Average fit",
+      value: `${averageFit}%`,
+      tone:
+        "border-[rgba(232,97,77,0.18)] bg-[rgba(232,97,77,0.08)] text-[var(--brand-coral)]",
+    },
+  ] as const;
+  const trustedCount = audience.candidates.filter(
+    (candidate) =>
+      candidate.status.toLowerCase().includes("trusted") ||
+      candidate.status.toLowerCase().includes("reliable") ||
+      candidate.fitScore >= 90,
+  ).length;
+  const reviewCount = audience.candidates.filter((candidate) =>
+    candidate.status.toLowerCase().includes("review"),
+  ).length;
 
   return (
     <div className="grid gap-5">
       <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+        <div className="flex flex-col gap-4">
           <div>
-            <div className="text-lg font-semibold text-[var(--brand-text)]">
+            <div className="text-base font-semibold text-[var(--brand-text)] sm:text-lg">
               {audience.eventTitle}
             </div>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {audience.target}
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <span className={cn(pillBase, "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]")}>
-              {selectedIds.length} chosen
-            </span>
-            <span className={cn(pillBase, "border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] text-[var(--brand-sage)]")}>
-              {remaining} seats left
-            </span>
-            <span className={cn(pillBase, "border-[rgba(232,97,77,0.18)] bg-[rgba(232,97,77,0.08)] text-[var(--brand-coral)]")}>
-              {averageFit}% avg fit
-            </span>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {overviewStats.map((item) => (
+              <div
+                key={item.label}
+                className={cn("rounded-xl border px-4 py-3", item.tone)}
+              >
+                <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-current/70">
+                  {item.label}
+                </div>
+                <div className="mt-2 text-base font-semibold text-current">{item.value}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="mt-5 grid gap-3 xl:grid-cols-[1fr_auto]">
+        <div className="mt-5">
           <label className="flex items-center gap-3 rounded-full border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3">
             <Search className="h-4 w-4 text-[var(--brand-text-light)]" />
             <input
@@ -853,7 +884,12 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
               className="w-full border-none bg-transparent text-sm text-[var(--brand-text)] outline-none"
             />
           </label>
-          <div className="flex flex-wrap gap-2">
+
+          <div className="mt-4">
+            <div className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+              Filter candidates
+            </div>
+            <div className="flex flex-wrap gap-2">
             {[
               ["all", "All clients"],
               ["high_fit", "High fit"],
@@ -878,12 +914,47 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                 {label}
               </button>
             ))}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)]">
         <div className="space-y-3">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Filtered pool
+              </div>
+              <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+                {filteredCandidates.length}
+              </div>
+            </div>
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Trusted / high fit
+              </div>
+              <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+                {trustedCount}
+              </div>
+            </div>
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Needs review
+              </div>
+              <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+                {reviewCount}
+              </div>
+            </div>
+          </div>
+          <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+            Candidate pool
+          </div>
+          {filteredCandidates.length === 0 ? (
+            <div className="rounded-lg border border-[var(--brand-border-light)] bg-white px-4 py-6 text-sm text-[var(--brand-text-muted)]">
+              No candidates match the current search and filter combination.
+            </div>
+          ) : null}
           {filteredCandidates.map((candidate) => {
             const selected = selectedIds.includes(candidate.id);
             const active = candidate.id === activeCandidate?.id;
@@ -903,7 +974,7 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
                 )}
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
+                  <div className="min-w-0">
                     <div className="font-semibold text-[var(--brand-text)]">{candidate.name}</div>
                     <p className="mt-1 text-sm text-[var(--brand-text-muted)]">
                       {candidate.tier} · {candidate.status} · Last active {candidate.lastActive}
@@ -1007,10 +1078,10 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
 
           <div>
             <div className="text-lg font-semibold text-[var(--brand-text)]">
-              Selected clients
+              Selected audience
             </div>
             <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
-              Admin can hand-pick people, assign an action lane, and manage room shape without leaving the event.
+              Pick invitees, assign action lanes, and shape the room without leaving the event.
             </p>
           </div>
 
@@ -1105,17 +1176,23 @@ export function AdminEventAudiencePicker({ audience }: { audience: AudiencePicke
               Audience mix
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              {topTags.map(([tag, count]) => (
-                <span
-                  key={tag}
-                  className={cn(
-                    pillBase,
-                    "border-[rgba(79,70,229,0.18)] bg-white text-[var(--brand-text-muted)]",
-                  )}
-                >
-                  {tag} · {count}
-                </span>
-              ))}
+              {topTags.length ? (
+                topTags.map(([tag, count]) => (
+                  <span
+                    key={tag}
+                    className={cn(
+                      pillBase,
+                      "border-[rgba(79,70,229,0.18)] bg-white text-[var(--brand-text-muted)]",
+                    )}
+                  >
+                    {tag} · {count}
+                  </span>
+                ))
+              ) : (
+                <div className="text-sm text-[var(--brand-text-muted)]">
+                  Select candidates to build a visible room mix.
+                </div>
+              )}
             </div>
           </div>
 
@@ -1899,6 +1976,9 @@ export function AdminRevenueControlDesk({
 
   const selectedPlan =
     planInventory.find((plan) => plan.name === selectedPlanName) ?? planInventory[0];
+  const premiumCount = planInventory.filter((plan) =>
+    plan.name.toLowerCase().includes("pro") || plan.name.toLowerCase().includes("studio"),
+  ).length;
 
   function updatePlan(name: string, next: Partial<AdminRevenuePlan>, nextMessage: string) {
     startTransition(() => {
@@ -1928,6 +2008,32 @@ export function AdminRevenueControlDesk({
           <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Change pricing posture, rewrite positioning, and keep the commercial stack coherent.
           </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Plans
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              {planInventory.length}
+            </div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Premium tiers
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              {premiumCount}
+            </div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Selected
+            </div>
+            <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+              {selectedPlan?.name ?? "No plan"}
+            </div>
+          </div>
         </div>
 
         <div className="space-y-3">
@@ -1998,6 +2104,24 @@ export function AdminRevenueControlDesk({
           <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
             Keep minimum ticket price, commission, and platform rules editable in the dashboard.
           </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Policy rules
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              {policyInventory.length}
+            </div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Last update
+            </div>
+            <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+              Live in this desk
+            </div>
+          </div>
         </div>
 
         <div className="space-y-3">
@@ -2656,6 +2780,13 @@ export function AdminVenueOperationsDesk({
   const [message, setMessage] = useState(
     `${Math.min(applications.length, 2)} venue applications staged for admin handling.`,
   );
+  const followUpCount = queue.filter((application) =>
+    application.status.toLowerCase().includes("wait") ||
+    application.status.toLowerCase().includes("request"),
+  ).length;
+  const approvedCount = queue.filter((application) =>
+    application.status.toLowerCase().includes("approve"),
+  ).length;
 
   function toggleKey(key: string) {
     startTransition(() => {
@@ -2701,6 +2832,26 @@ export function AdminVenueOperationsDesk({
             Batch-handle venue applications, push them into the right lane, and keep supply
             quality visible from one dashboard surface.
           </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Selected
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{selectedKeys.length}</div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Approved
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{approvedCount}</div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Follow-up
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{followUpCount}</div>
+          </div>
         </div>
         <div className="flex flex-wrap gap-3">
           <ActionButton
@@ -2998,6 +3149,15 @@ export function AdminModerationConsole({
 }) {
   const [reportQueue, setReportQueue] = useState(reports);
   const [banList, setBanList] = useState(banned);
+  const openReports = reportQueue.filter((report) =>
+    !report.status.toLowerCase().includes("resolved"),
+  ).length;
+  const criticalReports = reportQueue.filter((report) =>
+    report.priority.toLowerCase().includes("high"),
+  ).length;
+  const pendingAppeals = banList.filter((entry) =>
+    entry.appeal.toLowerCase().includes("pending"),
+  ).length;
 
   function resolveReport(key: string, status: string) {
     startTransition(() => {
@@ -3020,6 +3180,33 @@ export function AdminModerationConsole({
   return (
     <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
       <div className="space-y-4">
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Open reports
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              {openReports}
+            </div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              High priority
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              {criticalReports}
+            </div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Pending appeals
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              {pendingAppeals}
+            </div>
+          </div>
+        </div>
+
         {reportQueue.map((report) => (
           <article
             key={report.key}
@@ -3047,6 +3234,9 @@ export function AdminModerationConsole({
         <div className="text-lg font-semibold text-[var(--brand-text)]">
           Banned and appeals
         </div>
+        <p className="text-sm leading-relaxed text-[var(--brand-text-muted)]">
+          Keep every ban traceable, every appeal visible, and every restore action obvious from the same trust desk.
+        </p>
         {banList.map((entry) => (
           <div
             key={entry.key}

@@ -219,6 +219,10 @@ export function OrganizerAttendeeControlCenter({
   const checkedInCount = directory.filter((item) =>
     item.checkedIn.toLowerCase().includes("yes"),
   ).length;
+  const paidCount = directory.filter((item) =>
+    item.ticket.toLowerCase().includes("paid") ||
+    item.ticket.toLowerCase().includes("isk"),
+  ).length;
 
   function mutateSelected(next: Partial<OrganizerAttendee>) {
     if (!selected) {
@@ -281,6 +285,14 @@ export function OrganizerAttendeeControlCenter({
 
       <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
         <div className="space-y-3">
+          <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+            Attendee queue
+          </div>
+          {filtered.length === 0 ? (
+            <div className="rounded-lg border border-[var(--brand-border-light)] bg-white px-4 py-6 text-sm text-[var(--brand-text-muted)]">
+              No attendees match the current search.
+            </div>
+          ) : null}
           {filtered.map((attendee) => (
             <button
               key={attendee.name}
@@ -340,7 +352,26 @@ export function OrganizerAttendeeControlCenter({
                     {item.value}
                   </div>
                 </div>
-              ))}
+                ))}
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
+                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                  Paid attendees
+                </div>
+                <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+                  {paidCount} in current event lane
+                </div>
+              </div>
+              <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
+                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                  Approval-sensitive
+                </div>
+                <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+                  {pendingCount} need a decision
+                </div>
+              </div>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
@@ -388,6 +419,13 @@ export function VenueBookingCommandCenter({
   );
 
   const selected = queue.find((booking) => booking.key === selectedKey) ?? queue[0];
+  const pendingCount = queue.filter((booking) =>
+    booking.status.toLowerCase().includes("pending") ||
+    booking.status.toLowerCase().includes("counter"),
+  ).length;
+  const acceptedCount = queue.filter((booking) =>
+    booking.status.toLowerCase().includes("accepted"),
+  ).length;
 
   function mutateSelected(status: string, message?: string) {
     if (!selected) {
@@ -412,18 +450,32 @@ export function VenueBookingCommandCenter({
   return (
     <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
       <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Needs reply
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{pendingCount}</div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Accepted
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{acceptedCount}</div>
+          </div>
+        </div>
         {queue.map((booking) => (
           <button
             key={booking.key}
             type="button"
             onClick={() => setSelectedKey(booking.key)}
-              className={cn(
-                "ops-selection-card block w-full rounded-md border p-4 text-left transition",
-                booking.key === selected?.key
-                  ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
-              )}
-            >
+            className={cn(
+              "ops-selection-card block w-full rounded-md border p-4 text-left transition",
+              booking.key === selected?.key
+                ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
+                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+            )}
+          >
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold text-[var(--brand-text)]">{booking.event}</div>
               <ToneBadge tone={toneForStatus(booking.status)}>{booking.status}</ToneBadge>
@@ -459,6 +511,21 @@ export function VenueBookingCommandCenter({
             <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {selected.message}
             </p>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Attendance ask
+              </div>
+              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.attendance}</div>
+            </div>
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Current status
+              </div>
+              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.status}</div>
+            </div>
           </div>
 
           <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
@@ -678,6 +745,9 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
   const [inventory, setInventory] = useState(deals);
   const [selectedKey, setSelectedKey] = useState(deals[0]?.key ?? "");
   const selected = inventory.find((deal) => deal.key === selectedKey) ?? inventory[0];
+  const activeCount = inventory.filter((deal) => deal.status.toLowerCase().includes("active")).length;
+  const draftCount = inventory.filter((deal) => deal.status.toLowerCase().includes("draft")).length;
+  const pausedCount = inventory.filter((deal) => deal.status.toLowerCase().includes("pause")).length;
 
   function mutateSelected(next: Partial<VenueDeal>) {
     if (!selected) {
@@ -694,6 +764,26 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
   return (
     <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
       <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Active
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{activeCount}</div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Draft
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{draftCount}</div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Paused
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{pausedCount}</div>
+          </div>
+        </div>
         {inventory.map((deal) => (
           <button
             key={deal.key}
@@ -729,6 +819,20 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
             <div className="flex flex-wrap gap-2">
               <ToneBadge tone="sand">{selected.tier}</ToneBadge>
               <ToneBadge tone={toneForStatus(selected.status)}>{selected.status}</ToneBadge>
+            </div>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Deal type
+              </div>
+              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.type}</div>
+            </div>
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Redemption
+              </div>
+              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.redemption}</div>
             </div>
           </div>
 
@@ -785,6 +889,7 @@ export function VenueProfileSectionEditor({
   const [editor, setEditor] = useState(sections);
   const [selectedKey, setSelectedKey] = useState(sections[0]?.key ?? "");
   const selected = editor.find((section) => section.key === selectedKey) ?? editor[0];
+  const totalFields = editor.reduce((sum, section) => sum + section.items.length, 0);
 
   function updateItem(label: string, value: string) {
     if (!selected) {
@@ -810,6 +915,20 @@ export function VenueProfileSectionEditor({
   return (
     <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
       <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Sections
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{editor.length}</div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Editable fields
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{totalFields}</div>
+          </div>
+        </div>
         {editor.map((section) => (
           <button
             key={section.key}
@@ -835,6 +954,9 @@ export function VenueProfileSectionEditor({
           <div className="text-lg font-semibold text-[var(--brand-text)]">
             {selected.title}
           </div>
+          <p className="text-sm leading-relaxed text-[var(--brand-text-muted)]">
+            Keep this section specific enough that organizers can decide if the room fits before they ever message you.
+          </p>
           {selected.items.map((item) => (
             <label
               key={item.label}
@@ -1415,6 +1537,13 @@ export function OrganizerVenueRequestStudio({
   const [pipelineState, setPipelineState] = useState(pipeline);
 
   const selected = matches.find((item) => item.venue.slug === selectedSlug) ?? matches[0];
+  const acceptedCount = pipelineState.filter((item) =>
+    item.status.toLowerCase().includes("accepted"),
+  ).length;
+  const pendingCount = pipelineState.filter((item) =>
+    item.status.toLowerCase().includes("pending") ||
+    item.status.toLowerCase().includes("counter"),
+  ).length;
 
   function queueRequest() {
     if (!selected) {
@@ -1439,6 +1568,20 @@ export function OrganizerVenueRequestStudio({
   return (
     <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
       <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Accepted threads
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{acceptedCount}</div>
+          </div>
+          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              Needs reply
+            </div>
+            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{pendingCount}</div>
+          </div>
+        </div>
         {matches.map((match) => (
           <button
             key={match.venue.slug}
@@ -1475,6 +1618,20 @@ export function OrganizerVenueRequestStudio({
             <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
               {selected.fit}
             </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Match score
+              </div>
+              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.score}</div>
+            </div>
+            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                Next open slot
+              </div>
+              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.nextSlot}</div>
+            </div>
           </div>
 
           <label className="block text-sm font-semibold text-[var(--brand-text)]">

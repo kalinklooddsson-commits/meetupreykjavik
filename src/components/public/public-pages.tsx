@@ -42,10 +42,10 @@ import {
 } from "@/lib/public-data";
 import {
   getFeaturedSourcedPlaces,
+  getSourcedPlaces,
   type SourcedPlace,
 } from "@/lib/reykjavik-source-data";
 import { cn } from "@/lib/utils";
-import { Reveal } from "@/components/public/reveal";
 
 /* ── Formatters ────────────────────────────────────────── */
 
@@ -128,6 +128,205 @@ function categoryBadgeClass(tone: (typeof categories)[number]["tone"]) {
   if (tone === "indigo") return "bg-[var(--brand-indigo-soft)] text-[var(--brand-indigo)]";
   if (tone === "sand") return "bg-[var(--brand-sand)] text-[var(--brand-text)]";
   return "bg-[var(--brand-coral-soft)] text-[var(--brand-coral-dark)]";
+}
+
+function groupArchetype(group: PublicGroup) {
+  if (group.category === "Outdoors") {
+    return "For people who want a clear plan, a warm host, and a social rhythm around movement.";
+  }
+  if (group.category === "Tech") {
+    return "For builders, operators, and teams who want practical sessions with useful follow-through.";
+  }
+  if (group.category === "Food") {
+    return "For members who care about hospitality, tastings, and premium formats that justify a ticket.";
+  }
+  if (group.category === "Social" || group.category === "Expat") {
+    return "For people trying to build a real social circle in the city faster and with less friction.";
+  }
+  return "For members who want recurring community, recognizable hosts, and a reason to come back weekly.";
+}
+
+function venueFitSummary(venue: PublicVenue) {
+  const type = venue.type.toLowerCase();
+  if (type.includes("coworking")) {
+    return "Best for workshops, founder nights, and sessions where the room needs to support focus and discussion.";
+  }
+  if (type.includes("wine") || type.includes("restaurant")) {
+    return "Best for premium seated formats, curated dinners, and smaller events that should feel worth paying for.";
+  }
+  if (type.includes("cafe") || type.includes("music")) {
+    return "Best for intimate listening rooms, cultural nights, and conversation-led gatherings.";
+  }
+  return "Best for hosted social formats, recurring mixers, and events that rely on easy arrival flow.";
+}
+
+function areaHighlights(venues: PublicVenue[]) {
+  return Array.from(
+    venues.reduce(
+      (map, venue) => {
+        const current = map.get(venue.area) ?? {
+          area: venue.area,
+          venues: 0,
+          capacity: 0,
+          topVenue: venue.name,
+          topRating: venue.rating,
+        };
+        current.venues += 1;
+        current.capacity += venue.capacity;
+        if (venue.rating > current.topRating) {
+          current.topRating = venue.rating;
+          current.topVenue = venue.name;
+        }
+        map.set(venue.area, current);
+        return map;
+      },
+      new Map<
+        string,
+        {
+          area: string;
+          venues: number;
+          capacity: number;
+          topVenue: string;
+          topRating: number;
+        }
+      >(),
+    ).values(),
+  ).sort((left, right) => right.venues - left.venues || right.capacity - left.capacity);
+}
+
+function discoveryLanes(events: PublicEvent[]) {
+  const premium = [...events]
+    .filter((event) => !event.isFree)
+    .sort((left, right) => {
+      const leftPrice = Number.parseInt(left.priceLabel.replace(/[^0-9]/g, ""), 10) || 0;
+      const rightPrice = Number.parseInt(right.priceLabel.replace(/[^0-9]/g, ""), 10) || 0;
+      return rightPrice - leftPrice;
+    })[0];
+  const newcomer = [...events].find((event) =>
+    `${event.summary} ${event.approvalLabel} ${event.visibilityLabel}`.toLowerCase().includes("new"),
+  );
+  const fillingFast = [...events].sort(
+    (left, right) =>
+      occupancyPercent(right.attendees, right.capacity) -
+      occupancyPercent(left.attendees, left.capacity),
+  )[0];
+
+  return [
+    premium
+      ? {
+          label: "Premium format",
+          title: premium.title,
+          detail: `${premium.priceLabel} · ${premium.venueName} · ${premium.summary}`,
+          href: eventHref(premium.slug),
+        }
+      : null,
+    newcomer
+      ? {
+          label: "Newcomer-friendly",
+          title: newcomer.title,
+          detail: `${newcomer.approvalLabel} · ${newcomer.groupName}`,
+          href: eventHref(newcomer.slug),
+        }
+      : null,
+    fillingFast
+      ? {
+          label: "Filling fast",
+          title: fillingFast.title,
+          detail: `${occupancyPercent(fillingFast.attendees, fillingFast.capacity)}% full · ${fillingFast.venueName}`,
+          href: eventHref(fillingFast.slug),
+        }
+      : null,
+  ].filter(Boolean) as Array<{ label: string; title: string; detail: string; href: Route }>;
+}
+
+function eventFormatSignals(event: PublicEvent) {
+  return [
+    {
+      label: "Visibility",
+      value: event.visibilityLabel,
+      detail: "How people discover and qualify for the room.",
+    },
+    {
+      label: "Approval",
+      value: event.approvalLabel,
+      detail: "How the host shapes quality and balance before the night starts.",
+    },
+    {
+      label: "Reminder flow",
+      value: event.reminderLabel,
+      detail: "How the event maintains momentum and reduces no-shows.",
+    },
+  ];
+}
+
+function groupOperatingSignals(group: PublicGroup, upcomingEvents: PublicEvent[]) {
+  return [
+    {
+      label: "Member base",
+      value: `${group.members} members`,
+      detail: "The current community size already supporting the format.",
+    },
+    {
+      label: "Activity",
+      value: `${group.activity}% active`,
+      detail: "How much recurring energy the group is carrying right now.",
+    },
+    {
+      label: "Upcoming rhythm",
+      value: upcomingEvents.length ? `${upcomingEvents.length} upcoming events` : "Building next cycle",
+      detail: "How consistent the calendar looks for members deciding whether to join.",
+    },
+  ];
+}
+
+function sourcedPlaceSignals(place: SourcedPlace) {
+  return [
+    {
+      label: "Area",
+      value: place.area || "Reykjavik",
+      detail: "Where this venue sits in the city fabric.",
+    },
+    {
+      label: "Category",
+      value: place.kindLabel,
+      detail: "What kind of room or hospitality lane this place represents.",
+    },
+    {
+      label: "Claim path",
+      value: place.website ? "Claimable with live website" : "Claimable profile ready",
+      detail: "How quickly this place could become a partner venue inside the product.",
+    },
+  ];
+}
+
+function relatedSourcedPlaces(place: SourcedPlace) {
+  return getSourcedPlaces()
+    .filter(
+      (item) =>
+        item.slug !== place.slug &&
+        (item.area === place.area || item.laneKey === place.laneKey),
+    )
+    .slice(0, 4);
+}
+
+function blogSignals(posts: BlogPost[]) {
+  return [
+    {
+      label: "Editorial focus",
+      value: "Product, venues, and city community",
+      detail: "The current writing lane stays close to the core marketplace thesis.",
+    },
+    {
+      label: "Published pieces",
+      value: String(posts.length),
+      detail: "How much editorial context exists across the public brand surface.",
+    },
+    {
+      label: "Average depth",
+      value: `${Math.round(posts.reduce((sum, post) => sum + post.sections.length, 0) / posts.length)} sections`,
+      detail: "The current article depth across the blog library.",
+    },
+  ];
 }
 
 /** Extract image URL from gradient+url art strings */
@@ -664,38 +863,6 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
   );
 }
 
-function TierCard({
-  title,
-  price,
-  description,
-  features,
-}: {
-  title: string;
-  price: string;
-  description: string;
-  features?: readonly string[];
-}) {
-  return (
-    <article className="rounded-xl border border-gray-200 bg-white">
-      <div className="border-b border-gray-100 p-6">
-        <div className="text-sm font-semibold text-gray-500">{title}</div>
-        <div className="mt-2 text-3xl font-bold text-gray-900">{price}</div>
-        <p className="mt-3 text-sm text-gray-600">{description}</p>
-      </div>
-      {features ? (
-        <div className="p-6 space-y-3">
-          {features.map((feature) => (
-            <div key={feature} className="flex items-start gap-2">
-              <BadgeCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-sage)]" />
-              <span className="text-sm text-gray-700">{feature}</span>
-            </div>
-          ))}
-        </div>
-      ) : null}
-    </article>
-  );
-}
-
 function FilterBar({
   items,
   activeIndex = 0,
@@ -799,33 +966,6 @@ function IndexHero({
   );
 }
 
-/* ── Stat counter row ────────────────────────────────── */
-
-function StatRow({
-  items,
-}: {
-  items: Array<{ icon: React.ElementType; label: string; value: string }>;
-}) {
-  return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-      {items.map((item) => (
-        <div
-          key={item.label}
-          className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-4"
-        >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--brand-indigo-soft)]">
-            <item.icon className="h-5 w-5 text-[var(--brand-indigo)]" />
-          </div>
-          <div>
-            <div className="text-xl font-bold text-gray-900">{item.value}</div>
-            <div className="text-xs text-gray-500">{item.label}</div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 /* ══════════════════════════════════════════════════════════
    PAGE SCREENS
    ══════════════════════════════════════════════════════════ */
@@ -834,6 +974,7 @@ export function EventsIndexScreen() {
   const featured = publicEvents[0];
   const totalAttendees = publicEvents.reduce((sum, e) => sum + e.attendees, 0);
   const featuredImage = extractImageUrl(featured.art) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg";
+  const lanes = discoveryLanes(publicEvents);
 
   return (
     <>
@@ -932,6 +1073,26 @@ export function EventsIndexScreen() {
             />
           </div>
 
+          {lanes.length > 0 ? (
+            <div className="mt-8 grid gap-4 lg:grid-cols-3">
+              {lanes.map((lane) => (
+                <Link
+                  key={lane.label}
+                  href={lane.href}
+                  className="rounded-2xl border border-[var(--brand-border-light)] bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.08)]"
+                >
+                  <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--brand-text-light)]">
+                    {lane.label}
+                  </div>
+                  <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">
+                    {lane.title}
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{lane.detail}</p>
+                </Link>
+              ))}
+            </div>
+          ) : null}
+
           <div className="reveal-group mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {publicEvents.map((event) => (
               <EventCard key={event.slug} event={event} />
@@ -968,6 +1129,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
         (item.groupSlug === event.groupSlug || item.venueSlug === event.venueSlug),
     )
     .slice(0, 3);
+  const formatSignals = eventFormatSignals(event);
 
   return (
     <>
@@ -992,6 +1154,25 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                   <p key={paragraph} className="text-sm leading-relaxed text-gray-600">
                     {paragraph}
                   </p>
+                ))}
+              </div>
+            </Section>
+
+            <Section title="Why this format works">
+              <div className="grid gap-4 md:grid-cols-3">
+                {formatSignals.map((signal) => (
+                  <div
+                    key={signal.label}
+                    className="rounded-xl border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                  >
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                      {signal.label}
+                    </div>
+                    <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
+                      {signal.value}
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
+                  </div>
                 ))}
               </div>
             </Section>
@@ -1081,6 +1262,26 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
               </div>
             </Section>
 
+            <Section title="Booking notes">
+              <div className="space-y-3">
+                {[
+                  { label: "Host contact", value: event.hostContact },
+                  { label: "Share flow", value: event.shareLabel },
+                  { label: "Room policy", value: event.approvalLabel },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-lg border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                  >
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                      {item.label}
+                    </div>
+                    <div className="mt-2 text-sm leading-relaxed text-gray-700">{item.value}</div>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
             <Section>
               <Link
                 href="/signup"
@@ -1155,6 +1356,9 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
 export function GroupsIndexScreen() {
   const totalMembers = publicGroups.reduce((sum, g) => sum + g.members, 0);
   const avgActivity = Math.round(publicGroups.reduce((sum, g) => sum + g.activity, 0) / publicGroups.length);
+  const strongestGroups = [...publicGroups]
+    .sort((left, right) => right.activity - left.activity || right.members - left.members)
+    .slice(0, 3);
 
   return (
     <>
@@ -1213,6 +1417,23 @@ export function GroupsIndexScreen() {
       {/* Groups grid */}
       <section className="bg-[var(--brand-sand)]">
         <div className="section-shell py-10">
+          <div className="mb-8 grid gap-4 lg:grid-cols-3">
+            {strongestGroups.map((group) => (
+              <Link
+                key={group.slug}
+                href={groupHref(group.slug)}
+                className="rounded-2xl border border-[var(--brand-border-light)] bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.08)]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <ToneBadge tone={categoryTone(group.category)}>{group.category}</ToneBadge>
+                  <span className="text-xs font-medium text-gray-500">{group.activity}% active</span>
+                </div>
+                <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">{group.name}</div>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{groupArchetype(group)}</p>
+              </Link>
+            ))}
+          </div>
+
           <h2 className="mb-6 text-2xl font-bold text-gray-900">Active groups</h2>
           <div className="reveal-group grid gap-6 md:grid-cols-2">
             {publicGroups.map((group) => (
@@ -1259,6 +1480,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
   const upcomingEvents = publicEvents.filter((event) =>
     group.upcomingEventSlugs.includes(event.slug),
   );
+  const operatingSignals = groupOperatingSignals(group, upcomingEvents);
 
   return (
     <>
@@ -1303,6 +1525,25 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
               <div className="mt-4 flex flex-wrap gap-2">
                 {group.tags.map((tag) => (
                   <ToneBadge key={tag} tone={categoryTone(group.category)}>{tag}</ToneBadge>
+                ))}
+              </div>
+            </Section>
+
+            <Section title="Why members stay">
+              <div className="grid gap-4 md:grid-cols-3">
+                {operatingSignals.map((signal) => (
+                  <div
+                    key={signal.label}
+                    className="rounded-xl border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                  >
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                      {signal.label}
+                    </div>
+                    <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
+                      {signal.value}
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
+                  </div>
                 ))}
               </div>
             </Section>
@@ -1355,6 +1596,29 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
                 ))}
               </div>
             </Section>
+
+            <Section title="Membership read">
+              <div className="space-y-3">
+                {[
+                  { label: "Organizer", value: group.organizer },
+                  { label: "Best known for", value: group.tags.join(" · ") },
+                  {
+                    label: "Why this group matters",
+                    value: groupArchetype(group),
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-lg border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                  >
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                      {item.label}
+                    </div>
+                    <div className="mt-2 text-sm leading-relaxed text-gray-700">{item.value}</div>
+                  </div>
+                ))}
+              </div>
+            </Section>
           </div>
         </div>
       </section>
@@ -1366,6 +1630,7 @@ export function VenuesIndexScreen() {
   const sourcedPlaces = getFeaturedSourcedPlaces(6);
   const avgRating = (publicVenues.reduce((sum, v) => sum + v.rating, 0) / publicVenues.length).toFixed(1);
   const totalCapacity = publicVenues.reduce((sum, v) => sum + v.capacity, 0);
+  const neighborhoods = areaHighlights(publicVenues).slice(0, 4);
 
   return (
     <>
@@ -1424,6 +1689,25 @@ export function VenuesIndexScreen() {
       {/* Partner venues */}
       <section className="bg-[var(--brand-sand)]">
         <div className="section-shell py-10">
+          <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {neighborhoods.map((area) => (
+              <div
+                key={area.area}
+                className="rounded-2xl border border-[var(--brand-border-light)] bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)]"
+              >
+                <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--brand-text-light)]">
+                  {area.area}
+                </div>
+                <div className="mt-3 text-2xl font-bold tracking-tight text-gray-900">
+                  {area.venues} venues
+                </div>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">
+                  {area.capacity} combined seats. Best-rated: {area.topVenue} ({area.topRating.toFixed(1)}).
+                </p>
+              </div>
+            ))}
+          </div>
+
           <h2 className="mb-6 text-2xl font-bold text-gray-900">Partner venues</h2>
           <div className="reveal-group grid gap-6 md:grid-cols-2">
             {publicVenues.map((venue) => (
@@ -1483,6 +1767,9 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
   const upcomingEvents = publicEvents.filter((event) =>
     venue.upcomingEventSlugs.includes(event.slug),
   );
+  const nearbyVenues = publicVenues
+    .filter((item) => item.slug !== venue.slug && item.area === venue.area)
+    .slice(0, 3);
 
   return (
     <>
@@ -1537,6 +1824,25 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                     {amenity}
                   </div>
                 ))}
+              </div>
+            </Section>
+
+            <Section title="Best-fit formats">
+              <div className="rounded-xl border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
+                <p className="text-sm leading-relaxed text-gray-700">{venueFitSummary(venue)}</p>
+                {upcomingEvents.length > 0 ? (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {upcomingEvents.slice(0, 3).map((event) => (
+                      <Link
+                        key={event.slug}
+                        href={eventHref(event.slug)}
+                        className="rounded-full border border-[var(--brand-border)] bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-[var(--brand-indigo)] hover:text-[var(--brand-indigo)]"
+                      >
+                        {event.title}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </Section>
 
@@ -1615,6 +1921,25 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                 <p className="text-sm text-gray-500">No upcoming events.</p>
               )}
             </Section>
+
+            {nearbyVenues.length > 0 ? (
+              <Section title={`More in ${venue.area}`}>
+                <div className="space-y-3">
+                  {nearbyVenues.map((item) => (
+                    <Link
+                      key={item.slug}
+                      href={venueHref(item.slug)}
+                      className="block rounded-lg bg-gray-50 p-3 transition hover:bg-gray-100"
+                    >
+                      <div className="font-medium text-gray-900">{item.name}</div>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {item.type} · {item.capacity} capacity · {item.rating}/5
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </Section>
+            ) : null}
           </div>
         </div>
       </section>
@@ -1625,6 +1950,8 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
 export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
+  const signals = sourcedPlaceSignals(place);
+  const relatedPlaces = relatedSourcedPlaces(place);
 
   return (
     <>
@@ -1681,6 +2008,25 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
               ) : null}
             </Section>
 
+            <Section title="Venue read">
+              <div className="grid gap-4 md:grid-cols-3">
+                {signals.map((signal) => (
+                  <div
+                    key={signal.label}
+                    className="rounded-xl border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                  >
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                      {signal.label}
+                    </div>
+                    <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
+                      {signal.value}
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
             {hasPhoto && place.image?.credit ? (
               <Section title="Photo attribution">
                 <p className="text-sm text-gray-600">{place.image.credit}</p>
@@ -1702,6 +2048,48 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
                 ]}
               />
             </Section>
+
+            <Section title="Partner path">
+              <div className="space-y-3">
+                {[
+                  { label: "Profile state", value: "Ready for claim and onboarding" },
+                  { label: "Venue lane", value: place.laneLabel },
+                  {
+                    label: "External reference",
+                    value: place.website ? "Official website found" : "Manual outreach may be required",
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="rounded-lg border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                  >
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                      {item.label}
+                    </div>
+                    <div className="mt-2 text-sm leading-relaxed text-gray-700">{item.value}</div>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {relatedPlaces.length > 0 ? (
+              <Section title="Similar places">
+                <div className="space-y-3">
+                  {relatedPlaces.map((item) => (
+                    <Link
+                      key={item.slug}
+                      href={venueHref(item.slug)}
+                      className="block rounded-lg bg-gray-50 p-3 transition hover:bg-gray-100"
+                    >
+                      <div className="font-medium text-gray-900">{item.name}</div>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {item.kindLabel} · {item.area || "Reykjavik"}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </Section>
+            ) : null}
           </div>
         </div>
       </section>
@@ -1713,6 +2101,7 @@ export function BlogIndexScreen() {
   const featured = blogPosts[0];
   const rest = blogPosts.slice(1);
   const featuredImage = extractImageUrl(featured.hero) ?? "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
+  const signals = blogSignals(blogPosts);
 
   return (
     <>
@@ -1729,6 +2118,23 @@ export function BlogIndexScreen() {
       {/* Featured post */}
       <section className="bg-white">
         <div className="section-shell py-10">
+          <div className="mb-8 grid gap-4 lg:grid-cols-3">
+            {signals.map((signal) => (
+              <div
+                key={signal.label}
+                className="rounded-2xl border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-5"
+              >
+                <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--brand-text-light)]">
+                  {signal.label}
+                </div>
+                <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">
+                  {signal.value}
+                </div>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
+              </div>
+            ))}
+          </div>
+
           <div className="overflow-hidden rounded-2xl border border-gray-200 md:grid md:grid-cols-2">
             <div className="relative h-64 md:h-auto">
               <Image
@@ -1807,6 +2213,50 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
 
       <section className="section-shell py-8">
         <div className="mx-auto max-w-3xl space-y-8">
+          <Section title="Editorial angle">
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  label: "Category",
+                  value: post.category,
+                  detail: "The main lane this article supports in the broader public brand.",
+                },
+                {
+                  label: "Read time",
+                  value: post.readTime,
+                  detail: "Approximate depth for someone arriving from discovery surfaces.",
+                },
+                {
+                  label: "Published",
+                  value: post.publishedAt,
+                  detail: "How current this point of view is within the product story.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-xl border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                >
+                  <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    {item.label}
+                  </div>
+                  <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
+                    {item.value}
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.detail}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          <Section title="Why this matters">
+            <p className="text-base leading-relaxed text-gray-600">
+              The editorial layer exists to make the marketplace easier to trust. It gives members,
+              organizers, and venues a clearer lens on what MeetupReykjavik is actually trying to
+              reward in the city: stronger hosts, better-fit rooms, and more durable recurring
+              communities.
+            </p>
+          </Section>
+
           {post.sections.map((section) => (
             <div key={section.heading}>
               <h2 className="text-xl font-bold text-gray-900">{section.heading}</h2>
@@ -1827,6 +2277,9 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
                 >
                   <div className="font-medium text-gray-900">{item.title}</div>
                   <p className="mt-2 text-sm text-gray-600">{item.excerpt}</p>
+                  <div className="mt-3 text-xs font-medium text-gray-500">
+                    {item.category} · {item.readTime}
+                  </div>
                 </Link>
               ))}
             </div>

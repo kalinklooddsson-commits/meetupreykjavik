@@ -1,12 +1,10 @@
 import type { Route } from "next";
 import {
   CalendarClock,
-  BellRing,
   ClipboardCheck,
   CopyPlus,
   LayoutGrid,
   MapPinned,
-  MessageSquareMore,
   ScanQrCode,
   Sparkles,
   UsersRound,
@@ -15,6 +13,7 @@ import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
   DashboardTable,
+  DecisionStrip,
   FilterChips,
   KeyValueList,
   QuickActionCard,
@@ -324,6 +323,18 @@ export function OrganizerOverviewScreen() {
 }
 
 export function OrganizerGroupsScreen() {
+  const approvalGroups = organizerPortalData.groups.filter((group) =>
+    group.joinMode.toLowerCase().includes("approval"),
+  ).length;
+  const cadenceRiskGroups = organizerPortalData.groups.filter((group) =>
+    group.status.toLowerCase().includes("review"),
+  ).length;
+  const pendingRequests = organizerPortalData.groups.reduce(
+    (sum, group) => sum + group.pendingMembers,
+    0,
+  );
+  const totalCoHosts = organizerPortalData.groups.reduce((sum, group) => sum + group.coHosts, 0);
+
   return (
     <OrganizerShell
       eyebrow="Organizer groups"
@@ -331,58 +342,158 @@ export function OrganizerGroupsScreen() {
       description="All groups, members, and co-host context."
       links={organizerLinks("/organizer/groups")}
     >
-      <Surface
-        eyebrow="Filters"
-        title="Your groups"
-        actionLabel="Create new group"
-        actionHref="/groups/new"
-      >
-        <FilterChips
-          items={[
-            { key: "all", label: "All groups", active: true, tone: "indigo" },
-            { key: "active", label: "Active", tone: "sage" },
-            { key: "featured", label: "Featured", tone: "coral" },
-            { key: "needs-love", label: "Needs cadence", tone: "coral" },
-          ]}
-        />
-        <div className="mt-6">
-          <DashboardTable
-            columns={[
-              "Group",
-              "Join mode",
-              "Status",
-              "Pending",
-              "Co-hosts",
-              "Next event",
-              "Health",
+      <DecisionStrip
+        eyebrow="Group read"
+        title="What your communities need from you"
+        description="Scan membership pressure, cadence risk, and host coverage before opening the full group directory."
+        items={[
+          {
+            key: "membership",
+            label: "Membership",
+            summary: `${pendingRequests} member requests are sitting across ${approvalGroups} approval-based groups.`,
+            meta: "If join requests stall, the best potential newcomers never reach the event layer.",
+            tone: "coral",
+          },
+          {
+            key: "cadence",
+            label: "Cadence",
+            summary: `${cadenceRiskGroups} group lanes are showing signs of weak recurring rhythm or low event cadence.`,
+            meta: "Protect repeatable groups first. A strong recurring calendar does more work than one-off event spikes.",
+            tone: "indigo",
+          },
+          {
+            key: "host-coverage",
+            label: "Host coverage",
+            summary: `${totalCoHosts} co-hosts are spread across your current groups.`,
+            meta: "Use co-host depth to decide which communities can safely scale into more frequent or bigger formats.",
+            tone: "sage",
+          },
+        ]}
+      />
+
+      <div className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
+        <Surface
+          eyebrow="Groups"
+          title="Live group directory"
+          description="Keep group join rules, review status, and host coverage aligned before the event layer starts slipping."
+          actionLabel="Create new group"
+          actionHref="/groups/new"
+        >
+          <FilterChips
+            items={[
+              { key: "all", label: "All groups", active: true, tone: "indigo" },
+              { key: "active", label: "Active", tone: "sage" },
+              { key: "featured", label: "Featured", tone: "coral" },
+              { key: "needs-love", label: "Needs cadence", tone: "coral" },
             ]}
-            rows={organizerPortalData.groups.map((item) => ({
-              key: item.group.slug,
-              cells: [
-                <div key="group">
-                  <div className="font-semibold text-[var(--brand-text)]">{item.group.name}</div>
-                  <div className="text-xs text-[var(--brand-text-muted)]">
-                    {item.group.members} members
-                  </div>
-                </div>,
-                item.joinMode,
-                <ToneBadge key="status" tone={statusTone(item.status)}>
-                  {item.status}
-                </ToneBadge>,
-                String(item.pendingMembers),
-                String(item.coHosts),
-                item.nextEvent,
-                item.health,
-              ],
-            }))}
           />
+          <div className="mt-6">
+            <DashboardTable
+              caption="Organizer group directory with join mode, review state, pending members, host coverage, next event, and health."
+              columns={[
+                "Group",
+                "Join mode",
+                "Status",
+                "Requests",
+                "Co-hosts",
+                "Next event",
+                "Health",
+              ]}
+              rows={organizerPortalData.groups.map((item) => ({
+                key: item.group.slug,
+                cells: [
+                  <div key="group">
+                    <div className="font-semibold text-[var(--brand-text)]">{item.group.name}</div>
+                    <div className="text-xs text-[var(--brand-text-muted)]">
+                      {item.group.members} members
+                    </div>
+                  </div>,
+                  <ToneBadge key="join" tone={item.joinMode === "Approval" ? "coral" : "indigo"}>
+                    {item.joinMode}
+                  </ToneBadge>,
+                  <ToneBadge key="status" tone={statusTone(item.status)}>
+                    {item.status}
+                  </ToneBadge>,
+                  String(item.pendingMembers),
+                  String(item.coHosts),
+                  item.nextEvent,
+                  item.health,
+                ],
+              }))}
+            />
+          </div>
+        </Surface>
+
+        <div className="space-y-6">
+          <Surface
+            eyebrow="Cadence watch"
+            title="Where group quality needs help"
+          >
+            <div className="space-y-4">
+              {organizerPortalData.groups.map((item) => (
+                <StreamCard
+                  key={item.group.slug}
+                  eyebrow={
+                    <>
+                      <span className="text-[var(--brand-text)]">{item.group.name}</span>
+                      <span className="mx-2 text-[var(--brand-border)]">·</span>
+                      {item.group.members} members
+                    </>
+                  }
+                  title={item.nextEvent}
+                  description={item.health}
+                  meta={`${item.coHosts} co-hosts · ${item.pendingMembers} pending`}
+                  badge={<ToneBadge tone={statusTone(item.status)}>{item.status}</ToneBadge>}
+                />
+              ))}
+            </div>
+          </Surface>
+
+          <Surface
+            eyebrow="Host coverage"
+            title="Join flow and host support"
+          >
+            <KeyValueList
+              items={[
+                {
+                  key: "approval-groups",
+                  label: "Approval-based groups",
+                  value: String(approvalGroups),
+                },
+                {
+                  key: "open-groups",
+                  label: "Open groups",
+                  value: String(organizerPortalData.groups.length - approvalGroups),
+                },
+                {
+                  key: "total-hosts",
+                  label: "Co-host coverage",
+                  value: String(totalCoHosts),
+                },
+                {
+                  key: "pending-requests",
+                  label: "Pending requests",
+                  value: String(pendingRequests),
+                },
+              ]}
+            />
+          </Surface>
         </div>
-      </Surface>
+      </div>
     </OrganizerShell>
   );
 }
 
 export function OrganizerEventsScreen() {
+  const totalWaitlist = organizerPortalData.events.reduce((sum, event) => sum + event.waitlist, 0);
+  const manualApprovalEvents = organizerPortalData.events.filter((event) =>
+    event.approvalMode.toLowerCase().includes("manual"),
+  ).length;
+  const totalRevenue = organizerPortalData.events.reduce((sum, event) => {
+    const amount = Number.parseInt(event.revenue.replace(/[^0-9]/g, ""), 10) || 0;
+    return sum + amount;
+  }, 0);
+
   return (
     <OrganizerShell
       eyebrow="Organizer events"
@@ -390,6 +501,35 @@ export function OrganizerEventsScreen() {
       description="Published, draft, and recurring events."
       links={organizerLinks("/organizer/events")}
     >
+      <DecisionStrip
+        eyebrow="Weekly focus"
+        title="Where event operations need attention"
+        description="Read the pressure points before dropping into the event table."
+        items={[
+          {
+            key: "approval",
+            label: "Approvals",
+            summary: `${manualApprovalEvents} manual-approval formats are live this week.`,
+            meta: `${totalWaitlist} people are currently sitting on waitlists or approval-sensitive formats.`,
+            tone: "coral",
+          },
+          {
+            key: "revenue",
+            label: "Revenue",
+            summary: `${totalRevenue.toLocaleString()} ISK is booked across the current event stack.`,
+            meta: "Ticketed workshops and hosted socials are carrying the strongest commercial signal.",
+            tone: "sage",
+          },
+          {
+            key: "cadence",
+            label: "Cadence",
+            summary: `${organizerPortalData.templates.length} proven templates are ready to clone into the next cycle.`,
+            meta: "The faster path is repeatable formats, not rebuilding each event from scratch.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
         <Surface
           eyebrow="Event table"
@@ -440,7 +580,7 @@ export function OrganizerEventsScreen() {
         <div className="space-y-6">
           <Surface
             eyebrow="Calendar"
-            title="March workload"
+            title="Calendar load"
           >
             <div className="space-y-3">
               {organizerPortalData.events.map((event) => (
@@ -460,7 +600,7 @@ export function OrganizerEventsScreen() {
 
           <Surface
             eyebrow="Templates"
-            title="Repeatable event formats"
+            title="Saved formats"
           >
             <div className="grid gap-3">
               {organizerPortalData.templates.map((template) => (
@@ -486,6 +626,16 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
     return null;
   }
 
+  const approvalSensitiveCount = event.attendees.filter((attendee) =>
+    attendee.status.toLowerCase().includes("pending") ||
+    attendee.status.toLowerCase().includes("waitlist"),
+  ).length;
+  const approvedCount = event.attendees.filter((attendee) =>
+    attendee.status.toLowerCase().includes("approved"),
+  ).length;
+  const ticketRevenue = Number.parseInt(event.revenue.replace(/[^0-9]/g, ""), 10) || 0;
+  const revenuePerSeat = event.capacity ? Math.round(ticketRevenue / event.capacity) : 0;
+
   return (
     <OrganizerShell
       eyebrow="Organizer event"
@@ -493,6 +643,35 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
       description="Event details and attendee management."
       links={organizerLinks("/organizer/events")}
     >
+      <DecisionStrip
+        eyebrow="Event read"
+        title="What this event needs from you"
+        description="Read approval pressure, seat confidence, and commercial signal before working attendees or venue logistics."
+        items={[
+          {
+            key: "approval",
+            label: "Approval pressure",
+            summary: `${approvalSensitiveCount} attendees are still pending or sitting on the waitlist.`,
+            meta: "Approval lag is usually the fastest way to flatten momentum on a paid or trust-sensitive format.",
+            tone: "coral",
+          },
+          {
+            key: "attendance",
+            label: "Attendance confidence",
+            summary: `${approvedCount} attendees are already approved inside a ${event.capacity}-seat room.`,
+            meta: "Your room plan should follow approved and likely-attending people, not raw sign-up vanity.",
+            tone: "indigo",
+          },
+          {
+            key: "commercial",
+            label: "Commercial signal",
+            summary: `${event.revenue} is booked so far, about ${revenuePerSeat.toLocaleString()} ISK per seat at current capacity.`,
+            meta: "Per-seat signal is the cleanest read on whether the event economics match the room and format.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Capacity" value={`${event.rsvps}/${event.capacity}`} delta={event.status} detail="Live seats" icon={UsersRound} tone="indigo" />
         <StatCard label="Waitlist" value={String(event.waitlist)} delta={event.approvalMode} detail="Approval mode" icon={ClipboardCheck} tone="coral" />
@@ -539,13 +718,36 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
               </p>
             </div>
           </div>
+          <div className="mt-5">
+            <KeyValueList
+              items={[
+                {
+                  key: "venue",
+                  label: "Venue",
+                  value: event.venueName,
+                },
+                {
+                  key: "approval-mode",
+                  label: "Approval mode",
+                  value: event.approvalMode,
+                },
+                {
+                  key: "date",
+                  label: "Event date",
+                  value: event.dateLabel,
+                },
+              ]}
+            />
+          </div>
         </Surface>
 
         <Surface
           eyebrow="Attendees"
           title="Approve, reject, and check in"
+          description="This is the live attendance lane for approval, ticket state, and check-in context."
         >
           <DashboardTable
+            caption="Event attendee table with status, ticket state, check-in state, and organizer context."
             columns={["Attendee", "Status", "Ticket", "Check-in", "Context"]}
             rows={event.attendees.map((attendee) => ({
               key: attendee.name,
@@ -632,6 +834,15 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
 }
 
 export function OrganizerVenuesScreen() {
+  const acceptedVenueThreads = organizerPortalData.bookingPipeline.filter((item) =>
+    item.status.toLowerCase().includes("accepted"),
+  ).length;
+  const pendingVenueThreads = organizerPortalData.bookingPipeline.filter((item) =>
+    item.status.toLowerCase().includes("pending") ||
+    item.status.toLowerCase().includes("counter"),
+  ).length;
+  const topMatch = organizerPortalData.venueMatches[0];
+
   return (
     <OrganizerShell
       eyebrow="Organizer venues"
@@ -639,10 +850,42 @@ export function OrganizerVenuesScreen() {
       description="Find and book partner venues."
       links={organizerLinks("/organizer/venues")}
     >
+      <DecisionStrip
+        eyebrow="Venue read"
+        title="What the venue lane needs from you"
+        description="See fit quality, booking momentum, and reply pressure before sending more venue requests."
+        items={[
+          {
+            key: "fit",
+            label: "Best match",
+            summary: topMatch
+              ? `${topMatch.venue.name} is still the strongest room match at ${topMatch.score}.`
+              : "No lead venue match available.",
+            meta: "Start from proven room-fit instead of broad outreach. Better matching usually fixes more than more messaging.",
+            tone: "sage",
+          },
+          {
+            key: "pipeline",
+            label: "Pipeline",
+            summary: `${acceptedVenueThreads} venue threads are already accepted across the current booking pipeline.`,
+            meta: "Accepted rooms are operational leverage. Use them before adding more speculative requests.",
+            tone: "indigo",
+          },
+          {
+            key: "reply-pressure",
+            label: "Needs reply",
+            summary: `${pendingVenueThreads} venue conversations still need answers, counters, or final headcount follow-up.`,
+            meta: "Reply speed matters most when the room is already a strong fit and timing is the only blocker.",
+            tone: "coral",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Venue browser"
           title="Matched partner venues"
+          description="These rooms are already scored for fit, slot quality, and operational ease for your current event stack."
         >
           <FilterChips
             items={[
@@ -682,8 +925,10 @@ export function OrganizerVenuesScreen() {
         <Surface
           eyebrow="Pipeline"
           title="Booking requests"
+          description="This is the live state of your venue outreach, not just a history list."
         >
           <DashboardTable
+            caption="Organizer venue booking pipeline with room, status, date, and operational note."
             columns={["Organizer", "Venue", "Status", "Date", "Note"]}
             rows={organizerPortalData.bookingPipeline.map((item) => ({
               key: item.key,
@@ -698,6 +943,27 @@ export function OrganizerVenuesScreen() {
               ],
             }))}
           />
+          <div className="mt-5">
+            <KeyValueList
+              items={[
+                {
+                  key: "accepted",
+                  label: "Accepted threads",
+                  value: String(acceptedVenueThreads),
+                },
+                {
+                  key: "pending",
+                  label: "Pending or countered",
+                  value: String(pendingVenueThreads),
+                },
+                {
+                  key: "best-match",
+                  label: "Strongest current fit",
+                  value: topMatch ? topMatch.venue.name : "N/A",
+                },
+              ]}
+            />
+          </div>
         </Surface>
       </div>
 

@@ -1,11 +1,9 @@
 import type { Route } from "next";
 import {
   BadgeEuro,
-  BellRing,
   CalendarCheck2,
   CalendarRange,
   Gift,
-  MessageSquareMore,
   ShieldCheck,
   Users,
 } from "lucide-react";
@@ -13,6 +11,7 @@ import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
   DashboardTable,
+  DecisionStrip,
   FilterChips,
   KeyValueList,
   ProgressSteps,
@@ -107,6 +106,18 @@ function statusTone(status: string) {
   }
 
   return "indigo" as const;
+}
+
+function formatVenueEventSchedule(startsAt: string) {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Atlantic/Reykjavik",
+  }).format(new Date(startsAt));
 }
 
 function VenueShell(props: ComponentProps<typeof PortalShell>) {
@@ -339,6 +350,18 @@ export function VenueDashboardScreen() {
 }
 
 export function VenueEventsScreen() {
+  const replyNeededEvents = venuePortalData.upcomingEvents.filter((item) =>
+    item.status.toLowerCase().includes("counter"),
+  ).length;
+  const confirmedEvents = venuePortalData.upcomingEvents.filter((item) =>
+    item.status.toLowerCase().includes("confirmed") ||
+    item.status.toLowerCase().includes("transferred"),
+  ).length;
+  const totalExpectedAttendance = venuePortalData.upcomingEvents.reduce(
+    (sum, item) => sum + item.event.attendees,
+    0,
+  );
+
   return (
     <VenueShell
       eyebrow="Venue events"
@@ -346,10 +369,40 @@ export function VenueEventsScreen() {
       description="Hosted events, bookings, and calendar context."
       links={venueLinks("/venue/events")}
     >
+      <DecisionStrip
+        eyebrow="Calendar read"
+        title="What the live venue calendar needs"
+        description="Read event load, reply pressure, and expected room traffic before you work the event pipeline."
+        items={[
+          {
+            key: "confirmed",
+            label: "Confirmed formats",
+            summary: `${confirmedEvents} live events are already holding space in the room calendar.`,
+            meta: "Protected room-fit is more important than saying yes to every new booking thread.",
+            tone: "sage",
+          },
+          {
+            key: "reply-needed",
+            label: "Needs reply",
+            summary: `${replyNeededEvents} upcoming event threads still need venue follow-up or a counter.`,
+            meta: "Fast reply speed protects conversion and stops strong organizers from drifting to another room.",
+            tone: "coral",
+          },
+          {
+            key: "attendance",
+            label: "Attendance load",
+            summary: `${totalExpectedAttendance} expected attendees are moving through the current venue event stack.`,
+            meta: "Room planning should follow actual throughput, not just raw booking count.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Events"
-          title="Event pipeline"
+          title="Live event pipeline"
+          description="Use this list to track which event formats are confirmed, which still need a venue answer, and where room-fit needs intervention."
         >
           <FilterChips
             items={[
@@ -360,11 +413,17 @@ export function VenueEventsScreen() {
             ]}
           />
           <DashboardTable
+            caption="Venue event pipeline with organizer, status, format, attendance, and venue note."
             columns={["Event", "Organizer", "Status", "Format", "Attendance", "Note"]}
             rows={venuePortalData.upcomingEvents.map((item) => ({
               key: `${item.event.slug}-${item.organizer}`,
               cells: [
-                item.event.title,
+                <div key="event">
+                  <div className="font-semibold text-[var(--brand-text)]">{item.event.title}</div>
+                  <div className="text-xs text-[var(--brand-text-muted)]">
+                    {formatVenueEventSchedule(item.event.startsAt)}
+                  </div>
+                </div>,
                 item.organizer,
                 <ToneBadge key="status" tone={statusTone(item.status)}>
                   {item.status}
@@ -378,14 +437,26 @@ export function VenueEventsScreen() {
         </Surface>
 
         <Surface
-          eyebrow="Past stats"
+          eyebrow="Format momentum"
           title="Recent performance"
+          description="This room is converting best when the format fits the energy, service, and arrival flow."
         >
           <TrendChart
             data={venuePortalData.analytics.eventTypes}
             tone="coral"
             formatValue={(value) => `${value}`}
           />
+          <div className="mt-5 space-y-3">
+            {venuePortalData.upcomingEvents.map((item) => (
+              <div
+                key={`${item.event.slug}-note`}
+                className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+              >
+                <span className="font-semibold text-[var(--brand-text)]">{item.event.title}:</span>{" "}
+                {item.note}
+              </div>
+            ))}
+          </div>
         </Surface>
       </div>
     </VenueShell>
@@ -393,6 +464,17 @@ export function VenueEventsScreen() {
 }
 
 export function VenueBookingsScreen() {
+  const urgentReplies = venuePortalData.bookings.incoming.filter((booking) =>
+    booking.status.toLowerCase().includes("pending") ||
+    booking.status.toLowerCase().includes("counter"),
+  ).length;
+  const acceptedThreads = venuePortalData.bookings.history.filter((booking) =>
+    booking.result.toLowerCase().includes("accepted"),
+  ).length;
+  const topFitSignal = venuePortalData.bookings.guestFit.signals
+    .slice()
+    .sort((left, right) => right.score - left.score)[0];
+
   return (
     <VenueShell
       eyebrow="Venue bookings"
@@ -400,10 +482,41 @@ export function VenueBookingsScreen() {
       description="Requests, counters, and approvals."
       links={venueLinks("/venue/bookings")}
     >
+      <DecisionStrip
+        eyebrow="Booking read"
+        title="What the room needs from you today"
+        description="See response pressure, conversion momentum, and room-fit context before opening request details."
+        items={[
+          {
+            key: "reply-pressure",
+            label: "Reply pressure",
+            summary: `${urgentReplies} booking threads need a response or counter today.`,
+            meta: "The fastest operational win here is tightening reply speed on premium and weekend slots.",
+            tone: "coral",
+          },
+          {
+            key: "conversion",
+            label: "Conversion",
+            summary: `${acceptedThreads} recent booking outcomes closed as accepted.`,
+            meta: "Repeat organizers are converting best when room guidance is handled up front.",
+            tone: "sage",
+          },
+          {
+            key: "fit",
+            label: "Room fit",
+            summary: topFitSignal
+              ? `${topFitSignal.label} is the strongest guest-fit signal at ${topFitSignal.score}%.`
+              : "Room-fit signal unavailable.",
+            meta: "Use audience behavior and arrival flow to decide whether the request really belongs in this room.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Incoming"
-          title="Booking requests"
+          title="Incoming bookings"
         >
           <DashboardTable
             columns={["Organizer", "Event", "Date", "Attendance", "Status", "Message"]}
@@ -450,7 +563,7 @@ export function VenueBookingsScreen() {
 
       <Surface
         eyebrow="Action desk"
-        title="Respond to requests"
+        title="Reply and counter"
       >
         <VenueBookingCommandCenter bookings={venuePortalData.bookings.incoming} />
       </Surface>
@@ -517,6 +630,14 @@ export function VenueBookingsScreen() {
 }
 
 export function VenueAvailabilityScreen() {
+  const blockedDates = venuePortalData.availability.exceptions.length;
+  const openDays = venuePortalData.availability.weeklyGrid.filter((day) =>
+    day.blocks.some((block) => block.toLowerCase().includes("open")),
+  ).length;
+  const premiumWindows = venuePortalData.availability.weeklyGrid.reduce((sum, day) => {
+    return sum + day.blocks.filter((block) => block.toLowerCase().includes("premium")).length;
+  }, 0);
+
   return (
     <VenueShell
       eyebrow="Venue availability"
@@ -524,10 +645,40 @@ export function VenueAvailabilityScreen() {
       description="Recurring availability, exceptions, and day-by-day blocks."
       links={venueLinks("/venue/availability")}
     >
+      <DecisionStrip
+        eyebrow="Availability read"
+        title="What the room schedule is signaling"
+        description="See open-day coverage, blocked dates, and high-yield windows before editing the weekly calendar."
+        items={[
+          {
+            key: "coverage",
+            label: "Open coverage",
+            summary: `${openDays} weekdays currently expose open event windows to organizers.`,
+            meta: "Coverage matters more than volume. A few clean bookable windows outperform messy all-day availability.",
+            tone: "indigo",
+          },
+          {
+            key: "exceptions",
+            label: "Exceptions",
+            summary: `${blockedDates} exception blocks are already shaping how this month can be sold.`,
+            meta: "If blocked dates are buried, booking reply speed suffers because operators cannot trust the calendar.",
+            tone: "coral",
+          },
+          {
+            key: "premium",
+            label: "Premium windows",
+            summary: `${premiumWindows} high-yield time blocks are currently marked as premium or protected inventory.`,
+            meta: "Premium windows should stay obvious so high-fit paid formats are routed into the right hours.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <Surface
           eyebrow="Recurring"
           title="Availability rules"
+          description="These are the standing rules that explain how the room should usually be sold."
         >
           <div className="space-y-3">
             {venuePortalData.availability.recurring.map((rule) => (
@@ -544,6 +695,7 @@ export function VenueAvailabilityScreen() {
         <Surface
           eyebrow="Weekly editor"
           title="Open and blocked windows"
+          description="Every day should make it obvious when the room is open, protected, or commercially constrained."
         >
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1">
             {venuePortalData.availability.weeklyGrid.map((day) => (
@@ -568,6 +720,30 @@ export function VenueAvailabilityScreen() {
               </div>
             ))}
           </div>
+        </Surface>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
+        <Surface
+          eyebrow="Exceptions"
+          title="Dates that override the normal calendar"
+        >
+          <div className="space-y-3">
+            {venuePortalData.availability.exceptions.map((item, index) => (
+              <div
+                key={item}
+                className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-semibold text-[var(--brand-text)]">Calendar exception</span>
+                  <ToneBadge tone={index === 0 ? "coral" : "sand"}>
+                    {index === 0 ? "Current" : "Upcoming"}
+                  </ToneBadge>
+                </div>
+                <div className="mt-2">{item}</div>
+              </div>
+            ))}
+          </div>
           <div className="mt-5">
             <FilterChips
               items={venuePortalData.availability.exceptions.map((item, index) => ({
@@ -579,22 +755,30 @@ export function VenueAvailabilityScreen() {
             />
           </div>
         </Surface>
-      </div>
 
-      <Surface
-        eyebrow="Editor"
-        title="Weekly availability studio"
-      >
-        <VenueAvailabilityStudio
-          weeklyGrid={venuePortalData.availability.weeklyGrid}
-          exceptions={venuePortalData.availability.exceptions}
-        />
-      </Surface>
+        <Surface
+          eyebrow="Editor"
+          title="Weekly availability studio"
+        >
+          <VenueAvailabilityStudio
+            weeklyGrid={venuePortalData.availability.weeklyGrid}
+            exceptions={venuePortalData.availability.exceptions}
+          />
+        </Surface>
+      </div>
     </VenueShell>
   );
 }
 
 export function VenueDealsScreen() {
+  const activeDeals = venuePortalData.deals.filter((deal) =>
+    deal.status.toLowerCase().includes("active"),
+  ).length;
+  const draftDeals = venuePortalData.deals.filter((deal) =>
+    deal.status.toLowerCase().includes("draft"),
+  ).length;
+  const featuredDeal = venuePortalData.deals[0];
+
   return (
     <VenueShell
       eyebrow="Venue deals"
@@ -602,9 +786,41 @@ export function VenueDealsScreen() {
       description="Member offers and partnership perks."
       links={venueLinks("/venue/deals")}
     >
+      <DecisionStrip
+        eyebrow="Offer read"
+        title="What the deal stack needs from you"
+        description="Read live offer count, draft pressure, and the strongest current perk before editing deals."
+        items={[
+          {
+            key: "active",
+            label: "Active offers",
+            summary: `${activeDeals} venue deals are currently live for members and hosts.`,
+            meta: "A smaller clean offer stack usually converts better than a cluttered menu of weak perks.",
+            tone: "sage",
+          },
+          {
+            key: "drafts",
+            label: "Draft pressure",
+            summary: `${draftDeals} deal concepts are still waiting on commercial or menu decisions.`,
+            meta: "Drafts that sit too long usually signal weak economics or unclear audience fit.",
+            tone: "coral",
+          },
+          {
+            key: "hero-offer",
+            label: "Strongest perk",
+            summary: featuredDeal
+              ? `${featuredDeal.title} is currently the clearest lead offer in the venue stack.`
+              : "No lead deal available.",
+            meta: "One clear perk should carry the commercial story before you add secondary offers.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <Surface
         eyebrow="Offers"
         title="Active and draft deals"
+        description="This is the live commercial layer for member value, host value, and venue conversion."
       >
         <FilterChips
           items={[
@@ -649,6 +865,26 @@ export function VenueDealsScreen() {
             </article>
           ))}
         </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <StatCard
+            label="Active deals"
+            value={String(activeDeals)}
+            detail="Live commercial offers"
+            tone="sage"
+          />
+          <StatCard
+            label="Draft deals"
+            value={String(draftDeals)}
+            detail="Need pricing or ops decision"
+            tone="coral"
+          />
+          <StatCard
+            label="Lead perk"
+            value={featuredDeal?.tier ?? "N/A"}
+            detail={featuredDeal?.title ?? "No featured deal"}
+            tone="indigo"
+          />
+        </div>
       </Surface>
 
       <Surface
@@ -662,6 +898,18 @@ export function VenueDealsScreen() {
 }
 
 export function VenueAnalyticsScreen() {
+  const profileViews = venuePortalData.analytics.funnel.find((item) => item.label === "Profile views")?.value ?? 0;
+  const bookingInquiries =
+    venuePortalData.analytics.funnel.find((item) => item.label === "Booking inquiries")?.value ?? 0;
+  const confirmedBookings =
+    venuePortalData.analytics.funnel.find((item) => item.label === "Confirmed bookings")?.value ?? 0;
+  const inquiryConversion = bookingInquiries
+    ? Math.round((confirmedBookings / bookingInquiries) * 100)
+    : 0;
+  const topFormat = venuePortalData.analytics.eventTypes
+    .slice()
+    .sort((left, right) => right.value - left.value)[0];
+
   return (
     <VenueShell
       eyebrow="Venue analytics"
@@ -669,10 +917,42 @@ export function VenueAnalyticsScreen() {
       description="Profile views, events hosted, and booking conversion."
       links={venueLinks("/venue/analytics")}
     >
+      <DecisionStrip
+        eyebrow="Performance read"
+        title="What venue performance needs from you"
+        description="Read inquiry conversion, top-performing format, and discovery pull before opening the deeper charts."
+        items={[
+          {
+            key: "conversion",
+            label: "Inquiry conversion",
+            summary: `${confirmedBookings} bookings closed from ${bookingInquiries} inquiries, a ${inquiryConversion}% conversion rate.`,
+            meta: "If conversion drifts, the problem is usually fit clarity or reply speed before it is pure demand.",
+            tone: "coral",
+          },
+          {
+            key: "format",
+            label: "Top format",
+            summary: topFormat
+              ? `${topFormat.label} is currently the strongest hosted format at ${topFormat.value} live or recent events.`
+              : "No top format signal available.",
+            meta: "Protect the formats that already fit the room before chasing adjacent but weaker inventory.",
+            tone: "sage",
+          },
+          {
+            key: "visibility",
+            label: "Visibility",
+            summary: `${profileViews} profile views are currently feeding the top of the venue demand funnel.`,
+            meta: "If visibility is strong but bookings lag, the room story or commercial framing is not doing enough work.",
+            tone: "indigo",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <Surface
           eyebrow="Funnel"
           title="Booking conversion"
+          description="This is the commercial path from visibility to repeat organizers."
         >
           <FilterChips
             items={[
@@ -692,6 +972,7 @@ export function VenueAnalyticsScreen() {
         <Surface
           eyebrow="Event types"
           title="Top formats hosted"
+          description="Format mix should reinforce what the room does best, not spread evenly across weak event types."
         >
           <TrendChart
             data={venuePortalData.analytics.eventTypes}
@@ -705,15 +986,42 @@ export function VenueAnalyticsScreen() {
         eyebrow="Referrers"
         title="Where bookings come from"
       >
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {venuePortalData.analytics.topReferrers.map((referrer) => (
-            <div
-              key={referrer}
-              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4 text-sm font-semibold text-[var(--brand-text)]"
-            >
-              {referrer}
-            </div>
-          ))}
+        <div className="grid gap-6 xl:grid-cols-[0.94fr_1.06fr]">
+          <div className="grid gap-4 md:grid-cols-2">
+            {venuePortalData.analytics.topReferrers.map((referrer) => (
+              <div
+                key={referrer}
+                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4 text-sm font-semibold text-[var(--brand-text)]"
+              >
+                {referrer}
+              </div>
+            ))}
+          </div>
+
+          <KeyValueList
+            items={[
+              {
+                key: "profile-views",
+                label: "Profile views",
+                value: String(profileViews),
+              },
+              {
+                key: "booking-inquiries",
+                label: "Booking inquiries",
+                value: String(bookingInquiries),
+              },
+              {
+                key: "confirmed-bookings",
+                label: "Confirmed bookings",
+                value: String(confirmedBookings),
+              },
+              {
+                key: "conversion-rate",
+                label: "Inquiry conversion",
+                value: `${inquiryConversion}%`,
+              },
+            ]}
+          />
         </div>
       </Surface>
     </VenueShell>
@@ -721,6 +1029,10 @@ export function VenueAnalyticsScreen() {
 }
 
 export function VenueProfileScreen() {
+  const totalProfileSections = venuePortalData.profileSections.length;
+  const totalAmenities = venuePortalData.venue.amenities.length;
+  const highlightedHours = venuePortalData.venue.hours.filter((hour) => hour.highlighted).length;
+
   return (
     <VenueShell
       eyebrow="Venue profile"
@@ -728,6 +1040,35 @@ export function VenueProfileScreen() {
       description="Photos, description, amenities, and hours."
       links={venueLinks("/venue/profile")}
     >
+      <DecisionStrip
+        eyebrow="Profile read"
+        title="What the public venue profile needs"
+        description="Read profile coverage, amenity depth, and highlighted service windows before editing sections."
+        items={[
+          {
+            key: "coverage",
+            label: "Coverage",
+            summary: `${totalProfileSections} public profile sections are currently shaping how organizers see this room.`,
+            meta: "If the public story is weak, strong operational performance will still under-convert.",
+            tone: "indigo",
+          },
+          {
+            key: "amenities",
+            label: "Amenities",
+            summary: `${totalAmenities} amenities are currently visible on the public venue profile.`,
+            meta: "Amenities only matter if they support room-fit decisions, not if they read like filler tags.",
+            tone: "sage",
+          },
+          {
+            key: "hours",
+            label: "Highlighted hours",
+            summary: `${highlightedHours} weekly hours are currently marked as highlighted or strategically important.`,
+            meta: "Strong highlighted hours make booking decisions easier and reduce weak-fit inquiries.",
+            tone: "coral",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <Surface
           eyebrow="Preview"
@@ -746,11 +1087,33 @@ export function VenueProfileScreen() {
               </ToneBadge>
             ))}
           </div>
+          <div className="mt-5">
+            <KeyValueList
+              items={[
+                {
+                  key: "partnership-tier",
+                  label: "Partnership tier",
+                  value: venuePortalData.partnershipTier,
+                },
+                {
+                  key: "capacity",
+                  label: "Capacity",
+                  value: String(venuePortalData.venue.capacity),
+                },
+                {
+                  key: "rating",
+                  label: "Venue rating",
+                  value: String(venuePortalData.venue.rating),
+                },
+              ]}
+            />
+          </div>
         </Surface>
 
         <Surface
           eyebrow="Editor"
           title="Profile sections"
+          description="Keep the public venue story clear enough that the right organizers self-select into this room."
         >
           <VenueProfileSectionEditor sections={venuePortalData.profileSections} />
         </Surface>

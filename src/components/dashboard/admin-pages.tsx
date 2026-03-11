@@ -12,6 +12,7 @@ import { PortalShell } from "@/components/layout/portal-shell";
 import {
   ActivityFeed,
   DashboardTable,
+  DecisionStrip,
   FilterChips,
   HeatGrid,
   KeyValueList,
@@ -269,6 +270,13 @@ export function AdminOverviewScreen() {
 }
 
 export function AdminUsersScreen() {
+  const flaggedUsers = adminPortalData.users.filter((user) =>
+    user.status.toLowerCase().includes("flag"),
+  ).length;
+  const organizerAccounts = adminPortalData.users.filter((user) =>
+    user.type.toLowerCase().includes("organizer"),
+  ).length;
+
   return (
     <AdminShell
       eyebrow="Admin users"
@@ -306,10 +314,39 @@ export function AdminUsersScreen() {
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="User read"
+        title="What account operations need from admin"
+        description="Read the account mix, trust posture, and curation pressure before acting inside the directory."
+        items={[
+          {
+            key: "risk",
+            label: "Risk",
+            summary: `${flaggedUsers} accounts need extra attention or review.`,
+            meta: "Flagged profiles should be resolved before they bleed into invites, approvals, or premium surfaces.",
+            tone: "coral",
+          },
+          {
+            key: "supply",
+            label: "Organizer supply",
+            summary: `${organizerAccounts} organizer accounts are currently in the live user set.`,
+            meta: "These accounts shape event quality, so profile trust and operational health matter more than raw user count.",
+            tone: "indigo",
+          },
+          {
+            key: "curation",
+            label: "Curation",
+            summary: `${adminPortalData.clientDossier.adminNotes.length} admin playbook notes support high-trust attendee selection.`,
+            meta: "The client dossier is where admin turns raw profile data into room-shaping decisions.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Directory"
-          title="Users table"
+          title="User directory"
         >
           <FilterChips
             items={[
@@ -353,7 +390,7 @@ export function AdminUsersScreen() {
         </Surface>
 
         <Surface
-          eyebrow="Profile oversight"
+          eyebrow="Live profile read"
           title={adminPortalData.selectedUser.name}
           description={adminPortalData.selectedUser.bio}
         >
@@ -528,6 +565,13 @@ export function AdminUsersScreen() {
 }
 
 export function AdminGroupsScreen() {
+  const featureCandidates = adminPortalData.groups.queue.filter((group) =>
+    group.status.toLowerCase().includes("feature"),
+  ).length;
+  const cadenceRisks = adminPortalData.groups.table.filter((group) =>
+    group.health.toLowerCase().includes("needs"),
+  ).length;
+
   return (
     <AdminShell
       eyebrow="Admin groups"
@@ -569,10 +613,39 @@ export function AdminGroupsScreen() {
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="Group read"
+        title="Where group quality needs shaping"
+        description="See approval pressure, featuring opportunities, and cadence risk before working the queue."
+        items={[
+          {
+            key: "approval",
+            label: "Approval queue",
+            summary: `${adminPortalData.groups.queue.length} groups are waiting for an admin decision.`,
+            meta: "The queue is small enough to keep quality high if decisions stay fast and consistent.",
+            tone: "coral",
+          },
+          {
+            key: "feature",
+            label: "Featuring",
+            summary: `${featureCandidates} groups are pushing toward feature-level visibility.`,
+            meta: "Strong groups need editorial support early or they flatten into the same generic discovery lane.",
+            tone: "indigo",
+          },
+          {
+            key: "cadence",
+            label: "Cadence risk",
+            summary: `${cadenceRisks} live groups are losing rhythm and need intervention.`,
+            meta: "Prompting hosts, fixing format fit, or rescuing venue cadence usually matters more than raw member count.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <Surface
           eyebrow="Approval queue"
-          title="Needs admin review"
+          title="Needs review"
         >
           <div className="space-y-4">
             {adminPortalData.groups.queue.map((group) => (
@@ -596,8 +669,8 @@ export function AdminGroupsScreen() {
         </Surface>
 
         <Surface
-          eyebrow="All groups"
-          title="Active group table"
+          eyebrow="Live groups"
+          title="Group directory"
         >
           <FilterChips
             items={[
@@ -681,7 +754,7 @@ export function AdminEventsScreen() {
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface
           eyebrow="Events"
-          title="Moderation and feature controls"
+          title="Event operations"
         >
           <FilterChips
             items={[
@@ -711,7 +784,7 @@ export function AdminEventsScreen() {
 
         <Surface
           eyebrow="Audience control"
-          title="Client selection for this event"
+          title="Audience curation"
         >
           <AdminEventAudiencePicker audience={adminPortalData.events.audiencePicker} />
         </Surface>
@@ -790,6 +863,24 @@ export function AdminEventsScreen() {
 }
 
 export function AdminVenuesScreen() {
+  const followUpLoad = adminPortalData.venues.applications.filter((application) =>
+    ["waitlist", "request info"].some((state) =>
+      application.status.toLowerCase().includes(state),
+    ),
+  ).length;
+  const areaCounts = adminPortalData.venues.active.reduce<Record<string, number>>(
+    (accumulator, venue) => {
+      accumulator[venue.area] = (accumulator[venue.area] ?? 0) + 1;
+      return accumulator;
+    },
+    {},
+  );
+  const strongestArea = Object.entries(areaCounts).sort((left, right) => right[1] - left[1])[0];
+  const premiumReadyVenues = adminPortalData.venues.active.filter((venue) => venue.rating >= 4.8);
+  const averageRating =
+    adminPortalData.venues.active.reduce((sum, venue) => sum + venue.rating, 0) /
+    Math.max(adminPortalData.venues.active.length, 1);
+
   return (
     <AdminShell
       eyebrow="Admin venues"
@@ -812,13 +903,7 @@ export function AdminVenuesScreen() {
           },
           {
             label: "Follow-up load",
-            value: String(
-              adminPortalData.venues.applications.filter((application) =>
-                ["waitlist", "request info"].some((state) =>
-                  application.status.toLowerCase().includes(state),
-                ),
-              ).length,
-            ),
+            value: String(followUpLoad),
             detail: "Needs follow-up.",
           },
           {
@@ -829,6 +914,37 @@ export function AdminVenuesScreen() {
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="Supply read"
+        title="Where venue operations need admin attention"
+        description="Read supply pressure, approval load, and strongest partner inventory before working the queue."
+        items={[
+          {
+            key: "applications",
+            label: "Applications",
+            summary: `${adminPortalData.venues.applications.length} venue applications are open and ${followUpLoad} need follow-up today.`,
+            meta: "The fastest admin win is clearing waitlist and request-info threads before they stall new supply.",
+            tone: "coral",
+          },
+          {
+            key: "supply-depth",
+            label: "Supply depth",
+            summary: strongestArea
+              ? `${strongestArea[0]} currently has the deepest active venue inventory with ${strongestArea[1]} live partners.`
+              : "Active venue coverage is still thin.",
+            meta: "Use the current area stack to decide where featured formats can be routed without creating venue mismatch.",
+            tone: "indigo",
+          },
+          {
+            key: "premium-fit",
+            label: "Premium fit",
+            summary: `${premiumReadyVenues.length} active venues are already rated 4.8 or higher and are ready for premium or featured supply.`,
+            meta: "High-rated rooms are the easiest supply lane to fast-track for paid formats and launch-quality hosts.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-6">
         <Surface
           eyebrow="Applications"
@@ -840,7 +956,8 @@ export function AdminVenuesScreen() {
         <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
           <Surface
             eyebrow="Active venues"
-            title="Verified partners"
+            title="Verified partner directory"
+            description="Use this directory to route demand toward the rooms that are already verified and commercially ready."
           >
             <FilterChips
               items={[
@@ -851,6 +968,7 @@ export function AdminVenuesScreen() {
               ]}
             />
             <DashboardTable
+              caption="Verified venue partners with area, type, rating, and lead note."
               columns={["Venue", "Area", "Type", "Rating", "Lead note"]}
               rows={adminPortalData.venues.active.map((venue) => ({
                 key: venue.key,
@@ -866,10 +984,29 @@ export function AdminVenuesScreen() {
           </Surface>
 
           <Surface
-            eyebrow="Matching rules"
-            title="Supply guidance"
+            eyebrow="Supply signals"
+            title="Routing and approval guidance"
           >
-            <div className="space-y-3">
+            <KeyValueList
+              items={[
+                {
+                  key: "coverage",
+                  label: "Strongest area",
+                  value: strongestArea ? `${strongestArea[0]} (${strongestArea[1]})` : "N/A",
+                },
+                {
+                  key: "premium-ready",
+                  label: "Premium-ready rooms",
+                  value: String(premiumReadyVenues.length),
+                },
+                {
+                  key: "rating",
+                  label: "Average rating",
+                  value: averageRating.toFixed(1),
+                },
+              ]}
+            />
+            <div className="mt-5 space-y-3">
               {adminPortalData.venues.matching.map((note) => (
                 <div
                   key={note}
@@ -897,6 +1034,14 @@ export function AdminVenuesScreen() {
 }
 
 export function AdminRevenueScreen() {
+  const topSource = adminPortalData.revenue.sources[0];
+  const pendingPayouts = adminPortalData.revenue.transactions.filter((transaction) =>
+    transaction.status.toLowerCase().includes("pending"),
+  ).length;
+  const capturedTransactions = adminPortalData.revenue.transactions.filter((transaction) =>
+    transaction.status.toLowerCase().includes("captured"),
+  ).length;
+
   return (
     <AdminShell
       eyebrow="Admin revenue"
@@ -930,10 +1075,42 @@ export function AdminRevenueScreen() {
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="Revenue read"
+        title="What platform monetization needs from admin"
+        description="Read revenue mix, payout pressure, and plan posture before opening pricing controls or finance operations."
+        items={[
+          {
+            key: "mix",
+            label: "Revenue mix",
+            summary: topSource
+              ? `${topSource.label} is still the leading revenue source at ${topSource.value}% of current mix.`
+              : "No revenue leader available.",
+            meta: "If one source dominates too hard, the business gets brittle even when topline looks healthy.",
+            tone: "indigo",
+          },
+          {
+            key: "payouts",
+            label: "Payout pressure",
+            summary: `${pendingPayouts} transactions currently need payout or finance follow-up.`,
+            meta: "Pending payout threads are where finance friction becomes partner distrust fastest.",
+            tone: "coral",
+          },
+          {
+            key: "capture",
+            label: "Captured flow",
+            summary: `${capturedTransactions} recent transactions are already captured and stable.`,
+            meta: "Captured volume is only useful if the plan structure and guardrails still match how the marketplace is evolving.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
         <Surface
           eyebrow="Sources"
           title="Revenue mix"
+          description="Use this mix to see which business line is actually carrying the platform, not just which one sounds strategic."
         >
           <TrendChart
             data={adminPortalData.revenue.sources}
@@ -945,6 +1122,7 @@ export function AdminRevenueScreen() {
         <Surface
           eyebrow="Transactions"
           title="Recent activity"
+          description="This is the live finance lane for subscriptions, commissions, and payout-sensitive movement."
         >
           <FilterChips
             items={[
@@ -955,6 +1133,7 @@ export function AdminRevenueScreen() {
             ]}
           />
           <DashboardTable
+            caption="Recent revenue transactions with source, amount, status, and timestamp."
             columns={["Source", "Amount", "Status", "When"]}
             rows={adminPortalData.revenue.transactions.map((transaction) => ({
               key: transaction.key,
@@ -974,6 +1153,7 @@ export function AdminRevenueScreen() {
       <Surface
         eyebrow="Plans"
         title="Pricing controls"
+        description="Pricing should reflect what the marketplace is actually able to sustain, not just what looks tidy in a plan table."
       >
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {adminPortalData.revenue.plans.map((plan) => (
@@ -996,6 +1176,7 @@ export function AdminRevenueScreen() {
       <Surface
         eyebrow="Policies"
         title="Revenue guardrails"
+        description="Guardrails define which monetization behavior is allowed before finance or trust quality starts slipping."
       >
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {adminPortalData.revenue.policies.map((policy) => (
@@ -1038,6 +1219,22 @@ export function AdminRevenueScreen() {
 }
 
 export function AdminAnalyticsScreen() {
+  const chartLeader = adminPortalData.analyticsDeck
+    .slice()
+    .sort(
+      (left, right) =>
+        (right.data[right.data.length - 1] ?? 0) - (left.data[left.data.length - 1] ?? 0),
+    )[0];
+  const hottestSlot = adminPortalData.heatGrid.rows
+    .flatMap((row) =>
+      row.values.map((value, index) => ({
+        label: `${row.label} · ${adminPortalData.heatGrid.columns[index]}`,
+        value,
+      })),
+    )
+    .sort((left, right) => right.value - left.value)[0];
+  const largestGeo = adminPortalData.geography[0];
+
   return (
     <AdminShell
       eyebrow="Admin analytics"
@@ -1075,9 +1272,45 @@ export function AdminAnalyticsScreen() {
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="Analytics read"
+        title="What the operating data is really saying"
+        description="Scan the strongest chart signal, the busiest time slot, and the largest geography slice before opening the full deck."
+        items={[
+          {
+            key: "chart-leader",
+            label: "Leading chart",
+            summary: chartLeader
+              ? `${chartLeader.title} is currently the strongest visible signal in the chart deck.`
+              : "No chart leader available.",
+            meta: "Treat the leading signal as a prompt for action, not just a visual report.",
+            tone: "indigo",
+          },
+          {
+            key: "heat",
+            label: "Busiest slot",
+            summary: hottestSlot
+              ? `${hottestSlot.label} is the hottest demand window at ${hottestSlot.value}.`
+              : "No heat signal available.",
+            meta: "Time-density pressure should shape approvals, featuring, and venue routing before it becomes a capacity problem.",
+            tone: "coral",
+          },
+          {
+            key: "geography",
+            label: "Geography",
+            summary: largestGeo
+              ? `${largestGeo.label} remains the largest geographic slice at ${largestGeo.value}.`
+              : "No geography signal available.",
+            meta: "If one district dominates too hard, discovery and supply need to be rebalanced before the marketplace narrows.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <Surface
         eyebrow="Chart deck"
         title="Operating charts"
+        description="This is the live chart stack for growth, monetization, supply quality, and demand pressure."
       >
         <FilterChips
           items={[
@@ -1093,7 +1326,12 @@ export function AdminAnalyticsScreen() {
               key={chart.key}
               className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
             >
-              <div className="font-semibold text-[var(--brand-text)]">{chart.title}</div>
+              <div className="flex items-center justify-between gap-3">
+                <div className="font-semibold text-[var(--brand-text)]">{chart.title}</div>
+                <ToneBadge tone={chart.tone}>
+                  {chart.data[chart.data.length - 1] ?? 0}
+                </ToneBadge>
+              </div>
               <div className="mt-4">
                 <TrendChart
                   data={chart.data.map((value, index) => ({
@@ -1114,6 +1352,7 @@ export function AdminAnalyticsScreen() {
         <Surface
           eyebrow="Heat"
           title="Time and day heat grid"
+          description="This view should tell admin when the platform is under pressure, not just where activity exists."
         >
           <HeatGrid
             columns={adminPortalData.heatGrid.columns}
@@ -1124,6 +1363,7 @@ export function AdminAnalyticsScreen() {
         <Surface
           eyebrow="Geo"
           title="Geographic mix"
+          description="Use geographic concentration to spot where the marketplace is over-performing or becoming too centralized."
         >
           <KeyValueList
             items={adminPortalData.geography.map((entry) => ({
@@ -1150,6 +1390,16 @@ export function AdminAnalyticsScreen() {
 }
 
 export function AdminContentScreen() {
+  const refreshNeeded = adminPortalData.content.sections.filter((section) =>
+    section.status.toLowerCase().includes("refresh"),
+  ).length;
+  const publishedPosts = adminPortalData.content.blogQueue.filter((post) =>
+    post.status.toLowerCase().includes("published"),
+  ).length;
+  const leadCategory = adminPortalData.content.categories
+    .slice()
+    .sort((left, right) => Number(right.count) - Number(left.count))[0];
+
   return (
     <AdminShell
       eyebrow="Admin content"
@@ -1177,20 +1427,48 @@ export function AdminContentScreen() {
           },
           {
             label: "Needs refresh",
-            value: String(
-              adminPortalData.content.sections.filter((section) =>
-                section.status.toLowerCase().includes("refresh"),
-              ).length,
-            ),
+            value: String(refreshNeeded),
             detail: "Stale content.",
           },
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="Editorial read"
+        title="What content operations need from admin"
+        description="See homepage freshness, editorial backlog, and strongest category weight before opening the editors."
+        items={[
+          {
+            key: "homepage",
+            label: "Homepage freshness",
+            summary: `${refreshNeeded} homepage sections currently need a refresh or swap.`,
+            meta: "Homepage surfaces go stale faster than operators think, especially when featured inventory changes weekly.",
+            tone: "coral",
+          },
+          {
+            key: "blog",
+            label: "Editorial queue",
+            summary: `${publishedPosts} blog posts are published and ${adminPortalData.content.blogQueue.length - publishedPosts} are still draft-side or in review.`,
+            meta: "Editorial rhythm matters most when it reinforces current marketplace inventory instead of lagging it.",
+            tone: "indigo",
+          },
+          {
+            key: "categories",
+            label: "Category weight",
+            summary: leadCategory
+              ? `${leadCategory.name} is currently the heaviest active category lane with ${leadCategory.count} items.`
+              : "No category leader available.",
+            meta: "If one category dominates too hard, discovery starts looking repetitive and city coverage narrows.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <Surface
           eyebrow="Homepage"
           title="Homepage editor"
+          description="This is the live editorial surface shaping the first impression of the marketplace."
         >
           <div className="space-y-4">
             {adminPortalData.content.sections.map((section) => (
@@ -1214,6 +1492,7 @@ export function AdminContentScreen() {
           <Surface
             eyebrow="Categories"
             title="Category management"
+            description="Categories should shape discovery lanes, not just count content."
           >
             <div className="grid gap-3 md:grid-cols-2">
               {adminPortalData.content.categories.map((category) => (
@@ -1235,6 +1514,7 @@ export function AdminContentScreen() {
             title="Editorial queue"
           >
             <DashboardTable
+              caption="Editorial blog queue with title, category, and publishing state."
               columns={["Title", "Category", "Status"]}
               rows={adminPortalData.content.blogQueue.map((post) => ({
                 key: post.key,
@@ -1266,6 +1546,16 @@ export function AdminContentScreen() {
 }
 
 export function AdminModerationScreen() {
+  const openReports = adminPortalData.moderation.reports.filter((report) =>
+    report.status.toLowerCase().includes("open") ||
+    report.status.toLowerCase().includes("investigating") ||
+    report.status.toLowerCase().includes("escalated"),
+  ).length;
+  const highPriorityReports = adminPortalData.moderation.reports.filter((report) =>
+    report.priority.toLowerCase().includes("high"),
+  ).length;
+  const activeBans = adminPortalData.moderation.banned.length;
+
   return (
     <AdminShell
       eyebrow="Admin moderation"
@@ -1299,9 +1589,39 @@ export function AdminModerationScreen() {
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="Trust read"
+        title="What moderation needs from admin"
+        description="Read active report pressure, high-priority risk, and current bans before opening the moderation consoles."
+        items={[
+          {
+            key: "reports",
+            label: "Open reports",
+            summary: `${openReports} moderation reports are currently active or in progress.`,
+            meta: "Open reports are where trust debt compounds if decisions stall or consistency drops.",
+            tone: "coral",
+          },
+          {
+            key: "priority",
+            label: "High priority",
+            summary: `${highPriorityReports} reports are currently marked high priority.`,
+            meta: "These should shape the queue first because they usually hit safety, fraud, or platform trust directly.",
+            tone: "indigo",
+          },
+          {
+            key: "bans",
+            label: "Active bans",
+            summary: `${activeBans} accounts are currently banned from the marketplace.`,
+            meta: "Bans should stay traceable and reversible, but never invisible to the operating team.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <Surface
         eyebrow="Tabs"
         title="Moderation workspace"
+        description="This workspace separates live trust issues from slower review lanes and audit history."
       >
         <FilterChips
           items={[
@@ -1364,6 +1684,7 @@ export function AdminModerationScreen() {
           title="Admin action log"
         >
           <DashboardTable
+            caption="Moderation audit log with action, actor, and timestamp."
             columns={["Action", "Actor", "When"]}
             rows={adminPortalData.moderation.auditLog.map((entry) => ({
               key: entry.key,
@@ -1384,6 +1705,13 @@ export function AdminModerationScreen() {
 }
 
 export function AdminCommsScreen() {
+  const topSend = adminPortalData.comms.history.find((entry) =>
+    entry.result.toLowerCase().includes("open rate"),
+  );
+  const draftTemplate = adminPortalData.comms.templates.find(
+    (template) => template.key === adminPortalData.comms.draft.templateKey,
+  );
+
   return (
     <AdminShell
       eyebrow="Admin communications"
@@ -1420,6 +1748,39 @@ export function AdminCommsScreen() {
         ],
       )}
     >
+      <DecisionStrip
+        eyebrow="Comms read"
+        title="What audience communications need from admin"
+        description="Read send performance, audience spread, and current draft posture before opening the comms studio."
+        items={[
+          {
+            key: "audiences",
+            label: "Audience spread",
+            summary: `${adminPortalData.comms.audiences.length} audience lanes are currently addressable from the comms desk.`,
+            meta: "If audience lanes are vague, even strong copy turns into generic broadcast noise.",
+            tone: "indigo",
+          },
+          {
+            key: "draft",
+            label: "Current draft",
+            summary: draftTemplate
+              ? `${draftTemplate.name} is the active draft lane behind the current send plan.`
+              : "No active template draft available.",
+            meta: "The live draft should always match what the marketplace most needs to surface this week.",
+            tone: "coral",
+          },
+          {
+            key: "performance",
+            label: "Best performance",
+            summary: topSend
+              ? `${topSend.title} is still the strongest recent send at ${topSend.result}.`
+              : "No recent performance signal available.",
+            meta: "Past send performance should shape targeting and packaging, not just be archived as marketing trivia.",
+            tone: "sage",
+          },
+        ]}
+      />
+
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
         <Surface
           eyebrow="Compose"
@@ -1449,6 +1810,7 @@ export function AdminCommsScreen() {
         <Surface
           eyebrow="Templates"
           title="Email and notification templates"
+          description="These are the reusable message patterns shaping platform announcements, digests, and conversion prompts."
         >
           <div className="grid gap-3 md:grid-cols-2">
             {adminPortalData.comms.templates.map((template) => (
@@ -1472,8 +1834,10 @@ export function AdminCommsScreen() {
       <Surface
         eyebrow="History"
         title="Send history"
+        description="This is the recent comms track record by audience, timing, and result."
       >
         <DashboardTable
+          caption="Recent send history with audience, timestamp, and result."
           columns={["Title", "Audience", "Sent", "Result"]}
           rows={adminPortalData.comms.history.map((entry) => ({
             key: entry.key,
