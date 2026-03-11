@@ -28,6 +28,7 @@ export type HomeVenue = {
   events: number;
   deal?: string;
   art: string;
+  photo: string;
 };
 
 export const heroStats = [
@@ -130,7 +131,8 @@ export const venues: HomeVenue[] = [
     rating: 4.7,
     events: 31,
     deal: "Happy hour until 21:00",
-    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
+    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4))",
+    photo: "/demo-images/venues/lebowski-bar.jpg",
   },
   {
     name: "Kex Hostel",
@@ -139,7 +141,8 @@ export const venues: HomeVenue[] = [
     rating: 4.8,
     events: 23,
     deal: "Welcome drink for hosts",
-    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(55,48,163,0.4)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
+    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(55,48,163,0.4))",
+    photo: "/demo-images/venues/kex-hostel.jpg",
   },
   {
     name: "Stofan Cafe",
@@ -148,7 +151,8 @@ export const venues: HomeVenue[] = [
     rating: 4.9,
     events: 18,
     deal: "Coffee bundle for groups",
-    art: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/generated/litla-kaffistofan.svg')",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(245,240,232,0.4))",
+    photo: "/demo-images/venues/stofan-cafe.jpg",
   },
 ] as const;
 

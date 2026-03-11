@@ -190,11 +190,8 @@ select:focus-visible,
 
 .paper-panel {
   border: 1px solid var(--brand-border-light);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.82)),
-    rgba(255, 255, 255, 0.86);
-  box-shadow: var(--shadow-card);
-  backdrop-filter: blur(14px);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(42, 38, 56, 0.06);
 }
 
 .paper-panel-premium {
@@ -515,23 +512,11 @@ select:focus-visible,
 }
 
 .dashboard-decision-strip {
-  background:
-    radial-gradient(circle at top right, rgba(79, 70, 229, 0.08), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(250, 248, 244, 0.9));
+  background: #fff;
 }
 
 .dashboard-decision-card {
-  position: relative;
-  overflow: hidden;
   min-height: 100%;
-}
-
-.dashboard-decision-card::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 0.18rem;
-  background: linear-gradient(90deg, rgba(79, 70, 229, 0.82), rgba(232, 97, 77, 0.7));
 }
 
 .site-mobile-nav-shell {
@@ -660,11 +645,7 @@ select:focus-visible,
 }
 
 .ambient-orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(12px);
-  opacity: 0.75;
-  pointer-events: none;
+  display: none;
 }
 
 .eyebrow {
@@ -707,16 +688,7 @@ select:focus-visible,
 }
 
 .grain-overlay::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
-  mix-blend-mode: soft-light;
-  opacity: 0.55;
-  pointer-events: none;
+  display: none;
 }
 
 .scroll-strip {

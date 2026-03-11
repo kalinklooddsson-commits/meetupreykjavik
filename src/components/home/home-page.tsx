@@ -227,10 +227,14 @@ function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
 
   return (
     <article className="min-w-[286px] max-w-[286px] flex-shrink-0 overflow-hidden rounded-2xl border border-[var(--brand-border-light)] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-[5px] hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
-      <div
-        className="relative h-44 bg-cover bg-center"
-        style={{ backgroundImage: venue.art }}
-      >
+      <div className="relative h-44 overflow-hidden">
+        <Image
+          src={venue.photo}
+          alt={venue.name}
+          fill
+          className="object-cover"
+          sizes="286px"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(30,27,46,0.58)]" />
         <div className="absolute inset-x-0 bottom-0 p-5 text-white">
           <div className="text-lg font-bold tracking-[-0.02em]">{venue.name}</div>
