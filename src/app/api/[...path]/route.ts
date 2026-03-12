@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ZodError, type ZodType } from "zod";
 
 import { env, hasLiveSupabaseAuth, hasSupabaseEnv } from "@/lib/env";
@@ -43,6 +43,11 @@ import {
   publicVenues,
 } from "@/lib/public-data";
 import { hasTrustedOrigin } from "@/lib/security/request";
+import {
+  checkRateLimit,
+  rateLimitKeyFromRequest,
+  AUTH_RATE_LIMIT,
+} from "@/lib/security/rate-limit";
 import { createSupabaseRouteClient } from "@/lib/supabase/route";
 import {
   notFoundResponse,
@@ -1186,6 +1191,23 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
     }
 
     if (match.route.category === "auth") {
+      // Rate-limit mutating auth endpoints (login, signup, forgot-password, reset-password)
+      if (method !== "GET") {
+        const rlKey = rateLimitKeyFromRequest(request, "auth");
+        const rl = checkRateLimit(rlKey, AUTH_RATE_LIMIT);
+        if (!rl.allowed) {
+          return NextResponse.json(
+            { error: "Too many requests. Please try again later." },
+            {
+              status: 429,
+              headers: {
+                "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+              },
+            },
+          );
+        }
+      }
+
       const response = hasLiveSupabaseAuth()
         ? await handleLiveAuthRequest(request, key)
         : await handleMockAuthRequest(request, key);

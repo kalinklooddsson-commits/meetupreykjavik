@@ -4,6 +4,11 @@ import { z } from "zod";
 import { hasTrustedOrigin } from "@/lib/security/request";
 import { forbiddenResponse } from "@/lib/security/response";
 import { sendEmail, hasResendEnv } from "@/lib/email/resend";
+import {
+  checkRateLimit,
+  rateLimitKeyFromRequest,
+  CONTACT_RATE_LIMIT,
+} from "@/lib/security/rate-limit";
 
 const contactSchema = z.object({
   name: z.string().min(1).max(200),
@@ -15,6 +20,20 @@ const contactSchema = z.object({
 export async function POST(request: NextRequest) {
   if (!hasTrustedOrigin(request)) {
     return forbiddenResponse("Cross-site contact submissions are not allowed.");
+  }
+
+  const rlKey = rateLimitKeyFromRequest(request, "contact");
+  const rl = checkRateLimit(rlKey, CONTACT_RATE_LIMIT);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { ok: false, error: "Too many requests. Please try again later." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)),
+        },
+      },
+    );
   }
 
   try {
