@@ -765,6 +765,16 @@ async function handleLiveDataRequest(
         if (!supabase) return null;
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
+        // Prevent duplicate ratings
+        const { data: existingRating } = await supabase
+          .from("event_ratings")
+          .select("id")
+          .eq("event_id", event.id)
+          .eq("user_id", session.id)
+          .maybeSingle();
+        if (existingRating) {
+          return validationMessage("You have already rated this event.");
+        }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const { data, error } = await supabase
           .from("event_ratings")
@@ -877,10 +887,23 @@ async function handleLiveDataRequest(
         if (!supabase) return null;
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
+        if (venue.owner_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the venue owner can manage deals.");
+        }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const { data, error } = await supabase
           .from("venue_deals")
-          .insert({ ...body, venue_id: venue.id })
+          .insert({
+            venue_id: venue.id,
+            title: body.title as string,
+            description: (body.description as string) ?? null,
+            deal_type: body.dealType as string,
+            deal_tier: body.dealTier as string,
+            discount_value: (body.discountValue as string) ?? null,
+            valid_from: (body.validFrom as string) ?? null,
+            valid_until: (body.validUntil as string) ?? null,
+            is_active: (body.isActive as boolean) ?? true,
+          })
           .select()
           .single();
         if (error) throw error;
@@ -941,10 +964,25 @@ async function handleLiveDataRequest(
         if (!supabase) return null;
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
+        if (venue.owner_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the venue owner can manage availability.");
+        }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const { data, error } = await supabase
           .from("venue_availability")
-          .insert({ ...body, venue_id: venue.id })
+          .insert({
+            venue_id: venue.id,
+            day_of_week: (body.dayOfWeek as number) ?? null,
+            specific_date: (body.specificDate as string) ?? null,
+            start_time: body.startTime as string,
+            end_time: body.endTime as string,
+            capacity_override: (body.capacityOverride as number) ?? null,
+            cost_type: (body.costType as string) ?? null,
+            cost_amount: (body.costAmount as number) ?? null,
+            notes: (body.notes as string) ?? null,
+            is_recurring: (body.isRecurring as boolean) ?? false,
+            is_blocked: (body.isBlocked as boolean) ?? false,
+          })
           .select()
           .single();
         if (error) throw error;

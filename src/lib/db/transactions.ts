@@ -18,7 +18,7 @@ export async function createTransaction(transaction: TransactionInsert) {
   return data;
 }
 
-export async function getUserTransactions(userId: string) {
+export async function getUserTransactions(userId: string, limit = 50) {
   const supabase = await createSupabaseServerClient();
   if (!supabase) return [];
 
@@ -26,7 +26,8 @@ export async function getUserTransactions(userId: string) {
     .from("transactions")
     .select("*")
     .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(limit);
 
   if (error) {
     console.error("Failed to fetch user transactions:", error);
