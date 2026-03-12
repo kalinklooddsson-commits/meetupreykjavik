@@ -6,6 +6,7 @@ export const env = {
   RESEND_API_KEY: process.env.RESEND_API_KEY ?? "",
   NEXT_PUBLIC_SITE_URL:
     process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  NEXT_PUBLIC_PAYPAL_CLIENT_ID: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? "",
   PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID ?? "",
   PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET ?? "",
   PAYPAL_WEBHOOK_ID: process.env.PAYPAL_WEBHOOK_ID ?? "",
