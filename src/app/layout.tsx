@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { DM_Sans, Fraunces, Geist } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -55,7 +58,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      data-scroll-behavior="smooth"
+      data-scroll-behavior="smooth" className={cn("font-sans", geist.variable)}
     >
       <body className={`${dmSans.variable} ${fraunces.variable} antialiased`}>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
