@@ -55,7 +55,9 @@
     "nextEvent": "Next: {title}",
     "noUpcoming": "No upcoming events",
     "openForBookings": "Open for bookings",
-    "photo": "Photo"
+    "photo": "Photo",
+    "memberDeal": "Member deal",
+    "seats": "seats"
   },
   "signals": {
     "visibility": "Visibility",

@@ -55,7 +55,9 @@
     "nextEvent": "Næst: {title}",
     "noUpcoming": "Engir viðburðir í nánd",
     "openForBookings": "Opið fyrir bókanir",
-    "photo": "Mynd"
+    "photo": "Mynd",
+    "memberDeal": "Tilboð félagsmanna",
+    "seats": "sæti"
   },
   "signals": {
     "visibility": "Sýnileiki",

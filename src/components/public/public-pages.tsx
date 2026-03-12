@@ -852,7 +852,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         {venue.deal ? (
           <div className="absolute right-3 top-3">
             <span className="rounded-full bg-brand-coral px-2.5 py-1 text-xs font-bold text-white">
-              Member deal
+              {tCards("memberDeal")}
             </span>
           </div>
         ) : null}
@@ -887,7 +887,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         {/* Capacity */}
         <div className="mt-3 flex items-center gap-1.5 text-sm text-gray-500">
           <UsersRound className="h-4 w-4 text-gray-400" />
-          <span>{venue.capacity} seats</span>
+          <span>{venue.capacity} {tCards("seats")}</span>
         </div>
 
         {/* Amenity pills */}
