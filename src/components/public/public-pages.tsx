@@ -208,7 +208,7 @@ function areaHighlights(venues: PublicVenue[]) {
   ).sort((left, right) => right.venues - left.venues || right.capacity - left.capacity);
 }
 
-function discoveryLanes(events: PublicEvent[]) {
+function discoveryLanes(events: PublicEvent[], t: (key: string, values?: Record<string, string | number>) => string) {
   const premium = [...events]
     .filter((event) => !event.isFree)
     .sort((left, right) => {
@@ -228,7 +228,7 @@ function discoveryLanes(events: PublicEvent[]) {
   return [
     premium
       ? {
-          label: "Premium format",
+          label: t("premiumFormat"),
           title: premium.title,
           detail: `${premium.priceLabel} · ${premium.venueName} · ${premium.summary}`,
           href: eventHref(premium.slug),
@@ -236,7 +236,7 @@ function discoveryLanes(events: PublicEvent[]) {
       : null,
     newcomer
       ? {
-          label: "Newcomer-friendly",
+          label: t("newcomerFriendly"),
           title: newcomer.title,
           detail: `${newcomer.approvalLabel} · ${newcomer.groupName}`,
           href: eventHref(newcomer.slug),
@@ -244,71 +244,71 @@ function discoveryLanes(events: PublicEvent[]) {
       : null,
     fillingFast
       ? {
-          label: "Filling fast",
+          label: t("fillingFast"),
           title: fillingFast.title,
-          detail: `${occupancyPercent(fillingFast.attendees, fillingFast.capacity)}% full · ${fillingFast.venueName}`,
+          detail: `${t("percentFull", { percent: occupancyPercent(fillingFast.attendees, fillingFast.capacity) })} · ${fillingFast.venueName}`,
           href: eventHref(fillingFast.slug),
         }
       : null,
   ].filter(Boolean) as Array<{ label: string; title: string; detail: string; href: Route }>;
 }
 
-function eventFormatSignals(event: PublicEvent) {
+function eventFormatSignals(event: PublicEvent, t: (key: string) => string) {
   return [
     {
-      label: "Visibility",
+      label: t("visibility"),
       value: event.visibilityLabel,
-      detail: "How people discover and qualify for the room.",
+      detail: t("visibilityDetail"),
     },
     {
-      label: "Approval",
+      label: t("approval"),
       value: event.approvalLabel,
-      detail: "How the host shapes quality and balance before the night starts.",
+      detail: t("approvalDetail"),
     },
     {
-      label: "Reminder flow",
+      label: t("reminderFlow"),
       value: event.reminderLabel,
-      detail: "How the event maintains momentum and reduces no-shows.",
+      detail: t("reminderFlowDetail"),
     },
   ];
 }
 
-function groupOperatingSignals(group: PublicGroup, upcomingEvents: PublicEvent[]) {
+function groupOperatingSignals(group: PublicGroup, upcomingEvents: PublicEvent[], t: (key: string, values?: Record<string, string | number>) => string) {
   return [
     {
-      label: "Member base",
-      value: `${group.members} members`,
-      detail: "The current community size already supporting the format.",
+      label: t("memberBase"),
+      value: t("membersValue", { count: group.members }),
+      detail: t("memberBaseDetail"),
     },
     {
-      label: "Activity",
-      value: `${group.activity}% active`,
-      detail: "How much recurring energy the group is carrying right now.",
+      label: t("activity"),
+      value: t("activityValue", { percent: group.activity }),
+      detail: t("activityDetail"),
     },
     {
-      label: "Upcoming rhythm",
-      value: upcomingEvents.length ? `${upcomingEvents.length} upcoming events` : "Building next cycle",
-      detail: "How consistent the calendar looks for members deciding whether to join.",
+      label: t("upcomingRhythm"),
+      value: upcomingEvents.length ? t("upcomingValue", { count: upcomingEvents.length }) : t("buildingNext"),
+      detail: t("upcomingRhythmDetail"),
     },
   ];
 }
 
-function sourcedPlaceSignals(place: SourcedPlace) {
+function sourcedPlaceSignals(place: SourcedPlace, t: (key: string) => string) {
   return [
     {
-      label: "Area",
+      label: t("area"),
       value: place.area || "Reykjavik",
-      detail: "Where this venue sits in the city fabric.",
+      detail: t("areaDetail"),
     },
     {
-      label: "Category",
+      label: t("category"),
       value: place.kindLabel,
-      detail: "What kind of room or hospitality lane this place represents.",
+      detail: t("categoryDetail"),
     },
     {
-      label: "Claim path",
-      value: place.website ? "Claimable with live website" : "Claimable profile ready",
-      detail: "How quickly this place could become a partner venue inside the product.",
+      label: t("claimPath"),
+      value: place.website ? t("claimWithWebsite") : t("claimReady"),
+      detail: t("claimPathDetail"),
     },
   ];
 }
@@ -1244,10 +1244,11 @@ export function EventsIndexScreen({
   activeWhen?: string;
 } = {}) {
   const t = useTranslations("eventsPage");
+  const tSignals = useTranslations("signals");
   const featured = events[0] ?? null;
   const totalAttendees = events.reduce((sum, e) => sum + e.attendees, 0);
   const featuredImage = featured ? (extractImageUrl(featured.art) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg") : "/place-images/reykjavik/reykjavik-871-2-78434189.jpg";
-  const lanes = discoveryLanes(events);
+  const lanes = discoveryLanes(events, tSignals);
   const usedCategories = Array.from(new Set(events.map((e) => e.category)));
 
   return (
@@ -1475,6 +1476,7 @@ export function EventsIndexScreen({
 
 export function EventDetailScreen({ event }: { event: PublicEvent }) {
   const t = useTranslations("eventDetailPage");
+  const tSignals = useTranslations("signals");
   const tNav = useTranslations("nav");
   const group = publicGroups.find((item) => item.slug === event.groupSlug);
   const venue = publicVenues.find((item) => item.slug === event.venueSlug);
@@ -1485,7 +1487,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
         (item.groupSlug === event.groupSlug || item.venueSlug === event.venueSlug),
     )
     .slice(0, 3);
-  const formatSignals = eventFormatSignals(event);
+  const formatSignals = eventFormatSignals(event, tSignals);
   const signalIcons = [Eye, TrendingUp, Sparkles];
 
   return (
@@ -2038,10 +2040,11 @@ export function GroupsIndexScreen({
 export function GroupDetailScreen({ group }: { group: PublicGroup }) {
   const t = useTranslations("groupDetailPage");
   const tNav = useTranslations("nav");
+  const tSignals = useTranslations("signals");
   const upcomingEvents = publicEvents.filter((event) =>
     (group.upcomingEventSlugs ?? []).includes(event.slug),
   );
-  const operatingSignals = groupOperatingSignals(group, upcomingEvents);
+  const operatingSignals = groupOperatingSignals(group, upcomingEvents, tSignals);
   const signalIcons = [Users, TrendingUp, CalendarDays];
 
   return (
@@ -2784,9 +2787,10 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
 export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
   const tNav = useTranslations("nav");
   const t = useTranslations("sourcedVenueDetail");
+  const tSignals = useTranslations("signals");
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
-  const signals = sourcedPlaceSignals(place);
+  const signals = sourcedPlaceSignals(place, tSignals);
   const relatedPlaces = relatedSourcedPlaces(place);
 
   return (
