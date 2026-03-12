@@ -72,7 +72,7 @@ export async function SiteFooter() {
               />
               <button
                 type="button"
-                className="shrink-0 rounded-full bg-brand-coral px-5 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(232,97,77,0.3)]"
+                className="shrink-0 rounded-full bg-brand-coral px-5 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(232,97,77,0.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-coral"
               >
                 {tFooter("newsletterButton")}
               </button>

@@ -1237,9 +1237,9 @@ export function EventsIndexScreen({
   activeWhen?: string;
 } = {}) {
   const t = useTranslations("eventsPage");
-  const featured = events[0];
+  const featured = events[0] ?? null;
   const totalAttendees = events.reduce((sum, e) => sum + e.attendees, 0);
-  const featuredImage = extractImageUrl(featured.art) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg";
+  const featuredImage = featured ? (extractImageUrl(featured.art) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg") : "/place-images/reykjavik/reykjavik-871-2-78434189.jpg";
   const lanes = discoveryLanes(events);
   const usedCategories = Array.from(new Set(events.map((e) => e.category)));
 
@@ -1283,7 +1283,7 @@ export function EventsIndexScreen({
       )}
 
       {/* Featured event spotlight */}
-      <section className="reveal section-shell py-12">
+      {featured ? <section className="reveal section-shell py-12">
         <div className="mb-8 flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-brand-coral" />
           <h2 className="text-lg font-semibold text-gray-900">{t("featured.heading")}</h2>
@@ -1348,7 +1348,7 @@ export function EventsIndexScreen({
             </div>
           </div>
         </div>
-      </section>
+      </section> : null}
 
       {/* Filters + grid */}
       <section className="border-t border-gray-200 bg-brand-sand">
@@ -2943,9 +2943,9 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
 
 export function BlogIndexScreen() {
   const t = useTranslations("blogPage");
-  const featured = blogPosts[0];
+  const featured = blogPosts[0] ?? null;
   const rest = blogPosts.slice(1);
-  const featuredImage = extractImageUrl(featured.hero) ?? "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
+  const featuredImage = featured ? (extractImageUrl(featured.hero) ?? "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg") : "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
 
   return (
     <>
@@ -2963,7 +2963,7 @@ export function BlogIndexScreen() {
       </section>
 
       {/* Featured post — large card */}
-      <section className="bg-white">
+      {featured ? <section className="bg-white">
         <div className="section-shell py-12">
           <div className="mb-8">
             <span className="text-xs font-bold uppercase tracking-widest text-brand-indigo">{t("latestEyebrow")}</span>
@@ -3000,7 +3000,7 @@ export function BlogIndexScreen() {
             </div>
           </div>
         </div>
-      </section>
+      </section> : null}
 
       {/* Article grid */}
       {rest.length > 0 ? (
@@ -3457,7 +3457,7 @@ export function PricingScreen() {
                 <thead><tr className="border-b border-white/10 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{userTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
                   {[[t("comparison.memberFeatures.browseEventsVenues"), true, true, true],[t("comparison.memberFeatures.ticketCheckout"), true, true, true],[t("comparison.memberFeatures.standardRsvp"), true, true, true],[t("comparison.memberFeatures.priorityWaitlist"), false, true, true],[t("comparison.memberFeatures.directMessaging"), false, true, true],[t("comparison.memberFeatures.premiumBadge"), false, true, true],[t("comparison.memberFeatures.advancedFilters"), false, false, true],[t("comparison.memberFeatures.earlyAccessFeatures"), false, false, true]].map(([feature, ...vals], ri) => (
-                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{(vals as boolean[]).map((v, ci) => (<td key={ci} className="px-5 py-2.5">{v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}</td>))}</tr>
+                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{(vals as boolean[]).map((v, ci) => (<td key={ci} className="px-5 py-2.5">{v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-400">—</span>}</td>))}</tr>
                   ))}
                 </tbody>
               </table>
@@ -3470,7 +3470,7 @@ export function PricingScreen() {
                 <thead><tr className="border-b border-white/10 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{organizerTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Organizer ", "")}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
                   {[[t("comparison.organizerFeatures.activePublicEvents"), t("comparison.organizerFeatures.upTo3"), t("comparison.organizerFeatures.unlimited"), t("comparison.organizerFeatures.unlimited")],[t("comparison.organizerFeatures.publicTicketing"), true, true, true],[t("comparison.organizerFeatures.ticketCommission"), true, true, true],[t("comparison.organizerFeatures.basicEventAnalytics"), true, true, true],[t("comparison.organizerFeatures.recurringEvents"), false, true, true],[t("comparison.organizerFeatures.approvalWaitlistControls"), false, true, true],[t("comparison.organizerFeatures.venueRequestWorkflows"), false, true, true],[t("comparison.organizerFeatures.revenueReporting"), false, true, true],[t("comparison.organizerFeatures.prioritySupport"), false, false, true],[t("comparison.organizerFeatures.featuredPlacement"), false, false, true],[t("comparison.organizerFeatures.sponsorInventory"), false, false, true],[t("comparison.organizerFeatures.audienceSegmentation"), false, false, true]].map(([feature, ...vals], ri) => (
-                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{vals.map((v, ci) => (<td key={ci} className="px-5 py-2.5">{typeof v === "string" ? (<span className="text-white font-medium">{v}</span>) : v ? (<CheckCircle2 className="h-4 w-4 text-emerald-400" />) : (<span className="text-gray-600">—</span>)}</td>))}</tr>
+                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{vals.map((v, ci) => (<td key={ci} className="px-5 py-2.5">{typeof v === "string" ? (<span className="text-white font-medium">{v}</span>) : v ? (<CheckCircle2 className="h-4 w-4 text-emerald-400" />) : (<span className="text-gray-400">—</span>)}</td>))}</tr>
                   ))}
                 </tbody>
               </table>
@@ -3483,7 +3483,7 @@ export function PricingScreen() {
                 <thead><tr className="border-b border-white/10 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{venueTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Venue ", "")}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
                   {[[t("comparison.venueFeatures.publicListing"), true, true, true],[t("comparison.venueFeatures.applicationReview"), true, true, true],[t("comparison.venueFeatures.bookingInbox"), false, true, true],[t("comparison.venueFeatures.availabilityPlanning"), false, true, true],[t("comparison.venueFeatures.partnerDealManagement"), false, true, true],[t("comparison.venueFeatures.organizerFitInsights"), false, true, true],[t("comparison.venueFeatures.featuredPlacement"), false, false, true],[t("comparison.venueFeatures.premiumAnalytics"), false, false, true],[t("comparison.venueFeatures.priorityVenueMatching"), false, false, true],[t("comparison.venueFeatures.sponsoredInventory"), false, false, true]].map(([feature, ...vals], ri) => (
-                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{(vals as boolean[]).map((v, ci) => (<td key={ci} className="px-5 py-2.5">{v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}</td>))}</tr>
+                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{(vals as boolean[]).map((v, ci) => (<td key={ci} className="px-5 py-2.5">{v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-400">—</span>}</td>))}</tr>
                   ))}
                 </tbody>
               </table>

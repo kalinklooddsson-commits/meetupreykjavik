@@ -697,10 +697,6 @@ select:focus-visible,
   font-variant-numeric: tabular-nums;
 }
 
-.ambient-orb {
-  display: none;
-}
-
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -734,14 +730,6 @@ select:focus-visible,
 
 .drift-slow {
   animation: drift-slow 14s ease-in-out infinite;
-}
-
-.grain-overlay {
-  position: relative;
-}
-
-.grain-overlay::after {
-  display: none;
 }
 
 .scroll-strip {

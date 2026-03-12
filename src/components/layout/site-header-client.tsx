@@ -452,17 +452,17 @@ function SearchOverlay({
 
           {/* Recent searches placeholder */}
           <div className="mt-4 border-t border-gray-100 pt-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
               {overlayLabels?.recentSearches ?? "Recent searches"}
             </p>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-gray-500">
               {overlayLabels?.noRecentSearches ?? "No recent searches"}
             </p>
           </div>
 
           {/* Quick links */}
           <div className="mt-3 border-t border-gray-100 pt-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
               {overlayLabels?.browse ?? "Browse"}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -488,7 +488,7 @@ function SearchOverlay({
 
           {/* Popular categories */}
           <div className="mt-3 border-t border-gray-100 pt-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
               {overlayLabels?.popularCategories ?? "Popular categories"}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
