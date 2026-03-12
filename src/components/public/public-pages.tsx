@@ -494,13 +494,13 @@ function DetailHero({
         <div className="absolute inset-0" style={{ background: art }} />
       )}
       <div className="section-shell relative z-10 py-10 text-white sm:py-14 md:py-20">
-        <span className="text-xs font-semibold uppercase tracking-widest text-white/70">
+        <span className="text-xs font-semibold uppercase tracking-widest text-white/85">
           {eyebrow}
         </span>
         <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
           {title}
         </h1>
-        <p className="mt-4 max-w-2xl text-base text-white/80 sm:text-lg">{description}</p>
+        <p className="mt-4 max-w-2xl text-base text-white/85 sm:text-lg">{description}</p>
         {actions?.length ? (
           <div className="mt-6 flex flex-wrap gap-3">
             {actions.map((action) =>
@@ -1169,13 +1169,13 @@ function IndexHero({
       />
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-gray-900/60 to-gray-900/90" />
       <div className="section-shell relative z-10 py-10 text-white sm:py-16 md:py-24">
-        <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">
+        <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">
           {eyebrow}
         </span>
         <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           {title}
         </h1>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/80 sm:text-lg">
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
           {description}
         </p>
         {actions?.length ? (
@@ -1194,7 +1194,7 @@ function IndexHero({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
                 >
                   {action.label}
                 </Link>
@@ -1445,7 +1445,7 @@ export function EventsIndexScreen({
           {/* CTA */}
           <div className="mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-indigo via-indigo-700 to-indigo-900 p-8 text-center text-white sm:p-10 md:p-14">
             <h3 className="text-3xl font-bold sm:text-4xl">{t("cta.title")}</h3>
-            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/80">
+            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/85">
               {t("cta.description")}
             </p>
             <p className="mx-auto mt-2 max-w-md text-sm text-white/80">
@@ -2508,10 +2508,10 @@ export function VenuesIndexScreen({
         <div className="section-shell relative py-16 text-center text-white sm:py-20">
           <div className="mx-auto max-w-xl">
             <h3 className="text-3xl font-bold tracking-tight">{t("cta.title")}</h3>
-            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/70">
+            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/85">
               {t("cta.description")}
             </p>
-            <p className="mx-auto mt-2 text-sm text-white/75">
+            <p className="mx-auto mt-2 text-sm text-white/80">
               {t("cta.benefit")}
             </p>
             <Link
@@ -2803,7 +2803,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
           </>
         ) : null}
         <div className="section-shell relative z-10 py-10 text-white sm:py-14 md:py-20">
-          <span className="text-xs font-semibold uppercase tracking-widest text-white/70">Venue</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-white/85">Venue</span>
           <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{place.name}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{place.summary}</p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -2956,7 +2956,7 @@ export function BlogIndexScreen() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/90" />
         <div className="section-shell relative z-10 py-16 text-white sm:py-24">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("hero.eyebrow")}</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
           <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{t("hero.title")}</h1>
           <p className="mt-5 max-w-2xl text-base text-white/85 sm:text-lg">{t("hero.description")}</p>
         </div>
@@ -2966,7 +2966,7 @@ export function BlogIndexScreen() {
       <section className="bg-white">
         <div className="section-shell py-12">
           <div className="mb-8">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-coral">{t("latestEyebrow")}</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-indigo">{t("latestEyebrow")}</span>
           </div>
           <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-sm md:grid md:grid-cols-2">
             <div className="relative h-72 md:h-auto">
@@ -3264,7 +3264,7 @@ export function AboutScreen() {
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
           <h3 className="text-3xl font-bold">{t("cta.title")}</h3>
-          <p className="mx-auto mt-4 max-w-lg text-base text-white/80">{t("cta.description")}</p>
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/85">{t("cta.description")}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo-light shadow-lg transition hover:bg-white/90">
               {t("cta.createAccount")}
@@ -3304,7 +3304,7 @@ export function PricingScreen() {
               {t("hero.getStartedFree")}
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
               {t("hero.talkToUs")}
             </Link>
           </div>
@@ -4129,7 +4129,7 @@ export function ForOrganizersScreen() {
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
           <h3 className="text-3xl font-bold">{t("cta.heading")}</h3>
-          <p className="mx-auto mt-4 max-w-lg text-base text-white/80">{t("cta.description")}</p>
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/85">{t("cta.description")}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo-light shadow-lg transition hover:bg-white/90">
               {t("cta.button")}
@@ -4298,7 +4298,7 @@ export function ForVenuesScreen() {
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
           <h3 className="text-3xl font-bold">{t("cta.heading")}</h3>
-          <p className="mx-auto mt-4 max-w-lg text-base text-white/80">
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/85">
             {t("cta.description")}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">

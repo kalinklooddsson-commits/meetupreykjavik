@@ -47,7 +47,7 @@ export async function SiteFooter() {
               <Compass className="h-5 w-5" />
             </span>
             <div>
-              <div className="text-sm font-bold uppercase tracking-[0.18em] text-white/45">
+              <div className="text-sm font-bold uppercase tracking-[0.18em] text-white/60">
                 Meetup
               </div>
               <div className="font-editorial text-2xl text-white">
@@ -55,13 +55,13 @@ export async function SiteFooter() {
               </div>
             </div>
           </div>
-          <p className="max-w-sm text-sm leading-7 text-white/60">
+          <p className="max-w-sm text-sm leading-7 text-white/70">
             {tFooter("description")}
           </p>
 
           {/* Newsletter signup */}
           <div className="mt-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/60">
               {tFooter("newsletter")}
             </p>
             <form className="mt-2 flex gap-2">
@@ -89,7 +89,7 @@ export async function SiteFooter() {
 
         {footerColumns.map((column) => (
           <div key={column.title}>
-            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white/35">
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white/50">
               {column.title}
             </h2>
             <div className="space-y-3">
@@ -97,7 +97,7 @@ export async function SiteFooter() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="block text-sm text-white/70 transition-colors hover:text-white"
+                  className="block text-sm text-white/75 transition-colors hover:text-white"
                 >
                   {link.label}
                 </Link>
@@ -108,11 +108,11 @@ export async function SiteFooter() {
       </div>
       {/* Social links & copyright */}
       <div className="section-shell mt-10 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
-        <p className="text-sm text-white/45">
+        <p className="text-sm text-white/60">
           &copy; {new Date().getFullYear()} MeetupReykjavik. {tFooter("copyright")}
         </p>
         <div className="flex items-center gap-2">
-          <span className="mr-2 text-xs font-bold uppercase tracking-[0.18em] text-white/35">
+          <span className="mr-2 text-xs font-bold uppercase tracking-[0.18em] text-white/50">
             {tFooter("followUs")}
           </span>
           <a
@@ -120,7 +120,7 @@ export async function SiteFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/60 transition hover:bg-white/[0.15] hover:text-white/90"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Instagram className="h-4 w-4" />
           </a>
@@ -129,7 +129,7 @@ export async function SiteFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/60 transition hover:bg-white/[0.15] hover:text-white/90"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Facebook className="h-4 w-4" />
           </a>
@@ -138,7 +138,7 @@ export async function SiteFooter() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="X (Twitter)"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/60 transition hover:bg-white/[0.15] hover:text-white/90"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Twitter className="h-4 w-4" />
           </a>

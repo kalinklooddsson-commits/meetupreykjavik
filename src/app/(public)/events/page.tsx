@@ -29,9 +29,9 @@ export default async function EventsPage({
       (e) =>
         e.title.toLowerCase().includes(query) ||
         e.category.toLowerCase().includes(query) ||
-        e.group.toLowerCase().includes(query) ||
-        e.venue.toLowerCase().includes(query) ||
-        (e.description?.toLowerCase().includes(query) ?? false),
+        e.groupName.toLowerCase().includes(query) ||
+        e.venueName.toLowerCase().includes(query) ||
+        (e.summary?.toLowerCase().includes(query) ?? false),
     );
   }
 
