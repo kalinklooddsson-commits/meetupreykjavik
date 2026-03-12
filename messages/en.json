@@ -58,7 +58,14 @@
     "openForBookings": "Open for bookings",
     "photo": "Photo",
     "memberDeal": "Member deal",
-    "seats": "seats"
+    "seats": "seats",
+    "free": "Free",
+    "inPerson": "In person",
+    "spots": "spots",
+    "waitlist": "Waitlist",
+    "searchEvents": "Search events...",
+    "searchGroups": "Search groups...",
+    "searchVenues": "Search venues..."
   },
   "signals": {
     "visibility": "Visibility",
@@ -749,6 +756,7 @@
     "filters": {
       "all": "All",
       "allEvents": "All events",
+      "startingSoon": "Starting soon",
       "today": "Today",
       "thisWeek": "This Week",
       "weekend": "Weekend",

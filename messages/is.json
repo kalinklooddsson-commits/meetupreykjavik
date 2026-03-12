@@ -58,7 +58,14 @@
     "openForBookings": "Opið fyrir bókanir",
     "photo": "Mynd",
     "memberDeal": "Tilboð félagsmanna",
-    "seats": "sæti"
+    "seats": "sæti",
+    "free": "Ókeypis",
+    "inPerson": "Á staðnum",
+    "spots": "pláss",
+    "waitlist": "Biðlisti",
+    "searchEvents": "Leita að viðburðum...",
+    "searchGroups": "Leita að hópum...",
+    "searchVenues": "Leita að stöðum..."
   },
   "signals": {
     "visibility": "Sýnileiki",
@@ -749,6 +756,7 @@
     "filters": {
       "all": "Allt",
       "allEvents": "Allir viðburðir",
+      "startingSoon": "Bráðlega",
       "today": "Í dag",
       "thisWeek": "Þessa viku",
       "weekend": "Um helgina",

@@ -44,15 +44,23 @@ export default async function EventsPage({
 
   // Time filter (uses the dateFilter field on each event)
   if (when) {
-    const timeMap: Record<string, string> = {
-      today: "Today",
-      "this-week": "This Week",
-      weekend: "Weekend",
-      month: "Month",
-    };
-    const mapped = timeMap[when];
-    if (mapped) {
-      filteredEvents = filteredEvents.filter((e) => e.dateFilter === mapped);
+    if (when === "starting-soon") {
+      // Show today's events sorted by start time (soonest first)
+      filteredEvents = filteredEvents
+        .filter((e) => e.dateFilter === "Today" || e.dateFilter === "This Week")
+        .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
+        .slice(0, 6);
+    } else {
+      const timeMap: Record<string, string> = {
+        today: "Today",
+        "this-week": "This Week",
+        weekend: "Weekend",
+        month: "Month",
+      };
+      const mapped = timeMap[when];
+      if (mapped) {
+        filteredEvents = filteredEvents.filter((e) => e.dateFilter === mapped);
+      }
     }
   }
 

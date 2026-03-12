@@ -80,6 +80,12 @@ const timeFormatter = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Atlantic/Reykjavik",
 });
 
+/* ── Avatar placeholder colors (deterministic per-slot) ── */
+const AVATAR_COLORS = [
+  "#7C5CFC", "#E8614D", "#3B9B72", "#D97706",
+  "#6366F1", "#EC4899", "#14B8A6", "#8B5CF6",
+];
+
 /* ── Helpers ───────────────────────────────────────────── */
 
 function eventHref(slug: string) {
@@ -607,14 +613,19 @@ function EventCard({ event }: { event: PublicEvent }) {
           </div>
         </div>
 
-        {/* Age label overlay */}
-        {event.ageLabel !== "All ages" ? (
-          <div className="absolute right-4 top-4 z-10">
+        {/* Top-right badges: age + format */}
+        <div className="absolute right-4 top-4 z-10 flex flex-col items-end gap-1.5">
+          {event.isFree ? (
+            <span className="rounded-full bg-emerald-500 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white shadow-sm">
+              {tCards("free")}
+            </span>
+          ) : null}
+          {event.ageLabel !== "All ages" ? (
             <span className="rounded-full bg-black/40 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
               {event.ageLabel}
             </span>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </div>
 
       {/* ── Body ── */}
@@ -669,24 +680,51 @@ function EventCard({ event }: { event: PublicEvent }) {
           <span className="truncate">{event.groupName}</span>
         </div>
 
-        {/* Capacity bar — only when > 50% */}
+        {/* Attendee avatars + going count */}
+        <div className="mt-4 flex items-center gap-3">
+          <div className="flex -space-x-2">
+            {AVATAR_COLORS.slice(0, Math.min(event.attendees, 4)).map((color, i) => (
+              <div
+                key={i}
+                className="h-7 w-7 rounded-full border-2 border-white"
+                style={{ background: color }}
+              />
+            ))}
+            {event.attendees > 4 ? (
+              <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-gray-200 text-[10px] font-bold text-gray-600">
+                +{event.attendees - 4}
+              </div>
+            ) : null}
+          </div>
+          <span className="text-sm text-gray-600">
+            <span className="font-semibold text-gray-900">{event.attendees}</span> {tCards("going")}
+          </span>
+          {/* In person badge */}
+          <span className="ml-auto rounded-full bg-brand-indigo/10 px-2.5 py-0.5 text-[11px] font-medium text-brand-indigo">
+            {tCards("inPerson")}
+          </span>
+        </div>
+
+        {/* Capacity bar */}
         {fill > 50 ? (
-          <div className="mt-4">
+          <div className="mt-3">
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span>
-                {event.attendees}/{event.capacity} {tCards("going")}
+                {event.attendees}/{event.capacity} {tCards("spots")}
               </span>
-              {fill > 75 ? (
+              {fill >= 95 ? (
+                <span className="font-semibold text-red-600">{tCards("waitlist")}</span>
+              ) : fill > 75 ? (
                 <span className="font-semibold text-brand-coral">{tCards("fillingFast")}</span>
               ) : null}
             </div>
-            <div className="mt-1 h-1 rounded-full bg-gray-100">
+            <div className="mt-1 h-1.5 rounded-full bg-gray-100">
               <div
                 className={cn(
-                  "h-1 rounded-full transition-all",
-                  fill > 75 ? "bg-brand-coral" : "bg-brand-indigo",
+                  "h-1.5 rounded-full transition-all",
+                  fill >= 95 ? "bg-red-500" : fill > 75 ? "bg-brand-coral" : "bg-brand-indigo",
                 )}
-                style={{ width: `${fill}%` }}
+                style={{ width: `${Math.min(fill, 100)}%` }}
               />
             </div>
           </div>
@@ -1158,6 +1196,8 @@ function IndexHero({
   imageSrc,
   stats,
   actions,
+  searchAction,
+  searchPlaceholder,
 }: {
   eyebrow: string;
   title: string;
@@ -1165,6 +1205,8 @@ function IndexHero({
   imageSrc: string;
   stats?: Array<{ label: string; value: string }>;
   actions?: Array<{ href: Route; label: string; primary?: boolean }>;
+  searchAction?: string;
+  searchPlaceholder?: string;
 }) {
   return (
     <section className="relative overflow-hidden bg-gray-900">
@@ -1187,8 +1229,28 @@ function IndexHero({
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
           {description}
         </p>
+        {/* Inline search bar */}
+        {searchAction ? (
+          <form action={searchAction} method="GET" className="mt-8 flex max-w-lg">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                name="q"
+                placeholder={searchPlaceholder ?? "Search..."}
+                className="w-full rounded-l-full border-0 bg-white py-3.5 pl-12 pr-4 text-sm text-gray-900 shadow-lg placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-coral"
+              />
+            </div>
+            <button
+              type="submit"
+              className="rounded-r-full bg-brand-coral px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:opacity-90"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+          </form>
+        ) : null}
         {actions?.length ? (
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className={cn("flex flex-wrap gap-3", searchAction ? "mt-5" : "mt-8")}>
             {actions.map((action) =>
               action.primary ? (
                 <Link
@@ -1246,6 +1308,7 @@ export function EventsIndexScreen({
   activeWhen?: string;
 } = {}) {
   const t = useTranslations("eventsPage");
+  const tCards = useTranslations("cards");
   const tSignals = useTranslations("signals");
   const featured = events[0] ?? null;
   const totalAttendees = events.reduce((sum, e) => sum + e.attendees, 0);
@@ -1260,6 +1323,8 @@ export function EventsIndexScreen({
         title={t("hero.title")}
         description={t("hero.description")}
         imageSrc="/place-images/reykjavik/reykjavik-871-2-78434189.jpg"
+        searchAction="/events"
+        searchPlaceholder={tCards("searchEvents")}
         stats={[
           { label: t("stats.upcomingEvents"), value: String(events.length) },
           { label: t("stats.totalAttendees"), value: totalAttendees.toLocaleString() },
@@ -1407,6 +1472,7 @@ export function EventsIndexScreen({
           {/* Time filters — interactive links */}
           <TimeFilterBar
             items={[
+              { label: t("filters.startingSoon"), value: "starting-soon" },
               { label: t("filters.today"), value: "today" },
               { label: t("filters.thisWeek"), value: "this-week" },
               { label: t("filters.weekend"), value: "weekend" },
@@ -1801,6 +1867,7 @@ export function GroupsIndexScreen({
   activeCategory?: string;
 } = {}) {
   const t = useTranslations("groupsPage");
+  const tCards = useTranslations("cards");
   const totalMembers = groups.reduce((sum, g) => sum + g.members, 0);
   const avgActivity = Math.round(groups.reduce((sum, g) => sum + g.activity, 0) / groups.length);
   const strongestGroups = [...groups]
@@ -1833,6 +1900,8 @@ export function GroupsIndexScreen({
         title={t("hero.title")}
         description={t("hero.description")}
         imageSrc="/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg"
+        searchAction="/groups"
+        searchPlaceholder={tCards("searchGroups")}
         stats={[
           { label: t("stats.activeGroups"), value: String(groups.length) },
           { label: t("stats.totalMembers"), value: totalMembers.toLocaleString() },
@@ -2282,6 +2351,7 @@ export function VenuesIndexScreen({
   activeArea?: string;
 } = {}) {
   const t = useTranslations("venuesPage");
+  const tCards = useTranslations("cards");
   const sourcedPlaces = getFeaturedSourcedPlaces(6);
   const avgRating = venues.length > 0 ? (venues.reduce((sum, v) => sum + (v.rating ?? 0), 0) / venues.length).toFixed(1) : "0.0";
   const totalCapacity = venues.reduce((sum, v) => sum + (v.capacity ?? 0), 0);
@@ -2296,6 +2366,8 @@ export function VenuesIndexScreen({
         title={t("hero.title")}
         description={t("hero.description")}
         imageSrc="/place-images/reykjavik/hof-i-deccf755.jpg"
+        searchAction="/venues"
+        searchPlaceholder={tCards("searchVenues")}
         stats={[
           { label: t("stats.partnerVenues"), value: String(venues.length) },
           { label: t("stats.avgRating"), value: `${avgRating}/5` },
