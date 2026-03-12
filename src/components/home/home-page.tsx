@@ -156,19 +156,19 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
         <h3 className="text-base font-bold tracking-tight text-brand-text group-hover:text-brand-indigo">
           {event.title}
         </h3>
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-brand-text-muted">
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
           <span className="inline-flex items-center gap-1.5">
-            <CalendarDays className="h-3.5 w-3.5" />
+            <CalendarDays className="h-3.5 w-3.5 text-gray-400" />
             {event.day} · {event.time}
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5" />
+            <MapPin className="h-3.5 w-3.5 text-gray-400" />
             {event.venue}
           </span>
         </div>
         <div className="mt-3 flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 text-sm text-brand-text-muted">
-            <Users className="h-3.5 w-3.5" />
+          <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
+            <Users className="h-3.5 w-3.5 text-gray-400" />
             {event.attendees} {t("going")}
           </span>
           <span className="rounded-full bg-brand-coral px-4 py-2 text-xs font-bold text-white shadow-sm">
@@ -210,7 +210,7 @@ function GroupCard({ group }: { group: (typeof groups)[number] }) {
         <h3 className="mt-2 text-base font-bold tracking-tight text-brand-text group-hover:text-brand-indigo">
           {group.name}
         </h3>
-        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-brand-text-muted">
+        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-gray-600">
           {group.description}
         </p>
         <div className="mt-3 flex items-center justify-between border-t border-brand-border-light pt-3">
@@ -257,7 +257,7 @@ function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
       </div>
       <div className="px-5 py-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-brand-text-muted">
+          <span className="text-sm text-gray-600">
             {venue.events} {tHome("hostedEvents")}
           </span>
           <span className="inline-flex items-center gap-1 rounded-full bg-brand-coral-soft px-2.5 py-1 text-sm font-bold text-brand-coral-dark">
@@ -423,14 +423,14 @@ export function HomePage() {
       {/* ============================================================ */}
       {/*  THIS WEEK IN REYKJAVIK — responsive event grid              */}
       {/* ============================================================ */}
-      <section className="section-shell py-20">
+      <section className="reveal section-shell py-20">
         <SectionHeading
           eyebrow={tSections("thisWeekEyebrow")}
           title={tSections("thisWeekTitle")}
           actionHref="/events"
           actionLabel={tCta("seeAllEvents")}
         />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="reveal-group grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
@@ -471,14 +471,14 @@ export function HomePage() {
       {/* ============================================================ */}
       {/*  CATEGORIES — visual card grid                               */}
       {/* ============================================================ */}
-      <section className="bg-white px-4 py-20">
+      <section className="reveal bg-white px-4 py-20">
         <div className="section-shell">
           <SectionHeading
             eyebrow={tSections("categoriesEyebrow")}
             title={tSections("categoriesTitle")}
             center
           />
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="reveal-group grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {categories.map((category) => (
               <Link
                 key={category.name}
@@ -495,7 +495,7 @@ export function HomePage() {
                 <h3 className="mt-3 text-sm font-bold tracking-tight text-brand-text">
                   {category.name}
                 </h3>
-                <p className="mt-1 text-xs font-medium text-brand-text-muted">
+                <p className="mt-1 text-xs font-medium text-gray-600">
                   {category.count} {tSocial("meetups")}
                 </p>
                 <ArrowRight className="mt-3 h-3.5 w-3.5 text-brand-text-light transition-colors group-hover:text-brand-indigo" />
@@ -508,13 +508,13 @@ export function HomePage() {
       {/* ============================================================ */}
       {/*  HOW IT WORKS — decorative step numbers                      */}
       {/* ============================================================ */}
-      <section className="section-shell py-20">
+      <section className="reveal section-shell py-20">
         <SectionHeading
           eyebrow={tSections("howEyebrow")}
           title={tSections("howTitle")}
           center
         />
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="reveal-group grid gap-6 lg:grid-cols-3">
           {localizedSteps.map((step, i) => {
             const Icon = STEP_ICONS[i] ?? Compass;
             return (
@@ -534,7 +534,7 @@ export function HomePage() {
                   <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-text">
                     {step.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">
                     {step.description}
                   </p>
                 </div>
@@ -549,7 +549,7 @@ export function HomePage() {
       {/* ============================================================ */}
       {/*  GROUPS — 4-up grid                                          */}
       {/* ============================================================ */}
-      <section className="border-t border-brand-border-light bg-white px-4 py-20">
+      <section className="reveal border-t border-brand-border-light bg-white px-4 py-20">
         <div className="section-shell">
           <SectionHeading
             eyebrow={tSections("groupsEyebrow")}
@@ -557,7 +557,7 @@ export function HomePage() {
             actionHref="/groups"
             actionLabel={tCta("seeAllGroups")}
           />
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="reveal-group grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {groups.map((group) => (
               <GroupCard key={group.name} group={group} />
             ))}
@@ -568,14 +568,14 @@ export function HomePage() {
       {/* ============================================================ */}
       {/*  VENUES — responsive grid                                    */}
       {/* ============================================================ */}
-      <section className="section-shell py-20">
+      <section className="reveal section-shell py-20">
         <SectionHeading
           eyebrow={tSections("venuesEyebrow")}
           title={tSections("venuesTitle")}
           actionHref="/venues"
           actionLabel={tCta("becomePartner")}
         />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="reveal-group grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {venues.map((venue) => (
             <VenueCard key={venue.name} venue={venue} />
           ))}
