@@ -23,7 +23,10 @@ export async function getUserNotifications(userId: string, limit = 20) {
   return data ?? [];
 }
 
-export async function markNotificationRead(notificationId: string) {
+export async function markNotificationRead(
+  notificationId: string,
+  userId: string,
+) {
   const supabase = await createSupabaseServerClient();
   if (!supabase) throw new Error("Database unavailable");
 
@@ -31,10 +34,12 @@ export async function markNotificationRead(notificationId: string) {
     .from("notifications")
     .update({ is_read: true })
     .eq("id", notificationId)
+    .eq("user_id", userId)
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error("Notification not found or not yours.");
   return data;
 }
 

@@ -80,6 +80,18 @@ export async function joinGroup(groupId: string, userId: string) {
   const supabase = await createSupabaseServerClient();
   if (!supabase) throw new Error("Database unavailable");
 
+  // Check for existing membership
+  const { data: existing } = await supabase
+    .from("group_members")
+    .select("id")
+    .eq("group_id", groupId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (existing) {
+    throw new Error("You are already a member of this group.");
+  }
+
   const { data, error } = await supabase
     .from("group_members")
     .insert({

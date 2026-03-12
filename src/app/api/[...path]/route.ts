@@ -309,18 +309,23 @@ async function getSeededReadResponse(
         data: seededBookingsForRole(session?.accountType),
       });
     case "GET /api/admin/stats":
+      if (session?.accountType !== "admin") return forbiddenResponse("Admin access required.");
       return successResponse({
         metrics: adminPortalData.metrics,
         opsInbox: adminPortalData.opsInbox,
         urgentQueues: adminPortalData.urgentQueues,
       });
     case "GET /api/admin/analytics/[type]":
+      if (session?.accountType !== "admin") return forbiddenResponse("Admin access required.");
       return successResponse(seededAdminAnalytics(match.params.type));
     case "GET /api/admin/transactions":
+      if (session?.accountType !== "admin") return forbiddenResponse("Admin access required.");
       return successResponse(adminPortalData.revenue.transactions);
     case "GET /api/admin/moderation":
+      if (session?.accountType !== "admin") return forbiddenResponse("Admin access required.");
       return successResponse(adminPortalData.moderation);
     case "GET /api/admin/audit-log":
+      if (session?.accountType !== "admin") return forbiddenResponse("Admin access required.");
       return successResponse(adminPortalData.moderation.auditLog);
     default:
       return null;
@@ -651,8 +656,8 @@ async function handleLiveDataRequest(
         const url = request.nextUrl;
         const result = await getEvents({
           category: url.searchParams.get("category") ?? undefined,
-          limit: Number(url.searchParams.get("limit") ?? 20),
-          offset: Number(url.searchParams.get("offset") ?? 0),
+          limit: Math.min(Math.max(Number(url.searchParams.get("limit") ?? 20) || 20, 1), 100),
+          offset: Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0),
           status: url.searchParams.get("status") ?? "published",
         });
         return successResponse(result);
@@ -676,12 +681,22 @@ async function handleLiveDataRequest(
       }
       case "PATCH /api/events/[slug]": {
         if (!session) return forbiddenResponse("Authentication required.");
+        const eventToUpdate = await getEventBySlug(match.params.slug);
+        if (!eventToUpdate) return validationMessage("Event not found.");
+        if (eventToUpdate.host_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("You can only edit your own events.");
+        }
         const body = await parseValidatedBody(request, key);
         const data = await updateEvent(match.params.slug, body as Parameters<typeof updateEvent>[1]);
         return successResponse(data);
       }
       case "DELETE /api/events/[slug]": {
         if (!session) return forbiddenResponse("Authentication required.");
+        const eventToDelete = await getEventBySlug(match.params.slug);
+        if (!eventToDelete) return validationMessage("Event not found.");
+        if (eventToDelete.host_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("You can only delete your own events.");
+        }
         await deleteEvent(match.params.slug);
         return successResponse({ deleted: true });
       }
@@ -770,7 +785,7 @@ async function handleLiveDataRequest(
         const url = request.nextUrl;
         const data = await getGroups({
           category: url.searchParams.get("category") ?? undefined,
-          limit: Number(url.searchParams.get("limit") ?? 20),
+          limit: Math.min(Math.max(Number(url.searchParams.get("limit") ?? 20) || 20, 1), 100),
         });
         return successResponse(data);
       }
@@ -822,7 +837,7 @@ async function handleLiveDataRequest(
         const url = request.nextUrl;
         const result = await getVenues({
           type: url.searchParams.get("type") ?? undefined,
-          limit: Number(url.searchParams.get("limit") ?? 20),
+          limit: Math.min(Math.max(Number(url.searchParams.get("limit") ?? 20) || 20, 1), 100),
         });
         return successResponse(result.data);
       }
@@ -845,6 +860,11 @@ async function handleLiveDataRequest(
       }
       case "PATCH /api/venues/[slug]": {
         if (!session) return forbiddenResponse("Authentication required.");
+        const venueToUpdate = await getVenueBySlug(match.params.slug);
+        if (!venueToUpdate) return validationMessage("Venue not found.");
+        if (venueToUpdate.owner_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("You can only edit your own venues.");
+        }
         const body = await parseValidatedBody(request, key);
         const data = await updateVenue(match.params.slug, body as Parameters<typeof updateVenue>[1]);
         return successResponse(data);
@@ -956,18 +976,57 @@ async function handleLiveDataRequest(
       }
       case "GET /api/bookings": {
         if (!session) return forbiddenResponse("Authentication required.");
-        // Return bookings relevant to the user's role
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
-        const { data } = await supabase
+        // Fetch bookings where user is organizer
+        const { data: asOrganizer } = await supabase
           .from("venue_bookings")
           .select("*, profiles:organizer_id (*), venues:venue_id (*)")
-          .or(`organizer_id.eq.${session.id},venue_id.in.(select id from venues where owner_id = '${session.id}')`)
+          .eq("organizer_id", session.id)
           .order("requested_date", { ascending: false });
-        return successResponse(data ?? []);
+        // Fetch bookings for venues the user owns
+        const { data: ownedVenues } = await supabase
+          .from("venues")
+          .select("id")
+          .eq("owner_id", session.id);
+        const ownedVenueIds = (ownedVenues ?? []).map((v) => v.id);
+        let asVenueOwner: typeof asOrganizer = [];
+        if (ownedVenueIds.length > 0) {
+          const { data } = await supabase
+            .from("venue_bookings")
+            .select("*, profiles:organizer_id (*), venues:venue_id (*)")
+            .in("venue_id", ownedVenueIds)
+            .order("requested_date", { ascending: false });
+          asVenueOwner = data ?? [];
+        }
+        // Merge and deduplicate
+        const seen = new Set<string>();
+        const merged = [...(asOrganizer ?? []), ...asVenueOwner].filter((b) => {
+          if (seen.has(b.id)) return false;
+          seen.add(b.id);
+          return true;
+        });
+        return successResponse(merged);
       }
       case "PATCH /api/bookings/[id]": {
         if (!session) return forbiddenResponse("Authentication required.");
+        // Verify the user is the booking organizer or the venue owner
+        const supabaseForBooking = await createSupabaseServerClient();
+        if (!supabaseForBooking) return null;
+        const { data: bookingToUpdate } = await supabaseForBooking
+          .from("venue_bookings")
+          .select("organizer_id, venue_id, venues:venue_id (owner_id)")
+          .eq("id", match.params.id)
+          .single();
+        if (!bookingToUpdate) return validationMessage("Booking not found.");
+        const venueOwner = (bookingToUpdate.venues as unknown as { owner_id: string })?.owner_id;
+        if (
+          bookingToUpdate.organizer_id !== session.id &&
+          venueOwner !== session.id &&
+          session.accountType !== "admin"
+        ) {
+          return forbiddenResponse("You can only manage your own bookings.");
+        }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const data = await updateBookingStatus(
           match.params.id,
@@ -980,6 +1039,9 @@ async function handleLiveDataRequest(
       // ── Users / Profiles ──
       case "PATCH /api/users/[id]": {
         if (!session) return forbiddenResponse("Authentication required.");
+        if (match.params.id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("You can only edit your own profile.");
+        }
         const body = await parseValidatedBody(request, key);
         const data = await updateProfile(match.params.id, body as Parameters<typeof updateProfile>[1]);
         return successResponse(data);
@@ -999,7 +1061,7 @@ async function handleLiveDataRequest(
         if (!session) return forbiddenResponse("Authentication required.");
         const body = await request.json();
         if (body.id) {
-          await markNotificationRead(body.id);
+          await markNotificationRead(body.id, session.id);
         }
         return successResponse({ marked: true });
       }
@@ -1012,12 +1074,12 @@ async function handleLiveDataRequest(
       }
       case "POST /api/messages": {
         if (!session) return forbiddenResponse("Authentication required.");
-        const body = await request.json();
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const data = await sendMessage({
           sender_id: session.id,
-          receiver_id: body.receiverId,
-          subject: body.subject ?? "",
-          body: body.body,
+          receiver_id: body.receiverId as string,
+          subject: (body.subject as string) ?? "",
+          body: body.body as string,
         });
         return successResponse(data, { status: 201 });
       }

@@ -3,7 +3,7 @@ import type { Database } from "@/types/database";
 
 type MessageInsert = Database["public"]["Tables"]["messages"]["Insert"];
 
-export async function getUserConversations(userId: string) {
+export async function getUserConversations(userId: string, limit = 50) {
   const supabase = await createSupabaseServerClient();
   if (!supabase) return [];
 
@@ -14,7 +14,8 @@ export async function getUserConversations(userId: string) {
       profiles:sender_id (*)
     `)
     .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(limit);
 
   if (error) {
     console.error("Failed to fetch user conversations:", error);
