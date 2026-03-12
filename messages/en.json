@@ -644,7 +644,9 @@
     },
     "featured": {
       "heading": "Featured event",
-      "viewEvent": "View event"
+      "viewEvent": "View event",
+      "reserveSpot": "Reserve your spot",
+      "readMore": "Learn more"
     },
     "filters": {
       "allEvents": "All events",
@@ -653,10 +655,15 @@
       "weekend": "Weekend",
       "month": "Month"
     },
+    "grid": {
+      "allEvents": "All Events",
+      "filterByCategory": "Filter by category"
+    },
     "cta": {
       "title": "Ready to find your next event?",
       "description": "Join the community to RSVP, get reminders, and discover events matched to your interests.",
-      "button": "Create free account"
+      "button": "Create free account",
+      "subtitle": "Free RSVP, event reminders, and personalized recommendations."
     }
   },
   "groupsPage": {
@@ -684,7 +691,11 @@
       "buildText": "Members, discussions, and shared experiences that grow over time."
     },
     "grid": {
-      "activeGroups": "Active groups"
+      "activeGroups": "Active groups",
+      "filterByCategory": "Filter by category"
+    },
+    "showcase": {
+      "topGroups": "Most Active Groups"
     },
     "startGroup": {
       "title": "Start your own group",
@@ -728,9 +739,14 @@
       "description": "Discover venues across the city that could host your next event.",
       "seeAll": "See all"
     },
+    "map": {
+      "title": "Explore on the Map",
+      "description": "Find venues near you across Reykjavik"
+    },
     "cta": {
       "title": "Own a venue in Reykjavik?",
       "description": "Join our venue network to get bookings, host community events, and offer member deals.",
+      "benefit": "Free to join — no commissions, no hidden fees.",
       "button": "Apply as a partner"
     }
   },

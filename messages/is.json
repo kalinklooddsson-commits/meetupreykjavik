@@ -644,7 +644,9 @@
     },
     "featured": {
       "heading": "Valin viðburður",
-      "viewEvent": "Skoða viðburð"
+      "viewEvent": "Skoða viðburð",
+      "reserveSpot": "Bókaðu þér sæti",
+      "readMore": "Sjá nánar"
     },
     "filters": {
       "allEvents": "Allir viðburðir",
@@ -653,10 +655,15 @@
       "weekend": "Um helgina",
       "month": "Mánuðinn"
     },
+    "grid": {
+      "allEvents": "Allir viðburðir",
+      "filterByCategory": "Sía eftir flokki"
+    },
     "cta": {
       "title": "Tilbúin(n) að finna næsta viðburð?",
       "description": "Skráðu þig í samfélagið til að bóka sæti, fá áminningar og uppgötva viðburði sem henta þínum áhugamálum.",
-      "button": "Stofna ókeypis aðgang"
+      "button": "Stofna ókeypis aðgang",
+      "subtitle": "Ókeypis skráning, áminningar og persónulegar tillögur."
     }
   },
   "groupsPage": {
@@ -684,7 +691,11 @@
       "buildText": "Meðlimir, umræður og sameiginleg reynsla sem vaxa með tímanum."
     },
     "grid": {
-      "activeGroups": "Virkir hópar"
+      "activeGroups": "Virkir hópar",
+      "filterByCategory": "Sía eftir flokki"
+    },
+    "showcase": {
+      "topGroups": "Virkustu hóparnir"
     },
     "startGroup": {
       "title": "Stofnaðu þinn eigin hóp",
@@ -728,9 +739,14 @@
       "description": "Uppgötvaðu staði víðs vegar um borgina sem gætu hýst næsta viðburð þinn.",
       "seeAll": "Sjá alla"
     },
+    "map": {
+      "title": "Skoðaðu á korti",
+      "description": "Finndu staði nálægt þér um alla Reykjavík"
+    },
     "cta": {
       "title": "Átt þú stað í Reykjavík?",
       "description": "Skráðu þig í staðanetið okkar til að fá bókanir, hýsa samfélagsviðburði og bjóða meðlimatilboð.",
+      "benefit": "Ókeypis aðild — engin þóknun, engin falin gjöld.",
       "button": "Sækja um samstarf"
     }
   },

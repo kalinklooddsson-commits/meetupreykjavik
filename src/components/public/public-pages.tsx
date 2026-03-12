@@ -1168,6 +1168,7 @@ export function EventsIndexScreen({
   const totalAttendees = events.reduce((sum, e) => sum + e.attendees, 0);
   const featuredImage = extractImageUrl(featured.art) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg";
   const lanes = discoveryLanes(events);
+  const usedCategories = Array.from(new Set(events.map((e) => e.category)));
 
   return (
     <>
@@ -1189,18 +1190,18 @@ export function EventsIndexScreen({
       />
 
       {/* Featured event spotlight */}
-      <section className="reveal section-shell py-10">
+      <section className="reveal section-shell py-12">
         <div className="mb-8 flex items-center gap-3">
           <Sparkles className="h-5 w-5 text-brand-coral" />
           <h2 className="text-lg font-semibold text-gray-900">{t("featured.heading")}</h2>
         </div>
-        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white md:grid md:grid-cols-2">
-          <div className="relative h-64 md:h-auto">
+        <div className="paper-panel-premium overflow-hidden rounded-2xl border border-gray-200 md:grid md:grid-cols-5">
+          <div className="relative h-72 md:col-span-3 md:h-auto md:min-h-[360px]">
             <Image
               fill
               alt={featured.title}
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, 60vw"
               src={featuredImage}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent md:bg-gradient-to-r md:from-transparent md:via-black/20 md:to-black/60" />
@@ -1211,13 +1212,15 @@ export function EventsIndexScreen({
               </span>
             </div>
           </div>
-          <div className="p-5 sm:p-8">
+          <div className="flex flex-col justify-center p-6 sm:p-8 md:col-span-2">
             <div className="text-sm font-medium text-brand-indigo">
               {formatEventDate(featured.startsAt)} · {formatEventTimeRange(featured.startsAt, featured.endsAt)}
             </div>
-            <h3 className="mt-2 text-xl font-bold text-gray-900 sm:text-2xl">{featured.title}</h3>
-            <p className="mt-3 text-sm leading-relaxed text-gray-600">{featured.summary}</p>
-            <div className="mt-4 flex items-center gap-4 text-sm text-gray-500">
+            <h3 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl">{featured.title}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600 line-clamp-3">
+              {featured.description?.[0] ?? featured.summary}
+            </p>
+            <div className="mt-5 flex items-center gap-4 text-sm text-gray-500">
               <span className="flex items-center gap-1.5">
                 <MapPin className="h-4 w-4" />
                 {featured.venueName}
@@ -1235,19 +1238,19 @@ export function EventsIndexScreen({
                 />
               </div>
             </div>
-            <div className="mt-6 flex gap-3">
+            <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href={eventHref(featured.slug)}
                 className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
               >
-                {t("featured.viewEvent")}
+                {t("featured.reserveSpot")}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href={groupHref(featured.groupSlug)}
+                href={eventHref(featured.slug)}
                 className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
               >
-                {featured.groupName}
+                {t("featured.readMore")}
               </Link>
             </div>
           </div>
@@ -1257,35 +1260,62 @@ export function EventsIndexScreen({
       {/* Filters + grid */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-10">
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("filters.allEvents")}</h2>
-          <div className="space-y-4">
-            <FilterBar items={publicCategoryOptions} />
-            <FilterBar
-              items={[t("filters.today"), t("filters.thisWeek"), t("filters.weekend"), t("filters.month")]}
-              activeIndex={1}
-            />
+          <h2 className="mb-2 text-2xl font-bold text-gray-900">{t("grid.allEvents")}</h2>
+          <p className="mb-6 text-sm text-gray-500">{t("grid.filterByCategory")}</p>
+
+          {/* Category filter chips */}
+          <div className="mb-6 flex flex-wrap gap-2">
+            {publicCategoryOptions.map((cat) => (
+              <span
+                key={cat}
+                className={cn(
+                  "rounded-full px-4 py-1.5 text-xs font-semibold transition cursor-pointer",
+                  usedCategories.includes(cat)
+                    ? "bg-brand-indigo/10 text-brand-indigo ring-1 ring-brand-indigo/20"
+                    : "bg-gray-100 text-gray-400",
+                )}
+              >
+                {cat}
+              </span>
+            ))}
           </div>
 
+          {/* Time filters */}
+          <FilterBar
+            items={[t("filters.today"), t("filters.thisWeek"), t("filters.weekend"), t("filters.month")]}
+            activeIndex={1}
+          />
+
+          {/* Discovery lanes */}
           {lanes.length > 0 ? (
             <div className="mt-8 grid gap-4 lg:grid-cols-3">
-              {lanes.map((lane) => (
-                <Link
-                  key={lane.label}
-                  href={lane.href}
-                  className="rounded-2xl border border-brand-border-light bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.08)]"
-                >
-                  <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
-                    {lane.label}
-                  </div>
-                  <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">
-                    {lane.title}
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{lane.detail}</p>
-                </Link>
-              ))}
+              {lanes.map((lane, i) => {
+                const laneIcon = i === 0 ? <Sparkles className="h-4 w-4" /> : i === 1 ? <UsersRound className="h-4 w-4" /> : <TrendingUp className="h-4 w-4" />;
+                const laneColor = i === 0 ? "border-l-amber-500" : i === 1 ? "border-l-emerald-500" : "border-l-rose-500";
+                return (
+                  <Link
+                    key={lane.label}
+                    href={lane.href}
+                    className={cn(
+                      "rounded-2xl border border-brand-border-light border-l-4 bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.08)]",
+                      laneColor,
+                    )}
+                  >
+                    <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
+                      {laneIcon}
+                      {lane.label}
+                    </div>
+                    <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">
+                      {lane.title}
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{lane.detail}</p>
+                  </Link>
+                );
+              })}
             </div>
           ) : null}
 
+          {/* Event grid */}
           <div className="reveal-group mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {events.map((event) => (
               <EventCard key={event.slug} event={event} />
@@ -1293,14 +1323,17 @@ export function EventsIndexScreen({
           </div>
 
           {/* CTA */}
-          <div className="mt-12 rounded-2xl bg-brand-indigo p-6 text-center text-white sm:p-8 md:p-12">
-            <h3 className="text-2xl font-bold">{t("cta.title")}</h3>
-            <p className="mx-auto mt-3 max-w-lg text-sm text-white/80">
+          <div className="mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-indigo via-indigo-700 to-indigo-900 p-8 text-center text-white sm:p-10 md:p-14">
+            <h3 className="text-3xl font-bold sm:text-4xl">{t("cta.title")}</h3>
+            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/80">
               {t("cta.description")}
+            </p>
+            <p className="mx-auto mt-2 max-w-md text-sm text-white/60">
+              {t("cta.subtitle")}
             </p>
             <Link
               href="/signup"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold transition hover:bg-white/90 text-brand-indigo"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-10 py-4 text-base font-semibold text-brand-indigo shadow-lg shadow-black/20 transition hover:bg-white/90"
             >
               {t("cta.button")}
               <ArrowRight className="h-4 w-4" />
@@ -1569,6 +1602,25 @@ export function GroupsIndexScreen({
     .sort((left, right) => right.activity - left.activity || right.members - left.members)
     .slice(0, 3);
 
+  /* Derive unique categories from groups for filter chips */
+  const allCategories = Array.from(new Set(groups.map((g) => g.category)));
+
+  /* Map group slugs to their next upcoming event title */
+  const nextEventByGroup = new Map<string, string>();
+  for (const group of groups) {
+    if (group.upcomingEventSlugs.length > 0) {
+      const event = publicEvents.find((e) => e.slug === group.upcomingEventSlugs[0]);
+      if (event) nextEventByGroup.set(group.slug, event.title);
+    }
+  }
+
+  /* Activity bar color based on percentage */
+  function activityBarColor(pct: number) {
+    if (pct >= 80) return "bg-emerald-500";
+    if (pct >= 50) return "bg-amber-400";
+    return "bg-gray-300";
+  }
+
   return (
     <>
       <IndexHero
@@ -1594,28 +1646,40 @@ export function GroupsIndexScreen({
           <div className="grid gap-6 md:grid-cols-3">
             {[
               {
+                step: "01",
                 icon: UsersRound,
                 title: t("howItWorks.findTitle"),
                 text: t("howItWorks.findText"),
               },
               {
+                step: "02",
                 icon: CalendarDays,
                 title: t("howItWorks.joinTitle"),
                 text: t("howItWorks.joinText"),
               },
               {
+                step: "03",
                 icon: TrendingUp,
                 title: t("howItWorks.buildTitle"),
                 text: t("howItWorks.buildText"),
               },
             ].map((item) => (
-              <div key={item.title} className="flex items-start gap-4">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-indigo-soft">
-                  <item.icon className="h-5 w-5 text-brand-indigo" />
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900">{item.title}</div>
-                  <p className="mt-1 text-sm text-gray-600">{item.text}</p>
+              <div
+                key={item.title}
+                className="relative overflow-hidden rounded-xl border-l-4 border-brand-indigo bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)]"
+              >
+                {/* Large faded step number */}
+                <span className="pointer-events-none absolute -top-3 right-3 select-none text-[5rem] font-black leading-none text-brand-indigo/[0.06]">
+                  {item.step}
+                </span>
+                <div className="relative flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-indigo-soft">
+                    <item.icon className="h-5 w-5 text-brand-indigo" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-900">{item.title}</div>
+                    <p className="mt-1 text-sm text-gray-600">{item.text}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -1626,20 +1690,66 @@ export function GroupsIndexScreen({
       {/* Groups grid */}
       <section className="bg-brand-sand">
         <div className="section-shell py-10">
-          <div className="mb-8 grid gap-4 lg:grid-cols-3">
-            {strongestGroups.map((group) => (
-              <Link
-                key={group.slug}
-                href={groupHref(group.slug)}
-                className="rounded-2xl border border-brand-border-light bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.08)]"
+          {/* Strongest groups showcase */}
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("showcase.topGroups")}</h2>
+          <div className="mb-10 grid gap-4 lg:grid-cols-3">
+            {strongestGroups.map((group) => {
+              const nextEvent = nextEventByGroup.get(group.slug);
+              return (
+                <Link
+                  key={group.slug}
+                  href={groupHref(group.slug)}
+                  className="editorial-link-card group/card relative overflow-hidden p-5 transition-all hover:border-brand-indigo/30 hover:shadow-[0_20px_48px_rgba(42,38,56,0.10)]"
+                >
+                  {/* Gradient border accent on hover */}
+                  <span className="pointer-events-none absolute inset-x-0 top-0 h-1 rounded-t-[1.2rem] bg-gradient-to-r from-brand-indigo via-brand-coral to-brand-indigo opacity-0 transition-opacity group-hover/card:opacity-100" />
+
+                  <div className="flex items-center justify-between gap-3">
+                    <ToneBadge tone={categoryTone(group.category)}>{group.category}</ToneBadge>
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500">
+                      <UsersRound className="h-3.5 w-3.5" />
+                      {group.members}
+                    </div>
+                  </div>
+
+                  <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">{group.name}</div>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{groupArchetype(group)}</p>
+
+                  {/* Activity bar */}
+                  <div className="mt-4">
+                    <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-gray-500">
+                      <span>{group.activity}% active</span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                      <div
+                        className={cn("h-full rounded-full transition-all", activityBarColor(group.activity))}
+                        style={{ width: `${group.activity}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Next event */}
+                  {nextEvent && (
+                    <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
+                      <CalendarDays className="h-3.5 w-3.5 shrink-0 text-brand-indigo" />
+                      <span className="truncate">{nextEvent}</span>
+                    </div>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Category filter chips */}
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="mr-1 text-sm font-medium text-gray-500">{t("grid.filterByCategory")}</span>
+            {allCategories.map((cat) => (
+              <span
+                key={cat}
+                className="inline-flex items-center rounded-full border border-brand-border-light bg-white px-3.5 py-1.5 text-xs font-semibold text-gray-700 shadow-[0_1px_2px_rgba(42,38,56,0.04)] transition hover:border-brand-indigo/30 hover:bg-brand-indigo-soft"
               >
-                <div className="flex items-center justify-between gap-3">
-                  <ToneBadge tone={categoryTone(group.category)}>{group.category}</ToneBadge>
-                  <span className="text-xs font-medium text-gray-500">{group.activity}% active</span>
-                </div>
-                <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">{group.name}</div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">{groupArchetype(group)}</p>
-              </Link>
+                {cat}
+              </span>
             ))}
           </div>
 
@@ -1651,21 +1761,30 @@ export function GroupsIndexScreen({
           </div>
 
           {/* Start a group CTA */}
-          <div className="mt-12 rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 md:p-12">
-            <div className="flex flex-col items-center text-center sm:flex-row sm:text-left sm:gap-8">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-brand-coral-soft">
-                <Zap className="h-7 w-7 text-brand-coral" />
+          <div className="relative mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-coral via-[#e8634a] to-[#d4503d] p-6 shadow-[0_8px_32px_rgba(212,80,61,0.25)] sm:p-8 md:p-12">
+            {/* Decorative dot pattern */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.07]"
+              style={{
+                backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
+                backgroundSize: "24px 24px",
+              }}
+            />
+
+            <div className="relative flex flex-col items-center text-center sm:flex-row sm:text-left sm:gap-8">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+                <Zap className="h-9 w-9 text-white" />
               </div>
               <div className="mt-4 sm:mt-0">
-                <h3 className="text-xl font-bold text-gray-900">{t("startGroup.title")}</h3>
-                <p className="mt-2 max-w-lg text-sm text-gray-600">
+                <h3 className="text-xl font-bold text-white">{t("startGroup.title")}</h3>
+                <p className="mt-2 max-w-lg text-sm text-white/80">
                   {t("startGroup.description")}
                 </p>
               </div>
               <div className="mt-6 shrink-0 sm:mt-0 sm:ml-auto">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-coral shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition hover:scale-105 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                 >
                   {t("startGroup.button")}
                   <ArrowRight className="h-4 w-4" />
@@ -1678,6 +1797,7 @@ export function GroupsIndexScreen({
     </>
   );
 }
+
 
 export function GroupDetailScreen({ group }: { group: PublicGroup }) {
   const t = useTranslations("groupDetailPage");
@@ -1907,22 +2027,37 @@ export function VenuesIndexScreen({
       <section className="bg-brand-sand">
         <div className="section-shell py-10">
           <div className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {neighborhoods.map((area) => (
-              <div
-                key={area.area}
-                className="rounded-2xl border border-brand-border-light bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)]"
-              >
-                <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
-                  {area.area}
+            {neighborhoods.map((area, i) => {
+              const borderColors = [
+                "border-l-brand-coral",
+                "border-l-brand-indigo",
+                "border-l-brand-sage",
+                "border-l-amber-400",
+              ];
+              return (
+                <div
+                  key={area.area}
+                  className={`rounded-2xl border border-brand-border-light border-l-4 ${borderColors[i % borderColors.length]} bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition hover:shadow-md`}
+                >
+                  <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
+                    {area.area}
+                  </div>
+                  <div className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
+                    {area.venues}
+                  </div>
+                  <div className="text-xs font-medium text-gray-500">
+                    {t("neighborhoods.venues", { count: area.venues })}
+                  </div>
+                  <div className="mt-3 truncate text-sm font-semibold text-gray-800">
+                    <Star className="mr-1 inline h-3.5 w-3.5 fill-current text-yellow-400" />
+                    {area.topVenue} ({area.topRating.toFixed(1)})
+                  </div>
+                  <p className="mt-1 text-xs leading-relaxed text-gray-500">
+                    {area.capacity.toLocaleString()} seats
+                  </p>
                 </div>
-                <div className="mt-3 text-2xl font-bold tracking-tight text-gray-900">
-                  {t("neighborhoods.venues", { count: area.venues })}
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                  {t("neighborhoods.combinedSeats", { capacity: area.capacity, topVenue: area.topVenue, topRating: area.topRating.toFixed(1) })}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("grid.partnerVenues")}</h2>
@@ -1934,11 +2069,32 @@ export function VenuesIndexScreen({
         </div>
       </section>
 
+      {/* Map section */}
+      <section className="border-y border-gray-200 bg-white">
+        <div className="section-shell py-10">
+          <div className="mb-6 text-center">
+            <h2 className="text-2xl font-bold text-gray-900">{t("map.title")}</h2>
+            <p className="mt-1 text-sm text-gray-600">{t("map.description")}</p>
+          </div>
+          <div className="h-[400px] overflow-hidden rounded-2xl border border-brand-border-light shadow-sm">
+            <VenueMap
+              latitude={64.1466}
+              longitude={-21.9426}
+              name="Reykjavik Venues"
+              address="Central Reykjavik"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Sourced places */}
       {sourcedPlaces.length > 0 ? (
-        <section className="border-t border-gray-200 bg-white">
-          <div className="section-shell py-10">
-            <div className="mb-6 flex items-center justify-between">
+        <section className="bg-gray-50">
+          <div className="section-shell py-12">
+            <div className="mb-2 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
+              {t("sourced.title")}
+            </div>
+            <div className="mb-8 flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">{t("sourced.title")}</h2>
                 <p className="mt-1 text-sm text-gray-600">{t("sourced.description")}</p>
@@ -1961,19 +2117,25 @@ export function VenuesIndexScreen({
       ) : null}
 
       {/* Venue partner CTA */}
-      <section className="bg-gray-900">
-        <div className="section-shell py-12 text-center text-white sm:py-16">
-          <h3 className="text-2xl font-bold">{t("cta.title")}</h3>
-          <p className="mx-auto mt-3 max-w-lg text-sm text-white/70">
-            {t("cta.description")}
-          </p>
-          <Link
-            href="/venue/onboarding"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-coral px-8 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
-          >
-            {t("cta.button")}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+        <div className="section-shell relative py-16 text-center text-white sm:py-20">
+          <div className="mx-auto max-w-xl">
+            <h3 className="text-3xl font-bold tracking-tight">{t("cta.title")}</h3>
+            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/70">
+              {t("cta.description")}
+            </p>
+            <p className="mx-auto mt-2 text-sm text-white/50">
+              {t("cta.benefit")}
+            </p>
+            <Link
+              href="/venue/onboarding"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-coral px-10 py-4 text-sm font-semibold text-white shadow-lg shadow-brand-coral/20 transition hover:opacity-90"
+            >
+              {t("cta.button")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
     </>
