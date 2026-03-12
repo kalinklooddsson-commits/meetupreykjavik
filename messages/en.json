@@ -159,6 +159,7 @@
     },
     "cards": {
       "going": "going",
+      "members": "members",
       "memberDeal": "Member deal",
       "hostedEvents": "hosted events"
     },

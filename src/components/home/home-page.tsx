@@ -130,7 +130,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
 
         <div className="absolute left-4 top-4 rounded-xl bg-white px-3 py-1.5 text-center shadow-md">
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-coral">
-            Mar
+            {event.day.split(" ").pop()}
           </div>
           <div className="text-xl font-black leading-tight tracking-tight text-brand-text">
             {event.date}
@@ -184,7 +184,8 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
 /* ------------------------------------------------------------------ */
 
 function GroupCard({ group }: { group: (typeof groups)[number] }) {
-  const t = useTranslations("cta");
+  const tCta = useTranslations("cta");
+  const tCards = useTranslations("home.cards");
 
   return (
     <Link
@@ -213,10 +214,10 @@ function GroupCard({ group }: { group: (typeof groups)[number] }) {
         </p>
         <div className="mt-3 flex items-center justify-between border-t border-brand-border-light pt-3">
           <span className="text-sm font-semibold text-brand-text">
-            {group.members} members
+            {group.members} {tCards("members")}
           </span>
           <span className="text-sm font-bold text-brand-indigo">
-            {t("viewGroup")}
+            {tCta("viewGroup")}
           </span>
         </div>
       </div>
@@ -419,7 +420,7 @@ export function HomePage() {
         <div className="mt-8 text-center sm:hidden">
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 text-sm font-bold text-brand-indigo"
+            className="inline-flex items-center gap-2 text-sm font-bold text-brand-indigo transition-colors hover:text-brand-indigo-light"
           >
             {tCta("seeAllEvents")}
             <ArrowRight className="h-4 w-4" />
