@@ -1,4 +1,8 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  resolveMemberTier,
+  type MemberTier,
+} from "@/lib/entitlements";
 
 export async function createRsvp(
   eventId: string,
@@ -81,6 +85,10 @@ export async function cancelRsvp(eventId: string, userId: string) {
 
   if (error) throw error;
   if (!data) throw new Error("No active RSVP found to cancel.");
+
+  // Auto-promote next person from waitlist
+  await promoteFromWaitlist(eventId);
+
   return data;
 }
 
@@ -130,4 +138,70 @@ export async function getUserRsvps(userId: string) {
   }
 
   return data ?? [];
+}
+
+// ─── Priority Waitlist Promotion ─────────────────────────
+const TIER_PRIORITY: Record<MemberTier, number> = {
+  pro: 3,
+  plus: 2,
+  free: 1,
+};
+
+/**
+ * Promotes the next waitlisted user for an event.
+ * Premium members (Plus/Pro) get priority over free members.
+ * Within the same tier, FIFO order is used.
+ */
+export async function promoteFromWaitlist(
+  eventId: string,
+): Promise<string | null> {
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return null;
+
+  const { data: waitlisted, error } = await supabase
+    .from("rsvps")
+    .select(
+      `
+      id,
+      user_id,
+      created_at,
+      profiles:user_id ( premium_tier )
+    `,
+    )
+    .eq("event_id", eventId)
+    .eq("status", "waitlisted")
+    .order("created_at", { ascending: true });
+
+  if (error || !waitlisted?.length) return null;
+
+  // Sort by tier priority (premium first), then by join time (FIFO)
+  const sorted = [...waitlisted].sort((a, b) => {
+    const aTier = resolveMemberTier(
+      (a.profiles as unknown as { premium_tier: string | null })
+        ?.premium_tier ?? null,
+    );
+    const bTier = resolveMemberTier(
+      (b.profiles as unknown as { premium_tier: string | null })
+        ?.premium_tier ?? null,
+    );
+    const priorityDiff = TIER_PRIORITY[bTier] - TIER_PRIORITY[aTier];
+    if (priorityDiff !== 0) return priorityDiff;
+    return (
+      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    );
+  });
+
+  const promoted = sorted[0];
+
+  const { error: updateError } = await supabase
+    .from("rsvps")
+    .update({ status: "going" })
+    .eq("id", promoted.id);
+
+  if (updateError) {
+    console.error("Failed to promote from waitlist:", updateError);
+    return null;
+  }
+
+  return promoted.user_id;
 }

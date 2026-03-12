@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { TICKET_COMMISSION_RATE } from "@/lib/payments/constants";
 import type { Database } from "@/types/database";
 
 type TransactionInsert =
@@ -8,9 +9,25 @@ export async function createTransaction(transaction: TransactionInsert) {
   const supabase = await createSupabaseServerClient();
   if (!supabase) throw new Error("Database unavailable");
 
+  // Auto-calculate commission for ticket transactions
+  let finalTransaction = {
+    ...transaction,
+    status: transaction.status ?? "completed",
+  };
+  if (
+    finalTransaction.type === "ticket" &&
+    finalTransaction.amount_isk &&
+    !finalTransaction.commission_amount
+  ) {
+    finalTransaction.commission_amount =
+      Math.round(
+        Number(finalTransaction.amount_isk) * TICKET_COMMISSION_RATE * 100,
+      ) / 100;
+  }
+
   const { data, error } = await supabase
     .from("transactions")
-    .insert({ ...transaction, status: transaction.status ?? "completed" })
+    .insert(finalTransaction)
     .select()
     .single();
 

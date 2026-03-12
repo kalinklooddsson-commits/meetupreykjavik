@@ -1,4 +1,4 @@
-import { MemberProfileScreen } from "@/components/dashboard/member-pages";
+import { MemberProfileScreen } from "@/components/dashboard/member/profile";
 
 export default async function ProfilePage({
   params,

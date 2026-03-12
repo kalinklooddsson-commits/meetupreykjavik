@@ -125,10 +125,12 @@ export async function POST(request: NextRequest) {
         if (subscriptionId && subscriberEmail) {
           const supabase = await createSupabaseServerClient();
           if (supabase) {
-            // Activate premium for the user matching this email
+            // Use custom_id from subscription to determine tier, fallback to "plus"
+            const customId = event.resource?.custom_id as string | undefined;
+            const tier = customId ?? "plus";
             await supabase
               .from("profiles")
-              .update({ is_premium: true, premium_tier: "supporter" })
+              .update({ is_premium: true, premium_tier: tier })
               .eq("email", subscriberEmail);
           }
         }

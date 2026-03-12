@@ -1,4 +1,4 @@
-import { AdminVenuesScreen } from "@/components/dashboard/admin-pages";
+import { AdminVenuesScreen } from "@/components/dashboard/admin/venues";
 
 export default function AdminVenuesPage() {
   return <AdminVenuesScreen />;
