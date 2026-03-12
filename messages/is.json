@@ -43,6 +43,7 @@
     "viewGroup": "Skoða hóp",
     "viewEvent": "Skoða viðburð",
     "viewVenue": "Skoða stað",
+    "readArticle": "Lesa grein",
     "exploreVenue": "Skoða stað"
   },
   "cards": {
@@ -53,7 +54,8 @@
     "organizedBy": "Skipulagt af",
     "nextEvent": "Næst: {title}",
     "noUpcoming": "Engir viðburðir í nánd",
-    "openForBookings": "Opið fyrir bókanir"
+    "openForBookings": "Opið fyrir bókanir",
+    "photo": "Mynd"
   },
   "signals": {
     "visibility": "Sýnileiki",

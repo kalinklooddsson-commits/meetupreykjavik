@@ -43,6 +43,7 @@
     "viewGroup": "View group",
     "viewEvent": "View event",
     "viewVenue": "View venue",
+    "readArticle": "Read article",
     "exploreVenue": "Explore venue"
   },
   "cards": {
@@ -53,7 +54,8 @@
     "organizedBy": "Organized by",
     "nextEvent": "Next: {title}",
     "noUpcoming": "No upcoming events",
-    "openForBookings": "Open for bookings"
+    "openForBookings": "Open for bookings",
+    "photo": "Photo"
   },
   "signals": {
     "visibility": "Visibility",

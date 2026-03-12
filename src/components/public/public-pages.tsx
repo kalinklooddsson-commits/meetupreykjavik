@@ -938,6 +938,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
 
 
 function BlogCard({ post }: { post: BlogPost }) {
+  const tCta = useTranslations("cta");
   const imageUrl = extractImageUrl(post.hero);
 
   return (
@@ -972,7 +973,7 @@ function BlogCard({ post }: { post: BlogPost }) {
             href={blogHref(post.slug)}
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
           >
-            Read article
+            {tCta("readArticle")}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -983,6 +984,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 
 function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
   const tCta = useTranslations("cta");
+  const tCards = useTranslations("cards");
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
 
@@ -1039,7 +1041,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
         ) : null}
         {hasPhoto && place.image?.credit ? (
           <div className="rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-500">
-            Photo: {place.image.credit}
+            {tCards("photo")}: {place.image.credit}
           </div>
         ) : null}
         <Link
