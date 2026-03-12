@@ -81,7 +81,7 @@ export function ContactForm() {
   }
 
   return (
-    <div className="paper-panel-premium editorial-shell space-y-5 rounded-[1.7rem] border border-[rgba(255,255,255,0.74)] p-5 sm:p-6">
+    <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="paper-panel-premium editorial-shell space-y-5 rounded-[1.7rem] border border-[rgba(255,255,255,0.74)] p-5 sm:p-6">
       <div>
         <div className="font-editorial text-3xl tracking-[-0.05em] text-brand-text">
           {t("title")}
@@ -100,6 +100,7 @@ export function ContactForm() {
             value={form.name}
             onChange={(event) => updateField("name", event.target.value)}
             autoComplete="name"
+            required
             className="field-luxe mt-2 px-4 py-3 text-sm outline-none"
           />
         </label>
@@ -114,6 +115,7 @@ export function ContactForm() {
             autoComplete="email"
             autoCapitalize="none"
             spellCheck={false}
+            required
             className="field-luxe mt-2 px-4 py-3 text-sm outline-none"
           />
         </label>
@@ -144,14 +146,14 @@ export function ContactForm() {
           value={form.message}
           onChange={(event) => updateField("message", event.target.value)}
           rows={7}
+          required
           className="field-luxe mt-2 rounded-[1.2rem] px-4 py-3 text-sm leading-7 outline-none"
         />
       </label>
 
       <div className="editorial-muted-panel flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <button
-          type="button"
-          onClick={submit}
+          type="submit"
           disabled={submitting}
           className="inline-flex min-h-11 items-center rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.22)] transition hover:-translate-y-0.5 disabled:opacity-60"
         >
@@ -167,6 +169,6 @@ export function ContactForm() {
           </p>
         ) : null}
       </div>
-    </div>
+    </form>
   );
 }

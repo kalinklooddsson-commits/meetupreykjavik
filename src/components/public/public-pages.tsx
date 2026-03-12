@@ -936,7 +936,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 
   return (
     <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
-      <div className="relative h-44 bg-gray-200">
+      <div className="relative h-44 overflow-hidden bg-gray-200">
         {imageUrl ? (
           <>
             <Image
@@ -3692,7 +3692,7 @@ export function ContactScreen() {
                 {channels.map((channel) => (
                   <div key={channel.title}>
                     <div className="font-medium text-gray-900">{channel.title}</div>
-                    <div className="mt-1 text-sm font-medium text-brand-indigo">{channel.detail}</div>
+                    <a href={`mailto:${channel.detail}`} className="mt-1 block text-sm font-medium text-brand-indigo transition-colors hover:text-brand-indigo-light">{channel.detail}</a>
                     <p className="mt-1 text-sm text-gray-600">{channel.note}</p>
                   </div>
                 ))}
@@ -3944,9 +3944,13 @@ export function FaqScreen() {
       <section className="bg-white">
         <div className="section-shell py-8">
           <div className="mx-auto max-w-xl">
-            <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-brand-sand-light px-5 py-4">
+            <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-brand-sand-light px-5 py-4 transition-colors focus-within:border-brand-indigo/30 focus-within:bg-white">
               <Search className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-400">{t("searchPlaceholder")}</span>
+              <input
+                type="search"
+                placeholder={t("searchPlaceholder")}
+                className="flex-1 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 outline-none"
+              />
             </div>
           </div>
         </div>
@@ -4121,6 +4125,20 @@ export function ForOrganizersScreen() {
                       <span className="text-sm text-gray-700">{feature}</span>
                     </div>
                   ))}
+                </div>
+                <div className="border-t border-gray-100 p-7">
+                  <Link
+                    href="/signup"
+                    className={cn(
+                      "inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold transition hover:-translate-y-0.5",
+                      i === 1
+                        ? "bg-brand-coral text-white shadow-lg hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
+                        : "bg-brand-indigo text-white hover:opacity-90"
+                    )}
+                  >
+                    {t("pricing.getStarted")}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
               </article>
             ))}

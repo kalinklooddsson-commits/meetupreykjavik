@@ -871,7 +871,8 @@
     "pricing": {
       "heading": "Organizer plans",
       "commission": "Plus {rate}% commission on paid ticket sales.",
-      "recommended": "Recommended"
+      "recommended": "Recommended",
+      "getStarted": "Get started"
     },
     "cta": {
       "heading": "Ready to start organizing?",

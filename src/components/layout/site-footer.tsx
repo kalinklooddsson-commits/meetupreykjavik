@@ -89,7 +89,7 @@ export async function SiteFooter() {
 
         {footerColumns.map((column) => (
           <div key={column.title}>
-            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white/50">
+            <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white/70">
               {column.title}
             </h2>
             <div className="space-y-3">
@@ -112,7 +112,7 @@ export async function SiteFooter() {
           &copy; {new Date().getFullYear()} MeetupReykjavik. {tFooter("copyright")}
         </p>
         <div className="flex items-center gap-2">
-          <span className="mr-2 text-xs font-bold uppercase tracking-[0.18em] text-white/50">
+          <span className="mr-2 text-xs font-bold uppercase tracking-[0.18em] text-white/70">
             {tFooter("followUs")}
           </span>
           <a

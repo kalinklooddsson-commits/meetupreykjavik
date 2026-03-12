@@ -871,7 +871,8 @@
     "pricing": {
       "heading": "Áskriftarleiðir skipuleggjenda",
       "commission": "Auk {rate}% þóknunar af greiddri miðasölu.",
-      "recommended": "Mælt með"
+      "recommended": "Mælt með",
+      "getStarted": "Byrja"
     },
     "cta": {
       "heading": "Tilbúin(n) að byrja að skipuleggja?",
