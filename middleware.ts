@@ -1,8 +1,17 @@
+import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 
 import { routing } from "@/i18n/routing";
 
-export default function middleware(request: NextRequest) {
+const PROTECTED_PREFIXES = ["/dashboard", "/organizer", "/venue", "/admin"];
+
+function isProtectedRoute(pathname: string): boolean {
+  return PROTECTED_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+}
+
+export default async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
   const isDevelopment = process.env.NODE_ENV !== "production";
@@ -38,6 +47,40 @@ export default function middleware(request: NextRequest) {
       httpOnly: false,
       path: "/",
     });
+  }
+
+  // Supabase session refresh and route protection
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (supabaseUrl && supabaseAnonKey) {
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          for (const { name, value, options } of cookiesToSet) {
+            request.cookies.set(name, value);
+            response.cookies.set(name, value, options);
+          }
+        },
+      },
+    });
+
+    // Refresh the session — this call reads/writes auth cookies
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const { pathname } = request.nextUrl;
+
+    if (isProtectedRoute(pathname) && !user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/login";
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   return response;
