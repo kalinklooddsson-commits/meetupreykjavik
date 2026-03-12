@@ -161,6 +161,10 @@
       "joinDescription": "Skráðu þig með einum smelli, fylgdu hóp og slepptu óreiðunni í fæðinu.",
       "connectTitle": "Tengjast",
       "connectDescription": "Mættu, hittu raunverulegt fólk og styrktu staðina í Reykjavík á sama tíma."
+    },
+    "social": {
+      "headline": "Vertu með 2.400+ meðlimum sem uppgötva Reykjavík",
+      "meetups": "hittingar"
     }
   },
   "privacyPage": {
@@ -326,6 +330,25 @@
     "team": {
       "title": "Teymið"
     },
+    "values": {
+      "heading": "Það sem við stöndum fyrir",
+      "community": {
+        "title": "Samfélagið fyrst",
+        "text": "Sérhver eiginleiki sem við smíðum byrjar á spurningunni: gerir þetta raunverulega fundi betri?"
+      },
+      "trust": {
+        "title": "Traust innbyggt",
+        "text": "Prófílar, umsagnir og samþykktarverkfæri svo skipuleggjendur, staðir og meðlimir finni fyrir öryggi."
+      },
+      "quality": {
+        "title": "Gæði fram yfir magn",
+        "text": "Við verðlaunum sterka gestgjafa, vel passandi rými og varanleg endurtekin samfélög — ekki hégómamælikvarða."
+      },
+      "local": {
+        "title": "Staðbundið samhengi",
+        "text": "Byggt fyrir Reykjavík. Sérhver staður, hverfi og snið er mótað af borginni sjálfri."
+      }
+    },
     "cta": {
       "title": "Vertu hluti af samfélaginu í Reykjavík",
       "description": "Hvort sem þú vilt mæta, skipuleggja eða hýsa — hér er pláss fyrir þig.",
@@ -340,6 +363,13 @@
       "description": "Meðlimir skoða ókeypis. Skipuleggjendur og staðir borga fyrir raunveruleg verkfæri. {commission}% þóknun á greidda miða tryggir að vettvangurinn er samstilltur árangri þínum.",
       "getStartedFree": "Byrjaðu ókeypis",
       "talkToUs": "Hafðu samband"
+    },
+    "allPlans": {
+      "heading": "Allar áætlanir innihalda",
+      "feature1": "Aðgangur að öllu viðburða- og staðaskránni",
+      "feature2": "Örugg greiðsluafgreiðsla",
+      "feature3": "Tölvupósttilkynningar og viðburðaáminningar",
+      "feature4": "Samfélagsstuðningur og hjálparmiðstöð"
     },
     "members": {
       "badge": "Fyrir meðlimi",
@@ -448,6 +478,11 @@
         "q2": "Geta skipuleggjendur sent hverjum sem er bein skilaboð?",
         "a2": "Nei. Skilaboð virða persónuverndarstillingar meðlima. Skipuleggjendur geta aðeins náð til meðlima í gegnum samþykktar leiðir."
       }
+    },
+    "searchPlaceholder": "Leita að spurningum...",
+    "cta": {
+      "heading": "Ertu enn með spurningar?",
+      "description": "Teymið okkar er tilbúið að hjálpa. Hafðu samband og við svörum innan eins vinnudags."
     }
   },
   "contactPage": {
@@ -759,6 +794,7 @@
       "seePricing": "Sjá verðskrá"
     },
     "features": {
+      "eyebrow": "Verkfæri vettvangsins",
       "heading": "Allt sem þú þarft til að halda viðburði",
       "recurringGroups": {
         "title": "Endurteknir hópar",
@@ -784,6 +820,27 @@
         "title": "Samþykkisstýringar",
         "text": "Mótaðu hópinn þinn með handvirku samþykki, biðlistum og skipuleggjendastýrðum aðgangi."
       }
+    },
+    "steps": {
+      "heading": "Hvernig á að byrja",
+      "subtitle": "Frá skráningu til fyrsta birta viðburðarins í þremur einföldum skrefum.",
+      "create": {
+        "title": "Stofnaðu aðgang",
+        "text": "Skráðu þig sem skipuleggjandi og settu upp prófílinn þinn með samfélagsáherslu og áhugamálum."
+      },
+      "configure": {
+        "title": "Stilltu hópinn þinn",
+        "text": "Settu upp hópauðkenni, bættu við meðstjórnendum og veldu sniðval og staðakröfur."
+      },
+      "publish": {
+        "title": "Birtu viðburðinn þinn",
+        "text": "Búðu til fyrsta viðburðinn þinn með miðasölu, samþykkisstillingum og staðasamsvörun — deildu síðan með samfélaginu."
+      }
+    },
+    "testimonial": {
+      "quote": "MeetupReykjavik gaf bókmenntaklúbbnum okkar þá uppbyggingu sem við þurftum — endurtekna viðburði, raunverulegan stað og meðlimi sem mæta í raun.",
+      "name": "Sara Magnúsdóttir",
+      "role": "Skipuleggjandi, Bókmenntaklúbbur Reykjavíkur"
     },
     "pricing": {
       "heading": "Áskriftarleiðir skipuleggjenda",
@@ -831,9 +888,40 @@
         "text": "Úrvalssamstarfsaðilar fá áberandi staðsetningu í leitarniðurstöðum og sérvaldum ráðleggingum."
       }
     },
+    "benefits": {
+      "eyebrow": "Kostir staða",
+      "subtitle": "Skráðu þig á vettvanginn og opnaðu verkfæri hönnuð til að fylla dagatalið þitt af gæða samfélagsviðburðum."
+    },
+    "steps": {
+      "heading": "Hvernig það virkar fyrir staði",
+      "subtitle": "Frá umsókn til fyrstu bókunar í fjórum einföldum skrefum.",
+      "apply": {
+        "title": "Sæktu um aðild",
+        "text": "Sendu staðaumsókn þína með myndum, rýmisupplýsingum og framboðsóskum."
+      },
+      "setup": {
+        "title": "Kláraðu prófílinn",
+        "text": "Bættu við opnunartímum, aðstöðu, myndefni og settu upp bókunaróskir og meðlimatilboð."
+      },
+      "publish": {
+        "title": "Farðu í loftið",
+        "text": "Staðurinn þinn birtist í leitarniðurstöðum og skipuleggjendur geta byrjað að senda bókunarbeiðnir."
+      },
+      "grow": {
+        "title": "Auktu bókanir",
+        "text": "Fylgstu með frammistöðu með greiningum, safnaðu umsögnum og byggðu orðspor þitt í samfélaginu."
+      }
+    },
+    "testimonial": {
+      "quote": "Síðan við gengum í MeetupReykjavik hýsum við þrisvar sinnum fleiri samfélagsviðburði og bókanir á virkum dögum hafa tvöfaldast.",
+      "name": "Kristján Ólafsson",
+      "role": "Stjórnandi, Loft Hostel"
+    },
     "pricing": {
       "heading": "Áskriftarleiðir staða",
-      "bestValue": "Best verðmæti"
+      "bestValue": "Best verðmæti",
+      "listFree": "Skráðu ókeypis",
+      "applyNow": "Sækja um"
     },
     "cta": {
       "heading": "Tilbúin(n) að ganga í staðanetið?",
@@ -864,6 +952,7 @@
         "detail": "Núverandi greiningardýpt í bloggbókasafninu."
       }
     },
+    "latestEyebrow": "Nýjast",
     "readArticle": "Lesa grein",
     "moreArticles": "Fleiri greinar",
     "detail": {
@@ -967,7 +1056,8 @@
       "discussions": "Umræður",
       "upcomingEvents": "Væntanlegir viðburðir",
       "pastEvents": "Liðnir viðburðir",
-      "membershipRead": "Meðlimayfirlit"
+      "membershipRead": "Meðlimayfirlit",
+      "groupStats": "Hóptölur"
     },
     "labels": {
       "replies": "svör",
@@ -1005,6 +1095,7 @@
       "area": "Svæði",
       "address": "Heimilisfang",
       "capacity": "Rými",
+      "rating": "Einkunn",
       "peak": "Háannatími"
     },
     "empty": {

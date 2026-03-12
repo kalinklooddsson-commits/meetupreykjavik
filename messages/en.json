@@ -161,6 +161,10 @@
       "joinDescription": "RSVP in one click, follow a group, and skip the algorithmic feed noise.",
       "connectTitle": "Connect",
       "connectDescription": "Show up, meet real people, and support local Reykjavik venues at the same time."
+    },
+    "social": {
+      "headline": "Join 2,400+ members discovering Reykjavik",
+      "meetups": "meetups"
     }
   },
   "privacyPage": {
@@ -326,6 +330,25 @@
     "team": {
       "title": "Team"
     },
+    "values": {
+      "heading": "What we stand for",
+      "community": {
+        "title": "Community first",
+        "text": "Every feature we build starts with the question: does this make real-world gatherings better?"
+      },
+      "trust": {
+        "title": "Trust by design",
+        "text": "Profiles, reviews, and approval tools so organizers, venues, and members feel safe and informed."
+      },
+      "quality": {
+        "title": "Quality over quantity",
+        "text": "We reward strong hosts, well-matched rooms, and durable recurring communities — not vanity metrics."
+      },
+      "local": {
+        "title": "Local context",
+        "text": "Built for Reykjavik. Every venue, neighborhood, and format is shaped by the city itself."
+      }
+    },
     "cta": {
       "title": "Join the Reykjavik community",
       "description": "Whether you want to attend, organize, or host — there is a place for you.",
@@ -340,6 +363,13 @@
       "description": "Members browse free. Organizers and venues pay for real tools. {commission}% commission on paid tickets keeps the platform aligned with your success.",
       "getStartedFree": "Get started free",
       "talkToUs": "Talk to us"
+    },
+    "allPlans": {
+      "heading": "All plans include",
+      "feature1": "Access to the full event and venue directory",
+      "feature2": "Secure checkout and payment processing",
+      "feature3": "Email notifications and event reminders",
+      "feature4": "Community support and help center"
     },
     "members": {
       "badge": "For members",
@@ -448,6 +478,11 @@
         "q2": "Can organizers message anyone directly?",
         "a2": "No. Messaging respects member privacy settings. Organizers can only reach members through approved channels."
       }
+    },
+    "searchPlaceholder": "Search questions...",
+    "cta": {
+      "heading": "Still have questions?",
+      "description": "Our team is here to help. Reach out and we will get back to you within one business day."
     }
   },
   "contactPage": {
@@ -759,6 +794,7 @@
       "seePricing": "See pricing"
     },
     "features": {
+      "eyebrow": "Platform tools",
       "heading": "Everything you need to run events",
       "recurringGroups": {
         "title": "Recurring groups",
@@ -784,6 +820,27 @@
         "title": "Approval controls",
         "text": "Shape your room with manual approval, waitlists, and host-curated access."
       }
+    },
+    "steps": {
+      "heading": "How to get started",
+      "subtitle": "From signup to your first published event in three simple steps.",
+      "create": {
+        "title": "Create your account",
+        "text": "Sign up as an organizer and set up your profile with your community focus and interests."
+      },
+      "configure": {
+        "title": "Configure your group",
+        "text": "Set up your group identity, add co-hosts, and choose your format preferences and venue requirements."
+      },
+      "publish": {
+        "title": "Publish your event",
+        "text": "Create your first event with ticketing, approval settings, and venue matching — then share it with the community."
+      }
+    },
+    "testimonial": {
+      "quote": "MeetupReykjavik gave our book club the structure we needed — recurring events, a real venue, and members who actually show up.",
+      "name": "Sara Magnusdottir",
+      "role": "Organizer, Reykjavik Book Club"
     },
     "pricing": {
       "heading": "Organizer plans",
@@ -831,9 +888,40 @@
         "text": "Premium partners get highlighted placement in search results and curated venue recommendations."
       }
     },
+    "benefits": {
+      "eyebrow": "Venue benefits",
+      "subtitle": "Join the platform and unlock tools designed to fill your calendar with quality community events."
+    },
+    "steps": {
+      "heading": "How it works for venues",
+      "subtitle": "From application to your first booking in four straightforward steps.",
+      "apply": {
+        "title": "Apply to join",
+        "text": "Submit your venue application with photos, capacity details, and availability preferences."
+      },
+      "setup": {
+        "title": "Complete your profile",
+        "text": "Add hours, amenities, media, and set up your booking preferences and member deals."
+      },
+      "publish": {
+        "title": "Go live",
+        "text": "Your venue appears in search results and organizers can start sending booking requests."
+      },
+      "grow": {
+        "title": "Grow your bookings",
+        "text": "Track performance with analytics, collect reviews, and build your reputation in the community."
+      }
+    },
+    "testimonial": {
+      "quote": "Since joining MeetupReykjavik, we host three times as many community events and our weekday bookings have doubled.",
+      "name": "Kristjan Olafsson",
+      "role": "Manager, Loft Hostel"
+    },
     "pricing": {
       "heading": "Venue plans",
-      "bestValue": "Best value"
+      "bestValue": "Best value",
+      "listFree": "List free",
+      "applyNow": "Apply now"
     },
     "cta": {
       "heading": "Ready to join the venue network?",
@@ -864,6 +952,7 @@
         "detail": "The current article depth across the blog library."
       }
     },
+    "latestEyebrow": "Latest",
     "readArticle": "Read article",
     "moreArticles": "More articles",
     "detail": {
@@ -967,7 +1056,8 @@
       "discussions": "Discussions",
       "upcomingEvents": "Upcoming events",
       "pastEvents": "Past events",
-      "membershipRead": "Membership read"
+      "membershipRead": "Membership read",
+      "groupStats": "Group stats"
     },
     "labels": {
       "replies": "replies",
@@ -1005,6 +1095,7 @@
       "area": "Area",
       "address": "Address",
       "capacity": "Capacity",
+      "rating": "Rating",
       "peak": "Peak"
     },
     "empty": {

@@ -5,10 +5,13 @@ import {
   ArrowRight,
   CalendarDays,
   CheckCircle2,
+  Compass,
   MapPin,
+  Search,
   Sparkles,
   Star,
   Users,
+  Zap,
 } from "lucide-react";
 
 import {
@@ -19,6 +22,10 @@ import {
   steps,
   venues,
 } from "@/lib/home-data";
+
+/* ------------------------------------------------------------------ */
+/*  Color maps                                                         */
+/* ------------------------------------------------------------------ */
 
 const TAG_COLORS: Record<string, string> = {
   Social: "bg-brand-coral-soft text-brand-coral-dark",
@@ -35,6 +42,19 @@ const toneMap = {
   sand: "bg-brand-sand text-brand-text",
 } as const;
 
+const toneBorder = {
+  coral: "border-brand-coral/20",
+  sage: "border-brand-sage/20",
+  indigo: "border-brand-indigo/20",
+  sand: "border-brand-sand/40",
+} as const;
+
+const STEP_ICONS = [Search, Zap, Users] as const;
+
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
+
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -43,24 +63,32 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+/* ------------------------------------------------------------------ */
+/*  Section heading                                                    */
+/* ------------------------------------------------------------------ */
+
 function SectionHeading({
   eyebrow,
   title,
   actionHref,
   actionLabel,
+  center,
 }: {
   eyebrow: string;
   title: string;
   actionHref?: string;
   actionLabel?: string;
+  center?: boolean;
 }) {
   return (
-    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div
+      className={`mb-10 flex flex-col gap-4 ${center ? "items-center text-center" : "sm:flex-row sm:items-end sm:justify-between"}`}
+    >
       <div>
         <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo">
           {eyebrow}
         </span>
-        <h2 className="font-editorial mt-2 text-3xl leading-tight tracking-[-0.04em] text-brand-text sm:text-4xl">
+        <h2 className="font-editorial mt-2 text-3xl leading-tight tracking-[-0.04em] text-brand-text sm:text-4xl lg:text-[2.75rem]">
           {title}
         </h2>
       </div>
@@ -77,6 +105,10 @@ function SectionHeading({
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Event card (inline)                                                */
+/* ------------------------------------------------------------------ */
+
 function EventCard({ event }: { event: (typeof events)[number] }) {
   const t = useTranslations("home.cards");
   const tCta = useTranslations("cta");
@@ -84,15 +116,15 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
   return (
     <Link
       href={`/events/${event.slug}` as import("next").Route}
-      className="group block min-w-[280px] max-w-[306px] flex-shrink-0 overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
-      <div className="relative h-[175px] overflow-hidden">
+      <div className="relative h-[180px] overflow-hidden">
         <Image
           src={event.photo}
           alt={event.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="306px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(30,27,46,0.5)]" />
 
@@ -100,7 +132,9 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-coral">
             Mar
           </div>
-          <div className="text-xl font-black leading-tight tracking-tight">{event.date}</div>
+          <div className="text-xl font-black leading-tight tracking-tight">
+            {event.date}
+          </div>
         </div>
 
         <span
@@ -145,13 +179,17 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Group card (inline)                                                */
+/* ------------------------------------------------------------------ */
+
 function GroupCard({ group }: { group: (typeof groups)[number] }) {
   const t = useTranslations("cta");
 
   return (
     <Link
       href={`/groups/${group.slug}` as import("next").Route}
-      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
       <div className="relative h-36 overflow-hidden">
         <Image
@@ -186,6 +224,10 @@ function GroupCard({ group }: { group: (typeof groups)[number] }) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/*  Venue card (inline)                                                */
+/* ------------------------------------------------------------------ */
+
 function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
   const tHome = useTranslations("home.cards");
   const tCta = useTranslations("cta");
@@ -193,15 +235,15 @@ function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
   return (
     <Link
       href={`/venues/${venue.slug}` as import("next").Route}
-      className="group block min-w-[260px] max-w-[280px] flex-shrink-0 overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
-      <div className="relative h-40 overflow-hidden">
+      <div className="relative h-44 overflow-hidden">
         <Image
           src={venue.photo}
           alt={venue.name}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="280px"
+          sizes="(max-width: 768px) 100vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(30,27,46,0.55)]" />
         <div className="absolute inset-x-0 bottom-0 p-4 text-white">
@@ -235,12 +277,17 @@ function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
   );
 }
 
+/* ================================================================== */
+/*  HOME PAGE                                                          */
+/* ================================================================== */
+
 export function HomePage() {
   const tHero = useTranslations("home.hero");
   const tSections = useTranslations("home.sections");
   const tCta = useTranslations("cta");
   const tStats = useTranslations("home.stats");
   const tSteps = useTranslations("home.steps");
+  const tSocial = useTranslations("home.social");
 
   const localizedHeroStats = [
     { value: heroStats[0]?.value ?? "2,847", label: tStats("members") },
@@ -267,47 +314,85 @@ export function HomePage() {
     },
   ];
 
+  /* Placeholder avatar colors for social proof strip */
+  const avatarColors = [
+    "bg-brand-coral",
+    "bg-brand-indigo",
+    "bg-brand-sage",
+    "bg-[#E8A87C]",
+    "bg-[#7C9A82]",
+    "bg-[#6366F1]",
+    "bg-brand-coral-dark",
+    "bg-[#9F7AEA]",
+  ];
+
   return (
     <div className="site-shell">
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[linear-gradient(160deg,#1e1b2e_0%,#262243_32%,#2d2654_57%,#3a2c5f_100%)] px-4 pb-16 pt-14 text-white">
-        <div className="section-shell relative z-10 py-10 text-center">
-          <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+      {/* ============================================================ */}
+      {/*  HERO — cinematic, full-viewport                             */}
+      {/* ============================================================ */}
+      <section className="relative min-h-[85vh] overflow-hidden bg-[linear-gradient(160deg,#1e1b2e_0%,#262243_28%,#2d2654_52%,#3a2c5f_100%)] text-white">
+        {/* Background image with overlay */}
+        <div className="absolute inset-0">
+          <Image
+            src="/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg"
+            alt=""
+            fill
+            className="object-cover opacity-20"
+            sizes="100vw"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(30,27,46,0.5)] via-[rgba(30,27,46,0.3)] to-[rgba(30,27,46,0.85)]" />
+        </div>
+
+        {/* Content */}
+        <div className="section-shell relative z-10 flex min-h-[85vh] flex-col items-center justify-center px-4 py-24 text-center">
+          <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70 backdrop-blur-sm">
             {tHero("badge")}
           </span>
 
-          <h1 className="font-editorial mx-auto mt-6 max-w-3xl text-3xl leading-[0.96] tracking-[-0.05em] sm:text-4xl md:text-5xl lg:text-6xl">
+          <h1 className="font-editorial mx-auto mt-8 max-w-4xl text-5xl leading-[0.94] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
             {tHero("titleLead")}
             <br />
-            <span className="text-brand-coral italic">{tHero("titleAccent")}</span>
+            <span className="text-brand-coral italic">
+              {tHero("titleAccent")}
+            </span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
-            {tHero("subtitleTop")} {tHero("subtitleBottom")}
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/60 sm:text-xl">
+            {tHero("subtitleTop")}
+            <br className="hidden sm:block" /> {tHero("subtitleBottom")}
           </p>
 
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/events"
-              className="rounded-full bg-brand-coral px-7 py-3.5 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5"
+              className="rounded-full bg-brand-coral px-8 py-4 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
             >
               {tCta("exploreEvents")}
             </Link>
             <Link
               href="/groups"
-              className="rounded-full border border-white/18 bg-white/6 px-7 py-3.5 text-sm font-semibold text-white/90 transition-colors hover:bg-white/12"
+              className="rounded-full border border-white/18 bg-white/6 px-8 py-4 text-sm font-semibold text-white/90 backdrop-blur-sm transition-colors hover:bg-white/12"
             >
               {tCta("startGroup")}
             </Link>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
+          {/* Spacer before floating stats */}
+          <div className="flex-1" />
+
+          {/* Stats — glass-panel cards floating at hero bottom */}
+          <div className="mt-16 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {localizedHeroStats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl font-black tracking-tight text-white">
+              <div
+                key={stat.label}
+                className="glass-panel rounded-2xl px-5 py-4 text-center"
+              >
+                <div className="text-2xl font-black tracking-tight text-white sm:text-3xl">
                   {stat.value}
                 </div>
-                <div className="mt-1 text-xs font-medium uppercase tracking-wider text-white/50">
+                <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-white/50">
                   {stat.label}
                 </div>
               </div>
@@ -316,83 +401,134 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Events */}
-      <section className="section-shell py-16">
+      {/* ============================================================ */}
+      {/*  THIS WEEK IN REYKJAVIK — responsive event grid              */}
+      {/* ============================================================ */}
+      <section className="section-shell py-20">
         <SectionHeading
           eyebrow={tSections("thisWeekEyebrow")}
           title={tSections("thisWeekTitle")}
           actionHref="/events"
           actionLabel={tCta("seeAllEvents")}
         />
-        <div className="flex gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {events.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
         </div>
+        <div className="mt-8 text-center sm:hidden">
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-sm font-bold text-brand-indigo"
+          >
+            {tCta("seeAllEvents")}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </section>
 
-      {/* Categories */}
-      <section className="border-y border-brand-border-light bg-white px-4 py-16">
-        <div className="section-shell text-center">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo">
-            {tSections("categoriesEyebrow")}
-          </span>
-          <h2 className="font-editorial mt-2 text-3xl tracking-[-0.04em] text-brand-text sm:text-4xl">
-            {tSections("categoriesTitle")}
-          </h2>
-          <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+      {/* ============================================================ */}
+      {/*  SOCIAL PROOF STRIP                                          */}
+      {/* ============================================================ */}
+      <section className="border-y border-brand-border-light bg-gradient-to-r from-white via-brand-sand/30 to-white py-12">
+        <div className="section-shell flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-center sm:gap-8">
+          {/* Overlapping avatar circles */}
+          <div className="flex -space-x-3">
+            {avatarColors.map((color, i) => (
+              <div
+                key={i}
+                className={`h-10 w-10 rounded-full border-2 border-white ${color} shadow-sm`}
+              />
+            ))}
+          </div>
+          <p className="text-base font-semibold tracking-tight text-brand-text sm:text-lg">
+            {tSocial("headline")}
+          </p>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/*  CATEGORIES — visual card grid                               */}
+      {/* ============================================================ */}
+      <section className="bg-white px-4 py-20">
+        <div className="section-shell">
+          <SectionHeading
+            eyebrow={tSections("categoriesEyebrow")}
+            title={tSections("categoriesTitle")}
+            center
+          />
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {categories.map((category) => (
               <Link
                 key={category.name}
-                href={`/categories/${slugify(category.name)}` as import("next").Route}
-                className="inline-flex items-center gap-2.5 rounded-full border border-brand-border-light bg-white px-4 py-2.5 text-sm font-medium text-brand-text shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                href={
+                  `/categories/${slugify(category.name)}` as import("next").Route
+                }
+                className={`group relative overflow-hidden rounded-2xl border ${toneBorder[category.tone]} bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-card`}
               >
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-black ${toneMap[category.tone]}`}
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-black ${toneMap[category.tone]}`}
                 >
                   {category.letter}
                 </span>
-                {category.name}
-                <span className="text-xs text-brand-text-light">
-                  {category.count}
-                </span>
+                <h3 className="mt-3 text-sm font-bold tracking-tight text-brand-text">
+                  {category.name}
+                </h3>
+                <p className="mt-1 text-xs font-medium text-brand-text-muted">
+                  {category.count} {tSocial("meetups")}
+                </p>
+                <ArrowRight className="mt-3 h-3.5 w-3.5 text-brand-text-light transition-colors group-hover:text-brand-indigo" />
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="section-shell py-16">
+      {/* ============================================================ */}
+      {/*  HOW IT WORKS — decorative step numbers                      */}
+      {/* ============================================================ */}
+      <section className="section-shell py-20">
         <SectionHeading
           eyebrow={tSections("howEyebrow")}
           title={tSections("howTitle")}
+          center
         />
-        <div className="grid gap-5 lg:grid-cols-3">
-          {localizedSteps.map((step) => (
-            <article
-              key={step.number}
-              className="rounded-2xl border border-brand-border-light bg-white p-6 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-editorial text-4xl tracking-tight text-brand-indigo-soft">
+        <div className="grid gap-6 lg:grid-cols-3">
+          {localizedSteps.map((step, i) => {
+            const Icon = STEP_ICONS[i] ?? Compass;
+            return (
+              <article
+                key={step.number}
+                className="paper-panel-premium relative overflow-hidden rounded-2xl p-8"
+              >
+                {/* Decorative large number */}
+                <span className="font-editorial pointer-events-none absolute -right-3 -top-4 select-none text-[7rem] font-black leading-none tracking-tighter text-brand-indigo/[0.05]">
                   {step.number}
                 </span>
-                <CheckCircle2 className="h-5 w-5 text-brand-indigo" />
-              </div>
-              <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-text">
-                {step.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
-                {step.description}
-              </p>
-            </article>
-          ))}
+
+                <div className="relative z-10">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-indigo-soft">
+                    <Icon className="h-5 w-5 text-brand-indigo" />
+                  </div>
+                  <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-text">
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
+                    {step.description}
+                  </p>
+                </div>
+
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-indigo/20 via-brand-coral/20 to-transparent" />
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      {/* Groups */}
-      <section className="border-t border-brand-border-light bg-white px-4 py-16">
+      {/* ============================================================ */}
+      {/*  GROUPS — 4-up grid                                          */}
+      {/* ============================================================ */}
+      <section className="border-t border-brand-border-light bg-white px-4 py-20">
         <div className="section-shell">
           <SectionHeading
             eyebrow={tSections("groupsEyebrow")}
@@ -400,7 +536,7 @@ export function HomePage() {
             actionHref="/groups"
             actionLabel={tCta("seeAllGroups")}
           />
-          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {groups.map((group) => (
               <GroupCard key={group.name} group={group} />
             ))}
@@ -408,43 +544,47 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Venues */}
-      <section className="section-shell py-16">
+      {/* ============================================================ */}
+      {/*  VENUES — responsive grid                                    */}
+      {/* ============================================================ */}
+      <section className="section-shell py-20">
         <SectionHeading
           eyebrow={tSections("venuesEyebrow")}
           title={tSections("venuesTitle")}
           actionHref="/venues"
           actionLabel={tCta("becomePartner")}
         />
-        <div className="flex gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {venues.map((venue) => (
             <VenueCard key={venue.name} venue={venue} />
           ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-4 pb-16">
-        <div className="section-shell overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3730A3,#4F46E5_48%,#E8614D)] px-5 py-10 text-center text-white sm:px-8 md:px-12 sm:py-14">
+      {/* ============================================================ */}
+      {/*  BOTTOM CTA — full-width gradient                            */}
+      {/* ============================================================ */}
+      <section className="px-4 pb-20">
+        <div className="section-shell overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3730A3_0%,#4F46E5_40%,#E8614D_100%)] px-6 py-16 text-center text-white sm:px-12 sm:py-20">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
             {tSections("joinEyebrow")}
           </span>
-          <h2 className="font-editorial mx-auto mt-3 max-w-2xl text-3xl leading-tight tracking-[-0.04em] sm:text-4xl">
+          <h2 className="font-editorial mx-auto mt-4 max-w-2xl text-3xl leading-tight tracking-[-0.04em] sm:text-4xl lg:text-5xl">
             {tSections("joinTitle")}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-white/70">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
             {tSections("joinDescription")}
           </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="rounded-full bg-white px-7 py-3.5 text-sm font-bold shadow-lg transition-transform hover:-translate-y-0.5 text-brand-indigo"
+              className="rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-coral shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
             >
               {tCta("signupFreeLong")}
             </Link>
             <Link
               href="/for-venues"
-              className="rounded-full border border-white/18 bg-white/8 px-7 py-3.5 text-sm font-semibold text-white/90"
+              className="rounded-full border border-white/20 bg-white/8 px-8 py-4 text-sm font-semibold text-white/90 backdrop-blur-sm transition-colors hover:bg-white/15"
             >
               {tCta("partnerVenue")}
             </Link>

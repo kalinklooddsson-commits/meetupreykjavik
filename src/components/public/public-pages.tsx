@@ -5,16 +5,26 @@ import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   BadgeCheck,
+  BarChart3,
   Building2,
   CalendarDays,
   CheckCircle2,
   Clock3,
+  Eye,
   Globe2,
+  HandHeart,
+  Heart,
+  Lightbulb,
   MapPin,
+  MessageSquare,
+  Search,
+  Shield,
   Sparkles,
   Star,
+  Target,
   Ticket,
   TrendingUp,
+  Users,
   UsersRound,
   Zap,
 } from "lucide-react";
@@ -1358,6 +1368,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
     )
     .slice(0, 3);
   const formatSignals = eventFormatSignals(event);
+  const signalIcons = [Eye, TrendingUp, Sparkles];
 
   return (
     <>
@@ -1379,49 +1390,66 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
         ]}
       />
 
-      <section className="section-shell py-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
-          {/* Main content */}
-          <div className="space-y-6">
-            <Section title={t("sections.aboutThisEvent")}>
-              <div className="space-y-4">
+      <section className="section-shell py-10 lg:py-14">
+        <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
+          {/* ── Main content ── */}
+          <div className="space-y-10">
+            {/* About */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.aboutThisEvent")}
+              </h2>
+              <div className="space-y-5">
                 {event.description.map((paragraph) => (
-                  <p key={paragraph} className="text-sm leading-relaxed text-gray-600">
+                  <p key={paragraph} className="leading-8 text-gray-700">
                     {paragraph}
                   </p>
                 ))}
               </div>
-            </Section>
+            </div>
 
-            <Section title={t("sections.whyThisFormatWorks")}>
-              <div className="grid gap-4 md:grid-cols-3">
-                {formatSignals.map((signal) => (
-                  <div
-                    key={signal.label}
-                    className="rounded-xl border border-brand-border-light bg-brand-sand-light p-4"
-                  >
-                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
-                      {signal.label}
+            {/* Format signals as icon cards */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.whyThisFormatWorks")}
+              </h2>
+              <div className="grid gap-5 sm:grid-cols-3">
+                {formatSignals.map((signal, i) => {
+                  const Icon = signalIcons[i % signalIcons.length];
+                  return (
+                    <div
+                      key={signal.label}
+                      className="paper-panel rounded-2xl p-5"
+                    >
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-indigo-soft">
+                        <Icon className="h-5 w-5 text-brand-indigo" />
+                      </div>
+                      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                        {signal.label}
+                      </div>
+                      <div className="mt-2 text-sm font-semibold leading-6 text-gray-900">
+                        {signal.value}
+                      </div>
+                      <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
                     </div>
-                    <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
-                      {signal.value}
-                    </div>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-            </Section>
+            </div>
 
-            {/* Gallery */}
+            {/* Gallery 2x2 grid */}
             {event.gallery.length > 0 ? (
-              <Section title={t("sections.gallery")}>
-                <div className="grid gap-3 md:grid-cols-3">
-                  {event.gallery.map((art, index) => {
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.gallery")}
+                </h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {event.gallery.slice(0, 4).map((art, index) => {
                     const img = extractImageUrl(art);
                     return (
-                      <div key={`gallery-${index}`} className="relative h-36 overflow-hidden rounded-lg bg-gray-100">
+                      <div key={`gallery-${index}`} className="relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-100">
                         {img ? (
-                          <Image fill alt="" className="object-cover" sizes="33vw" src={img} unoptimized={img.startsWith("https://")} />
+                          <Image fill alt="" className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" src={img} unoptimized={img.startsWith("https://")} />
                         ) : (
                           <div className="h-full w-full" style={{ background: art }} />
                         )}
@@ -1429,50 +1457,83 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                     );
                   })}
                 </div>
-              </Section>
+              </div>
             ) : null}
 
             {/* Comments */}
             {event.comments.length > 0 ? (
-              <Section title={t("sections.comments")}>
-                <div className="space-y-4">
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.comments")}
+                </h2>
+                <div className="space-y-5">
                   {event.comments.map((comment) => (
-                    <div key={`${comment.author}-${comment.postedAt}`}>
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">{comment.author}</span>
-                        <span className="text-xs text-gray-400">{comment.postedAt}</span>
+                    <div
+                      key={`${comment.author}-${comment.postedAt}`}
+                      className="border-b border-brand-border-light pb-5 last:border-0 last:pb-0"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-indigo-soft text-sm font-bold text-brand-indigo">
+                          {comment.author.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-semibold text-gray-900">{comment.author}</span>
+                          <span className="ml-2 text-xs text-gray-400">{comment.postedAt}</span>
+                        </div>
                       </div>
-                      <p className="mt-1 text-sm text-gray-600">{comment.text}</p>
+                      <p className="mt-2.5 pl-12 leading-relaxed text-gray-700">{comment.text}</p>
                     </div>
                   ))}
                 </div>
-              </Section>
+              </div>
             ) : null}
 
             {/* Ratings */}
             {event.ratings.length > 0 ? (
-              <Section title={t("sections.reviews")}>
-                <div className="space-y-4">
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.reviews")}
+                </h2>
+                <div className="space-y-5">
                   {event.ratings.map((rating) => (
-                    <div key={`${rating.author}-${rating.rating}`}>
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">{rating.author}</span>
-                        <span className="flex items-center gap-1 text-brand-coral">
-                          <Star className="h-4 w-4 fill-current" />
-                          {rating.rating}/5
-                        </span>
+                    <div
+                      key={`${rating.author}-${rating.rating}`}
+                      className="border-b border-brand-border-light pb-5 last:border-0 last:pb-0"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-coral-soft text-sm font-bold text-brand-coral">
+                          {rating.author.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-semibold text-gray-900">{rating.author}</span>
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={cn(
+                                "h-4 w-4",
+                                i < rating.rating ? "fill-amber-500 text-amber-500" : "text-gray-200",
+                              )}
+                            />
+                          ))}
+                        </div>
                       </div>
-                      <p className="mt-1 text-sm text-gray-600">{rating.text}</p>
+                      <p className="mt-2.5 pl-12 leading-relaxed text-gray-700">{rating.text}</p>
                     </div>
                   ))}
                 </div>
-              </Section>
+              </div>
             ) : null}
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            <Section title={t("sections.details")}>
+          {/* ── Sidebar ── */}
+          <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">
+            {/* Event details card */}
+            <div className="paper-panel rounded-2xl p-5">
+              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                {t("sections.details")}
+              </h3>
               <KeyValueList
                 items={[
                   { key: "date", label: t("labels.date"), value: formatEventDate(event.startsAt) },
@@ -1495,9 +1556,20 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                   />
                 </div>
               </div>
-            </Section>
+              <Link
+                href="/signup"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                {t("actions.reserveSeat")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
 
-            <Section title={t("sections.bookingNotes")}>
+            {/* Booking notes card */}
+            <div className="paper-panel rounded-2xl p-5">
+              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                {t("sections.bookingNotes")}
+              </h3>
               <div className="space-y-3">
                 {[
                   { label: t("labels.hostContact"), value: event.hostContact },
@@ -1515,22 +1587,16 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                   </div>
                 ))}
               </div>
-            </Section>
+            </div>
 
-            <Section>
-              <Link
-                href="/signup"
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
-              >
-                {t("actions.reserveSeat")}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Section>
-
+            {/* Host group card */}
             {group ? (
-              <Section title={t("sections.hostGroup")}>
-                <div className="text-xl font-bold text-gray-900">{group.name}</div>
-                <p className="mt-1 text-sm text-gray-600">{group.summary}</p>
+              <div className="paper-panel rounded-2xl p-5">
+                <h3 className="font-editorial mb-3 text-lg tracking-tight text-gray-900">
+                  {t("sections.hostGroup")}
+                </h3>
+                <div className="text-lg font-bold text-gray-900">{group.name}</div>
+                <p className="mt-1 text-sm leading-relaxed text-gray-600">{group.summary}</p>
                 <KeyValueList
                   items={[
                     { key: "members", label: t("labels.members"), value: String(group.members) },
@@ -1543,13 +1609,17 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                 >
                   {t("labels.viewGroup")} <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-              </Section>
+              </div>
             ) : null}
 
+            {/* Venue card */}
             {venue ? (
-              <Section title={t("sections.venue")}>
-                <div className="text-xl font-bold text-gray-900">{venue.name}</div>
-                <p className="mt-1 text-sm text-gray-600">{venue.summary}</p>
+              <div className="paper-panel rounded-2xl p-5">
+                <h3 className="font-editorial mb-3 text-lg tracking-tight text-gray-900">
+                  {t("sections.venue")}
+                </h3>
+                <div className="text-lg font-bold text-gray-900">{venue.name}</div>
+                <p className="mt-1 text-sm leading-relaxed text-gray-600">{venue.summary}</p>
                 <KeyValueList
                   items={[
                     { key: "type", label: t("labels.type"), value: venue.type },
@@ -1568,14 +1638,17 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                 >
                   {t("labels.viewVenue")} <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-              </Section>
+              </div>
             ) : null}
           </div>
         </div>
 
+        {/* Related events */}
         {relatedEvents.length > 0 ? (
-          <div className="mt-10">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">{t("sections.relatedEvents")}</h2>
+          <div className="mt-14 border-t border-brand-border-light pt-10">
+            <h2 className="font-editorial mb-6 text-2xl tracking-tight text-gray-900">
+              {t("sections.relatedEvents")}
+            </h2>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {relatedEvents.map((item) => (
                 <EventCard key={item.slug} event={item} />
@@ -1806,6 +1879,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
     group.upcomingEventSlugs.includes(event.slug),
   );
   const operatingSignals = groupOperatingSignals(group, upcomingEvents);
+  const signalIcons = [Users, TrendingUp, CalendarDays];
 
   return (
     <>
@@ -1845,94 +1919,156 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
         </div>
       </DetailHero>
 
-      <section className="section-shell py-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
-          <div className="space-y-6">
-            <Section title={t("sections.about")}>
-              <div className="space-y-4">
+      <section className="section-shell py-10 lg:py-14">
+        <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
+          {/* ── Main content ── */}
+          <div className="space-y-10">
+            {/* About */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.about")}
+              </h2>
+              <div className="space-y-5">
                 {group.description.map((paragraph) => (
-                  <p key={paragraph} className="text-sm leading-relaxed text-gray-600">{paragraph}</p>
+                  <p key={paragraph} className="leading-8 text-gray-700">{paragraph}</p>
                 ))}
               </div>
-              <div className="mt-4 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {group.tags.map((tag) => (
                   <ToneBadge key={tag} tone={categoryTone(group.category)}>{tag}</ToneBadge>
                 ))}
               </div>
-            </Section>
+            </div>
 
-            <Section title={t("sections.whyMembersStay")}>
-              <div className="grid gap-4 md:grid-cols-3">
-                {operatingSignals.map((signal) => (
-                  <div
-                    key={signal.label}
-                    className="rounded-xl border border-brand-border-light bg-brand-sand-light p-4"
-                  >
-                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
-                      {signal.label}
-                    </div>
-                    <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
-                      {signal.value}
-                    </div>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </Section>
-
-            {group.discussions.length > 0 ? (
-              <Section title={t("sections.discussions")}>
-                <div className="space-y-4">
-                  {group.discussions.map((discussion) => (
-                    <div key={discussion.title} className="rounded-lg bg-gray-50 p-4">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">{discussion.title}</span>
-                        <span className="text-xs text-gray-500">{discussion.replies} {t("labels.replies")}</span>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-600">{discussion.preview}</p>
-                    </div>
-                  ))}
-                </div>
-              </Section>
-            ) : null}
-          </div>
-
-          <div className="space-y-6">
-            <Section title={t("sections.upcomingEvents")}>
-              {upcomingEvents.length > 0 ? (
-                <div className="space-y-3">
-                  {upcomingEvents.map((event) => (
-                    <Link
-                      key={event.slug}
-                      href={eventHref(event.slug)}
-                      className="block rounded-lg bg-gray-50 p-3 transition hover:bg-gray-100"
+            {/* Operating signals as icon cards */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.whyMembersStay")}
+              </h2>
+              <div className="grid gap-5 sm:grid-cols-3">
+                {operatingSignals.map((signal, i) => {
+                  const Icon = signalIcons[i % signalIcons.length];
+                  return (
+                    <div
+                      key={signal.label}
+                      className="paper-panel rounded-2xl p-5"
                     >
-                      <div className="font-medium text-gray-900">{event.title}</div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {formatEventDate(event.startsAt)} · {event.venueName}
-                      </p>
-                    </Link>
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-coral-soft">
+                        <Icon className="h-5 w-5 text-brand-coral" />
+                      </div>
+                      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                        {signal.label}
+                      </div>
+                      <div className="mt-2 text-sm font-semibold leading-6 text-gray-900">
+                        {signal.value}
+                      </div>
+                      <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Upcoming events as EventCards */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.upcomingEvents")}
+              </h2>
+              {upcomingEvents.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {upcomingEvents.map((event) => (
+                    <EventCard key={event.slug} event={event} />
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">{t("empty.noUpcomingEvents")}</p>
+                <p className="leading-8 text-gray-500">{t("empty.noUpcomingEvents")}</p>
               )}
-            </Section>
+            </div>
 
-            <Section title={t("sections.pastEvents")}>
-              <div className="space-y-2">
-                {group.pastEvents.map((item) => (
-                  <div key={item} className="rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-600">
-                    {item}
-                  </div>
-                ))}
+            {/* Past events as compact list */}
+            {group.pastEvents.length > 0 ? (
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.pastEvents")}
+                </h2>
+                <div className="space-y-2">
+                  {group.pastEvents.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-3 rounded-lg border border-brand-border-light bg-white px-4 py-2.5 text-sm text-gray-600"
+                    >
+                      <Clock3 className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </Section>
+            ) : null}
 
-            <Section title={t("sections.membershipRead")}>
+            {/* Discussions with reply counts */}
+            {group.discussions.length > 0 ? (
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.discussions")}
+                </h2>
+                <div className="space-y-4">
+                  {group.discussions.map((discussion) => (
+                    <div
+                      key={discussion.title}
+                      className="paper-panel rounded-xl p-5"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="font-semibold text-gray-900">{discussion.title}</div>
+                          <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{discussion.preview}</p>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1.5 rounded-full bg-brand-sand-light px-3 py-1.5 text-xs font-medium text-gray-600">
+                          <MessageSquare className="h-3.5 w-3.5" />
+                          {discussion.replies}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* ── Sidebar ── */}
+          <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">
+            {/* Group stats card */}
+            <div className="paper-panel rounded-2xl p-5">
+              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                {t("sections.groupStats")}
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-lg bg-brand-sand-light p-3 text-center">
+                  <div className="text-2xl font-bold text-gray-900">{group.members}</div>
+                  <div className="text-xs font-medium text-gray-500">{t("heroStats.members")}</div>
+                </div>
+                <div className="rounded-lg bg-brand-sand-light p-3 text-center">
+                  <div className="text-2xl font-bold text-gray-900">{group.activity}%</div>
+                  <div className="text-xs font-medium text-gray-500">{t("heroStats.activity")}</div>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center gap-3 border-t border-brand-border-light pt-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-indigo-soft text-sm font-bold text-brand-indigo">
+                  {group.organizer.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="text-xs text-gray-500">{t("labels.organizer")}</div>
+                  <div className="text-sm font-semibold text-gray-900">{group.organizer}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Membership info card */}
+            <div className="paper-panel rounded-2xl p-5">
+              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                {t("sections.membershipRead")}
+              </h3>
               <div className="space-y-3">
                 {[
-                  { label: t("labels.organizer"), value: group.organizer },
                   { label: t("labels.bestKnownFor"), value: group.tags.join(" · ") },
                   {
                     label: t("labels.whyThisGroupMatters"),
@@ -1950,7 +2086,14 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
                   </div>
                 ))}
               </div>
-            </Section>
+              <Link
+                href="/signup"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              >
+                {t("actions.joinThisGroup")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -2193,38 +2336,59 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
         </div>
       </DetailHero>
 
-      <section className="section-shell py-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
-          <div className="space-y-6">
-            <Section title={t("sections.about")}>
-              <div className="space-y-4">
+      <section className="section-shell py-10 lg:py-14">
+        <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
+          {/* ── Main content ── */}
+          <div className="space-y-10">
+            {/* About */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.about")}
+              </h2>
+              <div className="space-y-5">
                 {venue.description.map((paragraph) => (
-                  <p key={paragraph} className="text-sm leading-relaxed text-gray-600">{paragraph}</p>
+                  <p key={paragraph} className="leading-8 text-gray-700">{paragraph}</p>
                 ))}
               </div>
-            </Section>
+            </div>
 
-            <Section title={t("sections.amenities")}>
-              <div className="grid grid-cols-2 gap-2">
-                {venue.amenities.map((amenity) => (
-                  <div key={amenity} className="flex items-center gap-2 text-sm text-gray-700">
-                    <BadgeCheck className="h-4 w-4 text-brand-sage" />
-                    {amenity}
-                  </div>
-                ))}
+            {/* Gallery 2x2 grid */}
+            {venue.gallery.length > 0 ? (
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.gallery")}
+                </h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {venue.gallery.slice(0, 4).map((art, index) => {
+                    const img = extractImageUrl(art);
+                    return (
+                      <div key={`gallery-${index}`} className="relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-100">
+                        {img ? (
+                          <Image fill alt="" className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" src={img} unoptimized={img.startsWith("https://")} />
+                        ) : (
+                          <div className="h-full w-full" style={{ background: art }} />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </Section>
+            ) : null}
 
-            <Section title={t("sections.bestFitFormats")}>
-              <div className="rounded-xl border border-brand-border-light bg-brand-sand-light p-4">
-                <p className="text-sm leading-relaxed text-gray-700">{venueFitSummary(venue)}</p>
+            {/* Best-fit formats */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.bestFitFormats")}
+              </h2>
+              <div className="paper-panel rounded-2xl p-5">
+                <p className="leading-relaxed text-gray-700">{venueFitSummary(venue)}</p>
                 {upcomingEvents.length > 0 ? (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {upcomingEvents.slice(0, 3).map((event) => (
                       <Link
                         key={event.slug}
                         href={eventHref(event.slug)}
-                        className="rounded-full border border-brand-border bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-brand-indigo hover:text-brand-indigo"
+                        className="rounded-full border border-brand-border-light bg-brand-sand-light px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:border-brand-indigo hover:text-brand-indigo"
                       >
                         {event.title}
                       </Link>
@@ -2232,56 +2396,99 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                   </div>
                 ) : null}
               </div>
-            </Section>
+            </div>
 
-            <Section title={t("sections.gallery")}>
-              <div className="grid gap-3 md:grid-cols-3">
-                {venue.gallery.map((art, index) => {
-                  const img = extractImageUrl(art);
-                  return (
-                    <div key={`gallery-${index}`} className="relative h-36 overflow-hidden rounded-lg bg-gray-100">
-                      {img ? (
-                        <Image fill alt="" className="object-cover" sizes="33vw" src={img} unoptimized={img.startsWith("https://")} />
-                      ) : (
-                        <div className="h-full w-full" style={{ background: art }} />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Section>
+            {/* Upcoming events as EventCards */}
+            <div>
+              <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                {t("sections.upcomingEvents")}
+              </h2>
+              {upcomingEvents.length > 0 ? (
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {upcomingEvents.map((event) => (
+                    <EventCard key={event.slug} event={event} />
+                  ))}
+                </div>
+              ) : (
+                <p className="leading-8 text-gray-500">{t("empty.noUpcomingEvents")}</p>
+              )}
+            </div>
 
+            {/* Map */}
             {venue.latitude && venue.longitude ? (
-              <Section title={t("sections.location")}>
-                <VenueMap
-                  latitude={venue.latitude}
-                  longitude={venue.longitude}
-                  name={venue.name}
-                  address={venue.address}
-                />
-              </Section>
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.location")}
+                </h2>
+                <div className="overflow-hidden rounded-2xl border border-brand-border-light">
+                  <VenueMap
+                    latitude={venue.latitude}
+                    longitude={venue.longitude}
+                    name={venue.name}
+                    address={venue.address}
+                  />
+                </div>
+              </div>
+            ) : null}
+
+            {/* Nearby venues */}
+            {nearbyVenues.length > 0 ? (
+              <div>
+                <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
+                  {t("sections.moreInArea", { area: venue.area })}
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {nearbyVenues.map((item) => (
+                    <Link
+                      key={item.slug}
+                      href={venueHref(item.slug)}
+                      className="paper-panel rounded-xl p-4 transition hover:shadow-md"
+                    >
+                      <div className="font-semibold text-gray-900">{item.name}</div>
+                      <p className="mt-1 text-sm text-gray-500">{item.type}</p>
+                      <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
+                        <span>{item.capacity} {t("labels.capacity").toLowerCase()}</span>
+                        <span className="flex items-center gap-0.5">
+                          <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
+                          {item.rating}
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ) : null}
           </div>
 
-          <div className="space-y-6">
-            <Section title={t("sections.info")}>
+          {/* ── Sidebar ── */}
+          <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">
+            {/* Venue info card */}
+            <div className="paper-panel rounded-2xl p-5">
+              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                {t("sections.info")}
+              </h3>
               <KeyValueList
                 items={[
                   { key: "type", label: t("labels.type"), value: venue.type },
                   { key: "area", label: t("labels.area"), value: venue.area },
                   { key: "address", label: t("labels.address"), value: venue.address },
                   { key: "capacity", label: t("labels.capacity"), value: String(venue.capacity) },
+                  { key: "rating", label: t("labels.rating"), value: `${venue.rating}/5` },
                 ]}
               />
               {venue.deal ? (
-                <div className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                <div className="mt-4 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-800">
                   {venue.deal}
                 </div>
               ) : null}
-            </Section>
+            </div>
 
-            <Section title={t("sections.hours")}>
-              <div className="space-y-2">
+            {/* Hours card */}
+            <div className="paper-panel rounded-2xl p-5">
+              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                {t("sections.hours")}
+              </h3>
+              <div className="space-y-2.5">
                 {venue.hours.map((item) => (
                   <div key={item.day} className="flex items-center justify-between text-sm">
                     <span className={cn("text-gray-700", item.highlighted && "font-semibold")}>
@@ -2298,47 +2505,22 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                   </div>
                 ))}
               </div>
-            </Section>
+            </div>
 
-            <Section title={t("sections.upcomingEvents")}>
-              {upcomingEvents.length > 0 ? (
-                <div className="space-y-3">
-                  {upcomingEvents.map((event) => (
-                    <Link
-                      key={event.slug}
-                      href={eventHref(event.slug)}
-                      className="block rounded-lg bg-gray-50 p-3 transition hover:bg-gray-100"
-                    >
-                      <div className="font-medium text-gray-900">{event.title}</div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {formatEventDate(event.startsAt)} · {event.groupName}
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">{t("empty.noUpcomingEvents")}</p>
-              )}
-            </Section>
-
-            {nearbyVenues.length > 0 ? (
-              <Section title={t("sections.moreInArea", { area: venue.area })}>
-                <div className="space-y-3">
-                  {nearbyVenues.map((item) => (
-                    <Link
-                      key={item.slug}
-                      href={venueHref(item.slug)}
-                      className="block rounded-lg bg-gray-50 p-3 transition hover:bg-gray-100"
-                    >
-                      <div className="font-medium text-gray-900">{item.name}</div>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {item.type} · {item.capacity} capacity · {item.rating}/5
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              </Section>
-            ) : null}
+            {/* Amenities card */}
+            <div className="paper-panel rounded-2xl p-5">
+              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                {t("sections.amenities")}
+              </h3>
+              <div className="grid grid-cols-1 gap-2.5">
+                {venue.amenities.map((amenity) => (
+                  <div key={amenity} className="flex items-center gap-2.5 text-sm text-gray-700">
+                    <BadgeCheck className="h-4 w-4 shrink-0 text-brand-sage" />
+                    {amenity}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -2520,42 +2702,30 @@ export function BlogIndexScreen() {
   const featured = blogPosts[0];
   const rest = blogPosts.slice(1);
   const featuredImage = extractImageUrl(featured.hero) ?? "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
-  const signals = blogSignals(blogPosts, t);
 
   return (
     <>
-      <IndexHero
-        eyebrow={t("hero.eyebrow")}
-        title={t("hero.title")}
-        description={t("hero.description")}
-        imageSrc="/place-images/reykjavik/arb-jarsafn-c71d7348.jpg"
-        actions={[
-          { href: "/events", label: t("hero.exploreEvents"), primary: true },
-        ]}
-      />
+      {/* Hero with latest eyebrow */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-brand-basalt">
+        <div className="absolute inset-0 opacity-20">
+          <Image fill alt="" className="object-cover" sizes="100vw" src="/place-images/reykjavik/arb-jarsafn-c71d7348.jpg" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/90" />
+        <div className="section-shell relative z-10 py-16 text-white sm:py-24">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("hero.eyebrow")}</span>
+          <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{t("hero.title")}</h1>
+          <p className="mt-5 max-w-2xl text-base text-white/70 sm:text-lg">{t("hero.description")}</p>
+        </div>
+      </section>
 
-      {/* Featured post */}
+      {/* Featured post — large card */}
       <section className="bg-white">
-        <div className="section-shell py-10">
-          <div className="mb-8 grid gap-4 lg:grid-cols-3">
-            {signals.map((signal) => (
-              <div
-                key={signal.label}
-                className="rounded-2xl border border-brand-border-light bg-brand-sand-light p-5"
-              >
-                <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
-                  {signal.label}
-                </div>
-                <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">
-                  {signal.value}
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">{signal.detail}</p>
-              </div>
-            ))}
+        <div className="section-shell py-12">
+          <div className="mb-8">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-coral">{t("latestEyebrow")}</span>
           </div>
-
-          <div className="overflow-hidden rounded-2xl border border-gray-200 md:grid md:grid-cols-2">
-            <div className="relative h-64 md:h-auto">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 shadow-sm md:grid md:grid-cols-2">
+            <div className="relative h-72 md:h-auto">
               <Image
                 fill
                 alt={featured.title}
@@ -2563,19 +2733,22 @@ export function BlogIndexScreen() {
                 sizes="(max-width: 768px) 100vw, 50vw"
                 src={featuredImage}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent md:bg-gradient-to-r" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent md:bg-gradient-to-r" />
             </div>
-            <div className="p-5 sm:p-8">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col justify-center p-7 sm:p-10">
+              <div className="flex items-center gap-3">
                 <ToneBadge tone="indigo">{featured.category}</ToneBadge>
-                <span className="text-xs text-gray-500">{featured.readTime}</span>
+                <span className="flex items-center gap-1 text-xs text-gray-500">
+                  <Clock3 className="h-3 w-3" />
+                  {featured.readTime}
+                </span>
               </div>
-              <h3 className="mt-3 text-xl font-bold text-gray-900 sm:text-2xl">{featured.title}</h3>
+              <h2 className="mt-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{featured.title}</h2>
               <p className="mt-3 text-sm leading-relaxed text-gray-600">{featured.excerpt}</p>
               <div className="mt-4 text-sm text-gray-500">{featured.publishedAt}</div>
               <Link
                 href={blogHref(featured.slug)}
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
               >
                 {t("readArticle")}
                 <ArrowRight className="h-4 w-4" />
@@ -2585,12 +2758,12 @@ export function BlogIndexScreen() {
         </div>
       </section>
 
-      {/* More articles */}
+      {/* Article grid */}
       {rest.length > 0 ? (
         <section className="border-t border-gray-200 bg-brand-sand">
-          <div className="section-shell py-10">
-            <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("moreArticles")}</h2>
-            <div className="grid gap-6 md:grid-cols-2">
+          <div className="section-shell py-12">
+            <h2 className="mb-8 text-2xl font-bold text-gray-900">{t("moreArticles")}</h2>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {rest.map((post) => (
                 <BlogCard key={post.slug} post={post} />
               ))}
@@ -2717,66 +2890,85 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
 
 export function AboutScreen() {
   const t = useTranslations("aboutPage");
+
+  const values = [
+    { icon: Heart, title: t("values.community.title"), text: t("values.community.text"), color: "bg-brand-coral-soft text-brand-coral" },
+    { icon: Shield, title: t("values.trust.title"), text: t("values.trust.text"), color: "bg-brand-indigo-soft text-brand-indigo" },
+    { icon: Target, title: t("values.quality.title"), text: t("values.quality.text"), color: "bg-[rgba(124,154,130,0.12)] text-brand-sage" },
+    { icon: Lightbulb, title: t("values.local.title"), text: t("values.local.text"), color: "bg-amber-50 text-amber-600" },
+  ];
+
   return (
     <>
-      <IndexHero
-        eyebrow={t("hero.eyebrow")}
-        title={t("hero.title")}
-        description={t("hero.description")}
-        imageSrc="/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg"
-        stats={aboutStats.map((s) => ({ label: s.label, value: s.value }))}
-        actions={[
-          { href: "/events", label: t("hero.exploreEvents"), primary: true },
-          { href: "/contact", label: t("hero.getInTouch") },
-        ]}
-      />
+      {/* Large hero banner with brand gradient */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
+        <div className="absolute inset-0 opacity-20">
+          <Image fill alt="" className="object-cover" sizes="100vw" src="/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-indigo/40 to-[#312e81]/80" />
+        <div className="section-shell relative z-10 py-20 text-center text-white sm:py-28 md:py-36">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("hero.eyebrow")}</span>
+          <h1 className="mx-auto mt-4 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">{t("hero.title")}</h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80">{t("hero.description")}</p>
+          <div className="mt-10 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/events"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo shadow-lg transition hover:bg-white/90"
+            >
+              {t("hero.exploreEvents")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+            >
+              {t("hero.getInTouch")}
+            </Link>
+          </div>
+        </div>
+      </section>
 
-      {/* Mission */}
+      {/* Mission statement */}
       <section className="bg-white">
-        <div className="section-shell py-12">
+        <div className="section-shell py-16 sm:py-20">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="font-editorial text-3xl text-gray-900">{t("mission.title")}</h2>
-            <p className="mt-6 text-lg leading-relaxed text-gray-600">
-              {t("mission.paragraph1")}
-            </p>
-            <p className="mt-4 text-lg leading-relaxed text-gray-600">
-              {t("mission.paragraph2")}
-            </p>
+            <h2 className="font-editorial text-3xl leading-snug text-gray-900 sm:text-4xl">{t("mission.title")}</h2>
+            <p className="mt-8 text-lg leading-relaxed text-gray-600">{t("mission.paragraph1")}</p>
+            <p className="mt-5 text-lg leading-relaxed text-gray-600">{t("mission.paragraph2")}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats section */}
+      <section className="border-t border-gray-200 bg-brand-sand">
+        <div className="section-shell py-16">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {aboutStats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-gray-200 bg-white p-7 text-center transition hover:shadow-md">
+                <div className="text-4xl font-bold tracking-tight text-brand-indigo">{stat.value}</div>
+                <div className="mt-2 text-sm font-medium text-gray-600">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* How it works */}
-      <section className="border-t border-gray-200 bg-brand-sand">
-        <div className="section-shell py-12">
-          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">{t("howItWorks.title")}</h2>
+      <section className="border-t border-gray-200 bg-white">
+        <div className="section-shell py-16">
+          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t("howItWorks.title")}</h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              {
-                icon: UsersRound,
-                title: t("howItWorks.membersTitle"),
-                text: t("howItWorks.membersText"),
-                color: "bg-brand-indigo-soft text-brand-indigo",
-              },
-              {
-                icon: CalendarDays,
-                title: t("howItWorks.organizersTitle"),
-                text: t("howItWorks.organizersText"),
-                color: "bg-brand-coral-soft text-brand-coral",
-              },
-              {
-                icon: Building2,
-                title: t("howItWorks.venuesTitle"),
-                text: t("howItWorks.venuesText"),
-                color: "bg-[rgba(124,154,130,0.12)] text-brand-sage",
-              },
+              { icon: UsersRound, title: t("howItWorks.membersTitle"), text: t("howItWorks.membersText"), color: "bg-brand-indigo-soft text-brand-indigo" },
+              { icon: CalendarDays, title: t("howItWorks.organizersTitle"), text: t("howItWorks.organizersText"), color: "bg-brand-coral-soft text-brand-coral" },
+              { icon: Building2, title: t("howItWorks.venuesTitle"), text: t("howItWorks.venuesText"), color: "bg-[rgba(124,154,130,0.12)] text-brand-sage" },
             ].map((item) => (
-              <div key={item.title} className="rounded-xl border border-gray-200 bg-white p-6 text-center">
-                <div className={cn("mx-auto flex h-14 w-14 items-center justify-center rounded-2xl", item.color)}>
-                  <item.icon className="h-6 w-6" />
+              <div key={item.title} className="rounded-2xl border border-gray-200 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <div className={cn("mx-auto flex h-16 w-16 items-center justify-center rounded-2xl", item.color)}>
+                  <item.icon className="h-7 w-7" />
                 </div>
-                <h3 className="mt-4 text-lg font-bold text-gray-900">{item.title}</h3>
-                <p className="mt-2 text-sm text-gray-600">{item.text}</p>
+                <h3 className="mt-5 text-xl font-bold text-gray-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600">{item.text}</p>
               </div>
             ))}
           </div>
@@ -2784,18 +2976,39 @@ export function AboutScreen() {
       </section>
 
       {/* Team */}
-      <section className="border-t border-gray-200 bg-white">
-        <div className="section-shell py-12">
-          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">{t("team.title")}</h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            {aboutTeam.map((member) => (
-              <div key={member.name} className="rounded-xl border border-gray-200 bg-white p-6 text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-indigo-soft text-lg font-bold text-brand-indigo">
-                  {member.name.charAt(0)}
+      <section className="border-t border-gray-200 bg-brand-sand">
+        <div className="section-shell py-16">
+          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t("team.title")}</h2>
+          <div className="grid gap-8 md:grid-cols-3">
+            {aboutTeam.map((member, i) => {
+              const colors = ["bg-brand-indigo text-white", "bg-brand-coral text-white", "bg-brand-sage text-white"];
+              return (
+                <div key={member.name} className="rounded-2xl border border-gray-200 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <div className={cn("mx-auto flex h-20 w-20 items-center justify-center rounded-full text-2xl font-bold", colors[i % colors.length])}>
+                    {member.name.charAt(0)}
+                  </div>
+                  <div className="mt-5 text-xl font-bold text-gray-900">{member.name}</div>
+                  <div className="mt-1 text-sm font-semibold text-brand-indigo">{member.role}</div>
+                  <p className="mt-4 text-sm leading-relaxed text-gray-600">{member.note}</p>
                 </div>
-                <div className="mt-4 text-xl font-bold text-gray-900">{member.name}</div>
-                <div className="mt-1 text-sm font-medium text-brand-indigo">{member.role}</div>
-                <p className="mt-3 text-sm text-gray-600">{member.note}</p>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="section-shell py-16">
+          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t("values.heading")}</h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {values.map((item) => (
+              <div key={item.title} className="rounded-2xl border border-gray-200 bg-white p-7 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <div className={cn("mx-auto flex h-14 w-14 items-center justify-center rounded-2xl", item.color)}>
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mt-5 text-lg font-bold text-gray-900">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.text}</p>
               </div>
             ))}
           </div>
@@ -2803,24 +3016,17 @@ export function AboutScreen() {
       </section>
 
       {/* CTA */}
-      <section className="bg-brand-indigo">
-        <div className="section-shell py-12 text-center text-white sm:py-16">
-          <h3 className="text-2xl font-bold">{t("cta.title")}</h3>
-          <p className="mx-auto mt-3 max-w-lg text-sm text-white/80">
-            {t("cta.description")}
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link
-              href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold transition hover:bg-white/90 text-brand-indigo"
-            >
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+        <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
+          <h3 className="text-3xl font-bold">{t("cta.title")}</h3>
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/80">{t("cta.description")}</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo shadow-lg transition hover:bg-white/90">
               {t("cta.createAccount")}
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/events"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white transition hover:bg-white/20"
-            >
+            <Link href="/events" className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
               {t("cta.browseEvents")}
             </Link>
           </div>
@@ -2832,43 +3038,56 @@ export function AboutScreen() {
 
 export function PricingScreen() {
   const t = useTranslations("pricingPage");
+
+  const allPlansFeatures = [
+    t("allPlans.feature1"),
+    t("allPlans.feature2"),
+    t("allPlans.feature3"),
+    t("allPlans.feature4"),
+  ];
+
   return (
     <>
       {/* Pricing hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative z-10 py-16 text-center text-white sm:py-24">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">
-            {t("hero.eyebrow")}
-          </span>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
-            {t("hero.title")}
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base text-white/80 sm:text-lg">
-            {t("hero.description", { commission: ticketCommissionRate })}
-          </p>
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("hero.eyebrow")}</span>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">{t("hero.title")}</h1>
+          <p className="mx-auto mt-5 max-w-2xl text-base text-white/80 sm:text-lg">{t("hero.description", { commission: ticketCommissionRate })}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              href="/signup"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90 text-brand-indigo"
-            >
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90 text-brand-indigo">
               {t("hero.getStartedFree")}
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
-            >
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
               {t("hero.talkToUs")}
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Member plans */}
+      {/* All plans include */}
       <section className="bg-white">
         <div className="section-shell py-12">
-          <div className="mb-8 text-center">
+          <div className="mx-auto max-w-3xl rounded-2xl border border-brand-border-light bg-brand-sand-light p-8">
+            <h2 className="mb-6 text-center text-lg font-bold text-gray-900">{t("allPlans.heading")}</h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {allPlansFeatures.map((feature) => (
+                <div key={feature} className="flex items-center gap-3">
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-brand-sage" />
+                  <span className="text-sm text-gray-700">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Member plans */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="section-shell py-14">
+          <div className="mb-10 text-center">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-indigo-soft px-4 py-1.5 text-xs font-semibold text-brand-indigo">
               <UsersRound className="h-3.5 w-3.5" />
               {t("members.badge")}
@@ -2878,43 +3097,23 @@ export function PricingScreen() {
           </div>
           <div className="reveal-group grid gap-6 md:grid-cols-3">
             {userTiers.map((tier, i) => (
-              <article
-                key={tier.name}
-                className={cn(
-                  "rounded-xl border bg-white",
-                  i === 1
-                    ? "border-brand-indigo ring-2 ring-brand-indigo/10"
-                    : "border-gray-200",
-                )}
-              >
-                {i === 1 ? (
-                  <div className="rounded-t-xl bg-brand-indigo py-1.5 text-center text-xs font-semibold text-white">
-                    {t("members.mostPopular")}
-                  </div>
-                ) : null}
-                <div className="border-b border-gray-100 p-6">
+              <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-indigo ring-2 ring-brand-indigo/20 shadow-lg" : "border-gray-200")}>
+                {i === 1 ? (<div className="rounded-t-2xl bg-brand-indigo py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("members.mostPopular")}</div>) : null}
+                <div className="border-b border-gray-100 p-7">
                   <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
-                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
-                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                  <div className="mt-3 text-4xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-600">{tier.description}</p>
                 </div>
-                <div className="p-6 space-y-3">
+                <div className="p-7 space-y-3">
                   {tier.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-2">
+                    <div key={feature} className="flex items-start gap-2.5">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-sage" />
                       <span className="text-sm text-gray-700">{feature}</span>
                     </div>
                   ))}
                 </div>
-                <div className="px-6 pb-6">
-                  <Link
-                    href="/signup"
-                    className={cn(
-                      "flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold transition",
-                      i === 1
-                        ? "bg-brand-indigo text-white hover:opacity-90"
-                        : "border border-gray-300 text-gray-700 hover:bg-gray-50",
-                    )}
-                  >
+                <div className="px-7 pb-7">
+                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-indigo text-white hover:opacity-90" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
                     {tier.price === "0 ISK" ? t("members.joinFree") : t("members.getStarted")}
                   </Link>
                 </div>
@@ -2926,56 +3125,34 @@ export function PricingScreen() {
 
       {/* Organizer plans */}
       <section className="border-t border-gray-200 bg-brand-sand">
-        <div className="section-shell py-12">
-          <div className="mb-8 text-center">
+        <div className="section-shell py-14">
+          <div className="mb-10 text-center">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-coral-soft px-4 py-1.5 text-xs font-semibold text-brand-coral">
               <CalendarDays className="h-3.5 w-3.5" />
               {t("organizers.badge")}
             </span>
             <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("organizers.title")}</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              {t("organizers.description", { commission: ticketCommissionRate })}
-            </p>
+            <p className="mt-2 text-sm text-gray-600">{t("organizers.description", { commission: ticketCommissionRate })}</p>
           </div>
           <div className="reveal-group grid gap-6 md:grid-cols-3">
             {organizerTiers.map((tier, i) => (
-              <article
-                key={tier.name}
-                className={cn(
-                  "rounded-xl border bg-white",
-                  i === 1
-                    ? "border-brand-coral ring-2 ring-brand-coral/10"
-                    : "border-gray-200",
-                )}
-              >
-                {i === 1 ? (
-                  <div className="rounded-t-xl bg-brand-coral py-1.5 text-center text-xs font-semibold text-white">
-                    {t("organizers.recommended")}
-                  </div>
-                ) : null}
-                <div className="border-b border-gray-100 p-6">
+              <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-coral ring-2 ring-brand-coral/20 shadow-lg" : "border-gray-200")}>
+                {i === 1 ? (<div className="rounded-t-2xl bg-brand-coral py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("organizers.recommended")}</div>) : null}
+                <div className="border-b border-gray-100 p-7">
                   <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
-                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
-                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                  <div className="mt-3 text-4xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-600">{tier.description}</p>
                 </div>
-                <div className="p-6 space-y-3">
+                <div className="p-7 space-y-3">
                   {tier.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-2">
+                    <div key={feature} className="flex items-start gap-2.5">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-sage" />
                       <span className="text-sm text-gray-700">{feature}</span>
                     </div>
                   ))}
                 </div>
-                <div className="px-6 pb-6">
-                  <Link
-                    href="/signup"
-                    className={cn(
-                      "flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold transition",
-                      i === 1
-                        ? "bg-brand-coral text-white hover:opacity-90"
-                        : "border border-gray-300 text-gray-700 hover:bg-gray-50",
-                    )}
-                  >
+                <div className="px-7 pb-7">
+                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-coral text-white hover:opacity-90" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
                     {t("organizers.startOrganizing")}
                   </Link>
                 </div>
@@ -2987,56 +3164,34 @@ export function PricingScreen() {
 
       {/* Venue plans */}
       <section className="border-t border-gray-200 bg-white">
-        <div className="section-shell py-12">
-          <div className="mb-8 text-center">
+        <div className="section-shell py-14">
+          <div className="mb-10 text-center">
             <span className="inline-flex items-center gap-2 rounded-full bg-[rgba(124,154,130,0.12)] px-4 py-1.5 text-xs font-semibold text-brand-sage">
               <Building2 className="h-3.5 w-3.5" />
               {t("venues.badge")}
             </span>
             <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("venues.title")}</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              {t("venues.description")}
-            </p>
+            <p className="mt-2 text-sm text-gray-600">{t("venues.description")}</p>
           </div>
           <div className="reveal-group grid gap-6 md:grid-cols-3">
             {venueTiers.map((tier, i) => (
-              <article
-                key={tier.name}
-                className={cn(
-                  "rounded-xl border bg-white",
-                  i === 1
-                    ? "border-brand-sage ring-2 ring-brand-sage/10"
-                    : "border-gray-200",
-                )}
-              >
-                {i === 1 ? (
-                  <div className="rounded-t-xl bg-brand-sage py-1.5 text-center text-xs font-semibold text-white">
-                    {t("venues.bestValue")}
-                  </div>
-                ) : null}
-                <div className="border-b border-gray-100 p-6">
+              <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-sage ring-2 ring-brand-sage/20 shadow-lg" : "border-gray-200")}>
+                {i === 1 ? (<div className="rounded-t-2xl bg-brand-sage py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("venues.bestValue")}</div>) : null}
+                <div className="border-b border-gray-100 p-7">
                   <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
-                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
-                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                  <div className="mt-3 text-4xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-600">{tier.description}</p>
                 </div>
-                <div className="p-6 space-y-3">
+                <div className="p-7 space-y-3">
                   {tier.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-2">
+                    <div key={feature} className="flex items-start gap-2.5">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-sage" />
                       <span className="text-sm text-gray-700">{feature}</span>
                     </div>
                   ))}
                 </div>
-                <div className="px-6 pb-6">
-                  <Link
-                    href="/venue/onboarding"
-                    className={cn(
-                      "flex w-full items-center justify-center rounded-full py-3 text-sm font-semibold transition",
-                      i === 1
-                        ? "bg-brand-sage text-white hover:opacity-90"
-                        : "border border-gray-300 text-gray-700 hover:bg-gray-50",
-                    )}
-                  >
+                <div className="px-7 pb-7">
+                  <Link href="/venue/onboarding" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-sage text-white hover:opacity-90" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
                     {tier.price === "0 ISK" ? t("venues.listFree") : t("venues.applyNow")}
                   </Link>
                 </div>
@@ -3050,130 +3205,41 @@ export function PricingScreen() {
       <section className="border-t border-gray-200 bg-brand-basalt">
         <div className="section-shell py-12">
           <h2 className="mb-2 text-center text-2xl font-bold text-white">{t("comparison.title")}</h2>
-          <p className="mb-8 text-center text-sm text-gray-400">
-            {t("comparison.description")}
-          </p>
-
-          {/* Member comparison */}
+          <p className="mb-8 text-center text-sm text-gray-400">{t("comparison.description")}</p>
           <div className="reveal mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.memberPlans")}</h3>
             <div className="overflow-x-auto rounded-xl border border-white/10">
               <table className="w-full min-w-[540px] text-left text-sm">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    <th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>
-                    {userTiers.map((ti) => (
-                      <th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name}</th>
-                    ))}
-                  </tr>
-                </thead>
+                <thead><tr className="border-b border-white/10 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{userTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
-                  {[
-                    [t("comparison.memberFeatures.browseEventsVenues"), true, true, true],
-                    [t("comparison.memberFeatures.ticketCheckout"), true, true, true],
-                    [t("comparison.memberFeatures.standardRsvp"), true, true, true],
-                    [t("comparison.memberFeatures.priorityWaitlist"), false, true, true],
-                    [t("comparison.memberFeatures.directMessaging"), false, true, true],
-                    [t("comparison.memberFeatures.premiumBadge"), false, true, true],
-                    [t("comparison.memberFeatures.advancedFilters"), false, false, true],
-                    [t("comparison.memberFeatures.earlyAccessFeatures"), false, false, true],
-                  ].map(([feature, ...vals], ri) => (
-                    <tr key={ri} className="border-b border-white/5 last:border-0">
-                      <td className="px-5 py-2.5">{feature as string}</td>
-                      {(vals as boolean[]).map((v, ci) => (
-                        <td key={ci} className="px-5 py-2.5">
-                          {v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}
-                        </td>
-                      ))}
-                    </tr>
+                  {[[t("comparison.memberFeatures.browseEventsVenues"), true, true, true],[t("comparison.memberFeatures.ticketCheckout"), true, true, true],[t("comparison.memberFeatures.standardRsvp"), true, true, true],[t("comparison.memberFeatures.priorityWaitlist"), false, true, true],[t("comparison.memberFeatures.directMessaging"), false, true, true],[t("comparison.memberFeatures.premiumBadge"), false, true, true],[t("comparison.memberFeatures.advancedFilters"), false, false, true],[t("comparison.memberFeatures.earlyAccessFeatures"), false, false, true]].map(([feature, ...vals], ri) => (
+                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{(vals as boolean[]).map((v, ci) => (<td key={ci} className="px-5 py-2.5">{v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}</td>))}</tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-
-          {/* Organizer comparison */}
           <div className="reveal mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.organizerPlans")}</h3>
             <div className="overflow-x-auto rounded-xl border border-white/10">
               <table className="w-full min-w-[540px] text-left text-sm">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    <th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>
-                    {organizerTiers.map((ti) => (
-                      <th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Organizer ", "")}</th>
-                    ))}
-                  </tr>
-                </thead>
+                <thead><tr className="border-b border-white/10 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{organizerTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Organizer ", "")}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
-                  {[
-                    [t("comparison.organizerFeatures.activePublicEvents"), t("comparison.organizerFeatures.upTo3"), t("comparison.organizerFeatures.unlimited"), t("comparison.organizerFeatures.unlimited")],
-                    [t("comparison.organizerFeatures.publicTicketing"), true, true, true],
-                    [t("comparison.organizerFeatures.ticketCommission"), true, true, true],
-                    [t("comparison.organizerFeatures.basicEventAnalytics"), true, true, true],
-                    [t("comparison.organizerFeatures.recurringEvents"), false, true, true],
-                    [t("comparison.organizerFeatures.approvalWaitlistControls"), false, true, true],
-                    [t("comparison.organizerFeatures.venueRequestWorkflows"), false, true, true],
-                    [t("comparison.organizerFeatures.revenueReporting"), false, true, true],
-                    [t("comparison.organizerFeatures.prioritySupport"), false, false, true],
-                    [t("comparison.organizerFeatures.featuredPlacement"), false, false, true],
-                    [t("comparison.organizerFeatures.sponsorInventory"), false, false, true],
-                    [t("comparison.organizerFeatures.audienceSegmentation"), false, false, true],
-                  ].map(([feature, ...vals], ri) => (
-                    <tr key={ri} className="border-b border-white/5 last:border-0">
-                      <td className="px-5 py-2.5">{feature as string}</td>
-                      {vals.map((v, ci) => (
-                        <td key={ci} className="px-5 py-2.5">
-                          {typeof v === "string" ? (
-                            <span className="text-white font-medium">{v}</span>
-                          ) : v ? (
-                            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                          ) : (
-                            <span className="text-gray-600">—</span>
-                          )}
-                        </td>
-                      ))}
-                    </tr>
+                  {[[t("comparison.organizerFeatures.activePublicEvents"), t("comparison.organizerFeatures.upTo3"), t("comparison.organizerFeatures.unlimited"), t("comparison.organizerFeatures.unlimited")],[t("comparison.organizerFeatures.publicTicketing"), true, true, true],[t("comparison.organizerFeatures.ticketCommission"), true, true, true],[t("comparison.organizerFeatures.basicEventAnalytics"), true, true, true],[t("comparison.organizerFeatures.recurringEvents"), false, true, true],[t("comparison.organizerFeatures.approvalWaitlistControls"), false, true, true],[t("comparison.organizerFeatures.venueRequestWorkflows"), false, true, true],[t("comparison.organizerFeatures.revenueReporting"), false, true, true],[t("comparison.organizerFeatures.prioritySupport"), false, false, true],[t("comparison.organizerFeatures.featuredPlacement"), false, false, true],[t("comparison.organizerFeatures.sponsorInventory"), false, false, true],[t("comparison.organizerFeatures.audienceSegmentation"), false, false, true]].map(([feature, ...vals], ri) => (
+                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{vals.map((v, ci) => (<td key={ci} className="px-5 py-2.5">{typeof v === "string" ? (<span className="text-white font-medium">{v}</span>) : v ? (<CheckCircle2 className="h-4 w-4 text-emerald-400" />) : (<span className="text-gray-600">—</span>)}</td>))}</tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
-
-          {/* Venue comparison */}
           <div className="reveal">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.venuePlans")}</h3>
             <div className="overflow-x-auto rounded-xl border border-white/10">
               <table className="w-full min-w-[540px] text-left text-sm">
-                <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    <th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>
-                    {venueTiers.map((ti) => (
-                      <th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Venue ", "")}</th>
-                    ))}
-                  </tr>
-                </thead>
+                <thead><tr className="border-b border-white/10 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{venueTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Venue ", "")}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
-                  {[
-                    [t("comparison.venueFeatures.publicListing"), true, true, true],
-                    [t("comparison.venueFeatures.applicationReview"), true, true, true],
-                    [t("comparison.venueFeatures.bookingInbox"), false, true, true],
-                    [t("comparison.venueFeatures.availabilityPlanning"), false, true, true],
-                    [t("comparison.venueFeatures.partnerDealManagement"), false, true, true],
-                    [t("comparison.venueFeatures.organizerFitInsights"), false, true, true],
-                    [t("comparison.venueFeatures.featuredPlacement"), false, false, true],
-                    [t("comparison.venueFeatures.premiumAnalytics"), false, false, true],
-                    [t("comparison.venueFeatures.priorityVenueMatching"), false, false, true],
-                    [t("comparison.venueFeatures.sponsoredInventory"), false, false, true],
-                  ].map(([feature, ...vals], ri) => (
-                    <tr key={ri} className="border-b border-white/5 last:border-0">
-                      <td className="px-5 py-2.5">{feature as string}</td>
-                      {(vals as boolean[]).map((v, ci) => (
-                        <td key={ci} className="px-5 py-2.5">
-                          {v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}
-                        </td>
-                      ))}
-                    </tr>
+                  {[[t("comparison.venueFeatures.publicListing"), true, true, true],[t("comparison.venueFeatures.applicationReview"), true, true, true],[t("comparison.venueFeatures.bookingInbox"), false, true, true],[t("comparison.venueFeatures.availabilityPlanning"), false, true, true],[t("comparison.venueFeatures.partnerDealManagement"), false, true, true],[t("comparison.venueFeatures.organizerFitInsights"), false, true, true],[t("comparison.venueFeatures.featuredPlacement"), false, false, true],[t("comparison.venueFeatures.premiumAnalytics"), false, false, true],[t("comparison.venueFeatures.priorityVenueMatching"), false, false, true],[t("comparison.venueFeatures.sponsoredInventory"), false, false, true]].map(([feature, ...vals], ri) => (
+                    <tr key={ri} className="border-b border-white/5 last:border-0"><td className="px-5 py-2.5">{feature as string}</td>{(vals as boolean[]).map((v, ci) => (<td key={ci} className="px-5 py-2.5">{v ? <CheckCircle2 className="h-4 w-4 text-emerald-400" /> : <span className="text-gray-600">—</span>}</td>))}</tr>
                   ))}
                 </tbody>
               </table>
@@ -3182,23 +3248,23 @@ export function PricingScreen() {
         </div>
       </section>
 
-      {/* FAQ */}
+      {/* FAQ with accordion */}
       <section className="border-t border-gray-200 bg-brand-sand">
-        <div className="section-shell py-12">
-          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">{t("faq.title")}</h2>
-          <div className="mx-auto max-w-3xl space-y-4">
+        <div className="section-shell py-14">
+          <h2 className="mb-10 text-center text-2xl font-bold text-gray-900">{t("faq.title")}</h2>
+          <div className="mx-auto max-w-3xl space-y-3">
             {pricingFaq.map((item) => (
-              <div key={item.question} className="rounded-xl border border-gray-200 bg-white p-6">
-                <div className="font-semibold text-gray-900">{item.question}</div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.answer}</p>
-              </div>
+              <details key={item.question} className="group rounded-2xl border border-gray-200 bg-white transition-all [&[open]]:shadow-md">
+                <summary className="flex cursor-pointer items-center justify-between px-7 py-5 text-left font-semibold text-gray-900 transition hover:text-brand-indigo [&::-webkit-details-marker]:hidden">
+                  <span>{item.question}</span>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200 group-open:rotate-90" />
+                </summary>
+                <div className="px-7 pb-6"><p className="text-sm leading-relaxed text-gray-600">{item.answer}</p></div>
+              </details>
             ))}
           </div>
-          <div className="mt-8 text-center">
-            <Link
-              href="/faq"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-indigo"
-            >
+          <div className="mt-10 text-center">
+            <Link href="/faq" className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-indigo transition hover:underline">
               {t("faq.moreLink")}
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -3587,27 +3653,15 @@ export function FaqScreen() {
     {
       title: t("sections.joiningProfiles.title"),
       items: [
-        {
-          question: t("sections.joiningProfiles.q1"),
-          answer: t("sections.joiningProfiles.a1"),
-        },
-        {
-          question: t("sections.joiningProfiles.q2"),
-          answer: t("sections.joiningProfiles.a2"),
-        },
+        { question: t("sections.joiningProfiles.q1"), answer: t("sections.joiningProfiles.a1") },
+        { question: t("sections.joiningProfiles.q2"), answer: t("sections.joiningProfiles.a2") },
       ],
     },
     {
       title: t("sections.eventsGroups.title"),
       items: [
-        {
-          question: t("sections.eventsGroups.q1"),
-          answer: t("sections.eventsGroups.a1"),
-        },
-        {
-          question: t("sections.eventsGroups.q2"),
-          answer: t("sections.eventsGroups.a2"),
-        },
+        { question: t("sections.eventsGroups.q1"), answer: t("sections.eventsGroups.a1") },
+        { question: t("sections.eventsGroups.q2"), answer: t("sections.eventsGroups.a2") },
       ],
     },
     {
@@ -3620,14 +3674,8 @@ export function FaqScreen() {
     {
       title: t("sections.trustSupport.title"),
       items: [
-        {
-          question: t("sections.trustSupport.q1"),
-          answer: t("sections.trustSupport.a1"),
-        },
-        {
-          question: t("sections.trustSupport.q2"),
-          answer: t("sections.trustSupport.a2"),
-        },
+        { question: t("sections.trustSupport.q1"), answer: t("sections.trustSupport.a1") },
+        { question: t("sections.trustSupport.q2"), answer: t("sections.trustSupport.a2") },
       ],
     },
   ];
@@ -3644,21 +3692,59 @@ export function FaqScreen() {
         ]}
       />
 
-      <section className="section-shell py-8">
-        <div className="mx-auto max-w-3xl space-y-8">
-          {faqSections.map((section) => (
-            <div key={section.title}>
-              <h2 className="mb-4 text-lg font-semibold text-gray-900">{section.title}</h2>
-              <div className="space-y-4">
-                {section.items.map((item) => (
-                  <Section key={item.question}>
-                    <div className="font-medium text-gray-900">{item.question}</div>
-                    <p className="mt-2 text-sm text-gray-600">{item.answer}</p>
-                  </Section>
-                ))}
-              </div>
+      {/* Search placeholder */}
+      <section className="bg-white">
+        <div className="section-shell py-8">
+          <div className="mx-auto max-w-xl">
+            <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-brand-sand-light px-5 py-4">
+              <Search className="h-5 w-5 text-gray-400" />
+              <span className="text-sm text-gray-400">{t("searchPlaceholder")}</span>
             </div>
-          ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ categories with accordion */}
+      <section className="bg-white">
+        <div className="section-shell pb-14">
+          <div className="mx-auto max-w-3xl space-y-10">
+            {faqSections.map((section) => (
+              <div key={section.title}>
+                <h2 className="mb-5 text-xl font-bold text-gray-900">{section.title}</h2>
+                <div className="space-y-3">
+                  {section.items.map((item) => (
+                    <details
+                      key={item.question}
+                      className="group rounded-2xl border border-gray-200 bg-white transition-all hover:border-gray-300 [&[open]]:shadow-md [&[open]]:border-brand-indigo/20"
+                    >
+                      <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-left font-semibold text-gray-900 transition hover:text-brand-indigo [&::-webkit-details-marker]:hidden">
+                        <span>{item.question}</span>
+                        <ArrowRight className="h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200 group-open:rotate-90" />
+                      </summary>
+                      <div className="px-6 pb-5">
+                        <p className="text-sm leading-relaxed text-gray-600">{item.answer}</p>
+                      </div>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="border-t border-gray-200 bg-brand-sand">
+        <div className="section-shell py-14 text-center">
+          <h2 className="text-2xl font-bold text-gray-900">{t("cta.heading")}</h2>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-gray-600">{t("cta.description")}</p>
+          <Link
+            href="/contact"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-indigo px-8 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
+          >
+            {t("hero.contactUs")}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
     </>
@@ -3667,6 +3753,22 @@ export function FaqScreen() {
 
 export function ForOrganizersScreen() {
   const t = useTranslations("forOrganizersPage");
+
+  const features = [
+    { icon: UsersRound, title: t("features.recurringGroups.title"), text: t("features.recurringGroups.text"), color: "bg-brand-coral-soft text-brand-coral" },
+    { icon: Ticket, title: t("features.eventTools.title"), text: t("features.eventTools.text"), color: "bg-brand-indigo-soft text-brand-indigo" },
+    { icon: Building2, title: t("features.venueMatching.title"), text: t("features.venueMatching.text"), color: "bg-[rgba(124,154,130,0.12)] text-brand-sage" },
+    { icon: TrendingUp, title: t("features.analytics.title"), text: t("features.analytics.text"), color: "bg-brand-coral-soft text-brand-coral" },
+    { icon: CalendarDays, title: t("features.recurringTemplates.title"), text: t("features.recurringTemplates.text"), color: "bg-brand-indigo-soft text-brand-indigo" },
+    { icon: Zap, title: t("features.approvalControls.title"), text: t("features.approvalControls.text"), color: "bg-amber-50 text-amber-600" },
+  ];
+
+  const steps = [
+    { num: "01", title: t("steps.create.title"), text: t("steps.create.text") },
+    { num: "02", title: t("steps.configure.title"), text: t("steps.configure.text") },
+    { num: "03", title: t("steps.publish.title"), text: t("steps.publish.text") },
+  ];
+
   return (
     <>
       <IndexHero
@@ -3680,84 +3782,93 @@ export function ForOrganizersScreen() {
         ]}
       />
 
-      {/* Features */}
+      {/* Feature grid */}
       <section className="bg-white">
-        <div className="section-shell py-12">
-          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">{t("features.heading")}</h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                icon: UsersRound,
-                title: t("features.recurringGroups.title"),
-                text: t("features.recurringGroups.text"),
-              },
-              {
-                icon: Ticket,
-                title: t("features.eventTools.title"),
-                text: t("features.eventTools.text"),
-              },
-              {
-                icon: Building2,
-                title: t("features.venueMatching.title"),
-                text: t("features.venueMatching.text"),
-              },
-              {
-                icon: TrendingUp,
-                title: t("features.analytics.title"),
-                text: t("features.analytics.text"),
-              },
-              {
-                icon: CalendarDays,
-                title: t("features.recurringTemplates.title"),
-                text: t("features.recurringTemplates.text"),
-              },
-              {
-                icon: Zap,
-                title: t("features.approvalControls.title"),
-                text: t("features.approvalControls.text"),
-              },
-            ].map((item) => (
-              <div key={item.title} className="rounded-xl border border-gray-200 bg-white p-6">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-coral-soft">
-                  <item.icon className="h-5 w-5 text-brand-coral" />
+        <div className="section-shell py-16">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("features.eyebrow")}</span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900">{t("features.heading")}</h2>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((item) => (
+              <div key={item.title} className="group rounded-2xl border border-gray-200 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <div className={cn("flex h-12 w-12 items-center justify-center rounded-2xl", item.color)}>
+                  <item.icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-4 font-semibold text-gray-900">{item.title}</h3>
-                <p className="mt-2 text-sm text-gray-600">{item.text}</p>
+                <h3 className="mt-5 text-lg font-bold text-gray-900">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* How to get started */}
+      <section className="border-t border-gray-200 bg-brand-sand">
+        <div className="section-shell py-16">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900">{t("steps.heading")}</h2>
+            <p className="mt-4 text-base text-gray-600">{t("steps.subtitle")}</p>
+          </div>
+          <div className="mx-auto grid max-w-3xl gap-8 md:grid-cols-3">
+            {steps.map((step) => (
+              <div key={step.num} className="text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-coral text-lg font-bold text-white">
+                  {step.num}
+                </div>
+                <h3 className="mt-5 text-lg font-bold text-gray-900">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{step.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial placeholder */}
+      <section className="border-t border-gray-200 bg-white">
+        <div className="section-shell py-16">
+          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-brand-sand-light p-10 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-coral-soft">
+              <Heart className="h-6 w-6 text-brand-coral" />
+            </div>
+            <blockquote className="mt-6 font-editorial text-xl italic leading-relaxed text-gray-900">
+              {t("testimonial.quote")}
+            </blockquote>
+            <div className="mt-6">
+              <div className="font-semibold text-gray-900">{t("testimonial.name")}</div>
+              <div className="text-sm text-gray-500">{t("testimonial.role")}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section className="border-t border-gray-200 bg-brand-sand">
-        <div className="section-shell py-12">
+        <div className="section-shell py-16">
           <h2 className="mb-2 text-center text-2xl font-bold text-gray-900">{t("pricing.heading")}</h2>
-          <p className="mb-8 text-center text-sm text-gray-600">
-            {t("pricing.commission", { rate: ticketCommissionRate })}
-          </p>
+          <p className="mb-10 text-center text-sm text-gray-600">{t("pricing.commission", { rate: ticketCommissionRate })}</p>
           <div className="grid gap-6 md:grid-cols-3">
             {organizerTiers.map((tier, i) => (
               <article
                 key={tier.name}
                 className={cn(
-                  "rounded-xl border bg-white",
-                  i === 1 ? "border-brand-coral ring-2 ring-brand-coral/10" : "border-gray-200",
+                  "sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+                  i === 1 ? "border-brand-coral ring-2 ring-brand-coral/20 shadow-lg" : "border-gray-200",
                 )}
               >
                 {i === 1 ? (
-                  <div className="rounded-t-xl bg-brand-coral py-1.5 text-center text-xs font-semibold text-white">
+                  <div className="rounded-t-2xl bg-brand-coral py-2 text-center text-xs font-bold uppercase tracking-wider text-white">
                     {t("pricing.recommended")}
                   </div>
                 ) : null}
-                <div className="border-b border-gray-100 p-6">
+                <div className="border-b border-gray-100 p-7">
                   <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
-                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
-                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                  <div className="mt-3 text-4xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-600">{tier.description}</p>
                 </div>
-                <div className="p-6 space-y-3">
+                <div className="p-7 space-y-3">
                   {tier.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-2">
+                    <div key={feature} className="flex items-start gap-2.5">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-sage" />
                       <span className="text-sm text-gray-700">{feature}</span>
                     </div>
@@ -3769,20 +3880,21 @@ export function ForOrganizersScreen() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-brand-indigo">
-        <div className="section-shell py-12 text-center text-white sm:py-16">
-          <h3 className="text-2xl font-bold">{t("cta.heading")}</h3>
-          <p className="mx-auto mt-3 max-w-lg text-sm text-white/80">
-            {t("cta.description")}
-          </p>
-          <Link
-            href="/signup"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold transition hover:bg-white/90 text-brand-indigo"
-          >
-            {t("cta.button")}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+      {/* CTA with gradient */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+        <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
+          <h3 className="text-3xl font-bold">{t("cta.heading")}</h3>
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/80">{t("cta.description")}</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo shadow-lg transition hover:bg-white/90">
+              {t("cta.button")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/pricing" className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+              {t("hero.seePricing")}
+            </Link>
+          </div>
         </div>
       </section>
     </>
@@ -3791,6 +3903,23 @@ export function ForOrganizersScreen() {
 
 export function ForVenuesScreen() {
   const t = useTranslations("forVenuesPage");
+
+  const benefits = [
+    { icon: CheckCircle2, title: t("features.structuredOnboarding.title"), text: t("features.structuredOnboarding.text"), color: "bg-[rgba(124,154,130,0.12)] text-brand-sage" },
+    { icon: CalendarDays, title: t("features.bookingManagement.title"), text: t("features.bookingManagement.text"), color: "bg-brand-indigo-soft text-brand-indigo" },
+    { icon: TrendingUp, title: t("features.analyticsDeals.title"), text: t("features.analyticsDeals.text"), color: "bg-brand-coral-soft text-brand-coral" },
+    { icon: UsersRound, title: t("features.communityExposure.title"), text: t("features.communityExposure.text"), color: "bg-brand-indigo-soft text-brand-indigo" },
+    { icon: Star, title: t("features.reviewsRatings.title"), text: t("features.reviewsRatings.text"), color: "bg-amber-50 text-amber-600" },
+    { icon: Sparkles, title: t("features.featuredPlacement.title"), text: t("features.featuredPlacement.text"), color: "bg-brand-coral-soft text-brand-coral" },
+  ];
+
+  const steps = [
+    { num: "01", title: t("steps.apply.title"), text: t("steps.apply.text") },
+    { num: "02", title: t("steps.setup.title"), text: t("steps.setup.text") },
+    { num: "03", title: t("steps.publish.title"), text: t("steps.publish.text") },
+    { num: "04", title: t("steps.grow.title"), text: t("steps.grow.text") },
+  ];
+
   return (
     <>
       <IndexHero
@@ -3804,49 +3933,46 @@ export function ForVenuesScreen() {
         ]}
       />
 
-      {/* Features */}
+      {/* Venue benefits grid */}
       <section className="bg-white">
-        <div className="section-shell py-12">
-          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">{t("features.heading")}</h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                icon: CheckCircle2,
-                title: t("features.structuredOnboarding.title"),
-                text: t("features.structuredOnboarding.text"),
-              },
-              {
-                icon: CalendarDays,
-                title: t("features.bookingManagement.title"),
-                text: t("features.bookingManagement.text"),
-              },
-              {
-                icon: TrendingUp,
-                title: t("features.analyticsDeals.title"),
-                text: t("features.analyticsDeals.text"),
-              },
-              {
-                icon: UsersRound,
-                title: t("features.communityExposure.title"),
-                text: t("features.communityExposure.text"),
-              },
-              {
-                icon: Star,
-                title: t("features.reviewsRatings.title"),
-                text: t("features.reviewsRatings.text"),
-              },
-              {
-                icon: Sparkles,
-                title: t("features.featuredPlacement.title"),
-                text: t("features.featuredPlacement.text"),
-              },
-            ].map((item) => (
-              <div key={item.title} className="rounded-xl border border-gray-200 bg-white p-6">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[rgba(124,154,130,0.12)]">
-                  <item.icon className="h-5 w-5 text-brand-sage" />
+        <div className="section-shell py-16">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-sage">{t("benefits.eyebrow")}</span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900">{t("features.heading")}</h2>
+            <p className="mt-4 text-base text-gray-600">{t("benefits.subtitle")}</p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {benefits.map((item) => (
+              <div
+                key={item.title}
+                className="group rounded-2xl border border-gray-200 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className={cn("flex h-12 w-12 items-center justify-center rounded-2xl", item.color)}>
+                  <item.icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-4 font-semibold text-gray-900">{item.title}</h3>
-                <p className="mt-2 text-sm text-gray-600">{item.text}</p>
+                <h3 className="mt-5 text-lg font-bold text-gray-900">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works for venues */}
+      <section className="border-t border-gray-200 bg-brand-sand">
+        <div className="section-shell py-16">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900">{t("steps.heading")}</h2>
+            <p className="mt-4 text-base text-gray-600">{t("steps.subtitle")}</p>
+          </div>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {steps.map((step) => (
+              <div key={step.num} className="relative">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-sage text-lg font-bold text-white">
+                  {step.num}
+                </div>
+                <h3 className="mt-5 text-lg font-bold text-gray-900">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600">{step.text}</p>
               </div>
             ))}
           </div>
@@ -3854,35 +3980,50 @@ export function ForVenuesScreen() {
       </section>
 
       {/* Pricing */}
-      <section className="border-t border-gray-200 bg-brand-sand">
-        <div className="section-shell py-12">
-          <h2 className="mb-8 text-center text-2xl font-bold text-gray-900">{t("pricing.heading")}</h2>
+      <section className="border-t border-gray-200 bg-white">
+        <div className="section-shell py-16">
+          <h2 className="mb-10 text-center text-2xl font-bold text-gray-900">{t("pricing.heading")}</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {venueTiers.map((tier, i) => (
               <article
                 key={tier.name}
                 className={cn(
-                  "rounded-xl border bg-white",
-                  i === 1 ? "border-brand-sage ring-2 ring-brand-sage/10" : "border-gray-200",
+                  "sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
+                  i === 1
+                    ? "border-brand-sage ring-2 ring-brand-sage/20 shadow-lg"
+                    : "border-gray-200",
                 )}
               >
                 {i === 1 ? (
-                  <div className="rounded-t-xl bg-brand-sage py-1.5 text-center text-xs font-semibold text-white">
+                  <div className="rounded-t-2xl bg-brand-sage py-2 text-center text-xs font-bold uppercase tracking-wider text-white">
                     {t("pricing.bestValue")}
                   </div>
                 ) : null}
-                <div className="border-b border-gray-100 p-6">
+                <div className="border-b border-gray-100 p-7">
                   <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
-                  <div className="mt-2 text-3xl font-bold text-gray-900">{tier.price}</div>
-                  <p className="mt-3 text-sm text-gray-600">{tier.description}</p>
+                  <div className="mt-3 text-4xl font-bold text-gray-900">{tier.price}</div>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-600">{tier.description}</p>
                 </div>
-                <div className="p-6 space-y-3">
+                <div className="p-7 space-y-3">
                   {tier.features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-2">
+                    <div key={feature} className="flex items-start gap-2.5">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-sage" />
                       <span className="text-sm text-gray-700">{feature}</span>
                     </div>
                   ))}
+                </div>
+                <div className="px-7 pb-7">
+                  <Link
+                    href="/venue/onboarding"
+                    className={cn(
+                      "flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition",
+                      i === 1
+                        ? "bg-brand-sage text-white hover:opacity-90"
+                        : "border border-gray-300 text-gray-700 hover:bg-gray-50",
+                    )}
+                  >
+                    {tier.price === "0 ISK" ? t("pricing.listFree") : t("pricing.applyNow")}
+                  </Link>
                 </div>
               </article>
             ))}
@@ -3890,20 +4031,47 @@ export function ForVenuesScreen() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-gray-900">
-        <div className="section-shell py-12 text-center text-white sm:py-16">
-          <h3 className="text-2xl font-bold">{t("cta.heading")}</h3>
-          <p className="mx-auto mt-3 max-w-lg text-sm text-white/70">
+      {/* Testimonial placeholder */}
+      <section className="border-t border-gray-200 bg-brand-sand">
+        <div className="section-shell py-16">
+          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-white p-10 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(124,154,130,0.12)]">
+              <Star className="h-6 w-6 text-brand-sage" />
+            </div>
+            <blockquote className="mt-6 font-editorial text-xl italic leading-relaxed text-gray-900">
+              {t("testimonial.quote")}
+            </blockquote>
+            <div className="mt-6">
+              <div className="font-semibold text-gray-900">{t("testimonial.name")}</div>
+              <div className="text-sm text-gray-500">{t("testimonial.role")}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA with gradient */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-sage via-[#5a7d62] to-[#3d5c45]">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
+        <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
+          <h3 className="text-3xl font-bold">{t("cta.heading")}</h3>
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/80">
             {t("cta.description")}
           </p>
-          <Link
-            href="/venue/onboarding"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-coral px-8 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
-          >
-            {t("cta.button")}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/venue/onboarding"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-sage shadow-lg transition hover:bg-white/90"
+            >
+              {t("cta.button")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/venues"
+              className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+            >
+              {t("hero.browseVenues")}
+            </Link>
+          </div>
         </div>
       </section>
     </>
