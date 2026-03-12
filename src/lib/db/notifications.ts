@@ -1,0 +1,53 @@
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Database } from "@/types/database";
+
+type NotificationInsert =
+  Database["public"]["Tables"]["notifications"]["Insert"];
+
+export async function getUserNotifications(userId: string, limit = 20) {
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("Failed to fetch user notifications:", error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+export async function markNotificationRead(notificationId: string) {
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) throw new Error("Database unavailable");
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .update({ is_read: true })
+    .eq("id", notificationId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function createNotification(notification: NotificationInsert) {
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) throw new Error("Database unavailable");
+
+  const { data, error } = await supabase
+    .from("notifications")
+    .insert(notification)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
