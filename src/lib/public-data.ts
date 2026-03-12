@@ -1227,6 +1227,8 @@ export const publicVenues: PublicVenue[] = [
       "linear-gradient(135deg, rgba(180,160,120,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/litla-kaffistofan.svg')",
     ],
     art: "linear-gradient(135deg, rgba(180,160,120,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/litla-kaffistofan.svg')",
+    latitude: 64.1483,
+    longitude: -21.9411,
   },
   {
     slug: "messinn",
@@ -1742,38 +1744,6 @@ export const publicVenues: PublicVenue[] = [
     art: "linear-gradient(135deg, rgba(91,33,182,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/gamli-gaukurinn.svg')",
     latitude: 64.1488,
     longitude: -21.9408,
-  },
-  {
-    slug: "stofan-cafe",
-    name: "Stofan Cafe",
-    type: "Cafe & Lounge",
-    area: "Vesturgata",
-    capacity: 45,
-    rating: 4.9,
-    summary: "A cozy cafe with vintage decor and board games, beloved by locals for casual meetups and creative gatherings.",
-    description: [
-      "Stofan is one of Reykjavik's most characterful cafes. With its mismatched vintage furniture, board games on every shelf, and a warm living-room feel, it's the kind of place where strangers become friends.",
-      "The space works beautifully for smaller meetups, language exchanges, and book clubs. The coffee is excellent, the atmosphere is unforced, and the staff understand that people come here to linger.",
-    ],
-    address: "Vesturgata 3, 101 Reykjavik",
-    amenities: ["Board games", "Cozy seating", "Good coffee", "Quiet corner"],
-    hours: [
-      { day: "Mon", open: "10:00-22:00" },
-      { day: "Tue", open: "10:00-22:00" },
-      { day: "Wed", open: "10:00-22:00" },
-      { day: "Thu", open: "10:00-22:00" },
-      { day: "Fri", open: "10:00-23:00", highlighted: true },
-      { day: "Sat", open: "10:00-23:00", highlighted: true },
-      { day: "Sun", open: "11:00-22:00" },
-    ],
-    deal: "Coffee bundle for groups — 10% off 5+ drinks at MeetupReykjavik events",
-    upcomingEventSlugs: [],
-    gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.5), rgba(200,180,140,0.4)), url('/place-images/reykjavik/hafnarborg-1be7b43b.jpg')",
-    ],
-    art: "linear-gradient(135deg, rgba(245,240,232,0.5), rgba(200,180,140,0.4)), url('/place-images/reykjavik/hafnarborg-1be7b43b.jpg')",
-    latitude: 64.1483,
-    longitude: -21.9411,
   },
 ] as const;
 
