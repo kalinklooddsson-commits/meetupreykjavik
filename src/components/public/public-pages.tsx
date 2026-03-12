@@ -539,6 +539,10 @@ function Section({
 function EventCard({ event }: { event: PublicEvent }) {
   const fill = occupancyPercent(event.attendees, event.capacity);
   const startsAt = new Date(event.startsAt);
+  const badgeWeekday = startsAt.toLocaleString("en-GB", {
+    weekday: "short",
+    timeZone: "Atlantic/Reykjavik",
+  });
   const badgeDay = startsAt.toLocaleString("en-GB", {
     day: "numeric",
     timeZone: "Atlantic/Reykjavik",
@@ -547,81 +551,130 @@ function EventCard({ event }: { event: PublicEvent }) {
     .toLocaleString("en-GB", { month: "short", timeZone: "Atlantic/Reykjavik" })
     .toUpperCase();
   const imageUrl = extractImageUrl(event.art);
+  const avgRating =
+    event.ratings && event.ratings.length > 0
+      ? event.ratings.reduce((sum, r) => sum + r.rating, 0) /
+        event.ratings.length
+      : null;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
-      <div className="relative h-48 bg-gray-200">
+    <article className="group overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+      {/* ── Image area ── */}
+      <div className="relative h-48 overflow-hidden bg-gray-200">
         {imageUrl ? (
           <>
             <Image
               fill
               alt={event.title}
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
               src={imageUrl}
               unoptimized={imageUrl.startsWith("https://")}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(30,27,46,0.55)]" />
           </>
         ) : (
           <div className="absolute inset-0" style={{ background: event.art }} />
         )}
-        <div className="relative z-10 flex h-full flex-col justify-between p-4 text-white">
-          <div className="flex items-start justify-between gap-3">
-            <div className="rounded-lg bg-white px-3 py-1.5 text-center shadow-sm">
-              <div className="text-[0.6rem] font-bold uppercase tracking-wider text-brand-coral">
-                {badgeMonth}
-              </div>
-              <div className="text-xl font-bold text-gray-900">{badgeDay}</div>
-            </div>
-            <ToneBadge tone={categoryTone(event.category)}>{event.category}</ToneBadge>
+
+        {/* Date badge */}
+        <div className="absolute left-4 top-4 z-10 rounded-lg bg-white px-3 py-1.5 text-center shadow-md">
+          <div className="text-[0.55rem] font-semibold uppercase tracking-wide text-gray-500">
+            {badgeWeekday}
           </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
-              {event.priceLabel}
+          <div className="text-xl font-bold leading-tight text-gray-900">{badgeDay}</div>
+          <div className="text-[0.6rem] font-bold uppercase tracking-wider text-brand-coral">
+            {badgeMonth}
+          </div>
+        </div>
+
+        {/* Age label overlay */}
+        {event.ageLabel !== "All ages" ? (
+          <div className="absolute right-4 top-4 z-10">
+            <span className="rounded-full bg-black/40 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+              {event.ageLabel}
             </span>
-            {event.ageLabel !== "All ages" ? (
-              <span className="rounded-full bg-black/40 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
-                {event.ageLabel}
-              </span>
-            ) : null}
           </div>
-        </div>
+        ) : null}
       </div>
+
+      {/* ── Body ── */}
       <div className="p-5">
-        <h2 className="text-xl font-bold text-gray-900">{event.title}</h2>
-        <p className="mt-2 text-sm text-gray-600">{event.summary}</p>
-        <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4 text-gray-400" />
+        {/* Title */}
+        <Link href={eventHref(event.slug)} className="block">
+          <h2 className="text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-brand-indigo">
+            {event.title}
+          </h2>
+        </Link>
+
+        {/* Category + price row */}
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <ToneBadge tone={categoryTone(event.category)}>{event.category}</ToneBadge>
+          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+            {event.priceLabel}
+          </span>
+          {avgRating !== null ? (
+            <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-amber-600">
+              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+              {avgRating.toFixed(1)}
+            </span>
+          ) : null}
+        </div>
+
+        {/* Summary */}
+        <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-gray-600">
+          {event.summary}
+        </p>
+
+        {/* Date + time */}
+        <div className="mt-3.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+          <span className="flex items-center gap-1.5">
+            <CalendarDays className="h-3.5 w-3.5 text-gray-400" />
             {formatEventDate(event.startsAt)}
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock3 className="h-4 w-4 text-gray-400" />
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Clock3 className="h-3.5 w-3.5 text-gray-400" />
             {formatEventTimeRange(event.startsAt, event.endsAt)}
-          </div>
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-gray-400" />
-            {event.venueName}
-          </div>
-          <div className="flex items-center gap-2">
-            <UsersRound className="h-4 w-4 text-gray-400" />
-            {event.attendees}/{event.capacity} going
-          </div>
+          </span>
         </div>
-        <div className="mt-4">
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>{fill}% full</span>
-          </div>
-          <div className="mt-1 h-1.5 rounded-full bg-gray-100">
-            <div
-              className="h-1.5 rounded-full bg-brand-indigo"
-              style={{ width: `${fill}%` }}
-            />
-          </div>
+
+        {/* Venue */}
+        <div className="mt-1.5 flex items-center gap-1.5 text-sm text-gray-600">
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+          <span className="truncate">{event.venueName}</span>
         </div>
-        <div className="mt-5 flex items-center justify-between">
-          <div className="text-sm text-gray-500">{event.groupName}</div>
+
+        {/* Group */}
+        <div className="mt-1 flex items-center gap-1.5 text-sm text-gray-600">
+          <UsersRound className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+          <span className="truncate">{event.groupName}</span>
+        </div>
+
+        {/* Capacity bar — only when > 50% */}
+        {fill > 50 ? (
+          <div className="mt-4">
+            <div className="flex items-center justify-between text-xs text-gray-500">
+              <span>
+                {event.attendees}/{event.capacity} going
+              </span>
+              {fill > 75 ? (
+                <span className="font-semibold text-brand-coral">Filling fast</span>
+              ) : null}
+            </div>
+            <div className="mt-1 h-1 rounded-full bg-gray-100">
+              <div
+                className={cn(
+                  "h-1 rounded-full transition-all",
+                  fill > 75 ? "bg-brand-coral" : "bg-brand-indigo",
+                )}
+                style={{ width: `${fill}%` }}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        {/* CTA */}
+        <div className="mt-5 flex items-center justify-end">
           <Link
             href={eventHref(event.slug)}
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
@@ -643,49 +696,83 @@ function GroupCard({
   upcomingTitle?: string;
 }) {
   const imageUrl = extractImageUrl(group.banner);
+  const isHot = group.activity > 80;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
-      <div className="relative h-36 bg-gray-200">
+    <article className="group overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+      {/* Banner image with overlay badge */}
+      <div className="relative h-40 overflow-hidden bg-gray-200">
         {imageUrl ? (
           <>
             <Image
               fill
               alt={group.name}
-              className="object-cover"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
               src={imageUrl}
               unoptimized={imageUrl.startsWith("https://")}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
           </>
         ) : (
           <div className="absolute inset-0" style={{ background: group.banner }} />
         )}
-      </div>
-      <div className="p-5">
-        <div className="flex items-center gap-2">
+
+        {/* Category badge overlaid on banner */}
+        <div className="absolute top-3 left-3">
           <ToneBadge tone={categoryTone(group.category)}>{group.category}</ToneBadge>
         </div>
-        <h2 className="mt-3 text-xl font-bold text-gray-900">{group.name}</h2>
-        <p className="mt-2 text-sm text-gray-600">{group.summary}</p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {group.tags.map((tag) => (
-            <span key={tag} className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600">
-              {tag}
-            </span>
-          ))}
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <UsersRound className="h-4 w-4 text-gray-400" />
-            {group.members} members
+
+        {/* Hot badge */}
+        {isHot && (
+          <div className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-brand-coral/90 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+            <TrendingUp className="h-3 w-3" />
+            Hot
           </div>
-          <div className="flex items-center gap-2">
-            Organized by {group.organizer}
-          </div>
+        )}
+
+        {/* Member count on banner */}
+        <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+          <UsersRound className="h-3.5 w-3.5" />
+          {group.members} members
         </div>
-        <div className="mt-4 flex items-center justify-between">
+      </div>
+
+      {/* Activity progress bar */}
+      <div className="h-1 w-full bg-gray-200">
+        <div
+          className="h-full bg-brand-indigo transition-all duration-500"
+          style={{ width: `${Math.min(group.activity, 100)}%` }}
+        />
+      </div>
+
+      {/* Card body */}
+      <div className="p-5">
+        <h2 className="text-lg font-bold leading-snug text-gray-900">{group.name}</h2>
+        <p className="mt-1.5 line-clamp-2 text-sm text-gray-600">{group.summary}</p>
+
+        {/* Tags (first 3) */}
+        {group.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {group.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Organizer */}
+        <p className="mt-3 text-xs text-gray-400">
+          Organized by{" "}
+          <span className="font-medium text-gray-600">{group.organizer}</span>
+        </p>
+
+        {/* Footer */}
+        <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
           <div className="text-sm text-gray-500">
             {upcomingTitle ? `Next: ${upcomingTitle}` : "No upcoming events"}
           </div>
@@ -705,59 +792,125 @@ function GroupCard({
 function VenueCard({ venue }: { venue: PublicVenue }) {
   const nextEvent = publicEvents.find((event) => venue.upcomingEventSlugs.includes(event.slug));
   const imageUrl = extractImageUrl(venue.art);
+  const fullStars = Math.floor(venue.rating);
+  const emptyStars = 5 - fullStars;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
-      <div className="relative h-36 bg-gray-200">
+    <article className="group overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+      {/* ── Image section ── */}
+      <div className="relative h-44 overflow-hidden bg-gray-200">
         {imageUrl ? (
           <>
             <Image
               fill
               alt={venue.name}
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 33vw"
               src={imageUrl}
               unoptimized={imageUrl.startsWith("https://")}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           </>
         ) : (
           <div className="absolute inset-0" style={{ background: venue.art }} />
         )}
-        <div className="absolute right-3 top-3">
-          <span className="flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-sm font-semibold text-white backdrop-blur-sm">
-            <Star className="h-3.5 w-3.5 fill-current" />
-            {venue.rating}
+
+        {/* Venue type badge – top left */}
+        <div className="absolute left-3 top-3">
+          <span className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-gray-800 backdrop-blur-sm">
+            <Building2 className="h-3 w-3" />
+            {venue.type}
           </span>
         </div>
-      </div>
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-gray-900">{venue.name}</h3>
-        <div className="mt-0.5 text-xs text-gray-500">{venue.type} · {venue.area}</div>
-        <p className="mt-2 text-sm text-gray-600">{venue.summary}</p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {venue.amenities.slice(0, 3).map((amenity) => (
-            <span key={amenity} className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600">
-              {amenity}
+
+        {/* Member deal badge – top right */}
+        {venue.deal ? (
+          <div className="absolute right-3 top-3">
+            <span className="rounded-full bg-brand-coral px-2.5 py-1 text-xs font-bold text-white">
+              Member deal
             </span>
-          ))}
-        </div>
-        <div className="mt-4 flex items-center justify-between">
-          <div className="text-sm text-gray-500">
-            {nextEvent ? `Upcoming: ${nextEvent.title}` : "Open for bookings"}
           </div>
-          <Link
-            href={venueHref(venue.slug)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
-          >
-            View venue
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+        ) : null}
+
+        {/* Venue name overlay – bottom */}
+        <div className="absolute inset-x-0 bottom-0 px-4 pb-3">
+          <h3 className="text-lg font-bold leading-tight text-white drop-shadow-sm">{venue.name}</h3>
+        </div>
+      </div>
+
+      {/* ── Content section ── */}
+      <div className="p-5">
+        {/* Star rating + area badge row */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-0.5">
+            {Array.from({ length: fullStars }).map((_, i) => (
+              <Star key={`f${i}`} className="h-3.5 w-3.5 fill-current text-amber-500" />
+            ))}
+            {Array.from({ length: emptyStars }).map((_, i) => (
+              <Star key={`e${i}`} className="h-3.5 w-3.5 fill-current text-gray-300" />
+            ))}
+            <span className="ml-1 text-sm font-semibold text-gray-700">{venue.rating}</span>
+          </div>
+          <span className="rounded-full bg-brand-indigo-soft px-2.5 py-0.5 text-xs font-medium text-brand-indigo">
+            {venue.area}
+          </span>
+        </div>
+
+        {/* Summary */}
+        <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-gray-600">{venue.summary}</p>
+
+        {/* Capacity */}
+        <div className="mt-3 flex items-center gap-1.5 text-sm text-gray-500">
+          <UsersRound className="h-4 w-4 text-gray-400" />
+          <span>{venue.capacity} seats</span>
+        </div>
+
+        {/* Amenity pills */}
+        {venue.amenities.length > 0 ? (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {venue.amenities.slice(0, 4).map((amenity) => (
+              <span key={amenity} className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600">
+                {amenity}
+              </span>
+            ))}
+          </div>
+        ) : null}
+
+        {/* Member deal detail */}
+        {venue.deal ? (
+          <div className="mt-3 rounded-lg border border-brand-coral/20 bg-brand-coral/5 px-3 py-2 text-xs font-medium text-brand-coral">
+            {venue.deal}
+          </div>
+        ) : null}
+
+        {/* Divider + bottom row */}
+        <div className="mt-4 border-t border-gray-100 pt-4">
+          <div className="flex items-center justify-between gap-2">
+            {/* Next event or open status */}
+            <div className="min-w-0 flex-1 text-sm text-gray-500">
+              {nextEvent ? (
+                <span className="flex items-center gap-1.5 truncate">
+                  <CalendarDays className="h-3.5 w-3.5 shrink-0 text-brand-indigo" />
+                  <span className="truncate">{nextEvent.title}</span>
+                </span>
+              ) : (
+                <span className="text-gray-400">Open for bookings</span>
+              )}
+            </div>
+            <Link
+              href={venueHref(venue.slug)}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+            >
+              View venue
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </div>
     </article>
   );
 }
+
 
 function BlogCard({ post }: { post: BlogPost }) {
   const imageUrl = extractImageUrl(post.hero);
