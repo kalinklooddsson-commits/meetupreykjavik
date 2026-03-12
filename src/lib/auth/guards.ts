@@ -6,6 +6,24 @@ export async function getCurrentSession() {
   return getCurrentAppSession();
 }
 
+/**
+ * Server-component helper that returns the current user session or `null`.
+ *
+ * Usage in a React Server Component:
+ * ```tsx
+ * import { getUser } from "@/lib/auth/guards";
+ *
+ * export default async function Page() {
+ *   const user = await getUser();
+ *   if (!user) return <p>Not signed in</p>;
+ *   return <p>Hello {user.displayName}</p>;
+ * }
+ * ```
+ */
+export async function getUser() {
+  return getCurrentAppSession();
+}
+
 export async function redirectIfAuthenticated() {
   const session = await getCurrentSession();
 

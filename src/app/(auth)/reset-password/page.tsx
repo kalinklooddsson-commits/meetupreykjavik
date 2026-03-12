@@ -1,15 +1,18 @@
+import { getTranslations } from "next-intl/server";
+
 import { AuthPanel } from "@/components/ui/auth-panel";
 
-export default function ResetPasswordPage() {
+export default async function ResetPasswordPage() {
+  const t = await getTranslations("auth.resetPassword");
   return (
     <AuthPanel
       mode="reset-password"
-      eyebrow="Reset password"
-      title="Set a new password"
-      description="Enter your reset token and choose a new password."
-      primaryLabel="Set new password"
+      eyebrow={t("eyebrow")}
+      title={t("title")}
+      description={t("description")}
+      primaryLabel={t("primaryLabel")}
       secondaryHref="/login"
-      secondaryLabel="Back to login"
+      secondaryLabel={t("secondaryLabel")}
     />
   );
 }

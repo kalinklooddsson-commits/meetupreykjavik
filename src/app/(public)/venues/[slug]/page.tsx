@@ -3,7 +3,7 @@ import {
   SourcedVenueDetailScreen,
   VenueDetailScreen,
 } from "@/components/public/public-pages";
-import { getVenueBySlug } from "@/lib/public-data";
+import { fetchVenueBySlug } from "@/lib/data";
 import { getSourcedPlaceBySlug } from "@/lib/reykjavik-source-data";
 
 export default async function VenueDetailPage({
@@ -12,7 +12,7 @@ export default async function VenueDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const venue = getVenueBySlug(slug);
+  const venue = await fetchVenueBySlug(slug);
   const sourcedPlace = venue ? null : getSourcedPlaceBySlug(slug);
 
   if (!venue && !sourcedPlace) {

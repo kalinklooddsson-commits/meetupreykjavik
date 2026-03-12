@@ -1,368 +1,998 @@
 {
   "locale": {
-    "switcher": "Skipta um tungumal",
+    "switcher": "Skipta um tungumál",
     "en": "EN",
     "is": "IS"
   },
   "nav": {
-    "events": "Vidburdir",
-    "groups": "Hopar",
-    "venues": "Stadir",
+    "events": "Viðburðir",
+    "groups": "Hópar",
+    "venues": "Staðir",
     "about": "Um okkur",
-    "pricing": "Verdskra",
+    "pricing": "Verðskrá",
     "forOrganizers": "Fyrir skipuleggjendur",
-    "forVenues": "Fyrir stadi",
+    "forVenues": "Fyrir staði",
     "faq": "Algengar spurningar",
     "blog": "Blogg",
-    "privacy": "Personuvernd"
+    "privacy": "Persónuvernd",
+    "more": "Meira",
+    "categories": "Flokkar",
+    "contact": "Hafa samband",
+    "home": "Heim",
+    "menu": "Valmynd",
+    "close": "Loka"
   },
   "cta": {
-    "signup": "Stofna adgang",
+    "signup": "Nýskráning",
     "signin": "Skrá inn",
     "join": "Skráning",
-    "portal": "Mina sida",
-    "dashboard": "Yfirlit",
-    "admin": "Admin",
-    "venuePortal": "Stadagatt",
+    "portal": "Mínar síður",
+    "dashboard": "Stjórnborð",
+    "admin": "Stjórnandi",
+    "venuePortal": "Staðagátt",
     "organizerHub": "Skipuleggjandi",
     "explore": "Skoða",
-    "exploreEvents": "Skoða vidburdi",
-    "startGroup": "Stofna hop",
-    "seeAllEvents": "Sjå alla vidburdi",
-    "seeAllGroups": "Sjå alla hopa",
-    "becomePartner": "Verda samstarfsaðili",
-    "partnerVenue": "Samstarf fyrir stadi",
-    "signupFreeLong": "Stofna adgang",
-    "rsvp": "Skrá",
-    "viewGroup": "Skoða hop",
-    "exploreVenue": "Skoða stad"
+    "exploreEvents": "Skoða viðburði",
+    "startGroup": "Stofna hóp",
+    "seeAllEvents": "Sjá alla viðburði",
+    "seeAllGroups": "Sjá alla hópa",
+    "becomePartner": "Verða samstarfsaðili",
+    "partnerVenue": "Samstarf fyrir staði",
+    "signupFreeLong": "Stofna aðgang",
+    "rsvp": "Skráning",
+    "viewGroup": "Skoða hóp",
+    "exploreVenue": "Skoða stað"
   },
   "header": {
     "brandTop": "Meetup",
-    "brandBottom": "Reykjavik"
+    "brandBottom": "Reykjavík",
+    "search": "Leita",
+    "searchPlaceholder": "Leita að viðburðum, hópum, stöðum..."
   },
   "footer": {
-    "description": "Finndu vidburdi, hittu folk og stydu vid stadina. Okeypis ad ganga i og byggt fyrir Reykjavik.",
+    "description": "Finndu viðburði, hittu fólk og studdu við staðina. Ókeypis að ganga í, byggt fyrir Reykjavík.",
     "explore": "Skoða",
-    "company": "Fyrirtaekid",
+    "company": "Fyrirtækið",
     "legal": "Lagalegt",
     "categories": "Flokkar",
-    "forVenues": "Fyrir stadi",
-    "terms": "Skilmalar",
-    "contact": "Samband",
-    "copyright": "Byggt i Reykjavik, Islandi."
+    "forVenues": "Fyrir staði",
+    "terms": "Skilmálar",
+    "contact": "Hafa samband",
+    "copyright": "Byggt í Reykjavík, Íslandi."
   },
   "home": {
     "hero": {
-      "badge": "Nuna i Reykjavik",
-      "titleLead": "Finndu folkið thitt i",
-      "titleAccent": "Reykjavik",
-      "subtitleTop": "Finndu vidburdi. Hittu folk. Stydu vid lokal stadir.",
-      "subtitleBottom": "Okeypis ad ganga i. Greiddir vidburdir og samstarfsstadir halda senunni gangandi.",
-      "searchPlaceholder": "Leita ad vidburdum, hopum eða stodum...",
-      "commandEyebrow": "Leitardrifin borgaruppgotvun",
-      "commandTitle": "Byrjadu a rýminu, hostinum og verdmerkinu.",
-      "commandDescription": "Bestu lokal vörurnar minnka núningskostnad i leit. Leit er kallid til adgerda, traust er synilegt og naesta skref er alltaf ljost.",
-      "chipSafety": "samthykkt af host",
-      "chipVenue": "studt af stadi",
-      "chipPremium": "premium format",
-      "chipSocial": "felagskvold",
+      "badge": "Núna í Reykjavík",
+      "titleLead": "Finndu fólkið þitt í",
+      "titleAccent": "Reykjavík",
+      "subtitleTop": "Finndu viðburði. Hittu fólk. Studdu við staðina.",
+      "subtitleBottom": "Ókeypis að ganga í. Greiddir viðburðir og samstarfsstaðir halda borginni gangandi.",
+      "searchPlaceholder": "Leita að viðburðum, hópum eða stöðum...",
+      "commandEyebrow": "Leitardrifin borgaruppgötvun",
+      "commandTitle": "Byrjaðu á rýminu, gestgjafanum og verðmerkinu.",
+      "commandDescription": "Bestu staðbundnu vörurnar draga úr leitarnúningi. Leit er aðgerðin, traust er sýnilegt og næsta skref er alltaf ljóst.",
+      "chipSafety": "samþykkt af gestgjafa",
+      "chipVenue": "stutt af stað",
+      "chipPremium": "úrvalssnið",
+      "chipSocial": "félagskvöld",
       "chipWorkshops": "vinnustofur",
       "noteOneLabel": "Traustsía",
-      "noteOneValue": "Hostud format og rólegri koma a staðinn gera einstaklingum auðveldara að taka ákvörðun um að mæta.",
-      "noteTwoLabel": "Lágmarksverd",
-      "noteTwoValue": "Greitt opinbert inventory byrjar i 500 ISK svo jafnvel minni format hafi raunverulegan vidskiptagrunn.",
-      "noteThreeLabel": "Stadalag",
-      "noteThreeValue": "Samstarfsrymi auka gaedi vidburda, bokunaroryggi og lokal vidskiptavirdi a sama tima.",
-      "noteFourLabel": "I vikunni",
-      "noteFourValue": "Sterkasta inventoryid er nu i social, expat og nytilegum workshop formatum."
+      "noteOneValue": "Gestgjafastýrð snið og rólegri koma á staðinn gera einstaklingum auðveldara að ákveða að mæta.",
+      "noteTwoLabel": "Lágmarksverð",
+      "noteTwoValue": "Greitt opinbert framboð byrjar í 500 ISK svo jafnvel minni viðburðir hafi raunverulegan viðskiptagrunn.",
+      "noteThreeLabel": "Staðalag",
+      "noteThreeValue": "Samstarfsrými auka gæði viðburða, bókunaröryggi og staðbundið viðskiptavirði á sama tíma.",
+      "noteFourLabel": "Í vikunni",
+      "noteFourValue": "Sterkasta framboðið er í félagslífs-, útlendinga- og hagnýtum vinnustofusniðum."
     },
     "stats": {
-      "members": "Medlimir",
-      "groups": "Hopar",
-      "thisWeek": "I vikunni",
-      "venuePartners": "Stadasamstarf"
+      "members": "Meðlimir",
+      "groups": "Hópar",
+      "thisWeek": "Í vikunni",
+      "venuePartners": "Staðasamstarf"
     },
     "sections": {
-      "thisWeekEyebrow": "I vikunni",
-      "thisWeekTitle": "Hvad er ad gerast",
-      "thisWeekDescription": "Valdir vidburdir med stadatilbodum, vinalegum hostum og lokal stemningu.",
+      "thisWeekEyebrow": "Í vikunni",
+      "thisWeekTitle": "Hvað er að gerast",
+      "thisWeekDescription": "Valdir viðburðir með staðatilboðum, vingjarnlegum gestgjöfum og staðbundinni andrúmslofti.",
       "categoriesEyebrow": "Flokkar",
-      "categoriesTitle": "Finndu thitt samfelag",
-      "signalTrustTitle": "Traust byrjar fyrir checkout",
-      "signalTrustDescription": "Skyr host-einkenni, stadarfit og rólegri komuupplifun gera alla vöruna trúverðugri.",
-      "signalRevenueTitle": "Þetta er byggt til tekna",
+      "categoriesTitle": "Finndu þitt samfélag",
+      "signalTrustTitle": "Traust byrjar fyrir greiðslu",
+      "signalTrustDescription": "Skýr auðkenni gestgjafa, staðarfit og rólegri komuupplifun gera alla vöruna trúverðugri.",
+      "signalRevenueTitle": "Þetta er byggt til að afla tekna",
       "signalRevenueDescription": "Lágmarksmiðaverð, áskriftir skipuleggjenda og áætlanir fyrir staði eru sýnilegar í framendanum, ekki faldar seinna.",
       "signalVenueTitle": "Borgin sjálf er hluti af vörunni",
-      "signalVenueDescription": "Betri rými bæta uppgötvun, móta format viðburða og skapa sterkari lokal lykkju.",
+      "signalVenueDescription": "Betri rými bæta uppgötvun, móta snið viðburða og skapa sterkari staðbundna lykkju.",
       "businessEyebrow": "Byggt til reksturs",
       "businessTitle": "Hannað fyrir meðlimi, skipuleggjendur og samstarfsstaði á sama tíma.",
       "businessDescription": "Varan virkar vegna þess að hvert hlutverk sér skýra ástæðu til þátttöku: betri uppgötvun fyrir meðlimi, rekstrartól fyrir skipuleggjendur og raunverulegt verkflæðisvirði fyrir staði.",
-      "businessCta": "Sja vidskiptalikanið",
-      "memberLaneTitle": "Medlimir",
-      "memberLaneDescription": "Uppgötvun verður skýrari þegar fólk getur metið rýmið, hostinn og formatið án þess að giska.",
-      "memberLanePointOne": "Leitardrifin vafur med synilegum traustsmerkjum",
-      "memberLanePointTwo": "Greidd og okeypis format med skyrari vaentingum",
-      "memberLanePointThree": "Hopur og stadarsamhengi tengt beint vid hvern vidburd",
+      "businessCta": "Sjá viðskiptalíkanið",
+      "memberLaneTitle": "Meðlimir",
+      "memberLaneDescription": "Uppgötvun verður skýrari þegar fólk getur metið rýmið, gestgjafann og sniðið án þess að giska.",
+      "memberLanePointOne": "Leitardrifin vöfrun með sýnilegum traustmerkjum",
+      "memberLanePointTwo": "Greidd og ókeypis snið kynnt með skýrari væntingum",
+      "memberLanePointThree": "Hópur og staðarsamhengi tengt beint við hvern viðburð",
       "organizerLaneTitle": "Skipuleggjendur",
-      "organizerLaneDescription": "Endurteknir hostar þurfa meira en birtingarform. Þeir þurfa samþykktir, endurtekningarsnið og tekjulogik i vörunni sjálfri.",
-      "organizerLanePointOne": "Opinber midasala fra 500 ISK og upp",
-      "organizerLanePointTwo": "Endurtekid hopaauðkenni og audience rekstur",
-      "organizerLanePointThree": "Stadamatching og sterkari vidskiptarammi",
-      "venueLaneTitle": "Samstarfsstadir",
-      "venueLaneDescription": "Samstarfsrymi eru hluti af rekstrarkerfinu, ekki bara passivar skraningar a yfirlitssidu.",
-      "venueLanePointOne": "Bokunar-, tilboðs- og framboðsverkflæði",
-      "venueLanePointTwo": "Premium kynning og skyr event-fit merki",
-      "venueLanePointThree": "Meira virði i endurteknum vidskiptum fra sterkari hostum",
-      "flywheelEyebrow": "Lokal lykja",
-      "flywheelTitle": "Sterkari lokal lykja vex a hverri síðu.",
+      "organizerLaneDescription": "Endurteknir gestgjafar þurfa meira en birtingarform. Þeir þurfa samþykktir, endurtekningarsnið og tekjurökfræði í vörunni sjálfri.",
+      "organizerLanePointOne": "Opinber miðasala frá 500 ISK og upp úr",
+      "organizerLanePointTwo": "Endurtekið hópauðkenni og áhorfendarekstur",
+      "organizerLanePointThree": "Staðasamsvörun og sterkari viðskiptarammi",
+      "venueLaneTitle": "Samstarfsstaðir",
+      "venueLaneDescription": "Samstarfsrými eru hluti af rekstrarkerfinu, ekki bara óvirkar skráningar á yfirlitssíðu.",
+      "venueLanePointOne": "Bókunar-, tilboðs- og framboðsverkflæði",
+      "venueLanePointTwo": "Úrvalskynning og skýr viðburðarfit merki",
+      "venueLanePointThree": "Meira virði í endurteknum viðskiptum frá sterkari gestgjöfum",
+      "flywheelEyebrow": "Staðbundin lykkja",
+      "flywheelTitle": "Sterkari staðbundin lykkja vex á hverri síðu.",
       "flywheelDescription": "Besta útgáfan af þessari vöru er ekki bara falleg. Hún tengir uppgötvun, rekstur og tekjur nógu skýrt til að hver hlið markaðarins styrki hina.",
-      "flywheelPointOneTitle": "Betri uppgotvun",
-      "flywheelPointOneDescription": "Medlimir finna format hraðar þegar varan sýnir traust, verð, stað og hostgæði saman.",
+      "flywheelPointOneTitle": "Betri uppgötvun",
+      "flywheelPointOneDescription": "Meðlimir finna snið hraðar þegar varan sýnir traust, verð, stað og gæði gestgjafa saman.",
       "flywheelPointTwoTitle": "Betri rekstur",
-      "flywheelPointTwoDescription": "Skipuleggjendur og stadir halda sig vid kerfid thegar tólid líða eins og vidskiptainnviðir, ekki samfélagshobbý.",
+      "flywheelPointTwoDescription": "Skipuleggjendur og staðir halda sér við kerfið þegar tólið líður eins og viðskiptainnviðir, ekki samfélagshobbý.",
       "flywheelPointThreeTitle": "Betri tekjur",
       "flywheelPointThreeDescription": "Greidd sæti, staðaáætlanir og áskriftir skipuleggjenda virka betur þegar framendinn rammar inn gildið rétt frá byrjun.",
-      "howEyebrow": "Hvernig virkar thad",
-      "howTitle": "Rólegri leid til ad uppgötva borgina",
-      "howDescription": "Vörulogikin er einföld: skoða, skrá sig og mæta. Engin feed-óreiða og ekkert endalaust swipe.",
-      "groupsEyebrow": "Hopar",
-      "groupsTitle": "Samfelog med raunverulegum hostum",
-      "groupsDescription": "Hver hopur byggir a raunverulegum hosti, endurteknum rytma og skyrum tilgangi.",
-      "venuesEyebrow": "Samstarfsstadir",
-      "venuesTitle": "Bestu stadirnir i borginni",
-      "venuesDescription": "Samstarfsstadir fa meiri synileika, betri bokunarferil og premium kynningu.",
-      "joinEyebrow": "Taktu thatt i borginni",
-      "joinTitle": "Tilbuid/adur ad finna folkid thitt?",
-      "joinDescription": "Vertu med i hopi sem uppgötvar allt sem Reykjavik hefur upp a ad bjóda og styrkir lokal senu i leidinni.",
-      "closingTitle": "Ritstjornarlegt, lokalt og hlýtt",
-      "memberFirst": "Fyrir medlimi fyrst",
-      "memberFirstDescription": "Einföld skráning, gegnsætt RSVP flæði og skýr mynd af thvi sem er virkt i vikunni.",
-      "venueAware": "Med stadi i huga",
-      "venueAwareDescription": "Kynntir stadir, tilbod, framboð og innvidir fyrir seinni byggingarstig."
+      "howEyebrow": "Hvernig virkar það",
+      "howTitle": "Rólegri leið til að uppgötva borgina",
+      "howDescription": "Vörurökfræðin er einföld: skoða, skrá sig og mæta. Engin fæðisóreiða og ekkert endalaust strjúk.",
+      "groupsEyebrow": "Hópar",
+      "groupsTitle": "Samfélög með raunverulegum gestgjöfum",
+      "groupsDescription": "Hver hópur byggir á raunverulegum gestgjafa, endurteknum takti og skýrum tilgangi.",
+      "venuesEyebrow": "Samstarfsstaðir",
+      "venuesTitle": "Bestu staðirnir í borginni",
+      "venuesDescription": "Samstarfsstaðir fá meiri sýnileika, betri bókunarferli og úrvalskynning.",
+      "joinEyebrow": "Taktu þátt í borginni",
+      "joinTitle": "Tilbúin(n) að finna fólkið þitt?",
+      "joinDescription": "Vertu með í hópi sem uppgötvar allt sem Reykjavík hefur upp á að bjóða og styrkir staðbundna senu í leiðinni.",
+      "closingTitle": "Ritstjórnarlegt, staðbundið og hlýtt",
+      "memberFirst": "Meðlimir fyrst",
+      "memberFirstDescription": "Einföld skráning, gegnsætt skráningarflæði og skýr mynd af því sem er virkt í vikunni.",
+      "venueAware": "Með staði í huga",
+      "venueAwareDescription": "Kynntir staðir, tilboð, framboð og innviðir tilbúnir fyrir síðari byggingaráfanga."
     },
     "cards": {
-      "going": "ad fara",
-      "memberDeal": "Medlimatilbod",
-      "hostedEvents": "haldnir vidburdir"
+      "going": "að fara",
+      "memberDeal": "Meðlimatilboð",
+      "hostedEvents": "haldnir viðburðir"
     },
     "steps": {
       "discoverTitle": "Uppgötva",
-      "discoverDescription": "Skoðaðu vidburdi og hopa eftir ahugasvidi, degi og hverfi.",
+      "discoverDescription": "Skoðaðu viðburði og hópa eftir áhugasviði, dagsetningu og hverfi.",
       "joinTitle": "Skrá sig",
-      "joinDescription": "Skrádu thig med einum smelli, fylgdu hopi og slepptu óreiðunni i feedi.",
+      "joinDescription": "Skráðu þig með einum smelli, fylgdu hóp og slepptu óreiðunni í fæðinu.",
       "connectTitle": "Tengjast",
-      "connectDescription": "Maettu, hittu raunverulegt folk og styrktu stadina i Reykjavik a sama tima."
+      "connectDescription": "Mættu, hittu raunverulegt fólk og styrktu staðina í Reykjavík á sama tíma."
     }
   },
   "privacyPage": {
     "hero": {
-      "eyebrow": "Personuvernd",
-      "title": "Skyr datameohondlun er hluti af trausti, ekki aukaatriði.",
-      "description": "Thessi sida dekkar helstu stefnuhaetti vörunnar: reikningsgogn, samfelagsvirkni, skilabod, greiningar og rettindi notenda.",
+      "eyebrow": "Persónuvernd",
+      "title": "Skýr gagnameðhöndlun er hluti af trausti, ekki lagalegt aukaatriði.",
+      "description": "Þessi síða fjallar um helstu stefnuþætti vörunnar: reikningsgögn, samfélagsvirkni, skilaboð, greiningar og réttindi notenda.",
       "metrics": {
-        "visibility": "Sjalfgefin synileiki",
-        "analytics": "Varveisla greininga",
-        "export": "Utflutningsleid",
-        "locale": "Tungumal"
+        "visibility": "Sjálfgefinn sýnileiki",
+        "analytics": "Varðveisla greininga",
+        "export": "Útflutningsleið",
+        "locale": "Tungumál"
       },
       "values": {
-        "visibility": "Adeins medlimir",
-        "analytics": "12 manudir",
-        "export": "Yfirferd admin",
+        "visibility": "Aðeins meðlimir",
+        "analytics": "12 mánuðir",
+        "export": "Yfirferð stjórnanda",
         "locale": "IS / EN"
       }
     },
     "sectionsEyebrow": "Stefnukafli",
     "sections": {
       "identity": {
-        "title": "Auðkenni og reikningsgogn",
-        "copy": "Kerfid geymir profilgogn, reikningsupplýsingar og hlutverk sem þarf til ad keyra medlimastig, skipuleggjendaflæði og samstarf med stadi. Thad felur i ser birtingarnafn, einkanetfang og stillingar sem stjorna hver ser virkni thina.",
-        "point1": "Synileiki profils fylgir personuverndarstillingum medlima.",
-        "point2": "Skipuleggjendur og stadir safna frekari rekstrarupplýsingum fyrir traust og yfirferd.",
-        "point3": "Adgangur admin er fraeskilinn fyrir modun, support og rekstur."
+        "title": "Auðkenni og reikningsgögn",
+        "copy": "Kerfið geymir prófílgögn, reikningsupplýsingar og hlutverk sem þarf til að reka meðlimastig, skipuleggjendaflæði og samstarf við staði. Það felur í sér birtingarnafn, einkanetfang og stillingar sem stjórna hver sér virkni þína.",
+        "point1": "Sýnileiki prófíls fylgir persónuverndarstillingum meðlima.",
+        "point2": "Skipuleggjendur og staðir safna frekari rekstrarupplýsingum fyrir traust og yfirferð.",
+        "point3": "Aðgangur stjórnanda er frátekinn fyrir umsjón, aðstoð og rekstur."
       },
       "activity": {
-        "title": "Virkni i vidburdum, hopum og stodum",
-        "copy": "RSVP, biðlistar, samþykktir, maetingarmerki og samskipti vid stadi eru notud til ad halda vidburdum traustum og hjalpa skipuleggjendum og admin ad taka betri akvardanir. Varan er medvitaed um gaedi og traust, thannig ad rekstrarvirkni er hluti af gagnaskraningunni.",
-        "point1": "Saga RSVP og samþykkta getur verid synileg skipuleggjendum eða admin thar sem vid a.",
-        "point2": "Samskipti vid stadi og vidburdi geta verid notud til ad baeta medmaeli og minnka miskun.",
-        "point3": "Greidslu- og utborgunargogn verda varveitt fyrir bokhald og yfirferd þegar lifandi veitendur tengjast."
+        "title": "Virkni í viðburðum, hópum og stöðum",
+        "copy": "Skráningar, biðlistar, samþykktir, mætingarmerki og samskipti við staði eru notuð til að halda viðburðum traustum og hjálpa skipuleggjendum og stjórnendum að taka betri ákvarðanir. Varan er meðvituð um gæði og traust, þannig að rekstrarvirkni er hluti af gagnaskráningunni.",
+        "point1": "Saga skráninga og samþykkta getur verið sýnileg skipuleggjendum eða stjórnendum þar sem við á.",
+        "point2": "Samskipti við staði og viðburði geta verið notuð til að bæta tillögur og minnka misnotkun.",
+        "point3": "Greiðslu- og útborgunargögn verða varðveitt fyrir bókhald og yfirferð þegar greiðsluveitendur tengjast."
       },
       "comms": {
-        "title": "Skilabod og greiningar",
-        "copy": "Kerfid sendir virk skilabod eins og samþykktir, bithlista-uppfaerslur, aeminningar og umsagnir um stadi. Thad fylgist einnig med sameiginlegum greiningum svo varan skilji hvaða format, hverfi og stadasamstarf virkar best.",
-        "point1": "Yfirlit og markadsskilaabod eru stjornanleg i reikningsstillingum.",
-        "point2": "Greiningar eru notadar til vörubaeta, ekki fyrir almennar auglýsinganetssniðgreiningar.",
-        "point3": "Adgangs-, utflutnings- og eyðingarbeidnir fara i gegnum admin-yfirferd."
+        "title": "Skilaboð og greiningar",
+        "copy": "Kerfið sendir viðskiptaskilaboð eins og samþykktir, biðlistauppfærslur, áminningar og umsagnir um staði. Það fylgist einnig með sameiginlegum greiningum svo varan skilji hvaða snið, hverfi og staðasamstörf virka best.",
+        "point1": "Yfirlit og markaðsskilaboð eru stjórnanlegar í reikningsstillingum.",
+        "point2": "Greiningar eru notaðar til vörubóta, ekki fyrir almennar auglýsinganetsgreiningar.",
+        "point3": "Aðgangs-, útflutnings- og eyðingarbeiðnir fara í gegnum yfirferð stjórnanda."
       }
     },
-    "rightsEyebrow": "Rettindi medlima",
-    "rightsTitle": "Adgangur, leidretting, utflutningur og eyðing",
-    "rightsDescription": "Lifandi admin- og stillingasvæði eru thar fyrir til ad styðja thessar adgerdir þegar bakendatenging er komin.",
+    "rightsEyebrow": "Réttindi meðlima",
+    "rightsTitle": "Aðgangur, leiðrétting, útflutningur og eyðing",
+    "rightsDescription": "Virk stjórnunar- og stillingasvæði eru þegar til staðar til að styðja þessar aðgerðir þegar bakendatenging er komin.",
     "rights": {
       "access": {
-        "title": "Sja eigin skra",
-        "text": "Haegt er ad birta profil, RSVP, medlimastig og reikningsstillingar fyrir utflutning."
+        "title": "Sjá eigin skrá",
+        "text": "Hægt er að birta prófíl, skráningar, meðlimastig og reikningsstillingar fyrir útflutning."
       },
       "correct": {
-        "title": "Leidretta profilgogn",
-        "text": "Medlimir, skipuleggjendur og stadir geta uppfaert rekstrarauðkenni sitt yfir tid."
+        "title": "Leiðrétta prófílgögn",
+        "text": "Meðlimir, skipuleggjendur og staðir geta uppfært rekstrarauðkenni sitt yfir tíma."
       },
       "billing": {
-        "title": "Yfirferd greidslna og vidskipta",
-        "text": "Thegar greidslur fara i loftid geymir kerfid thau gogn sem tharf fyrir reikninga og utborgun."
+        "title": "Yfirferð greiðslna og viðskipta",
+        "text": "Þegar greiðslur fara í loftið geymir kerfið þau gögn sem þarf fyrir reikninga og útborgun."
       },
       "locale": {
-        "title": "Tungumalssnid policy",
-        "text": "Personuvernd og reikningsstjornun eru aetlad i baedi ensku og islensku."
+        "title": "Tvítyngd stefnuyfirlit",
+        "text": "Persónuvernd og reikningsstjórnun eru ætluð í bæði ensku og íslensku."
       }
     }
   },
   "termsPage": {
     "hero": {
-      "eyebrow": "Skilmalar",
-      "title": "Skyrar reglur fyrir vandad borgarkerfi.",
-      "description": "Thessir skilmalar skyr aetlud vinnubrögd fyrir medlimi, skipuleggjendur, stadasamstarf, modun og framtidar greidsluflæði.",
+      "eyebrow": "Skilmálar",
+      "title": "Skýrar reglur fyrir vandað borgarkerfi.",
+      "description": "Þessir skilmálar útskýra hvernig meðlimir, skipuleggjendur, staðasamstarf, umsjón og framtíðar greiðsluflæði eiga að virka.",
       "primaryCta": "Hafa samband",
-      "secondaryCta": "Lesa personuvernd",
+      "secondaryCta": "Lesa persónuvernd",
       "metrics": {
         "roles": "Notendahlutverk",
-        "domains": "Modunarsvid",
+        "domains": "Umsjónarsvið",
         "principle": "Kjarnahugsun",
-        "support": "Supportleid"
+        "support": "Aðstoðarleið"
       },
       "values": {
         "roles": "4",
-        "domains": "Notendur, vidburdir, hopar, stadir",
-        "principle": "Traust og skyrliki",
-        "support": "Yfirfarid af admin"
+        "domains": "Notendur, viðburðir, hópar, staðir",
+        "principle": "Traust og skýrleiki",
+        "support": "Yfirfarið af stjórnanda"
       }
     },
-    "sectionsEyebrow": "Skilmalkafli",
+    "sectionsEyebrow": "Skilmálakafli",
     "sections": {
       "accounts": {
-        "title": "Reikningar og medlimastig",
-        "copy": "Medlimir, skipuleggjendur og stadapartners nyta sama kjarna kerfisins en bera mismunandi abyrgd. Reikningar skulu nota rett auðkennis- og samskiptagogn og kerfid getur takmarkad adgang ef traust eða öryggi krefst thess.",
-        "point1": "Medlimir bera abyrgd a rettum profílgognum og virðingarrikri thattöku.",
-        "point2": "Skipuleggjendur bera abyrgd a sannri lysingu vidburda og skyrri hosthegðun.",
-        "point3": "Stadapartners bera abyrgd a rettum upplysingum um frambod, tilbod og bokun."
+        "title": "Reikningar og meðlimastig",
+        "copy": "Meðlimir, skipuleggjendur og samstarfsstaðir nýta sama kjarna kerfisins en bera mismunandi ábyrgð. Reikningar skulu nota rétt auðkennis- og samskiptagögn og kerfið getur takmarkað aðgang ef traust eða öryggi krefst þess.",
+        "point1": "Meðlimir bera ábyrgð á réttum prófílgögnum og virðingarríkri þátttöku.",
+        "point2": "Skipuleggjendur bera ábyrgð á sannri lýsingu viðburða og skýrri gestgjafavirkni.",
+        "point3": "Samstarfsstaðir bera ábyrgð á réttum upplýsingum um framboð, tilboð og bókun."
       },
       "events": {
-        "title": "Vidburdir, greidslur og afbokanir",
-        "copy": "Opinberir vidburdir eru aetladir til ad byrja i 500 ISK eða meira nema their se studdir af sponsorum eða serstaklega samthykktir. Bokunarhald, biðlistar og greidslustadfestingar eru hluti af rekstrarlikani kerfisins og thegar lifandi veitendur tengjast fylgir gjaldtaka, endurgreidslur og utborgun samkomulagi.",
-        "point1": "Stadfest sæti eða bokun getur farid eftir greidslu, samþykki eða baedi.",
-        "point2": "Endurgreidslur og afbokanir geta verid mismunandi eftir vidburdi, stadi eða medlimastigi.",
-        "point3": "Admin getur gripid inn i ef gaedi, traust eða miskun hefur áhrif a skraningu eða vidskipti."
+        "title": "Viðburðir, greiðslur og afbókanir",
+        "copy": "Opinberir viðburðir eru ætlaðir til að byrja í 500 ISK eða meira nema þeir séu studdir af styrktaraðilum eða sérstaklega samþykktir. Bókunarhald, biðlistar og greiðslustaðfestingar eru hluti af rekstrarlíkani kerfisins og þegar greiðsluveitendur tengjast fylgir gjaldtaka, endurgreiðslur og útborgun samkomulagi.",
+        "point1": "Staðfest sæti eða bókun getur farið eftir greiðslu, samþykki eða hvoru tveggja.",
+        "point2": "Endurgreiðslur og afbókanir geta verið mismunandi eftir viðburði, stað eða meðlimastigi.",
+        "point3": "Stjórnandi getur gripið inn í ef gæði, traust eða misnotkun hefur áhrif á skráningu eða viðskipti."
       },
       "moderation": {
-        "title": "Modun og pallstjorn",
-        "copy": "Varan er viljandi vandud. Admin getur frestad, takmarkad eða fjarlægt notendur, hopa, vidburdi eða stadaskraningar þegar öryggi, traust, spam, areitni eða endurtekin gæðavandamal réttlaeta inngrip.",
-        "point1": "Modunaraðgerdir geta verid timabundnar, varanlegar eða skilyrtar yfirferd.",
-        "point2": "Synileiki skipuleggjenda og stada getur verid takmarkadur ef gaedi eða aedicni hrapar.",
-        "point3": "Kærur og supportbeidnir fara i gegnum rekstrarleid kerfisins."
+        "title": "Umsjón og pallstjórn",
+        "copy": "Varan er viljandi vandað. Stjórnandi getur frestað, takmarkað eða fjarlægt notendur, hópa, viðburði eða staðaskráningar þegar öryggi, traust, ruslpóstur, áreitni eða endurtekin gæðavandamál réttlæta inngripið.",
+        "point1": "Umsjónaraðgerðir geta verið tímabundnar, varanlegar eða háðar yfirferð.",
+        "point2": "Sýnileiki skipuleggjenda og staða getur verið takmarkaður ef gæði eða áreiðanleiki hrapar.",
+        "point3": "Kærur og aðstoðarbeiðnir fara í gegnum rekstrarleið kerfisins."
       }
     },
     "stanceEyebrow": "Rekstrarstaða",
-    "stanceTitle": "Hvernig varan medhöndlar gaedi",
-    "stanceDescription": "MeetupReykjavik a ad finnast markvisst. Thad thydir ad adgerdir admin, skipuleggjenda og stada eru ekki eingongu mekaniskar.",
+    "stanceTitle": "Hvernig varan meðhöndlar gæði",
+    "stanceDescription": "MeetupReykjavik á að finnast markvisst. Það þýðir að aðgerðir stjórnanda, skipuleggjenda og staða eru ekki eingöngu vélfræðilegar.",
     "stance": {
       "trust": {
-        "label": "Traustslag",
-        "value": "Profiler, samþykktir, maeting og modun skipta ollu mali."
+        "label": "Traustlag",
+        "value": "Prófílar, samþykktir, mæting og umsjón skipta öllu máli."
       },
       "rooms": {
-        "label": "Gaedi rymis",
-        "value": "Admin og hostar geta môtad attendance til ad baeta öryggi og fit."
+        "label": "Gæði rýmis",
+        "value": "Stjórnandi og gestgjafar geta mótað þátttöku til að bæta öryggi og samsvörun."
       },
       "providers": {
         "label": "Veitendur",
-        "value": "Email og greidslur bætast vid seinna an thess ad breyta kjarnareglunum."
+        "value": "Tölvupóstur og greiðslur bætast við seinna án þess að breyta grunnreglunum."
       },
       "appeals": {
-        "label": "Kaerur",
-        "value": "Meðhöndladar i support- og modunarleidum."
+        "label": "Kærur",
+        "value": "Meðhöndlaðar í aðstoðar- og umsjónarleiðum."
       }
     },
-    "remindersEyebrow": "Hagnýt aeminning",
-    "remindersTitle": "Staeda buildsins",
-    "remindersDescription": "Thessi local build inniheldur heildarform vörunnar en ekki allar lifandi tengingar.",
+    "remindersEyebrow": "Hagnýt áminning",
+    "remindersTitle": "Staða byggingarinnar",
+    "remindersDescription": "Þessi staðbundna smíði inniheldur heildarform vörunnar en ekki allar virkar tengingar.",
     "reminders": {
-      "one": "Reiknings-, greidslu- og samskiptaveitendur eru ekki enn tengdir framleidslu.",
-      "two": "Local dashboards og stjornborð likja eftir heildarrekstrarforminu fyrir deployment.",
-      "three": "Sum lifandi lagaleg og viðskiptaleg atridi verda klárud thegar veitendur eru tilbunir."
+      "one": "Reiknings-, greiðslu- og samskiptaveitendur eru ekki enn tengdir framleiðslu.",
+      "two": "Staðbundin stjórnborð líkja eftir heildarrekstrarforminu fyrir dreifingu.",
+      "three": "Sum viðskiptaleg og lagaleg atriði verða kláruð þegar veitendauppsetning er lokið."
+    }
+  },
+  "aboutPage": {
+    "hero": {
+      "eyebrow": "Um okkur",
+      "title": "Um MeetupReykjavik",
+      "description": "Staðbundinn vettvangur fyrir viðburði, hópa og staðasamstarf — sérstaklega byggður fyrir Reykjavík.",
+      "exploreEvents": "Skoða viðburði",
+      "getInTouch": "Hafa samband"
+    },
+    "mission": {
+      "title": "Hlutverk okkar",
+      "paragraph1": "Reykjavík er nógu lítil til að gæði skipta máli strax. Ef viðburðir virka tilviljunarkenndir, gestgjafar veikir eða rýmin passa ekki við sniðið, þá tekur fólk strax eftir.",
+      "paragraph2": "Við sameinum viðburðasamhengi, hópauðkenni og staðarfit í eitt kerfi. Þetta er munurinn á fæði og raunverulegri staðbundinni vöru."
+    },
+    "howItWorks": {
+      "title": "Hvernig virkar það",
+      "membersTitle": "Meðlimir",
+      "membersText": "Finndu viðburði, skráðu þig í hópa og staðfestu þátttöku. Ókeypis að skoða, með úrvalsstig fyrir dýpri aðgang.",
+      "organizersTitle": "Skipuleggjendur",
+      "organizersText": "Haltu endurtekna viðburði með samþykktarverkfærum, greiddri miðasölu, greiningum og staðasamsvörun innbyggt.",
+      "venuesTitle": "Staðir",
+      "venuesText": "Gerðu samstarf við vettvanginn til að fá bókanir, halda betri samfélagsviðburði og bjóða meðlimum tilboð."
+    },
+    "team": {
+      "title": "Teymið"
+    },
+    "cta": {
+      "title": "Vertu hluti af samfélaginu í Reykjavík",
+      "description": "Hvort sem þú vilt mæta, skipuleggja eða hýsa — hér er pláss fyrir þig.",
+      "createAccount": "Stofna aðgang",
+      "browseEvents": "Skoða viðburði"
+    }
+  },
+  "pricingPage": {
+    "hero": {
+      "eyebrow": "Verðskrá",
+      "title": "Einföld og gagnsæ verðskrá",
+      "description": "Meðlimir skoða ókeypis. Skipuleggjendur og staðir borga fyrir raunveruleg verkfæri. {commission}% þóknun á greidda miða tryggir að vettvangurinn er samstilltur árangri þínum.",
+      "getStartedFree": "Byrjaðu ókeypis",
+      "talkToUs": "Hafðu samband"
+    },
+    "members": {
+      "badge": "Fyrir meðlimi",
+      "title": "Meðlimaáætlanir",
+      "description": "Skoðaðu ókeypis. Uppfærðu fyrir forgangsaðgang og úrvalseiginleika.",
+      "mostPopular": "Vinsælast",
+      "joinFree": "Skráðu þig ókeypis",
+      "getStarted": "Byrja hér"
+    },
+    "organizers": {
+      "badge": "Fyrir skipuleggjendur",
+      "title": "Áætlanir fyrir skipuleggjendur",
+      "description": "Haltu viðburði með raunverulegum verkfærum. Auk {commission}% þóknunar á greidda miðasölu.",
+      "recommended": "Mælt með",
+      "startOrganizing": "Byrja að skipuleggja"
+    },
+    "venues": {
+      "badge": "Fyrir staði",
+      "title": "Áætlanir fyrir staði",
+      "description": "Frá grunnlista til fulls samstarfs með bókunarverkfærum og greiningum.",
+      "bestValue": "Besta tilboðið",
+      "listFree": "Skráðu ókeypis",
+      "applyNow": "Sækja um"
+    },
+    "comparison": {
+      "title": "Berðu saman áætlanir í einu augnaráði",
+      "description": "Allir eiginleikar á öllum stigum — svo þú velur rétta áætlun í fyrsta skipti.",
+      "feature": "Eiginleiki",
+      "memberPlans": "Meðlimaáætlanir",
+      "organizerPlans": "Áætlanir skipuleggjenda",
+      "venuePlans": "Áætlanir staða",
+      "memberFeatures": {
+        "browseEventsVenues": "Skoða viðburði og staði",
+        "ticketCheckout": "Miðakaup",
+        "standardRsvp": "Venjuleg skráning",
+        "priorityWaitlist": "Forgangur á biðlista",
+        "directMessaging": "Bein skilaboð",
+        "premiumBadge": "Úrvalsmerki",
+        "advancedFilters": "Ítarleg sía",
+        "earlyAccessFeatures": "Snemmbær aðgangur"
+      },
+      "organizerFeatures": {
+        "activePublicEvents": "Virkir opinberir viðburðir",
+        "upTo3": "Allt að 3",
+        "unlimited": "Ótakmarkað",
+        "publicTicketing": "Opinber miðasala",
+        "ticketCommission": "5% miðaþóknun",
+        "basicEventAnalytics": "Grunngreiningar viðburða",
+        "recurringEvents": "Endurteknir viðburðir",
+        "approvalWaitlistControls": "Samþykktar- og biðlistastýring",
+        "venueRequestWorkflows": "Bókunarflæði staða",
+        "revenueReporting": "Tekjuskýrslur",
+        "prioritySupport": "Forgangsstuðningur",
+        "featuredPlacement": "Aukin sýnileiki",
+        "sponsorInventory": "Styrktarbirgðir",
+        "audienceSegmentation": "Áhorfendaskipting"
+      },
+      "venueFeatures": {
+        "publicListing": "Opinber skráning",
+        "applicationReview": "Yfirferð umsókna",
+        "bookingInbox": "Bókunarpósthólf",
+        "availabilityPlanning": "Framboðsskipulag",
+        "partnerDealManagement": "Samstarfstilboðsstjórnun",
+        "organizerFitInsights": "Skipuleggjendafitsgreining",
+        "featuredPlacement": "Aukin sýnileiki",
+        "premiumAnalytics": "Úrvalsgreiningar",
+        "priorityVenueMatching": "Forgangur í staðasamsvörun",
+        "sponsoredInventory": "Styrktarbirgðir"
+      }
+    },
+    "faq": {
+      "title": "Algengar spurningar",
+      "moreLink": "Fleiri spurningar? Sjá allar algengar spurningar"
+    }
+  },
+  "faqPage": {
+    "hero": {
+      "eyebrow": "Algengar spurningar",
+      "title": "Algengar spurningar",
+      "description": "Fljótleg svör um vettvanginn, verðskrá og hvernig hlutirnir virka.",
+      "contactUs": "Hafa samband",
+      "seePricing": "Sjá verðskrá"
+    },
+    "sections": {
+      "joiningProfiles": {
+        "title": "Skráning og prófílar",
+        "q1": "Þarf ég að borga til að skoða eða skrá mig?",
+        "a1": "Nei. Skoðun og grunnuppgötvun er ókeypis. Greiddir eiginleikar eru aðeins nauðsynlegir fyrir tiltekna viðburði eða meðlimastig.",
+        "q2": "Af hverju skipta prófílar meðlima máli?",
+        "a2": "Prófílar hjálpa skipuleggjendum og stöðum að skilja áhorfendur sína, og hjálpa meðlimum að fá skýrari væntingar um snið og samsvörun viðburða."
+      },
+      "eventsGroups": {
+        "title": "Viðburðir og hópar",
+        "q1": "Af hverju eru sumir viðburðir með handvirkri samþykkt og aðrir með opinni skráningu?",
+        "a1": "Bæði er stutt. Samþykkt virkar vel þegar gestgjafar vilja móta rýmið, en opin skráning virkar fyrir einfaldari snið með minni núningi.",
+        "q2": "Hvernig taka staðir þátt?",
+        "a2": "Samstarfsstaðir hýsa viðburði, bjóða meðlimum tilboð og hjálpa til við komuupplifunina. Þeir eru virkur hluti af vettvangnum."
+      },
+      "paymentsBilling": {
+        "title": "Greiðslur og innheimta"
+      },
+      "trustSupport": {
+        "title": "Traust og þjónusta",
+        "q1": "Hvernig virkar þjónustan?",
+        "a1": "Notaðu sambandsíðuna til að ná til rétta teymisins. Við höfum aðskildar leiðir fyrir almenna aðstoð, skipuleggjendaaðstoð, staðarekstur og traustmál.",
+        "q2": "Geta skipuleggjendur sent hverjum sem er bein skilaboð?",
+        "a2": "Nei. Skilaboð virða persónuverndarstillingar meðlima. Skipuleggjendur geta aðeins náð til meðlima í gegnum samþykktar leiðir."
+      }
     }
   },
   "contactPage": {
     "hero": {
-      "eyebrow": "Samband",
-      "title": "Finndu rett teymi an thess ad fara i gegnum venjulega support-villu.",
-      "description": "Support, skipuleggjendaadstod, stadasamstarf og personuverndarspurningar hafa skyrar leid svo varan haldist hjalpsoem og abyrg.",
-      "primaryCta": "Bua til reikning",
-      "secondaryCta": "Lesa skilmala",
+      "eyebrow": "Hafa samband",
+      "title": "Finndu rétta teymið án þess að fara í gegnum venjulega þjónustuvillu.",
+      "description": "Þjónusta, skipuleggjendaaðstoð, staðasamstarf og persónuverndaspurningar hafa skýrar leiðir svo varan haldist hjálpleg og ábyrg.",
+      "primaryCta": "Stofna aðgang",
+      "secondaryCta": "Lesa skilmála",
       "metrics": {
-        "lanes": "Supportleid",
-        "reply": "Markmid um fyrsta svar",
-        "organizer": "Skipuleggjendaaðstod",
-        "trust": "Traustyfirferd"
+        "lanes": "Þjónustuleiðir",
+        "reply": "Markmið um fyrsta svar",
+        "organizer": "Skipuleggjendaaðstoð",
+        "trust": "Traustyfirferð"
       },
       "values": {
         "lanes": "4",
         "reply": "1 virkur dagur",
-        "organizer": "Samdægurs ef bratt",
+        "organizer": "Samdægurs ef brýnt",
         "trust": "Fer eftir forgangi"
       }
     },
-    "channelsEyebrow": "Leidir",
-    "channelsTitle": "Vid hvern a ad hafa samband",
-    "channelsDescription": "Hver leid samsvarar raunverulegu rekstrarhlutverki i vörunni.",
+    "channelsEyebrow": "Leiðir",
+    "channelsTitle": "Við hvern á að hafa samband",
+    "channelsDescription": "Hver leið samsvarar raunverulegu rekstrarhlutverki í vörunni.",
     "channels": {
       "general": {
-        "title": "Almenn support",
-        "note": "Hjalp med reikning, vöruspurningar og onboarding."
+        "title": "Almenn þjónusta",
+        "note": "Hjálp með reikning, vöruspurningar og byrjunarleiðbeiningar."
       },
       "organizer": {
-        "title": "Skipuleggjendaadstod",
-        "note": "Samthykktir vidburda, hopastofnun og samfelagsadstod."
+        "title": "Skipuleggjendaaðstoð",
+        "note": "Samþykktir viðburða, hópastofnun og samfélagsaðstoð."
       },
       "venue": {
-        "title": "Stadasamstarf",
-        "note": "Umsoknir stada, tilbod og spurningar um bokunarflæði."
+        "title": "Staðasamstarf",
+        "note": "Umsóknir staða, tilboð og spurningar um bókunarflæði."
       },
       "trust": {
-        "title": "Personuvernd og traust",
-        "note": "Modun, personuverndarbeidnir og viðkvæm reikningsmal."
+        "title": "Persónuvernd og traust",
+        "note": "Umsjón, persónuverndarbeiðnir og viðkvæm reikningsatriði."
       }
     },
-    "expectationsEyebrow": "Svarstimar",
-    "expectationsTitle": "Vid hverju ma buast",
-    "expectationsDescription": "Thad heldur væntingum skyrum aoudur en lifandi email-innvidir tengjast.",
+    "expectationsEyebrow": "Svartímar",
+    "expectationsTitle": "Við hverju má búast",
+    "expectationsDescription": "Þetta heldur væntingum skýrum áður en virkir tölvupóstsinnviðir tengjast.",
     "expectations": {
-      "one": "Markmid fyrir almenna support: innan eins virks dags.",
-      "two": "Stada- og skipuleggjendamal: yfirleitt sama dag.",
-      "three": "Modunar- og personuverndarmal: svarstimi fer eftir alvarleika og gæðum gagna."
+      "one": "Markmið fyrir almenna þjónustu: innan eins virks dags.",
+      "two": "Staða- og skipuleggjendamál: yfirleitt sama dag.",
+      "three": "Umsjónar- og persónuverndarmál: svartími fer eftir alvarleika og gæðum gagna."
     }
   },
   "contactForm": {
-    "title": "Hafa samband vid teymid",
-    "description": "Thessi local form endurskapar supportflæðid. Thad geymir drög a thessari vel svo strukturnar se til stadar aoudur en emailsending er tengd.",
+    "title": "Hafa samband við teymið",
+    "description": "Þetta staðbundna form endurspeglar þjónustuflæðið. Það geymir drög á þessari vél svo uppbygging sé til staðar áður en tölvupóstsending er tengd.",
     "fields": {
       "name": "Nafn",
       "email": "Netfang",
       "topic": "Efni",
-      "message": "Skilabod"
+      "message": "Skilaboð"
     },
     "topics": {
       "general": "Almenn spurning",
-      "organizer": "Skipuleggjendaadstod",
-      "venue": "Stadasamstarf",
-      "billing": "Greidslur og bokhald",
-      "privacy": "Personuvernd eða modun"
+      "organizer": "Skipuleggjendaaðstoð",
+      "venue": "Staðasamstarf",
+      "billing": "Greiðslur og bókhald",
+      "privacy": "Persónuvernd eða umsjón"
     },
-    "submit": "Vista local supportdrog",
+    "submit": "Vista staðbundin þjónustudrög",
     "status": {
-      "incomplete": "Baettu vid nafni, netfangi og skilabodum aoudur en local drög eru vistud.",
-      "saved": "Vistað local sem supportdrog. Engin lifandi skilabod voru send ur thessu buildi."
+      "incomplete": "Bættu við nafni, netfangi og skilaboðum áður en staðbundin drög eru vistuð.",
+      "saved": "Vistað staðbundið sem þjónustudrög. Engin skilaboð voru send úr þessari smíði."
+    }
+  },
+  "auth": {
+    "login": {
+      "eyebrow": "Velkomin(n) aftur",
+      "title": "Skráðu þig inn",
+      "description": "Fáðu aðgang að viðburðum, hópum og stjórnborðinu.",
+      "primaryLabel": "Skrá inn",
+      "secondaryLabel": "Vantar aðgang? Stofnaðu einn",
+      "forgotPassword": "Gleymt lykilorð?"
+    },
+    "signup": {
+      "eyebrow": "Byrjaðu hér",
+      "title": "Stofna aðgang",
+      "description": "Skráðu þig sem meðlimur, skipuleggjandi eða samstarfsstaður.",
+      "primaryLabel": "Stofna aðgang",
+      "secondaryLabel": "Ertu nú þegar með aðgang? Skráðu þig inn"
+    },
+    "forgotPassword": {
+      "eyebrow": "Endurstilling lykilorðs",
+      "title": "Endurheimta aðganginn þinn",
+      "description": "Sláðu inn netfangið þitt og við sendum endurheimt tengil.",
+      "primaryLabel": "Senda endurheimt tölvupóst",
+      "secondaryLabel": "Til baka á innskráningu"
+    },
+    "resetPassword": {
+      "eyebrow": "Endurstilla lykilorð",
+      "title": "Velja nýtt lykilorð",
+      "description": "Sláðu inn endurstillingartáknið þitt og veldu nýtt lykilorð.",
+      "primaryLabel": "Stilla nýtt lykilorð",
+      "secondaryLabel": "Til baka á innskráningu"
+    },
+    "fields": {
+      "displayName": "Birtingarnafn",
+      "displayNamePlaceholder": "Opinbera nafnið þitt",
+      "email": "Netfang",
+      "password": "Lykilorð",
+      "passwordPlaceholder": "Lágmark 8 stafir",
+      "confirmPassword": "Staðfesta lykilorð",
+      "confirmPasswordPlaceholder": "Endurtaktu nýja lykilorðið þitt",
+      "resetToken": "Endurstillingartákn",
+      "resetTokenPlaceholder": "Tákn úr endurheimt tölvupósti",
+      "language": "Tungumál",
+      "accountType": "Tegund aðgangs"
+    },
+    "roles": {
+      "member": "Meðlimur",
+      "organizer": "Skipuleggjandi",
+      "venuePartner": "Samstarfsstaður",
+      "admin": "Stjórnandi"
+    },
+    "demoAccounts": "Prufuaðgangar",
+    "signOut": "Skrá út",
+    "backToHome": "Til baka heim",
+    "errors": {
+      "generic": "Eitthvað fór úrskeiðis.",
+      "success": "Tókst."
+    }
+  },
+  "errors": {
+    "notFound": {
+      "code": "404",
+      "title": "Síða fannst ekki",
+      "description": "Síðan sem þú leitar að er ekki til eða hefur verið flutt. Við skulum koma þér á rétta braut.",
+      "goHome": "Fara heim",
+      "browseEvents": "Skoða viðburði",
+      "exploreVenues": "Skoða staði"
+    },
+    "error": {
+      "eyebrow": "Eitthvað fór úrskeiðis",
+      "title": "Óvænt villa",
+      "description": "Eitthvað hlaðaðist ekki rétt. Þú getur reynt aftur eða farið til baka á forsíðu.",
+      "tryAgain": "Reyna aftur",
+      "goHome": "Fara heim"
+    },
+    "globalError": {
+      "badge": "Kerfisvillu",
+      "title": "Forritið lenti í alvarlegri villu.",
+      "description": "Þessi vara-skjár tryggir að jafnvel versta tilfellið hafi merkt og markvissan skjá.",
+      "systemFailure": "Kerfisbilun",
+      "brandedFallback": "Merkt varaútgáfa",
+      "goHome": "Fara heim",
+      "browseEvents": "Skoða viðburði"
+    }
+  },
+  "common": {
+    "processing": "Í vinnslu...",
+    "loading": "Hleð...",
+    "search": "Leita",
+    "save": "Vista",
+    "cancel": "Hætta við",
+    "delete": "Eyða",
+    "edit": "Breyta",
+    "close": "Loka",
+    "back": "Til baka",
+    "next": "Áfram",
+    "previous": "Til baka",
+    "submit": "Senda",
+    "confirm": "Staðfesta",
+    "yes": "Já",
+    "no": "Nei",
+    "or": "eða",
+    "and": "og",
+    "free": "Ókeypis",
+    "paid": "Greitt"
+  },
+  "eventsPage": {
+    "hero": {
+      "eyebrow": "Viðburðir",
+      "title": "Viðburðir í Reykjavík",
+      "description": "Skipulagðir félagsviðburðir, vinnustofur, smökkun og útivist — í boði raunverulegra skipuleggjenda á raunverulegum stöðum víðs vegar um borgina."
+    },
+    "stats": {
+      "upcomingEvents": "Væntanlegir viðburðir",
+      "totalAttendees": "Skráðir þátttakendur",
+      "partnerVenues": "Samstarfsstaðir",
+      "activeGroups": "Virkir hópar"
+    },
+    "actions": {
+      "joinCommunity": "Ganga í samfélagið",
+      "exploreGroups": "Skoða hópa"
+    },
+    "featured": {
+      "heading": "Valin viðburður",
+      "viewEvent": "Skoða viðburð"
+    },
+    "filters": {
+      "allEvents": "Allir viðburðir",
+      "today": "Í dag",
+      "thisWeek": "Þessa viku",
+      "weekend": "Um helgina",
+      "month": "Mánuðinn"
+    },
+    "cta": {
+      "title": "Tilbúin(n) að finna næsta viðburð?",
+      "description": "Skráðu þig í samfélagið til að bóka sæti, fá áminningar og uppgötva viðburði sem henta þínum áhugamálum.",
+      "button": "Stofna ókeypis aðgang"
+    }
+  },
+  "groupsPage": {
+    "hero": {
+      "eyebrow": "Hópar",
+      "title": "Samfélagshópar",
+      "description": "Endurtekin samfélög með tilgang. Finndu þitt fólk, skráðu þig í hóp og byggðu raunveruleg tengsl í Reykjavík."
+    },
+    "stats": {
+      "activeGroups": "Virkir hópar",
+      "totalMembers": "Heildarfjöldi meðlima",
+      "avgActivity": "Meðalvirkni",
+      "weeklyEvents": "Vikulegir viðburðir"
+    },
+    "actions": {
+      "joinGroup": "Ganga í hóp",
+      "seeEvents": "Sjá viðburði"
+    },
+    "howItWorks": {
+      "findTitle": "Finndu samfélagið þitt",
+      "findText": "Skoðaðu hópa eftir áhugasviði — útivist, tækni, félagslíf, listir, matur og fleira.",
+      "joinTitle": "Taktu þátt í reglulegum viðburðum",
+      "joinText": "Hópar halda reglulega fundi með stöðugu sniði, traustum gestgjöfum og góðum stöðum.",
+      "buildTitle": "Byggðu upp tengsl",
+      "buildText": "Meðlimir, umræður og sameiginleg reynsla sem vaxa með tímanum."
+    },
+    "grid": {
+      "activeGroups": "Virkir hópar"
+    },
+    "startGroup": {
+      "title": "Stofnaðu þinn eigin hóp",
+      "description": "Ertu með hugmynd að samfélagi? Stofnaðu hóp með meðlimastjórnun, viðburðatólum og staðasamsvörun innbyggðu.",
+      "button": "Byrja hér"
+    }
+  },
+  "venuesPage": {
+    "hero": {
+      "eyebrow": "Staðir",
+      "title": "Staðir í Reykjavík",
+      "description": "Samstarfsstaðir sem hýsa samfélagsviðburði, bjóða meðlimatilboð og láta hvern fund líða eins og heima."
+    },
+    "stats": {
+      "partnerVenues": "Samstarfsstaðir",
+      "avgRating": "Meðaleinkunn",
+      "totalCapacity": "Heildarrými",
+      "cityLocations": "Staðsetningar í borginni"
+    },
+    "actions": {
+      "becomePartner": "Verða samstarfsaðili",
+      "seeEvents": "Sjá viðburði"
+    },
+    "whyVenues": {
+      "curatedTitle": "Valin rými",
+      "curatedText": "Sérhver samstarfsstaður er valinn fyrir samfélagsfit, gæði rýmis og hýsingarmöguleika.",
+      "dealsTitle": "Meðlimatilboð",
+      "dealsText": "Samstarfsstaðir bjóða sérstök tilboð fyrir meðlimi MeetupReykjavik — allt frá velkomindrykkjum til hópaverða.",
+      "reviewsTitle": "Traustverðugar umsagnir",
+      "reviewsText": "Raunverulegar einkunnir frá samfélagsmeðlimum sem sóttu viðburði á hverjum stað."
+    },
+    "neighborhoods": {
+      "venues": "{count} staðir",
+      "combinedSeats": "{capacity} sæti samtals. Hæst metinn: {topVenue} ({topRating})."
+    },
+    "grid": {
+      "partnerVenues": "Samstarfsstaðir"
+    },
+    "sourced": {
+      "title": "Fleiri staðir í Reykjavík",
+      "description": "Uppgötvaðu staði víðs vegar um borgina sem gætu hýst næsta viðburð þinn.",
+      "seeAll": "Sjá alla"
+    },
+    "cta": {
+      "title": "Átt þú stað í Reykjavík?",
+      "description": "Skráðu þig í staðanetið okkar til að fá bókanir, hýsa samfélagsviðburði og bjóða meðlimatilboð.",
+      "button": "Sækja um samstarf"
+    }
+  },
+  "forOrganizersPage": {
+    "hero": {
+      "eyebrow": "Fyrir skipuleggjendur",
+      "title": "Verkfæri fyrir viðburðaskipuleggjendur",
+      "description": "Skipuleggðu hópa og viðburði með alvöru verkfærum: endurteknar seríur, greidd miðasala frá {minPrice} kr., samþykki þátttakenda og staðasamsvörun.",
+      "startOrganizing": "Byrja að skipuleggja",
+      "seePricing": "Sjá verðskrá"
+    },
+    "features": {
+      "heading": "Allt sem þú þarft til að halda viðburði",
+      "recurringGroups": {
+        "title": "Endurteknir hópar",
+        "text": "Byggðu upp samfélagseinkenni með meðlimastjórnun, umræðuþráðum og meðstjórnendaaðstoð."
+      },
+      "eventTools": {
+        "title": "Viðburðaverkfæri",
+        "text": "Búðu til viðburði með miðasölu, samþykkisferli, þátttakendastjórnun og sjálfvirkum áminningum."
+      },
+      "venueMatching": {
+        "title": "Staðasamsvörun",
+        "text": "Finndu rétta salinn fyrir þitt snið með samsvörun eftir rýmd, aðstöðu og framboði."
+      },
+      "analytics": {
+        "title": "Greiningar",
+        "text": "Fylgstu með mætingu, tekjum og áhorfendaþróun til að bæta viðburðina þína."
+      },
+      "recurringTemplates": {
+        "title": "Endurtekin sniðmát",
+        "text": "Settu upp viðburðaseríu einu sinni og birtu útgáfur með forfylltum upplýsingum og samræmdu útliti."
+      },
+      "approvalControls": {
+        "title": "Samþykkisstýringar",
+        "text": "Mótaðu hópinn þinn með handvirku samþykki, biðlistum og skipuleggjendastýrðum aðgangi."
+      }
+    },
+    "pricing": {
+      "heading": "Áskriftarleiðir skipuleggjenda",
+      "commission": "Auk {rate}% þóknunar af greiddri miðasölu.",
+      "recommended": "Mælt með"
+    },
+    "cta": {
+      "heading": "Tilbúin(n) að byrja að skipuleggja?",
+      "description": "Stofnaðu aðgang, byrjaðu hóp og birtu fyrsta viðburðinn þinn á nokkrum mínútum.",
+      "button": "Byrjaðu ókeypis"
+    }
+  },
+  "forVenuesPage": {
+    "hero": {
+      "eyebrow": "Fyrir staði",
+      "title": "Samstarf við MeetupReykjavik",
+      "description": "Breyttu staðnum þínum í samfélagsmiðstöð með bókunarverkfærum, framboðsstjórnun, tilboðum og greiningum.",
+      "applyAsPartner": "Sækja um samstarf",
+      "browseVenues": "Skoða staði"
+    },
+    "features": {
+      "heading": "Af hverju staðir eiga samstarf við okkur",
+      "structuredOnboarding": {
+        "title": "Skipulögð innleiðing",
+        "text": "Leiðsögn um auðkenningu fyrirtækis, rýmd, opnunartíma, myndefni og greiðsluuppsetningu."
+      },
+      "bookingManagement": {
+        "title": "Bókunarstjórnun",
+        "text": "Haldtu utan um beiðnir, gagntilboð, framboð og bókunarsögu á einum stað."
+      },
+      "analyticsDeals": {
+        "title": "Greiningar og tilboð",
+        "text": "Búðu til meðlimatilboð, fylgstu með frammistöðu viðburða og skildu skipuleggjendablönduna þína og áhorfendur."
+      },
+      "communityExposure": {
+        "title": "Sýnileiki í samfélaginu",
+        "text": "Láttu skipuleggjendur og meðlimi finna þig sem eru í virkri leit að réttum stað fyrir viðburðina sína."
+      },
+      "reviewsRatings": {
+        "title": "Umsagnir og einkunnir",
+        "text": "Byggðu upp traust með ósviknum umsögnum frá samfélagsmeðlimum sem sóttu viðburði hjá þér."
+      },
+      "featuredPlacement": {
+        "title": "Aukin staðsetning",
+        "text": "Úrvalssamstarfsaðilar fá áberandi staðsetningu í leitarniðurstöðum og sérvaldum ráðleggingum."
+      }
+    },
+    "pricing": {
+      "heading": "Áskriftarleiðir staða",
+      "bestValue": "Best verðmæti"
+    },
+    "cta": {
+      "heading": "Tilbúin(n) að ganga í staðanetið?",
+      "description": "Sæktu um í dag og byrjaðu að fá bókunarbeiðnir frá samfélagsskipuleggjendum.",
+      "button": "Sækja um samstarf"
+    }
+  },
+  "blogPage": {
+    "hero": {
+      "eyebrow": "Blogg",
+      "title": "Af blogginu",
+      "description": "Hugleiðingar um samfélagshönnun, staðbundna viðburði og uppbyggingu betra félagslags í Reykjavík.",
+      "exploreEvents": "Skoða viðburði"
+    },
+    "signals": {
+      "editorialFocus": {
+        "label": "Ritstjórnarfókus",
+        "value": "Vara, staðir og samfélag borgarinnar",
+        "detail": "Núverandi skrifleiðin helst nálægt kjarnakenningunni um markaðstorgið."
+      },
+      "publishedPieces": {
+        "label": "Útgefnar greinar",
+        "detail": "Hversu mikið ritstjórnarsamhengi er til staðar á opinberum vörumerkjaflötum."
+      },
+      "averageDepth": {
+        "label": "Meðaldýpt",
+        "sections": "{count} kaflar",
+        "detail": "Núverandi greiningardýpt í bloggbókasafninu."
+      }
+    },
+    "readArticle": "Lesa grein",
+    "moreArticles": "Fleiri greinar",
+    "detail": {
+      "editorialAngle": "Ritstjórnarsjónarhorn",
+      "category": "Flokkur",
+      "categoryDetail": "Aðalleiðin sem þessi grein styður í víðara opinbera vörumerkinu.",
+      "readTime": "Lestrartími",
+      "readTimeDetail": "Áætluð dýpt fyrir þá sem koma af uppgötvunarflötum.",
+      "published": "Birt",
+      "publishedDetail": "Hversu nýlegt þetta sjónarhorn er innan vörusögunnar.",
+      "whyMatters": "Af hverju þetta skiptir máli",
+      "whyMattersBody": "Ritstjórnarlagið er til þess að gera markaðstorgið auðveldara að treysta. Það gefur meðlimum, skipuleggjendum og stöðum skýrari linsu á hvað MeetupReykjavik er í raun að reyna að verðlauna í borginni: sterkari gestgjafa, betur passandi herbergi og varanlegri endurtekin samfélög.",
+      "continueReading": "Halda áfram að lesa"
+    }
+  },
+  "categoriesPage": {
+    "hero": {
+      "eyebrow": "Flokkar",
+      "title": "Skoða eftir flokkum",
+      "description": "Finndu viðburði, hópa og staði skipulagða eftir því sem þú leitar að.",
+      "browseEvents": "Skoða viðburði",
+      "seeGroups": "Sjá hópa"
+    },
+    "meetups": "{count} hittingar",
+    "events": "{count} viðburðir",
+    "groups": "{count} hópar",
+    "venues": "{count} staðir",
+    "eventsLabel": "Viðburðir",
+    "groupsLabel": "Hópar",
+    "venuesLabel": "Staðir",
+    "notFound": {
+      "eyebrow": "Flokkur",
+      "title": "Flokkur fannst ekki",
+      "description": "Þessi flokkur er ekki enn í skránni.",
+      "browseCategories": "Skoða flokka"
+    },
+    "detail": {
+      "eyebrow": "Flokkur",
+      "meetupsInCategory": "{count} hittingar í þessum flokki",
+      "join": "Skráning",
+      "allCategories": "Allir flokkar",
+      "eventsHeading": "Viðburðir",
+      "groupsHeading": "Hópar",
+      "venuesHeading": "Staðir",
+      "relatedCategories": "Skyldir flokkar"
+    }
+  },
+  "eventDetailPage": {
+    "eyebrowSuffix": "viðburður",
+    "actions": {
+      "rsvp": "Skráning",
+      "viewGroup": "Skoða hóp",
+      "reserveSeat": "Bókaðu sæti"
+    },
+    "sections": {
+      "aboutThisEvent": "Um þennan viðburð",
+      "whyThisFormatWorks": "Af hverju þetta snið virkar",
+      "gallery": "Myndasafn",
+      "comments": "Athugasemdir",
+      "reviews": "Umsagnir",
+      "details": "Upplýsingar",
+      "bookingNotes": "Bókunarupplýsingar",
+      "hostGroup": "Gestgjafihópur",
+      "venue": "Staður",
+      "relatedEvents": "Tengdir viðburðir"
+    },
+    "labels": {
+      "date": "Dagsetning",
+      "time": "Tími",
+      "venue": "Staður",
+      "group": "Hópur",
+      "ticket": "Miði",
+      "age": "Aldur",
+      "capacity": "Rými",
+      "hostContact": "Tengiliður gestgjafa",
+      "shareFlow": "Deilingarflæði",
+      "roomPolicy": "Rýmisstefna",
+      "members": "Meðlimir",
+      "organizer": "Skipuleggjandi",
+      "type": "Tegund",
+      "area": "Svæði",
+      "rating": "Einkunn",
+      "viewGroup": "Skoða hóp",
+      "viewVenue": "Skoða stað"
+    }
+  },
+  "groupDetailPage": {
+    "eyebrowSuffix": "hópur",
+    "actions": {
+      "joinThisGroup": "Ganga í þennan hóp"
+    },
+    "heroStats": {
+      "members": "Meðlimir",
+      "activity": "Virkni",
+      "organizer": "Skipuleggjandi",
+      "upcoming": "Væntanlegt"
+    },
+    "sections": {
+      "about": "Um",
+      "whyMembersStay": "Af hverju meðlimir halda sér",
+      "discussions": "Umræður",
+      "upcomingEvents": "Væntanlegir viðburðir",
+      "pastEvents": "Liðnir viðburðir",
+      "membershipRead": "Meðlimayfirlit"
+    },
+    "labels": {
+      "replies": "svör",
+      "organizer": "Skipuleggjandi",
+      "bestKnownFor": "Þekktast fyrir",
+      "whyThisGroupMatters": "Af hverju þessi hópur skiptir máli"
+    },
+    "empty": {
+      "noUpcomingEvents": "Engir væntanlegir viðburðir ennþá."
+    }
+  },
+  "venueDetailPage": {
+    "actions": {
+      "partnerWithUs": "Gerðu samstarf við okkur"
+    },
+    "heroStats": {
+      "area": "Svæði",
+      "capacity": "Rými",
+      "rating": "Einkunn",
+      "events": "Viðburðir"
+    },
+    "sections": {
+      "about": "Um",
+      "amenities": "Aðstaða",
+      "bestFitFormats": "Best passandi snið",
+      "gallery": "Myndasafn",
+      "location": "Staðsetning",
+      "info": "Upplýsingar",
+      "hours": "Opnunartímar",
+      "upcomingEvents": "Væntanlegir viðburðir",
+      "moreInArea": "Meira á {area}"
+    },
+    "labels": {
+      "type": "Tegund",
+      "area": "Svæði",
+      "address": "Heimilisfang",
+      "capacity": "Rými",
+      "peak": "Háannatími"
+    },
+    "empty": {
+      "noUpcomingEvents": "Engir væntanlegir viðburðir."
     }
   }
 }

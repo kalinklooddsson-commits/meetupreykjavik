@@ -49,7 +49,7 @@ export function LocaleSwitcher({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border border-[var(--brand-border)] bg-white/72 p-1",
+        "inline-flex items-center gap-1 rounded-full border border-brand-border bg-white/72 p-1",
         compact && "border-transparent bg-transparent p-0",
         className,
       )}
@@ -66,8 +66,8 @@ export function LocaleSwitcher({
             "min-h-11 min-w-11 rounded-full px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] transition-colors",
             compact && "min-h-9 min-w-9 px-2.5 py-1.5 tracking-[0.14em]",
             locale === nextLocale
-              ? "bg-[var(--brand-indigo)] text-white"
-              : "text-[var(--brand-text-light)] hover:text-[var(--brand-indigo)]",
+              ? "bg-brand-indigo text-white"
+              : "text-brand-text-light hover:text-brand-indigo",
             isBusy ? "cursor-wait opacity-70" : "cursor-pointer",
           )}
         >

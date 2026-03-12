@@ -1,15 +1,18 @@
+import { getTranslations } from "next-intl/server";
+
 import { AuthPanel } from "@/components/ui/auth-panel";
 
-export default function SignupPage() {
+export default async function SignupPage() {
+  const t = await getTranslations("auth.signup");
   return (
     <AuthPanel
       mode="signup"
-      eyebrow="Get started"
-      title="Create your account"
-      description="Join as a member, organizer, or venue partner."
-      primaryLabel="Create account"
+      eyebrow={t("eyebrow")}
+      title={t("title")}
+      description={t("description")}
+      primaryLabel={t("primaryLabel")}
       secondaryHref="/login"
-      secondaryLabel="Already have an account? Sign in"
+      secondaryLabel={t("secondaryLabel")}
     />
   );
 }

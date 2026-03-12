@@ -1,15 +1,18 @@
+import { getTranslations } from "next-intl/server";
+
 import { AuthPanel } from "@/components/ui/auth-panel";
 
-export default function ForgotPasswordPage() {
+export default async function ForgotPasswordPage() {
+  const t = await getTranslations("auth.forgotPassword");
   return (
     <AuthPanel
       mode="forgot-password"
-      eyebrow="Password reset"
-      title="Recover your account"
-      description="Enter your email and we'll send a recovery link."
-      primaryLabel="Send recovery email"
+      eyebrow={t("eyebrow")}
+      title={t("title")}
+      description={t("description")}
+      primaryLabel={t("primaryLabel")}
       secondaryHref="/login"
-      secondaryLabel="Back to login"
+      secondaryLabel={t("secondaryLabel")}
     />
   );
 }

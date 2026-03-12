@@ -14,7 +14,8 @@ export async function SiteFooter() {
         { href: "/events" as Route, label: tNav("events") },
         { href: "/groups" as Route, label: tNav("groups") },
         { href: "/venues" as Route, label: tNav("venues") },
-        { href: "/categories" as Route, label: tFooter("categories") },
+        { href: "/categories" as Route, label: tNav("categories") },
+        { href: "/blog" as Route, label: tNav("blog") },
       ],
     },
     {
@@ -22,9 +23,9 @@ export async function SiteFooter() {
       links: [
         { href: "/about" as Route, label: tNav("about") },
         { href: "/pricing" as Route, label: tNav("pricing") },
-        { href: "/blog" as Route, label: tNav("blog") },
-        { href: "/faq" as Route, label: "FAQ" },
-        { href: "/for-venues" as Route, label: tFooter("forVenues") },
+        { href: "/for-organizers" as Route, label: tNav("forOrganizers") },
+        { href: "/for-venues" as Route, label: tNav("forVenues") },
+        { href: "/faq" as Route, label: tNav("faq") },
       ],
     },
     {
@@ -32,17 +33,17 @@ export async function SiteFooter() {
       links: [
         { href: "/privacy" as Route, label: tNav("privacy") },
         { href: "/terms" as Route, label: tFooter("terms") },
-        { href: "/contact" as Route, label: tFooter("contact") },
+        { href: "/contact" as Route, label: tNav("contact") },
       ],
     },
   ] as const;
 
   return (
-    <footer className="relative overflow-hidden bg-[var(--brand-basalt)] px-4 py-14 text-white">
-      <div className="section-shell relative z-10 grid gap-10 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
+    <footer className="relative overflow-hidden bg-brand-basalt px-4 py-14 text-white">
+      <div className="section-shell relative z-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
         <div>
           <div className="mb-4 flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--brand-indigo)] text-white">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-indigo text-white">
               <Compass className="h-5 w-5" />
             </span>
             <div>
@@ -59,7 +60,7 @@ export async function SiteFooter() {
           </p>
           <Link
             href="/signup"
-            className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
+            className="mt-6 inline-flex min-h-11 items-center rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
           >
             {tCta("signup")}
           </Link>

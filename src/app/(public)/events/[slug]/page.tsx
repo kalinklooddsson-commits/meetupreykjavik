@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { EventDetailScreen } from "@/components/public/public-pages";
-import { getEventBySlug } from "@/lib/public-data";
+import { fetchEventBySlug } from "@/lib/data";
 
 export default async function EventDetailPage({
   params,
@@ -8,7 +8,7 @@ export default async function EventDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const event = getEventBySlug(slug);
+  const event = await fetchEventBySlug(slug);
 
   if (!event) {
     notFound();

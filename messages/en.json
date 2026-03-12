@@ -14,7 +14,13 @@
     "forVenues": "For venues",
     "faq": "FAQ",
     "blog": "Blog",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "more": "More",
+    "categories": "Categories",
+    "contact": "Contact",
+    "home": "Home",
+    "menu": "Menu",
+    "close": "Close"
   },
   "cta": {
     "signup": "Create account",
@@ -39,7 +45,9 @@
   },
   "header": {
     "brandTop": "Meetup",
-    "brandBottom": "Reykjavik"
+    "brandBottom": "Reykjavik",
+    "search": "Search",
+    "searchPlaceholder": "Search events, groups, venues..."
   },
   "footer": {
     "description": "Discover events. Meet people. Support local venues. Free to join, built for Reykjavik.",
@@ -293,6 +301,155 @@
       "three": "Some live commercial and legal details will be finalized when provider setup is complete."
     }
   },
+  "aboutPage": {
+    "hero": {
+      "eyebrow": "About",
+      "title": "About MeetupReykjavik",
+      "description": "A local platform for events, groups, and venue partnerships — built specifically for Reykjavik.",
+      "exploreEvents": "Explore events",
+      "getInTouch": "Get in touch"
+    },
+    "mission": {
+      "title": "Our mission",
+      "paragraph1": "Reykjavik is small enough that quality matters fast. If events feel random, hosts feel weak, or the rooms do not fit the format, people notice immediately.",
+      "paragraph2": "We bring event context, group identity, and venue fit into one system. That is the difference between a feed and an actual local product."
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "membersTitle": "Members",
+      "membersText": "Find events, join groups, RSVP with confidence. Free to browse, with premium tiers for deeper access.",
+      "organizersTitle": "Organizers",
+      "organizersText": "Run recurring events with approval tools, paid ticketing, analytics, and venue matching built in.",
+      "venuesTitle": "Venues",
+      "venuesText": "Partner with the platform to get bookings, host better community events, and offer member deals."
+    },
+    "team": {
+      "title": "Team"
+    },
+    "cta": {
+      "title": "Join the Reykjavik community",
+      "description": "Whether you want to attend, organize, or host — there is a place for you.",
+      "createAccount": "Create account",
+      "browseEvents": "Browse events"
+    }
+  },
+  "pricingPage": {
+    "hero": {
+      "eyebrow": "Pricing",
+      "title": "Simple, transparent pricing",
+      "description": "Members browse free. Organizers and venues pay for real tools. {commission}% commission on paid tickets keeps the platform aligned with your success.",
+      "getStartedFree": "Get started free",
+      "talkToUs": "Talk to us"
+    },
+    "members": {
+      "badge": "For members",
+      "title": "Member plans",
+      "description": "Browse free. Upgrade for priority access and premium features.",
+      "mostPopular": "Most popular",
+      "joinFree": "Join free",
+      "getStarted": "Get started"
+    },
+    "organizers": {
+      "badge": "For organizers",
+      "title": "Organizer plans",
+      "description": "Run events with real tools. Plus {commission}% commission on paid ticket sales.",
+      "recommended": "Recommended",
+      "startOrganizing": "Start organizing"
+    },
+    "venues": {
+      "badge": "For venues",
+      "title": "Venue plans",
+      "description": "From basic listing to full partnership with booking tools and analytics.",
+      "bestValue": "Best value",
+      "listFree": "List free",
+      "applyNow": "Apply now"
+    },
+    "comparison": {
+      "title": "Compare plans at a glance",
+      "description": "Every feature across every tier — so you pick the right plan the first time.",
+      "feature": "Feature",
+      "memberPlans": "Member plans",
+      "organizerPlans": "Organizer plans",
+      "venuePlans": "Venue plans",
+      "memberFeatures": {
+        "browseEventsVenues": "Browse events & venues",
+        "ticketCheckout": "Ticket checkout",
+        "standardRsvp": "Standard RSVP",
+        "priorityWaitlist": "Priority waitlist",
+        "directMessaging": "Direct messaging",
+        "premiumBadge": "Premium badge",
+        "advancedFilters": "Advanced filters",
+        "earlyAccessFeatures": "Early access features"
+      },
+      "organizerFeatures": {
+        "activePublicEvents": "Active public events",
+        "upTo3": "Up to 3",
+        "unlimited": "Unlimited",
+        "publicTicketing": "Public ticketing",
+        "ticketCommission": "5% ticket commission",
+        "basicEventAnalytics": "Basic event analytics",
+        "recurringEvents": "Recurring events",
+        "approvalWaitlistControls": "Approval & waitlist controls",
+        "venueRequestWorkflows": "Venue request workflows",
+        "revenueReporting": "Revenue reporting",
+        "prioritySupport": "Priority support",
+        "featuredPlacement": "Featured placement",
+        "sponsorInventory": "Sponsor inventory",
+        "audienceSegmentation": "Audience segmentation"
+      },
+      "venueFeatures": {
+        "publicListing": "Public listing",
+        "applicationReview": "Application review",
+        "bookingInbox": "Booking inbox",
+        "availabilityPlanning": "Availability planning",
+        "partnerDealManagement": "Partner deal management",
+        "organizerFitInsights": "Organizer-fit insights",
+        "featuredPlacement": "Featured placement",
+        "premiumAnalytics": "Premium analytics",
+        "priorityVenueMatching": "Priority venue matching",
+        "sponsoredInventory": "Sponsored inventory"
+      }
+    },
+    "faq": {
+      "title": "Common questions",
+      "moreLink": "More questions? See full FAQ"
+    }
+  },
+  "faqPage": {
+    "hero": {
+      "eyebrow": "FAQ",
+      "title": "Frequently asked questions",
+      "description": "Quick answers about the platform, pricing, and how things work.",
+      "contactUs": "Contact us",
+      "seePricing": "See pricing"
+    },
+    "sections": {
+      "joiningProfiles": {
+        "title": "Joining and profiles",
+        "q1": "Do I need to pay to browse or RSVP?",
+        "a1": "No. Browsing and basic discovery are free. Paid features are only required for specific events or membership tiers.",
+        "q2": "Why do member profiles matter?",
+        "a2": "Profiles help organizers and venues understand their audience, and help members get clearer expectations around event format and fit."
+      },
+      "eventsGroups": {
+        "title": "Events and groups",
+        "q1": "Why are some events manual approval and others open RSVP?",
+        "a1": "Both are supported. Approval works well when hosts want to shape the room, while open RSVP works for simpler, lower-friction formats.",
+        "q2": "How are venues involved?",
+        "a2": "Venue partners host events, offer member deals, and help shape the arrival experience. They are an active part of the platform."
+      },
+      "paymentsBilling": {
+        "title": "Payments and billing"
+      },
+      "trustSupport": {
+        "title": "Trust and support",
+        "q1": "How does support work?",
+        "a1": "Use the contact page to reach the right team. We have separate channels for general help, organizer support, venue operations, and trust concerns.",
+        "q2": "Can organizers message anyone directly?",
+        "a2": "No. Messaging respects member privacy settings. Organizers can only reach members through approved channels."
+      }
+    }
+  },
   "contactPage": {
     "hero": {
       "eyebrow": "Contact",
@@ -363,6 +520,479 @@
     "status": {
       "incomplete": "Add your name, email, and message before saving this local draft.",
       "saved": "Saved locally as a contact draft. No live message was sent from this build."
+    }
+  },
+  "auth": {
+    "login": {
+      "eyebrow": "Welcome back",
+      "title": "Sign in to your account",
+      "description": "Access your events, groups, and dashboard.",
+      "primaryLabel": "Sign in",
+      "secondaryLabel": "Need an account? Create one",
+      "forgotPassword": "Forgot password?"
+    },
+    "signup": {
+      "eyebrow": "Get started",
+      "title": "Create your account",
+      "description": "Join as a member, organizer, or venue partner.",
+      "primaryLabel": "Create account",
+      "secondaryLabel": "Already have an account? Sign in"
+    },
+    "forgotPassword": {
+      "eyebrow": "Password reset",
+      "title": "Recover your account",
+      "description": "Enter your email and we'll send a recovery link.",
+      "primaryLabel": "Send recovery email",
+      "secondaryLabel": "Back to login"
+    },
+    "resetPassword": {
+      "eyebrow": "Reset password",
+      "title": "Set a new password",
+      "description": "Enter your reset token and choose a new password.",
+      "primaryLabel": "Set new password",
+      "secondaryLabel": "Back to login"
+    },
+    "fields": {
+      "displayName": "Display name",
+      "displayNamePlaceholder": "Your public name",
+      "email": "Email",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your new password",
+      "resetToken": "Reset token",
+      "resetTokenPlaceholder": "Token from recovery email",
+      "language": "Language",
+      "accountType": "Account type"
+    },
+    "roles": {
+      "member": "Member",
+      "organizer": "Organizer",
+      "venuePartner": "Venue partner",
+      "admin": "Admin"
+    },
+    "demoAccounts": "Demo accounts",
+    "signOut": "Sign out",
+    "backToHome": "Back to home",
+    "errors": {
+      "generic": "Something went wrong.",
+      "success": "Success."
+    }
+  },
+  "errors": {
+    "notFound": {
+      "code": "404",
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or has been moved. Let's get you back on track.",
+      "goHome": "Go home",
+      "browseEvents": "Browse events",
+      "exploreVenues": "Explore venues"
+    },
+    "error": {
+      "eyebrow": "Something went wrong",
+      "title": "Unexpected error",
+      "description": "Something didn't load correctly. You can try again or head back to the homepage.",
+      "tryAgain": "Try again",
+      "goHome": "Go home"
+    },
+    "globalError": {
+      "badge": "System error",
+      "title": "The app hit a global failure.",
+      "description": "This global fallback is in place so even the worst-case route state still has a branded, intentional screen.",
+      "systemFailure": "System-level failure",
+      "brandedFallback": "Branded fallback",
+      "goHome": "Go home",
+      "browseEvents": "Browse events"
+    }
+  },
+  "common": {
+    "processing": "Processing...",
+    "loading": "Loading...",
+    "search": "Search",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "free": "Free",
+    "paid": "Paid"
+  },
+  "eventsPage": {
+    "hero": {
+      "eyebrow": "Events",
+      "title": "Events in Reykjavik",
+      "description": "Hosted socials, workshops, tastings, and outdoor adventures — curated by real organizers in real venues across the city."
+    },
+    "stats": {
+      "upcomingEvents": "Upcoming events",
+      "totalAttendees": "Total attendees",
+      "partnerVenues": "Partner venues",
+      "activeGroups": "Active groups"
+    },
+    "actions": {
+      "joinCommunity": "Join the community",
+      "exploreGroups": "Explore groups"
+    },
+    "featured": {
+      "heading": "Featured event",
+      "viewEvent": "View event"
+    },
+    "filters": {
+      "allEvents": "All events",
+      "today": "Today",
+      "thisWeek": "This Week",
+      "weekend": "Weekend",
+      "month": "Month"
+    },
+    "cta": {
+      "title": "Ready to find your next event?",
+      "description": "Join the community to RSVP, get reminders, and discover events matched to your interests.",
+      "button": "Create free account"
+    }
+  },
+  "groupsPage": {
+    "hero": {
+      "eyebrow": "Groups",
+      "title": "Community groups",
+      "description": "Recurring communities with a purpose. Find your people, join a group, and build real connections in Reykjavik."
+    },
+    "stats": {
+      "activeGroups": "Active groups",
+      "totalMembers": "Total members",
+      "avgActivity": "Avg. activity",
+      "weeklyEvents": "Weekly events"
+    },
+    "actions": {
+      "joinGroup": "Join a group",
+      "seeEvents": "See events"
+    },
+    "howItWorks": {
+      "findTitle": "Find your community",
+      "findText": "Browse groups by interest — outdoors, tech, social, arts, food, and more.",
+      "joinTitle": "Join recurring events",
+      "joinText": "Groups host regular meetups with consistent formats, trusted hosts, and strong venues.",
+      "buildTitle": "Build connections",
+      "buildText": "Members, discussions, and shared experiences that grow over time."
+    },
+    "grid": {
+      "activeGroups": "Active groups"
+    },
+    "startGroup": {
+      "title": "Start your own group",
+      "description": "Have a community idea? Launch a group with member management, event tools, and venue matching built in.",
+      "button": "Get started"
+    }
+  },
+  "venuesPage": {
+    "hero": {
+      "eyebrow": "Venues",
+      "title": "Venues in Reykjavik",
+      "description": "Partner venues that host community events, offer member deals, and make every meetup feel at home."
+    },
+    "stats": {
+      "partnerVenues": "Partner venues",
+      "avgRating": "Avg. rating",
+      "totalCapacity": "Total capacity",
+      "cityLocations": "City locations"
+    },
+    "actions": {
+      "becomePartner": "Become a partner",
+      "seeEvents": "See events"
+    },
+    "whyVenues": {
+      "curatedTitle": "Curated spaces",
+      "curatedText": "Every partner venue is selected for its community fit, layout quality, and hosting potential.",
+      "dealsTitle": "Member deals",
+      "dealsText": "Partner venues offer exclusive deals for MeetupReykjavik members — from welcome drinks to group rates.",
+      "reviewsTitle": "Trusted reviews",
+      "reviewsText": "Real ratings from community members who attended events at each venue."
+    },
+    "neighborhoods": {
+      "venues": "{count} venues",
+      "combinedSeats": "{capacity} combined seats. Best-rated: {topVenue} ({topRating})."
+    },
+    "grid": {
+      "partnerVenues": "Partner venues"
+    },
+    "sourced": {
+      "title": "More places in Reykjavik",
+      "description": "Discover venues across the city that could host your next event.",
+      "seeAll": "See all"
+    },
+    "cta": {
+      "title": "Own a venue in Reykjavik?",
+      "description": "Join our venue network to get bookings, host community events, and offer member deals.",
+      "button": "Apply as a partner"
+    }
+  },
+  "forOrganizersPage": {
+    "hero": {
+      "eyebrow": "For organizers",
+      "title": "Tools for event organizers",
+      "description": "Run groups and events with real tools: recurring series, paid tickets from {minPrice} ISK, attendee approvals, and venue matching.",
+      "startOrganizing": "Start organizing",
+      "seePricing": "See pricing"
+    },
+    "features": {
+      "heading": "Everything you need to run events",
+      "recurringGroups": {
+        "title": "Recurring groups",
+        "text": "Build a community identity with member management, discussion threads, and co-host support."
+      },
+      "eventTools": {
+        "title": "Event tools",
+        "text": "Create events with ticketing, approval workflows, attendee management, and automated reminders."
+      },
+      "venueMatching": {
+        "title": "Venue matching",
+        "text": "Find the right room for your format with capacity, amenity, and availability matching."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "text": "Track attendance, revenue, and audience trends to improve your events over time."
+      },
+      "recurringTemplates": {
+        "title": "Recurring templates",
+        "text": "Set up event series once and publish editions with pre-filled details and consistent branding."
+      },
+      "approvalControls": {
+        "title": "Approval controls",
+        "text": "Shape your room with manual approval, waitlists, and host-curated access."
+      }
+    },
+    "pricing": {
+      "heading": "Organizer plans",
+      "commission": "Plus {rate}% commission on paid ticket sales.",
+      "recommended": "Recommended"
+    },
+    "cta": {
+      "heading": "Ready to start organizing?",
+      "description": "Create your account, start a group, and publish your first event in minutes.",
+      "button": "Get started free"
+    }
+  },
+  "forVenuesPage": {
+    "hero": {
+      "eyebrow": "For venues",
+      "title": "Partner with MeetupReykjavik",
+      "description": "Turn your venue into a community hub with booking tools, availability management, deals, and analytics.",
+      "applyAsPartner": "Apply as a partner",
+      "browseVenues": "Browse venues"
+    },
+    "features": {
+      "heading": "Why venues partner with us",
+      "structuredOnboarding": {
+        "title": "Structured onboarding",
+        "text": "Guided intake covering business identity, capacity, hours, media, and billing setup."
+      },
+      "bookingManagement": {
+        "title": "Booking management",
+        "text": "Manage incoming requests, counter offers, availability, and booking history in one place."
+      },
+      "analyticsDeals": {
+        "title": "Analytics & deals",
+        "text": "Create member deals, track event performance, and understand your organizer mix and audience."
+      },
+      "communityExposure": {
+        "title": "Community exposure",
+        "text": "Get discovered by organizers and members actively looking for the right venue for their events."
+      },
+      "reviewsRatings": {
+        "title": "Reviews & ratings",
+        "text": "Build trust with authentic reviews from community members who attended events at your space."
+      },
+      "featuredPlacement": {
+        "title": "Featured placement",
+        "text": "Premium partners get highlighted placement in search results and curated venue recommendations."
+      }
+    },
+    "pricing": {
+      "heading": "Venue plans",
+      "bestValue": "Best value"
+    },
+    "cta": {
+      "heading": "Ready to join the venue network?",
+      "description": "Apply today and start receiving booking requests from community organizers.",
+      "button": "Apply as a partner"
+    }
+  },
+  "blogPage": {
+    "hero": {
+      "eyebrow": "Blog",
+      "title": "From the blog",
+      "description": "Thoughts on community design, local events, and building a better social layer for Reykjavik.",
+      "exploreEvents": "Explore events"
+    },
+    "signals": {
+      "editorialFocus": {
+        "label": "Editorial focus",
+        "value": "Product, venues, and city community",
+        "detail": "The current writing lane stays close to the core marketplace thesis."
+      },
+      "publishedPieces": {
+        "label": "Published pieces",
+        "detail": "How much editorial context exists across the public brand surface."
+      },
+      "averageDepth": {
+        "label": "Average depth",
+        "sections": "{count} sections",
+        "detail": "The current article depth across the blog library."
+      }
+    },
+    "readArticle": "Read article",
+    "moreArticles": "More articles",
+    "detail": {
+      "editorialAngle": "Editorial angle",
+      "category": "Category",
+      "categoryDetail": "The main lane this article supports in the broader public brand.",
+      "readTime": "Read time",
+      "readTimeDetail": "Approximate depth for someone arriving from discovery surfaces.",
+      "published": "Published",
+      "publishedDetail": "How current this point of view is within the product story.",
+      "whyMatters": "Why this matters",
+      "whyMattersBody": "The editorial layer exists to make the marketplace easier to trust. It gives members, organizers, and venues a clearer lens on what MeetupReykjavik is actually trying to reward in the city: stronger hosts, better-fit rooms, and more durable recurring communities.",
+      "continueReading": "Continue reading"
+    }
+  },
+  "categoriesPage": {
+    "hero": {
+      "eyebrow": "Categories",
+      "title": "Browse by category",
+      "description": "Find events, groups, and venues organized by what you are looking for.",
+      "browseEvents": "Browse events",
+      "seeGroups": "See groups"
+    },
+    "meetups": "{count} meetups",
+    "events": "{count} events",
+    "groups": "{count} groups",
+    "venues": "{count} venues",
+    "eventsLabel": "Events",
+    "groupsLabel": "Groups",
+    "venuesLabel": "Venues",
+    "notFound": {
+      "eyebrow": "Category",
+      "title": "Category not found",
+      "description": "This category is not in the directory yet.",
+      "browseCategories": "Browse categories"
+    },
+    "detail": {
+      "eyebrow": "Category",
+      "meetupsInCategory": "{count} meetups in this category",
+      "join": "Join",
+      "allCategories": "All categories",
+      "eventsHeading": "Events",
+      "groupsHeading": "Groups",
+      "venuesHeading": "Venues",
+      "relatedCategories": "Related categories"
+    }
+  },
+  "eventDetailPage": {
+    "eyebrowSuffix": "event",
+    "actions": {
+      "rsvp": "RSVP",
+      "viewGroup": "View group",
+      "reserveSeat": "Reserve your seat"
+    },
+    "sections": {
+      "aboutThisEvent": "About this event",
+      "whyThisFormatWorks": "Why this format works",
+      "gallery": "Gallery",
+      "comments": "Comments",
+      "reviews": "Reviews",
+      "details": "Details",
+      "bookingNotes": "Booking notes",
+      "hostGroup": "Host group",
+      "venue": "Venue",
+      "relatedEvents": "Related events"
+    },
+    "labels": {
+      "date": "Date",
+      "time": "Time",
+      "venue": "Venue",
+      "group": "Group",
+      "ticket": "Ticket",
+      "age": "Age",
+      "capacity": "Capacity",
+      "hostContact": "Host contact",
+      "shareFlow": "Share flow",
+      "roomPolicy": "Room policy",
+      "members": "Members",
+      "organizer": "Organizer",
+      "type": "Type",
+      "area": "Area",
+      "rating": "Rating",
+      "viewGroup": "View group",
+      "viewVenue": "View venue"
+    }
+  },
+  "groupDetailPage": {
+    "eyebrowSuffix": "group",
+    "actions": {
+      "joinThisGroup": "Join this group"
+    },
+    "heroStats": {
+      "members": "Members",
+      "activity": "Activity",
+      "organizer": "Organizer",
+      "upcoming": "Upcoming"
+    },
+    "sections": {
+      "about": "About",
+      "whyMembersStay": "Why members stay",
+      "discussions": "Discussions",
+      "upcomingEvents": "Upcoming events",
+      "pastEvents": "Past events",
+      "membershipRead": "Membership read"
+    },
+    "labels": {
+      "replies": "replies",
+      "organizer": "Organizer",
+      "bestKnownFor": "Best known for",
+      "whyThisGroupMatters": "Why this group matters"
+    },
+    "empty": {
+      "noUpcomingEvents": "No upcoming events yet."
+    }
+  },
+  "venueDetailPage": {
+    "actions": {
+      "partnerWithUs": "Partner with us"
+    },
+    "heroStats": {
+      "area": "Area",
+      "capacity": "Capacity",
+      "rating": "Rating",
+      "events": "Events"
+    },
+    "sections": {
+      "about": "About",
+      "amenities": "Amenities",
+      "bestFitFormats": "Best-fit formats",
+      "gallery": "Gallery",
+      "location": "Location",
+      "info": "Info",
+      "hours": "Hours",
+      "upcomingEvents": "Upcoming events",
+      "moreInArea": "More in {area}"
+    },
+    "labels": {
+      "type": "Type",
+      "area": "Area",
+      "address": "Address",
+      "capacity": "Capacity",
+      "peak": "Peak"
+    },
+    "empty": {
+      "noUpcomingEvents": "No upcoming events."
     }
   }
 }

@@ -1,15 +1,14 @@
 export function Skeleton({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded-lg ${className}`}
-      style={{ backgroundColor: "#e5e7eb", minHeight: 20 }}
+      className={`animate-pulse rounded-lg bg-gray-200 min-h-5 ${className}`}
     />
   );
 }
 
 export function CardSkeleton() {
   return (
-    <div className="rounded-xl border bg-white p-4" style={{ borderColor: "#EBE6DC" }}>
+    <div className="rounded-xl border border-brand-border bg-white p-4">
       <Skeleton className="mb-4 h-48 w-full" />
       <Skeleton className="mb-2 h-5 w-3/4" />
       <Skeleton className="mb-2 h-4 w-1/2" />

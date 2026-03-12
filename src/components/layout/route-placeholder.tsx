@@ -19,19 +19,19 @@ export function RoutePlaceholder({
     <section className="section-shell px-0 py-20">
       <div className="paper-panel overflow-hidden rounded-[2rem]">
         <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="border-b border-[var(--brand-border-light)] bg-white px-8 py-10 lg:border-r lg:border-b-0 lg:px-12 lg:py-14">
-            <span className="eyebrow bg-[rgba(79,70,229,0.08)] px-4 py-2 text-[var(--brand-indigo)]">
+          <div className="border-b border-brand-border-light bg-white px-8 py-10 lg:border-r lg:border-b-0 lg:px-12 lg:py-14">
+            <span className="eyebrow bg-[rgba(79,70,229,0.08)] px-4 py-2 text-brand-indigo">
               In progress
             </span>
-            <h1 className="font-editorial mt-6 text-4xl leading-tight tracking-[-0.04em] text-[var(--brand-text)] sm:text-5xl">
+            <h1 className="font-editorial mt-6 text-4xl leading-tight tracking-[-0.04em] text-brand-text sm:text-5xl">
               {title}
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-[var(--brand-text-muted)] sm:text-lg">
+            <p className="mt-5 max-w-2xl text-base leading-8 text-brand-text-muted sm:text-lg">
               {description}
             </p>
             <Link
               href={ctaHref as Route}
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[var(--brand-indigo)] px-6 py-3 text-sm font-bold text-white shadow-[0_16px_42px_rgba(55,48,163,0.24)] transition-transform hover:-translate-y-0.5"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-bold text-white shadow-[0_16px_42px_rgba(55,48,163,0.24)] transition-transform hover:-translate-y-0.5"
             >
               {ctaLabel}
               <ArrowRight className="h-4 w-4" />

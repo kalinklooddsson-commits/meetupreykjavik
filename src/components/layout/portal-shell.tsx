@@ -191,14 +191,14 @@ export function PortalShell({
 
             <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
               <div>
-                <div className="eyebrow bg-[rgba(79,70,229,0.08)] px-4 py-2 text-[var(--brand-indigo)]">
+                <div className="eyebrow bg-[rgba(79,70,229,0.08)] px-4 py-2 text-brand-indigo">
                   {eyebrow}
                 </div>
-                <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)] sm:text-[2.9rem]">
+                <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-brand-text sm:text-[2.9rem]">
                   {title}
                 </h1>
                 {description ? (
-                  <p className="mt-3 max-w-3xl text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <p className="mt-3 max-w-3xl text-sm leading-7 text-brand-text-muted">
                     {description}
                   </p>
                 ) : null}
@@ -211,7 +211,7 @@ export function PortalShell({
                     "inline-flex items-center gap-3 rounded-[1.35rem] border px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5",
                     isAdmin
                       ? "border-[rgba(30,27,46,0.14)] bg-[linear-gradient(140deg,rgba(30,27,46,0.96),rgba(55,48,163,0.92),rgba(232,97,77,0.78))] text-white shadow-[0_22px_44px_rgba(42,38,56,0.18)]"
-                      : "border-[rgba(79,70,229,0.12)] bg-white text-[var(--brand-text)]",
+                      : "border-[rgba(79,70,229,0.12)] bg-white text-brand-text",
                   )}
                 >
                   <span>{primaryAction.label}</span>
@@ -232,13 +232,13 @@ export function PortalShell({
                         : "border-[rgba(153,148,168,0.12)] bg-white/84",
                     )}
                   >
-                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                       {signal.label}
                     </div>
-                    <div className="font-editorial tabular-data mt-1 text-2xl tracking-[-0.05em] text-[var(--brand-text)]">
+                    <div className="font-editorial tabular-data mt-1 text-2xl tracking-[-0.05em] text-brand-text">
                       {signal.value}
                     </div>
-                    <p className="mt-1 text-xs text-[var(--brand-text-muted)]">
+                    <p className="mt-1 text-xs text-brand-text-muted">
                       {signal.detail}
                     </p>
                   </article>

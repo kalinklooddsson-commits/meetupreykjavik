@@ -198,23 +198,23 @@ export function OrganizerEventWizard({
     <div className="section-shell py-10">
       <div className="grid gap-6 xl:grid-cols-[290px_1fr_350px]">
         <aside className={sectionClassName}>
-          <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+          <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
             Seven-step wizard
           </div>
-          <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-brand-text">
             Create a new event
           </h1>
-          <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-4 text-sm leading-7 text-brand-text-muted">
             Work through the full organizer flow: group selection, recurring setup,
             venue or online location, attendee controls, ticketing, media, and final review.
           </p>
 
           <div className="mt-6 rounded-[1.3rem] bg-[rgba(245,240,232,0.84)] p-4">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                 Completion
               </span>
-              <span className="text-sm font-semibold text-[var(--brand-text)]">
+              <span className="text-sm font-semibold text-brand-text">
                 {completion}%
               </span>
             </div>
@@ -243,17 +243,17 @@ export function OrganizerEventWizard({
                   className={cn(
                     "inline-flex h-10 w-10 items-center justify-center rounded-2xl",
                     stepIsReady(index, form)
-                      ? "bg-[rgba(124,154,130,0.14)] text-[var(--brand-sage)]"
-                      : "bg-[rgba(245,240,232,0.94)] text-[var(--brand-text-muted)]",
+                      ? "bg-[rgba(124,154,130,0.14)] text-brand-sage"
+                      : "bg-[rgba(245,240,232,0.94)] text-brand-text-muted",
                   )}
                 >
                   <item.icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <div className="text-sm font-semibold text-[var(--brand-text)]">
+                  <div className="text-sm font-semibold text-brand-text">
                     Step {index + 1}
                   </div>
-                  <div className="text-xs text-[var(--brand-text-muted)]">{item.label}</div>
+                  <div className="text-xs text-brand-text-muted">{item.label}</div>
                 </div>
               </button>
             ))}
@@ -264,7 +264,7 @@ export function OrganizerEventWizard({
           {step === 0 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Event title
                   <input
                     id="event-title"
@@ -273,15 +273,15 @@ export function OrganizerEventWizard({
                     onChange={(event) => updateField("title", event.target.value)}
                     placeholder="React systems night"
                     autoComplete="off"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Group
                   <select
                     value={form.groupSlug}
                     onChange={(event) => updateField("groupSlug", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     {publicGroups.map((group) => (
                       <option key={group.slug} value={group.slug}>
@@ -293,12 +293,12 @@ export function OrganizerEventWizard({
               </div>
 
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Category
                   <select
                     value={form.category}
                     onChange={(event) => updateField("category", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     {categories.map((category) => (
                       <option key={category.name} value={category.name}>
@@ -307,12 +307,12 @@ export function OrganizerEventWizard({
                     ))}
                   </select>
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Event type
                   <select
                     value={form.eventType}
                     onChange={(event) => updateField("eventType", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     <option value="in_person">In person</option>
                     <option value="hybrid">Hybrid</option>
@@ -321,7 +321,7 @@ export function OrganizerEventWizard({
                 </label>
               </div>
 
-              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 block text-sm font-semibold text-brand-text">
                   Tags
                   <input
                     id="event-tags"
@@ -329,17 +329,17 @@ export function OrganizerEventWizard({
                     value={form.tags}
                     onChange={(event) => updateField("tags", event.target.value)}
                     placeholder="react, architecture, systems"
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
 
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Visibility mode
                   <select
                     value={form.visibilityMode}
                     onChange={(event) => updateField("visibilityMode", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     <option value="public">Public discovery</option>
                     <option value="approval">Public with host approval</option>
@@ -347,7 +347,7 @@ export function OrganizerEventWizard({
                     <option value="invite_only">Invite only</option>
                   </select>
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Co-hosts
                   <input
                     id="event-cohosts"
@@ -355,7 +355,7 @@ export function OrganizerEventWizard({
                     value={form.coHosts}
                     onChange={(event) => updateField("coHosts", event.target.value)}
                     placeholder="Name one or more co-hosts"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
@@ -365,62 +365,62 @@ export function OrganizerEventWizard({
           {step === 1 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-3">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Start date
                   <input
                     type="date"
                     value={form.startsOn}
                     onChange={(event) => updateField("startsOn", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Start time
                   <input
                     type="time"
                     value={form.startTime}
                     onChange={(event) => updateField("startTime", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   End time
                   <input
                     type="time"
                     value={form.endTime}
                     onChange={(event) => updateField("endTime", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
 
-              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-brand-text">
                 <input
                   type="checkbox"
                   checked={form.recurring}
                   onChange={(event) => updateField("recurring", event.target.checked)}
-                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                  className="h-4 w-4 rounded border-brand-border text-brand-coral"
                 />
                 Make this a recurring event
               </label>
 
               {form.recurring ? (
                 <div className="mt-5 grid gap-5 md:grid-cols-2">
-                  <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  <label className="block text-sm font-semibold text-brand-text">
                     Recurrence rule
                     <input
                       value={form.recurrenceRule}
                       onChange={(event) => updateField("recurrenceRule", event.target.value)}
-                      className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                      className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                     />
                   </label>
-                  <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  <label className="block text-sm font-semibold text-brand-text">
                     Recurrence end
                     <input
                       type="date"
                       value={form.recurrenceEnds}
                       onChange={(event) => updateField("recurrenceEnds", event.target.value)}
-                      className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                      className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                     />
                   </label>
                 </div>
@@ -443,8 +443,8 @@ export function OrganizerEventWizard({
                     className={cn(
                       "rounded-full border px-4 py-2 text-sm font-semibold transition",
                       form.locationMode === key
-                        ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                        : "border-[rgba(153,148,168,0.14)] bg-white/78 text-[var(--brand-text-muted)]",
+                        ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-brand-indigo"
+                        : "border-[rgba(153,148,168,0.14)] bg-white/78 text-brand-text-muted",
                     )}
                   >
                     {label}
@@ -453,12 +453,12 @@ export function OrganizerEventWizard({
               </div>
 
               {form.locationMode === "venue" ? (
-                <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="mt-5 block text-sm font-semibold text-brand-text">
                   Venue partner
                   <select
                     value={form.venueSlug}
                     onChange={(event) => updateField("venueSlug", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     {publicVenues.map((venue) => (
                       <option key={venue.slug} value={venue.slug}>
@@ -470,19 +470,19 @@ export function OrganizerEventWizard({
               ) : null}
 
               {form.locationMode === "custom" ? (
-                <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="mt-5 block text-sm font-semibold text-brand-text">
                   Venue address
                   <input
                     value={form.venueAddress}
                     onChange={(event) => updateField("venueAddress", event.target.value)}
                     placeholder="Tryggvagata 12, 101 Reykjavik"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               ) : null}
 
               {form.locationMode === "online" ? (
-                <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="mt-5 block text-sm font-semibold text-brand-text">
                   Online link
                   <input
                     id="event-online-link"
@@ -495,7 +495,7 @@ export function OrganizerEventWizard({
                     autoCapitalize="none"
                     inputMode="url"
                     spellCheck={false}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               ) : null}
@@ -505,7 +505,7 @@ export function OrganizerEventWizard({
           {step === 3 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Attendee limit
                   <input
                     type="number"
@@ -514,10 +514,10 @@ export function OrganizerEventWizard({
                     onChange={(event) =>
                       updateField("attendeeLimit", Number(event.target.value))
                     }
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Guest limit
                   <input
                     type="number"
@@ -526,37 +526,37 @@ export function OrganizerEventWizard({
                     onChange={(event) =>
                       updateField("guestLimit", Number(event.target.value))
                     }
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
               <div className="mt-5 grid gap-5 md:grid-cols-3">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   RSVP mode
                   <select
                     value={form.rsvpMode}
                     onChange={(event) => updateField("rsvpMode", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     <option value="open">Open</option>
                     <option value="approval">Approval</option>
                     <option value="invite_only">Invite only</option>
                   </select>
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Age label
                   <input
                     value={form.ageRestriction}
                     onChange={(event) => updateField("ageRestriction", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Minimum age
                   <input
                     value={form.ageMin}
                     onChange={(event) => updateField("ageMin", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
@@ -565,33 +565,33 @@ export function OrganizerEventWizard({
 
           {step === 4 ? (
             <section className={sectionClassName}>
-              <label className="flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+              <label className="flex items-center gap-3 text-sm font-semibold text-brand-text">
                 <input
                   type="checkbox"
                   checked={form.isFree}
                   onChange={(event) => updateField("isFree", event.target.checked)}
-                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                  className="h-4 w-4 rounded border-brand-border text-brand-coral"
                 />
                 Free or sponsor-backed event
               </label>
-              <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                 Reserve free publishing for sponsor-backed launches, invite-only formats,
                 or admin-approved community exceptions. Public paid events should start at{" "}
-                <span className="font-semibold text-[var(--brand-text)]">
+                <span className="font-semibold text-brand-text">
                   {formatIsk(minimumTicketPriceIsk)}
                 </span>
                 .
               </p>
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Ticket label
                   <input
                     value={form.ticketLabel}
                     onChange={(event) => updateField("ticketLabel", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Ticket price
                   <input
                     id="event-ticket-price"
@@ -601,49 +601,49 @@ export function OrganizerEventWizard({
                     onChange={(event) => updateField("ticketPrice", event.target.value)}
                     disabled={form.isFree}
                     placeholder={formatIsk(minimumTicketPriceIsk)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)] disabled:opacity-60"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral disabled:opacity-60"
                   />
                 </label>
               </div>
               <div className="mt-5 grid gap-4 md:grid-cols-3">
                 <div className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                     Ticket floor
                   </div>
-                  <div className="mt-2 font-semibold text-[var(--brand-text)]">
+                  <div className="mt-2 font-semibold text-brand-text">
                     {formatIsk(minimumTicketPriceIsk)}
                   </div>
                 </div>
                 <div className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                     Platform commission
                   </div>
-                  <div className="mt-2 font-semibold text-[var(--brand-text)]">
+                  <div className="mt-2 font-semibold text-brand-text">
                     {ticketCommissionRate}% of paid sales
                   </div>
                 </div>
                 <div className="rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                     Capacity gross
                   </div>
-                  <div className="mt-2 font-semibold text-[var(--brand-text)]">
+                  <div className="mt-2 font-semibold text-brand-text">
                     {form.isFree ? "Sponsor-backed" : formatIsk(estimatedGrossAtCapacity)}
                   </div>
                 </div>
               </div>
               {!isPaidTicketValid ? (
-                <div className="mt-5 rounded-[1.1rem] border border-[rgba(232,97,77,0.22)] bg-[rgba(232,97,77,0.1)] px-4 py-3 text-sm leading-7 text-[var(--brand-coral-dark)]">
+                <div className="mt-5 rounded-[1.1rem] border border-[rgba(232,97,77,0.22)] bg-[rgba(232,97,77,0.1)] px-4 py-3 text-sm leading-7 text-brand-coral-dark">
                   Public paid events must be priced at {formatIsk(minimumTicketPriceIsk)} or
                   above to protect platform revenue and avoid low-signal inventory.
                 </div>
               ) : null}
-              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 block text-sm font-semibold text-brand-text">
                 Refund policy
                 <textarea
                   value={form.refundPolicy}
                   onChange={(event) => updateField("refundPolicy", event.target.value)}
                   rows={4}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
             </section>
@@ -651,17 +651,17 @@ export function OrganizerEventWizard({
 
           {step === 5 ? (
             <section className={sectionClassName}>
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Event description
                 <textarea
                   value={form.description}
                   onChange={(event) => updateField("description", event.target.value)}
                   rows={8}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Featured photo URL
                   <input
                     id="event-featured-photo"
@@ -674,37 +674,37 @@ export function OrganizerEventWizard({
                     autoCapitalize="none"
                     inputMode="url"
                     spellCheck={false}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Gallery notes
                   <input
                     value={form.galleryNotes}
                     onChange={(event) => updateField("galleryNotes", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Guest question
                   <textarea
                     value={form.guestQuestion}
                     onChange={(event) => updateField("guestQuestion", event.target.value)}
                     rows={4}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
                 <div className="space-y-5">
-                  <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                  <label className="block text-sm font-semibold text-brand-text">
                     Reminder cadence
                     <select
                       value={form.reminderCadence}
                       onChange={(event) =>
                         updateField("reminderCadence", event.target.value)
                       }
-                      className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                      className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                     >
                       <option value="24h and 2h before start">24h and 2h before start</option>
                       <option value="48h, 24h, and 2h before start">
@@ -713,27 +713,27 @@ export function OrganizerEventWizard({
                       <option value="Same day only">Same day only</option>
                     </select>
                   </label>
-                  <label className="flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+                  <label className="flex items-center gap-3 text-sm font-semibold text-brand-text">
                     <input
                       type="checkbox"
                       checked={form.featuredPlacement}
                       onChange={(event) =>
                         updateField("featuredPlacement", event.target.checked)
                       }
-                      className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                      className="h-4 w-4 rounded border-brand-border text-brand-coral"
                     />
                     Request featured placement in discovery
                   </label>
                 </div>
               </div>
-              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-brand-text">
                 <input
                   type="checkbox"
                   checked={form.commentsEnabled}
                   onChange={(event) =>
                     updateField("commentsEnabled", event.target.checked)
                   }
-                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                  className="h-4 w-4 rounded border-brand-border text-brand-coral"
                 />
                 Enable event comments
               </label>
@@ -744,16 +744,16 @@ export function OrganizerEventWizard({
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
                 <div className="rounded-[1.25rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                     Final event summary
                   </div>
-                  <div className="font-editorial mt-3 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                  <div className="font-editorial mt-3 text-3xl tracking-[-0.05em] text-brand-text">
                     {form.title || "Event title"}
                   </div>
-                  <div className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <div className="mt-3 text-sm leading-7 text-brand-text-muted">
                     {selectedGroup?.name} · {form.startsOn} · {form.startTime}
                   </div>
-                  <div className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <div className="mt-3 text-sm leading-7 text-brand-text-muted">
                     {form.locationMode === "venue"
                       ? `${selectedVenue?.name} · ${selectedVenue?.area}`
                       : form.locationMode === "custom"
@@ -761,29 +761,29 @@ export function OrganizerEventWizard({
                         : form.onlineLink || "Online link"}
                   </div>
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-brand-text">
                       {form.isFree ? "Sponsor-backed / free" : `Ticket ${form.ticketPrice}`}
                     </div>
-                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-brand-text">
                       {form.isFree
                         ? "No commission on free issue"
                         : `${formatIsk(estimatedPlatformFee)} estimated platform fee at capacity`}
                     </div>
-                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-brand-text">
                       Visibility: {form.visibilityMode.replaceAll("_", " ")}
                     </div>
-                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                    <div className="rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-brand-text">
                       Reminders: {form.reminderCadence}
                     </div>
                   </div>
                 </div>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Launch notes
                   <textarea
                     value={form.launchNotes}
                     onChange={(event) => updateField("launchNotes", event.target.value)}
                     rows={6}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
@@ -792,7 +792,7 @@ export function OrganizerEventWizard({
                 <button
                   type="button"
                   onClick={() => saveDraft("draft")}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.18)] bg-white px-5 py-3 text-sm font-bold text-[var(--brand-indigo)] transition hover:-translate-y-0.5"
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.18)] bg-white px-5 py-3 text-sm font-bold text-brand-indigo transition hover:-translate-y-0.5"
                 >
                   Save local draft
                   <ListChecks className="h-4 w-4" />
@@ -800,7 +800,7 @@ export function OrganizerEventWizard({
                 <button
                   type="button"
                   onClick={() => saveDraft("publish-ready")}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
                 >
                   Mark ready for review
                   <CheckCheck className="h-4 w-4" />
@@ -810,7 +810,7 @@ export function OrganizerEventWizard({
                 <div
                   role="status"
                   aria-live="polite"
-                  className="mt-4 rounded-[1.1rem] border border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-[var(--brand-sage-dark)]"
+                  className="mt-4 rounded-[1.1rem] border border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-brand-sage-dark"
                 >
                   {message}
                 </div>
@@ -823,18 +823,18 @@ export function OrganizerEventWizard({
               type="button"
               onClick={() => moveStep("back")}
               disabled={step === 0}
-              className="inline-flex min-h-11 items-center rounded-full border border-[rgba(153,148,168,0.18)] bg-white/78 px-4 py-2 text-sm font-semibold text-[var(--brand-text)] disabled:opacity-50"
+              className="inline-flex min-h-11 items-center rounded-full border border-[rgba(153,148,168,0.18)] bg-white/78 px-4 py-2 text-sm font-semibold text-brand-text disabled:opacity-50"
             >
               Back
             </button>
-            <div className="text-sm text-[var(--brand-text-muted)]">
+            <div className="text-sm text-brand-text-muted">
               Step {step + 1} of {steps.length}
             </div>
             <button
               type="button"
               onClick={() => moveStep("forward")}
               disabled={step === steps.length - 1 || !stepIsReady(step, form)}
-              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-indigo)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="inline-flex min-h-11 items-center rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
             >
               Next step
             </button>
@@ -843,7 +843,7 @@ export function OrganizerEventWizard({
 
         <aside className="space-y-6">
           <section className={sectionClassName}>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
               Live event card
             </div>
             <div className="mt-4 overflow-hidden rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white">
@@ -853,47 +853,47 @@ export function OrganizerEventWizard({
               />
               <div className="p-5">
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-[var(--brand-indigo)]">
+                  <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-brand-indigo">
                     {form.category}
                   </span>
-                  <span className="rounded-full bg-[rgba(245,240,232,0.9)] px-3 py-1 text-xs font-semibold text-[var(--brand-text)]">
+                  <span className="rounded-full bg-[rgba(245,240,232,0.9)] px-3 py-1 text-xs font-semibold text-brand-text">
                     {form.isFree ? "Free RSVP" : form.ticketPrice || "Paid"}
                   </span>
-                  <span className="rounded-full bg-[rgba(124,154,130,0.12)] px-3 py-1 text-xs font-semibold text-[var(--brand-sage)]">
+                  <span className="rounded-full bg-[rgba(124,154,130,0.12)] px-3 py-1 text-xs font-semibold text-brand-sage">
                     {form.visibilityMode.replaceAll("_", " ")}
                   </span>
                   {form.featuredPlacement ? (
-                    <span className="rounded-full bg-[rgba(232,97,77,0.12)] px-3 py-1 text-xs font-semibold text-[var(--brand-coral)]">
+                    <span className="rounded-full bg-[rgba(232,97,77,0.12)] px-3 py-1 text-xs font-semibold text-brand-coral">
                       Featured request
                     </span>
                   ) : null}
                 </div>
-                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-brand-text">
                   {form.title || "Event title"}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                   {form.description}
                 </p>
                 <div className="mt-4 grid gap-3">
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {selectedGroup?.name} · hosted by {organizerName}
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {form.startsOn} · {form.startTime}-{form.endTime}
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {form.locationMode === "venue"
                       ? `${selectedVenue?.name} · ${selectedVenue?.area}`
                       : form.locationMode === "custom"
                         ? form.venueAddress || "Custom address"
                         : form.onlineLink || "Online event"}
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {form.isFree
                       ? "Free / sponsor-backed event"
                       : `${form.ticketPrice || formatIsk(minimumTicketPriceIsk)} · ${ticketCommissionRate}% platform commission`}
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     Reminder flow: {form.reminderCadence}
                   </div>
                 </div>
@@ -901,7 +901,7 @@ export function OrganizerEventWizard({
                   {tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-[rgba(153,148,168,0.14)] px-3 py-1 text-xs font-semibold text-[var(--brand-text-muted)]"
+                      className="rounded-full border border-[rgba(153,148,168,0.14)] px-3 py-1 text-xs font-semibold text-brand-text-muted"
                     >
                       {tag}
                     </span>
@@ -912,7 +912,7 @@ export function OrganizerEventWizard({
           </section>
 
           <section className={sectionClassName}>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
               Organizer notes
             </div>
             <div className="mt-4 space-y-3">
@@ -925,7 +925,7 @@ export function OrganizerEventWizard({
               ].map((note) => (
                 <div
                   key={note}
-                  className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/78 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                  className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/78 px-4 py-3 text-sm leading-7 text-brand-text-muted"
                 >
                   {note}
                 </div>

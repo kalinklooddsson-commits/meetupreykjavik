@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { GroupDetailScreen } from "@/components/public/public-pages";
-import { getGroupBySlug } from "@/lib/public-data";
+import { fetchGroupBySlug } from "@/lib/data";
 
 export default async function GroupDetailPage({
   params,
@@ -8,7 +8,7 @@ export default async function GroupDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const group = getGroupBySlug(slug);
+  const group = await fetchGroupBySlug(slug);
 
   if (!group) {
     notFound();

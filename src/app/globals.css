@@ -1,5 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-indigo: var(--brand-indigo);
+  --color-brand-indigo-dark: var(--brand-indigo-dark);
+  --color-brand-indigo-light: var(--brand-indigo-light);
+  --color-brand-indigo-soft: var(--brand-indigo-soft);
+  --color-brand-coral: var(--brand-coral);
+  --color-brand-coral-dark: var(--brand-coral-dark);
+  --color-brand-coral-soft: var(--brand-coral-soft);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-sand-light: var(--brand-sand-light);
+  --color-brand-sand-dark: var(--brand-sand-dark);
+  --color-brand-sage: var(--brand-sage);
+  --color-brand-basalt: var(--brand-basalt);
+  --color-brand-basalt-light: var(--brand-basalt-light);
+  --color-brand-text: var(--brand-text);
+  --color-brand-text-muted: var(--brand-text-muted);
+  --color-brand-text-light: var(--brand-text-light);
+  --color-brand-border: var(--brand-border);
+  --color-brand-border-light: var(--brand-border-light);
+}
+
 :root {
   --brand-indigo: #3730a3;
   --brand-indigo-dark: #2e2890;
@@ -73,6 +94,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top right, rgba(79, 70, 229, 0.08), transparent 32%),
     radial-gradient(circle at 18% 12%, rgba(232, 97, 77, 0.12), transparent 24%),
@@ -1228,6 +1250,6 @@ select:focus-visible,
 
 @media (max-width: 768px) {
   .section-shell {
-    width: min(calc(100% - 1.25rem), var(--site-width));
+    width: min(calc(100% - 2rem), var(--site-width));
   }
 }

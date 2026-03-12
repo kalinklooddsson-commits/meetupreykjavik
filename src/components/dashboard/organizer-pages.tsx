@@ -109,8 +109,8 @@ export function OrganizerMessagesScreen() {
                 key={message.key}
                 eyebrow={
                   <>
-                    <span className="text-[var(--brand-text)]">{message.counterpart}</span>
-                    <span className="mx-2 text-[var(--brand-border)]">·</span>
+                    <span className="text-brand-text">{message.counterpart}</span>
+                    <span className="mx-2 text-brand-border">·</span>
                     {message.role} · {message.channel}
                   </>
                 }
@@ -249,49 +249,49 @@ export function OrganizerOverviewScreen() {
             {organizerPortalData.nextEvents.map((event) => (
               <div
                 key={event.slug}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-[var(--brand-text)]">
+                    <div className="text-sm font-semibold text-brand-text">
                       {event.title}
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                    <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
                       {event.groupName} · {event.venueName} · {event.dateLabel}
                     </p>
                   </div>
                   <ToneBadge tone={statusTone(event.status)}>{event.status}</ToneBadge>
                 </div>
                 <div className="mt-4 grid gap-3 md:grid-cols-4">
-                  <div className="rounded-md bg-[var(--brand-sand-light)] px-3 py-2 text-sm">
-                    <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                  <div className="rounded-md bg-brand-sand-light px-3 py-2 text-sm">
+                    <div className="text-[11px] font-medium uppercase tracking-wider text-brand-text-light">
                       RSVP
                     </div>
-                    <div className="mt-1 font-semibold text-[var(--brand-text)]">
+                    <div className="mt-1 font-semibold text-brand-text">
                       {event.rsvps} / {event.capacity}
                     </div>
                   </div>
-                  <div className="rounded-md bg-[var(--brand-sand-light)] px-3 py-2 text-sm">
-                    <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                  <div className="rounded-md bg-brand-sand-light px-3 py-2 text-sm">
+                    <div className="text-[11px] font-medium uppercase tracking-wider text-brand-text-light">
                       Waitlist
                     </div>
-                    <div className="mt-1 font-semibold text-[var(--brand-text)]">
+                    <div className="mt-1 font-semibold text-brand-text">
                       {event.waitlist}
                     </div>
                   </div>
-                  <div className="rounded-md bg-[var(--brand-sand-light)] px-3 py-2 text-sm">
-                    <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                  <div className="rounded-md bg-brand-sand-light px-3 py-2 text-sm">
+                    <div className="text-[11px] font-medium uppercase tracking-wider text-brand-text-light">
                       Tickets
                     </div>
-                    <div className="mt-1 font-semibold text-[var(--brand-text)]">
+                    <div className="mt-1 font-semibold text-brand-text">
                       {event.ticketsSold}
                     </div>
                   </div>
-                  <div className="rounded-md bg-[var(--brand-sand-light)] px-3 py-2 text-sm">
-                    <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                  <div className="rounded-md bg-brand-sand-light px-3 py-2 text-sm">
+                    <div className="text-[11px] font-medium uppercase tracking-wider text-brand-text-light">
                       Revenue
                     </div>
-                    <div className="mt-1 font-semibold text-[var(--brand-text)]">
+                    <div className="mt-1 font-semibold text-brand-text">
                       {event.revenue}
                     </div>
                   </div>
@@ -403,8 +403,8 @@ export function OrganizerGroupsScreen() {
                 key: item.group.slug,
                 cells: [
                   <div key="group">
-                    <div className="font-semibold text-[var(--brand-text)]">{item.group.name}</div>
-                    <div className="text-xs text-[var(--brand-text-muted)]">
+                    <div className="font-semibold text-brand-text">{item.group.name}</div>
+                    <div className="text-xs text-brand-text-muted">
                       {item.group.members} members
                     </div>
                   </div>,
@@ -435,8 +435,8 @@ export function OrganizerGroupsScreen() {
                   key={item.group.slug}
                   eyebrow={
                     <>
-                      <span className="text-[var(--brand-text)]">{item.group.name}</span>
-                      <span className="mx-2 text-[var(--brand-border)]">·</span>
+                      <span className="text-brand-text">{item.group.name}</span>
+                      <span className="mx-2 text-brand-border">·</span>
                       {item.group.members} members
                     </>
                   }
@@ -560,8 +560,8 @@ export function OrganizerEventsScreen() {
                 key: event.slug,
                 cells: [
                   <div key="event">
-                    <div className="font-semibold text-[var(--brand-text)]">{event.title}</div>
-                    <div className="text-xs text-[var(--brand-text-muted)]">{event.dateLabel}</div>
+                    <div className="font-semibold text-brand-text">{event.title}</div>
+                    <div className="text-xs text-brand-text-muted">{event.dateLabel}</div>
                   </div>,
                   event.groupName,
                   <ToneBadge key="status" tone={statusTone(event.status)}>
@@ -586,11 +586,11 @@ export function OrganizerEventsScreen() {
               {organizerPortalData.events.map((event) => (
                 <div
                   key={event.slug}
-                  className="flex items-center justify-between gap-4 rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3"
+                  className="flex items-center justify-between gap-4 rounded-md border border-brand-border-light bg-white px-4 py-3"
                 >
                   <div>
-                    <div className="font-semibold text-[var(--brand-text)]">{event.dateLabel}</div>
-                    <div className="text-sm text-[var(--brand-text-muted)]">{event.title}</div>
+                    <div className="font-semibold text-brand-text">{event.dateLabel}</div>
+                    <div className="text-sm text-brand-text-muted">{event.title}</div>
                   </div>
                   <ToneBadge tone={statusTone(event.status)}>{event.status}</ToneBadge>
                 </div>
@@ -606,7 +606,7 @@ export function OrganizerEventsScreen() {
               {organizerPortalData.templates.map((template) => (
                 <div
                   key={template}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm font-semibold text-[var(--brand-text)]"
+                  className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3 text-sm font-semibold text-brand-text"
                 >
                   {template}
                 </div>
@@ -689,16 +689,16 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
             {event.timeline.map((step) => (
               <div
                 key={step.time}
-                className="flex items-center justify-between gap-4 rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3"
+                className="flex items-center justify-between gap-4 rounded-md border border-brand-border-light bg-white px-4 py-3"
               >
-                <div className="font-semibold text-[var(--brand-text)]">{step.label}</div>
+                <div className="font-semibold text-brand-text">{step.label}</div>
                 <ToneBadge tone="sand">{step.time}</ToneBadge>
               </div>
             ))}
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-brand-sand-light p-4">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Co-organizers
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -709,11 +709,11 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
                 ))}
               </div>
             </div>
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-brand-sand-light p-4">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Discussion
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+              <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                 {event.commentsSummary}
               </p>
             </div>
@@ -782,10 +782,10 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
             {organizerPortalData.attendeeIntelligence.fitSignals.map((signal) => (
               <article
                 key={signal.key}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{signal.label}</div>
+                  <div className="font-semibold text-brand-text">{signal.label}</div>
                   <ToneBadge
                     tone={
                       signal.score >= 85
@@ -798,7 +798,7 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
                     {signal.score}%
                   </ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                   {signal.note}
                 </p>
               </article>
@@ -821,7 +821,7 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
             {organizerPortalData.attendeeIntelligence.hostingNotes.map((note) => (
               <div
                 key={note}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3 text-sm leading-relaxed text-brand-text-muted"
               >
                 {note}
               </div>
@@ -899,7 +899,7 @@ export function OrganizerVenuesScreen() {
             {organizerPortalData.venueMatches.map(({ venue, score, nextSlot, fit }) => (
               <article
                 key={venue.slug}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4"
               >
                 <div
                   className="h-28 rounded-md"
@@ -910,11 +910,11 @@ export function OrganizerVenuesScreen() {
                   <ToneBadge tone="sage">{score} fit</ToneBadge>
                   <ToneBadge tone="sand">{venue.area}</ToneBadge>
                 </div>
-                <div className="mt-2 text-base font-semibold text-[var(--brand-text)]">
+                <div className="mt-2 text-base font-semibold text-brand-text">
                   {venue.name}
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">{fit}</p>
-                <div className="mt-3 text-sm font-semibold text-[var(--brand-text)]">
+                <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">{fit}</p>
+                <div className="mt-3 text-sm font-semibold text-brand-text">
                   Next slot: {nextSlot}
                 </div>
               </article>

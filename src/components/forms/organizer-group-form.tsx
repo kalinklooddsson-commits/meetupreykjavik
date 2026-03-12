@@ -32,7 +32,7 @@ const bannerMoods = [
 const sectionClassName =
   "rounded-[1.5rem] border border-[rgba(153,148,168,0.12)] bg-white/84 p-5";
 const fieldClassName =
-  "luxe-field mt-2 w-full rounded-2xl px-4 py-3 outline-none transition focus-visible:border-[var(--brand-coral)] focus-visible:ring-4 focus-visible:ring-[rgba(232,97,77,0.1)]";
+  "luxe-field mt-2 w-full rounded-2xl px-4 py-3 outline-none transition focus-visible:border-brand-coral focus-visible:ring-4 focus-visible:ring-[rgba(232,97,77,0.1)]";
 
 function slugify(value: string) {
   return value
@@ -115,13 +115,13 @@ export function OrganizerGroupForm({
       <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
         <aside className="space-y-6">
           <section className={sectionClassName}>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
               Group launch
             </div>
-            <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)]">
+            <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-brand-text">
               Create a new group
             </h1>
-            <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+            <p className="mt-4 text-sm leading-7 text-brand-text-muted">
               Build the group identity, join rules, banner tone, and moderation-ready
               positioning before you publish the first event.
             </p>
@@ -147,14 +147,14 @@ export function OrganizerGroupForm({
                   key={item.label}
                   className="flex items-center gap-3 rounded-[1.1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3"
                 >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-[var(--brand-indigo)]">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-brand-indigo">
                     <item.icon className="h-5 w-5" />
                   </span>
                   <div>
-                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                       {item.label}
                     </div>
-                    <div className="text-sm font-semibold text-[var(--brand-text)]">
+                    <div className="text-sm font-semibold text-brand-text">
                       {item.value}
                     </div>
                   </div>
@@ -164,7 +164,7 @@ export function OrganizerGroupForm({
           </section>
 
           <section className={sectionClassName}>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
               Readiness
             </div>
             <div className="mt-4 space-y-3">
@@ -182,13 +182,13 @@ export function OrganizerGroupForm({
                     className={cn(
                       "inline-flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold",
                       readiness[index]
-                        ? "bg-[rgba(124,154,130,0.14)] text-[var(--brand-sage)]"
-                        : "bg-[rgba(232,97,77,0.08)] text-[var(--brand-coral)]",
+                        ? "bg-[rgba(124,154,130,0.14)] text-brand-sage"
+                        : "bg-[rgba(232,97,77,0.08)] text-brand-coral",
                     )}
                   >
                     {index + 1}
                   </span>
-                  <span className="text-sm text-[var(--brand-text)]">{label}</span>
+                  <span className="text-sm text-brand-text">{label}</span>
                 </div>
               ))}
             </div>
@@ -198,7 +198,7 @@ export function OrganizerGroupForm({
         <div className="space-y-6">
           <section className={sectionClassName}>
             <div className="grid gap-5 md:grid-cols-2">
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Group name
                 <input
                   id="group-name"
@@ -210,7 +210,7 @@ export function OrganizerGroupForm({
                   className={fieldClassName}
                 />
               </label>
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Category
                 <select
                   id="group-category"
@@ -229,7 +229,7 @@ export function OrganizerGroupForm({
             </div>
 
             <div className="mt-5 grid gap-5 md:grid-cols-2">
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 City
                 <input
                   id="group-city"
@@ -241,16 +241,16 @@ export function OrganizerGroupForm({
                 />
               </label>
               <div className="rounded-2xl border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.8)] px-4 py-3">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                   Generated slug
                 </div>
-                <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+                <div className="mt-2 text-sm font-semibold text-brand-text">
                   {slug || "group-slug-preview"}
                 </div>
               </div>
             </div>
 
-            <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+            <label className="mt-5 block text-sm font-semibold text-brand-text">
               Group description
               <textarea
                 id="group-description"
@@ -261,7 +261,7 @@ export function OrganizerGroupForm({
                 placeholder="Describe the format, who the group is for, what a first-timer should expect, and why this group belongs in Reykjavik."
                 className={`${fieldClassName} leading-7`}
               />
-              <span className="mt-2 block text-xs font-medium text-[var(--brand-text-light)]">
+              <span className="mt-2 block text-xs font-medium text-brand-text-light">
                 Aim for 80-240 words so the moderation team can understand the concept and the tone quickly.
               </span>
             </label>
@@ -269,7 +269,7 @@ export function OrganizerGroupForm({
 
           <section className={sectionClassName}>
             <div className="grid gap-5 md:grid-cols-2">
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Visibility
                 <select
                   id="group-visibility"
@@ -283,7 +283,7 @@ export function OrganizerGroupForm({
                 </select>
               </label>
 
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Join mode
                 <select
                   id="group-join-mode"
@@ -298,7 +298,7 @@ export function OrganizerGroupForm({
               </label>
             </div>
 
-            <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+            <label className="mt-5 block text-sm font-semibold text-brand-text">
               Discovery tags
               <input
                 id="group-tags"
@@ -310,7 +310,7 @@ export function OrganizerGroupForm({
               />
             </label>
 
-            <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+            <label className="mt-5 block text-sm font-semibold text-brand-text">
               Moderation notes
               <textarea
                 id="group-moderation-notes"
@@ -325,12 +325,12 @@ export function OrganizerGroupForm({
 
           <section className={sectionClassName}>
             <div className="flex items-center gap-3">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(79,70,229,0.08)] text-brand-indigo">
                 <ImagePlus className="h-5 w-5" />
               </span>
               <div>
-                <div className="font-semibold text-[var(--brand-text)]">Banner direction</div>
-                <p className="text-sm text-[var(--brand-text-muted)]">
+                <div className="font-semibold text-brand-text">Banner direction</div>
+                <p className="text-sm text-brand-text-muted">
                   Pick the visual tone the group should open with on cards and the group detail header.
                 </p>
               </div>
@@ -349,7 +349,7 @@ export function OrganizerGroupForm({
                   )}
                 >
                   <div className="h-28" style={{ background: mood.art }} />
-                  <div className="bg-white/86 px-4 py-3 text-sm font-semibold text-[var(--brand-text)]">
+                  <div className="bg-white/86 px-4 py-3 text-sm font-semibold text-brand-text">
                     {mood.label}
                   </div>
                 </button>
@@ -360,22 +360,22 @@ export function OrganizerGroupForm({
           <section className={sectionClassName}>
             <div className="rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.82)] p-4">
               <div className="flex items-start gap-3">
-                <Sparkles className="mt-0.5 h-5 w-5 text-[var(--brand-coral)]" />
+                <Sparkles className="mt-0.5 h-5 w-5 text-brand-coral" />
                 <div>
-                  <div className="font-semibold text-[var(--brand-text)]">
+                  <div className="font-semibold text-brand-text">
                     Launch checklist
                   </div>
-                  <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                  <p className="mt-2 text-sm leading-7 text-brand-text-muted">
                     I understand the group will stay local-only for now, save as a draft in this folder’s workflow, and later connect to Supabase moderation and publishing.
                   </p>
                 </div>
               </div>
-              <label className="mt-4 flex items-center gap-3 text-sm font-medium text-[var(--brand-text)]">
+              <label className="mt-4 flex items-center gap-3 text-sm font-medium text-brand-text">
                 <input
                   type="checkbox"
                   checked={form.accepted}
                   onChange={(event) => updateField("accepted", event.target.checked)}
-                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                  className="h-4 w-4 rounded border-brand-border text-brand-coral"
                 />
                 Mark this group ready for review
               </label>
@@ -385,12 +385,12 @@ export function OrganizerGroupForm({
               <button
                 type="button"
                 onClick={saveDraft}
-                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
+                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
               >
                 Save local group draft
                 <CheckCheck className="h-4 w-4" />
               </button>
-              <div className="text-sm text-[var(--brand-text-muted)]">
+              <div className="text-sm text-brand-text-muted">
                 Drafts save to local storage only. Nothing is deployed or published.
               </div>
             </div>
@@ -399,7 +399,7 @@ export function OrganizerGroupForm({
               <div
                 role="status"
                 aria-live="polite"
-                className="mt-4 rounded-[1.1rem] border border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-[var(--brand-sage-dark)]"
+                className="mt-4 rounded-[1.1rem] border border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-brand-sage-dark"
               >
                 {message}
               </div>
@@ -407,24 +407,24 @@ export function OrganizerGroupForm({
           </section>
 
           <section className={sectionClassName}>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
               Live preview
             </div>
             <div className="mt-4 overflow-hidden rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white">
               <div className="h-40" style={{ background: selectedBanner.art }} />
               <div className="p-5">
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-[var(--brand-indigo)]">
+                  <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-brand-indigo">
                     {form.category}
                   </span>
-                  <span className="rounded-full bg-[rgba(245,240,232,0.92)] px-3 py-1 text-xs font-semibold text-[var(--brand-text)]">
+                  <span className="rounded-full bg-[rgba(245,240,232,0.92)] px-3 py-1 text-xs font-semibold text-brand-text">
                     {form.joinMode === "approval" ? "Approval join" : "Open join"}
                   </span>
                 </div>
-                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-brand-text">
                   {form.name || "Your group name"}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                   {form.description || "Your group description will appear here as you write it."}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -432,13 +432,13 @@ export function OrganizerGroupForm({
                     tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-[rgba(153,148,168,0.16)] px-3 py-1 text-xs font-semibold text-[var(--brand-text-muted)]"
+                        className="rounded-full border border-[rgba(153,148,168,0.16)] px-3 py-1 text-xs font-semibold text-brand-text-muted"
                       >
                         {tag}
                       </span>
                     ))
                   ) : (
-                    <span className="text-sm text-[var(--brand-text-light)]">
+                    <span className="text-sm text-brand-text-light">
                       Add at least two tags to improve discovery.
                     </span>
                   )}

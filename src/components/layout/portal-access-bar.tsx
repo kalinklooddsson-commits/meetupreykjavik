@@ -10,18 +10,18 @@ export function PortalAccessBar({ session }: { session: MockSession }) {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/"
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.14)] bg-[rgba(79,70,229,0.08)] px-4 py-2 text-sm font-semibold text-[var(--brand-indigo)]"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-brand-indigo/14 bg-brand-indigo-soft px-4 py-2 text-sm font-semibold text-brand-indigo"
           >
             <Compass className="h-4 w-4" />
             Public site
           </Link>
-          <div className="text-sm text-[var(--brand-text-muted)]">
+          <div className="text-sm text-brand-text-muted">
             Signed in as{" "}
-            <span className="font-semibold text-[var(--brand-text)]">
+            <span className="font-semibold text-brand-text">
               {session.displayName}
             </span>
           </div>
-          <span className="inline-flex min-h-8 items-center rounded-full border border-[rgba(232,97,77,0.18)] bg-[rgba(232,97,77,0.08)] px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-coral)]">
+          <span className="inline-flex min-h-8 items-center rounded-full border border-brand-coral/18 bg-brand-coral-soft px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-brand-coral">
             {session.accountType}
           </span>
         </div>
@@ -29,7 +29,7 @@ export function PortalAccessBar({ session }: { session: MockSession }) {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/dashboard"
-            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[rgba(153,148,168,0.16)] bg-white/78 px-4 py-2 text-sm font-semibold text-[var(--brand-text)]"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[rgba(153,148,168,0.16)] bg-white/78 px-4 py-2 text-sm font-semibold text-brand-text"
           >
             Account hub
             <ArrowUpRight className="h-4 w-4" />

@@ -143,8 +143,8 @@ export function VenueMessagesScreen() {
                 key={message.key}
                 eyebrow={
                   <>
-                    <span className="text-[var(--brand-text)]">{message.counterpart}</span>
-                    <span className="mx-2 text-[var(--brand-border)]">·</span>
+                    <span className="text-brand-text">{message.counterpart}</span>
+                    <span className="mx-2 text-brand-border">·</span>
                     {message.role} · {message.channel}
                   </>
                 }
@@ -259,7 +259,7 @@ export function VenueOnboardingScreen() {
               {venuePortalData.onboarding.requiredDocs.map((doc) => (
                 <div
                   key={doc}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm font-semibold text-[var(--brand-text)]"
+                  className="rounded-md border border-brand-border-light bg-white px-4 py-3 text-sm font-semibold text-brand-text"
                 >
                   {doc}
                 </div>
@@ -312,20 +312,20 @@ export function VenueDashboardScreen() {
             {venuePortalData.upcomingEvents.map(({ event, organizer, status, note }) => (
               <div
                 key={`${event.slug}-${organizer}`}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-[var(--brand-text)]">
+                    <div className="text-sm font-semibold text-brand-text">
                       {event.title}
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                    <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
                       {organizer} · {event.venueName}
                     </p>
                   </div>
                   <ToneBadge tone={statusTone(status)}>{status}</ToneBadge>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">{note}</p>
+                <p className="mt-4 text-sm leading-relaxed text-brand-text-muted">{note}</p>
               </div>
             ))}
           </div>
@@ -419,8 +419,8 @@ export function VenueEventsScreen() {
               key: `${item.event.slug}-${item.organizer}`,
               cells: [
                 <div key="event">
-                  <div className="font-semibold text-[var(--brand-text)]">{item.event.title}</div>
-                  <div className="text-xs text-[var(--brand-text-muted)]">
+                  <div className="font-semibold text-brand-text">{item.event.title}</div>
+                  <div className="text-xs text-brand-text-muted">
                     {formatVenueEventSchedule(item.event.startsAt)}
                   </div>
                 </div>,
@@ -450,9 +450,9 @@ export function VenueEventsScreen() {
             {venuePortalData.upcomingEvents.map((item) => (
               <div
                 key={`${item.event.slug}-note`}
-                className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                className="rounded-md border border-brand-border-light bg-white px-4 py-3 text-sm leading-relaxed text-brand-text-muted"
               >
-                <span className="font-semibold text-[var(--brand-text)]">{item.event.title}:</span>{" "}
+                <span className="font-semibold text-brand-text">{item.event.title}:</span>{" "}
                 {item.note}
               </div>
             ))}
@@ -544,15 +544,15 @@ export function VenueBookingsScreen() {
             {venuePortalData.bookings.history.map((item) => (
               <div
                 key={item.key}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">
+                  <div className="font-semibold text-brand-text">
                     {item.organizer}
                   </div>
                   <ToneBadge tone={statusTone(item.result)}>{item.result}</ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                   {item.note}
                 </p>
               </div>
@@ -578,10 +578,10 @@ export function VenueBookingsScreen() {
             {venuePortalData.bookings.guestFit.signals.map((signal) => (
               <article
                 key={signal.key}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{signal.label}</div>
+                  <div className="font-semibold text-brand-text">{signal.label}</div>
                   <ToneBadge
                     tone={
                       signal.score >= 85
@@ -594,7 +594,7 @@ export function VenueBookingsScreen() {
                     {signal.score}%
                   </ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                   {signal.note}
                 </p>
               </article>
@@ -617,7 +617,7 @@ export function VenueBookingsScreen() {
             {venuePortalData.bookings.guestFit.roomGuidance.map((item) => (
               <div
                 key={item}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3 text-sm leading-relaxed text-brand-text-muted"
               >
                 {item}
               </div>
@@ -684,7 +684,7 @@ export function VenueAvailabilityScreen() {
             {venuePortalData.availability.recurring.map((rule) => (
               <div
                 key={rule}
-                className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm font-semibold text-[var(--brand-text)]"
+                className="rounded-md border border-brand-border-light bg-white px-4 py-3 text-sm font-semibold text-brand-text"
               >
                 {rule}
               </div>
@@ -701,17 +701,17 @@ export function VenueAvailabilityScreen() {
             {venuePortalData.availability.weeklyGrid.map((day) => (
               <div
                 key={day.day}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{day.day}</div>
+                  <div className="font-semibold text-brand-text">{day.day}</div>
                   <ToneBadge tone="sand">{day.blocks.length} blocks</ToneBadge>
                 </div>
                 <div className="mt-3 space-y-2">
                   {day.blocks.map((block) => (
                     <div
                       key={block}
-                      className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-2 text-sm text-[var(--brand-text)]"
+                      className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-2 text-sm text-brand-text"
                     >
                       {block}
                     </div>
@@ -732,10 +732,10 @@ export function VenueAvailabilityScreen() {
             {venuePortalData.availability.exceptions.map((item, index) => (
               <div
                 key={item}
-                className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                className="rounded-md border border-brand-border-light bg-white px-4 py-3 text-sm leading-relaxed text-brand-text-muted"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <span className="font-semibold text-[var(--brand-text)]">Calendar exception</span>
+                  <span className="font-semibold text-brand-text">Calendar exception</span>
                   <ToneBadge tone={index === 0 ? "coral" : "sand"}>
                     {index === 0 ? "Current" : "Upcoming"}
                   </ToneBadge>
@@ -834,13 +834,13 @@ export function VenueDealsScreen() {
           {venuePortalData.deals.map((deal, index) => (
             <article
               key={deal.key}
-              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5"
+              className="rounded-lg border border-brand-border-light bg-white p-5"
             >
               <div className="flex items-center justify-between gap-3">
                 <ToneBadge tone={deal.tier === "Gold" ? "coral" : deal.tier === "Silver" ? "indigo" : "sage"}>
                   {deal.tier}
                 </ToneBadge>
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(79,70,229,0.08)] text-brand-indigo">
                   {[Gift, BadgeEuro, CalendarCheck2][index] ? (
                     (() => {
                       const Icon = [Gift, BadgeEuro, CalendarCheck2][index];
@@ -849,17 +849,17 @@ export function VenueDealsScreen() {
                   ) : null}
                 </span>
               </div>
-              <div className="mt-2 text-base font-semibold text-[var(--brand-text)]">
+              <div className="mt-2 text-base font-semibold text-brand-text">
                 {deal.title}
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 <ToneBadge tone={statusTone(deal.status)}>{deal.status}</ToneBadge>
                 <ToneBadge tone="sand">{deal.type}</ToneBadge>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+              <p className="mt-4 text-sm leading-relaxed text-brand-text-muted">
                 {deal.note}
               </p>
-              <div className="mt-4 text-sm font-semibold text-[var(--brand-text)]">
+              <div className="mt-4 text-sm font-semibold text-brand-text">
                 Redemption: {deal.redemption}
               </div>
             </article>
@@ -991,7 +991,7 @@ export function VenueAnalyticsScreen() {
             {venuePortalData.analytics.topReferrers.map((referrer) => (
               <div
                 key={referrer}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4 text-sm font-semibold text-[var(--brand-text)]"
+                className="rounded-lg border border-brand-border-light bg-white p-4 text-sm font-semibold text-brand-text"
               >
                 {referrer}
               </div>

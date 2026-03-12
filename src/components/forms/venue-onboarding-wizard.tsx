@@ -171,22 +171,22 @@ export function VenueOnboardingWizard({
     <div className="section-shell py-10">
       <div className="grid gap-6 xl:grid-cols-[290px_1fr_350px]">
         <aside className={sectionClassName}>
-          <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+          <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
             Ten-step onboarding
           </div>
-          <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-[var(--brand-text)]">
+          <h1 className="font-editorial mt-4 text-4xl tracking-[-0.05em] text-brand-text">
             Venue partner onboarding
           </h1>
-          <p className="mt-4 text-sm leading-7 text-[var(--brand-text-muted)]">
+          <p className="mt-4 text-sm leading-7 text-brand-text-muted">
             Capture the business identity, venue profile, availability, deals, contacts,
             and billing details the platform needs before a venue can be reviewed and approved.
           </p>
           <div className="mt-6 rounded-[1.3rem] bg-[rgba(245,240,232,0.84)] p-4">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                 Completion
               </span>
-              <span className="text-sm font-semibold text-[var(--brand-text)]">
+              <span className="text-sm font-semibold text-brand-text">
                 {completion}%
               </span>
             </div>
@@ -215,17 +215,17 @@ export function VenueOnboardingWizard({
                   className={cn(
                     "inline-flex h-10 w-10 items-center justify-center rounded-2xl",
                     stepIsReady(index, form)
-                      ? "bg-[rgba(124,154,130,0.14)] text-[var(--brand-sage)]"
-                      : "bg-[rgba(245,240,232,0.94)] text-[var(--brand-text-muted)]",
+                      ? "bg-[rgba(124,154,130,0.14)] text-brand-sage"
+                      : "bg-[rgba(245,240,232,0.94)] text-brand-text-muted",
                   )}
                 >
                   <item.icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <div className="text-sm font-semibold text-[var(--brand-text)]">
+                  <div className="text-sm font-semibold text-brand-text">
                     Step {index + 1}
                   </div>
-                  <div className="text-xs text-[var(--brand-text-muted)]">{item.label}</div>
+                  <div className="text-xs text-brand-text-muted">{item.label}</div>
                 </div>
               </button>
             ))}
@@ -236,19 +236,19 @@ export function VenueOnboardingWizard({
           {step === 0 ? (
             <section className={sectionClassName}>
               <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4">
-                <div className="font-semibold text-[var(--brand-text)]">
+                <div className="font-semibold text-brand-text">
                   Account owner
                 </div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-7 text-brand-text-muted">
                   {ownerName} is currently preparing this venue application locally. Nothing is being submitted to external services yet.
                 </p>
               </div>
-              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-brand-text">
                 <input
                   type="checkbox"
                   checked={form.acceptedTerms}
                   onChange={(event) => updateField("acceptedTerms", event.target.checked)}
-                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                  className="h-4 w-4 rounded border-brand-border text-brand-coral"
                 />
                 I accept the local draft workflow and will complete the remaining steps before review
               </label>
@@ -258,7 +258,7 @@ export function VenueOnboardingWizard({
           {step === 1 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Business name
                   <input
                     id="venue-business-name"
@@ -267,35 +267,35 @@ export function VenueOnboardingWizard({
                     onChange={(event) => updateField("businessName", event.target.value)}
                     placeholder="Lebowski Bar"
                     autoComplete="organization"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Legal name
                   <input
                     value={form.legalName}
                     onChange={(event) => updateField("legalName", event.target.value)}
                     placeholder="Lebowski Reykjavik ehf."
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Kennitala
                   <input
                     value={form.kennitala}
                     onChange={(event) => updateField("kennitala", event.target.value)}
                     placeholder="000000-0000"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Venue type
                   <select
                     value={form.venueType}
                     onChange={(event) => updateField("venueType", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     <option value="bar">Bar</option>
                     <option value="restaurant">Restaurant</option>
@@ -312,7 +312,7 @@ export function VenueOnboardingWizard({
           {step === 2 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Address
                   <input
                     id="venue-address"
@@ -321,20 +321,20 @@ export function VenueOnboardingWizard({
                     onChange={(event) => updateField("address", event.target.value)}
                     placeholder="Laugavegur 20b, 101 Reykjavik"
                     autoComplete="street-address"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Area
                   <input
                     value={form.area}
                     onChange={(event) => updateField("area", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Seated capacity
                   <input
                     type="number"
@@ -343,10 +343,10 @@ export function VenueOnboardingWizard({
                     onChange={(event) =>
                       updateField("capacitySeated", Number(event.target.value))
                     }
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Standing capacity
                   <input
                     type="number"
@@ -355,7 +355,7 @@ export function VenueOnboardingWizard({
                     onChange={(event) =>
                       updateField("capacityStanding", Number(event.target.value))
                     }
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
@@ -364,31 +364,31 @@ export function VenueOnboardingWizard({
 
           {step === 3 ? (
             <section className={sectionClassName}>
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Public summary
                 <textarea
                   value={form.summary}
                   onChange={(event) => updateField("summary", event.target.value)}
                   rows={3}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
-              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 block text-sm font-semibold text-brand-text">
                 Full description
                 <textarea
                   value={form.description}
                   onChange={(event) => updateField("description", event.target.value)}
                   rows={7}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
-              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 block text-sm font-semibold text-brand-text">
                 Amenities
                 <input
                   value={form.amenities}
                   onChange={(event) => updateField("amenities", event.target.value)}
                   placeholder="host desk, group seating, projector"
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
             </section>
@@ -396,22 +396,22 @@ export function VenueOnboardingWizard({
 
           {step === 4 ? (
             <section className={sectionClassName}>
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Gallery notes
                 <textarea
                   value={form.galleryNotes}
                   onChange={(event) => updateField("galleryNotes", event.target.value)}
                   rows={4}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
-              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 block text-sm font-semibold text-brand-text">
                 Hero art direction
                 <textarea
                   value={form.heroDirection}
                   onChange={(event) => updateField("heroDirection", event.target.value)}
                   rows={4}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
             </section>
@@ -419,22 +419,22 @@ export function VenueOnboardingWizard({
 
           {step === 5 ? (
             <section className={sectionClassName}>
-              <label className="block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="block text-sm font-semibold text-brand-text">
                 Opening hours
                 <textarea
                   value={form.openingHours}
                   onChange={(event) => updateField("openingHours", event.target.value)}
                   rows={4}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
-              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 block text-sm font-semibold text-brand-text">
                 Availability rules
                 <textarea
                   value={form.availabilityRules}
                   onChange={(event) => updateField("availabilityRules", event.target.value)}
                   rows={4}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
             </section>
@@ -443,20 +443,20 @@ export function VenueOnboardingWizard({
           {step === 6 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Deal title
                   <input
                     value={form.dealTitle}
                     onChange={(event) => updateField("dealTitle", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Deal type
                   <select
                     value={form.dealType}
                     onChange={(event) => updateField("dealType", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
                     <option value="welcome_drink">Welcome drink</option>
                     <option value="happy_hour">Happy hour</option>
@@ -465,12 +465,12 @@ export function VenueOnboardingWizard({
                   </select>
                 </label>
               </div>
-              <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 block text-sm font-semibold text-brand-text">
                 Partnership tier
                 <select
                   value={form.partnershipTier}
                   onChange={(event) => updateField("partnershipTier", event.target.value)}
-                  className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 >
                   <option value="free">Venue Listing - 0 ISK</option>
                   <option value="standard">Venue Partner - 9,900 ISK / mo</option>
@@ -490,29 +490,29 @@ export function VenueOnboardingWizard({
                         : "border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.72)]",
                     )}
                   >
-                    <div className="font-semibold text-[var(--brand-text)]">{tier.name}</div>
-                    <div className="mt-2 text-sm font-semibold text-[var(--brand-indigo)]">
+                    <div className="font-semibold text-brand-text">{tier.name}</div>
+                    <div className="mt-2 text-sm font-semibold text-brand-indigo">
                       {tier.price}
                     </div>
-                    <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                       {tier.description}
                     </p>
                   </button>
                 ))}
               </div>
               <div className="mt-5 rounded-[1.15rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-4">
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                   Selected plan
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">
+                  <div className="font-semibold text-brand-text">
                     {selectedTierDetails.name}
                   </div>
-                  <div className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-[var(--brand-indigo)]">
+                  <div className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-brand-indigo">
                     {selectedTierDetails.price}
                   </div>
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                   {selectedTierDetails.description}
                 </p>
               </div>
@@ -522,7 +522,7 @@ export function VenueOnboardingWizard({
           {step === 7 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Contact name
                   <input
                     id="venue-contact-name"
@@ -530,10 +530,10 @@ export function VenueOnboardingWizard({
                     value={form.contactName}
                     onChange={(event) => updateField("contactName", event.target.value)}
                     autoComplete="name"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Email
                   <input
                     id="venue-email"
@@ -544,12 +544,12 @@ export function VenueOnboardingWizard({
                     autoComplete="email"
                     autoCapitalize="none"
                     spellCheck={false}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
               <div className="mt-5 grid gap-5 md:grid-cols-3">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Phone
                   <input
                     id="venue-phone"
@@ -559,10 +559,10 @@ export function VenueOnboardingWizard({
                     onChange={(event) => updateField("phone", event.target.value)}
                     autoComplete="tel"
                     inputMode="tel"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Website
                   <input
                     id="venue-website"
@@ -574,10 +574,10 @@ export function VenueOnboardingWizard({
                     autoCapitalize="none"
                     inputMode="url"
                     spellCheck={false}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Instagram
                   <input
                     id="venue-instagram"
@@ -586,7 +586,7 @@ export function VenueOnboardingWizard({
                     spellCheck={false}
                     value={form.instagram}
                     onChange={(event) => updateField("instagram", event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
@@ -596,7 +596,7 @@ export function VenueOnboardingWizard({
           {step === 8 ? (
             <section className={sectionClassName}>
               <div className="grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Billing contact
                   <input
                     id="venue-billing-contact"
@@ -604,10 +604,10 @@ export function VenueOnboardingWizard({
                     value={form.billingContact}
                     onChange={(event) => updateField("billingContact", event.target.value)}
                     autoComplete="name"
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
-                <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                <label className="block text-sm font-semibold text-brand-text">
                   Invoice email
                   <input
                     id="venue-invoice-email"
@@ -618,16 +618,16 @@ export function VenueOnboardingWizard({
                     autoComplete="email"
                     autoCapitalize="none"
                     spellCheck={false}
-                    className="mt-2 w-full rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />
                 </label>
               </div>
-              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-brand-text">
                 <input
                   type="checkbox"
                   checked={form.legalAccepted}
                   onChange={(event) => updateField("legalAccepted", event.target.checked)}
-                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                  className="h-4 w-4 rounded border-brand-border text-brand-coral"
                 />
                 I confirm the legal and billing information is ready for a later live submission
               </label>
@@ -637,24 +637,24 @@ export function VenueOnboardingWizard({
           {step === 9 ? (
             <section className={sectionClassName}>
               <div className="rounded-[1.35rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] p-4">
-                <div className="font-semibold text-[var(--brand-text)]">Review summary</div>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <div className="font-semibold text-brand-text">Review summary</div>
+                <p className="mt-2 text-sm leading-7 text-brand-text-muted">
                   {form.businessName || "Venue name"} · {form.venueType} · {form.area} ·{" "}
                   {selectedTierDetails.name}
                 </p>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                   {form.summary}
                 </p>
-                <div className="mt-4 rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-[var(--brand-text)]">
+                <div className="mt-4 rounded-[1rem] bg-white/80 px-4 py-3 text-sm text-brand-text">
                   Billing target: {selectedTierDetails.price}
                 </div>
               </div>
-              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-[var(--brand-text)]">
+              <label className="mt-5 flex items-center gap-3 text-sm font-semibold text-brand-text">
                 <input
                   type="checkbox"
                   checked={form.readyForReview}
                   onChange={(event) => updateField("readyForReview", event.target.checked)}
-                  className="h-4 w-4 rounded border-[var(--brand-border)] text-[var(--brand-coral)]"
+                  className="h-4 w-4 rounded border-brand-border text-brand-coral"
                 />
                 Mark this venue onboarding flow ready for review
               </label>
@@ -663,7 +663,7 @@ export function VenueOnboardingWizard({
                 <button
                   type="button"
                   onClick={() => saveDraft("draft")}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.18)] bg-white px-5 py-3 text-sm font-bold text-[var(--brand-indigo)] transition hover:-translate-y-0.5"
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.18)] bg-white px-5 py-3 text-sm font-bold text-brand-indigo transition hover:-translate-y-0.5"
                 >
                   Save local draft
                   <Receipt className="h-4 w-4" />
@@ -671,7 +671,7 @@ export function VenueOnboardingWizard({
                 <button
                   type="button"
                   onClick={() => saveDraft("review")}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
                 >
                   Mark ready for review
                   <CheckCheck className="h-4 w-4" />
@@ -682,7 +682,7 @@ export function VenueOnboardingWizard({
                 <div
                   role="status"
                   aria-live="polite"
-                  className="mt-4 rounded-[1.1rem] border border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-[var(--brand-sage-dark)]"
+                  className="mt-4 rounded-[1.1rem] border border-[rgba(124,154,130,0.22)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-brand-sage-dark"
                 >
                   {message}
                 </div>
@@ -695,18 +695,18 @@ export function VenueOnboardingWizard({
               type="button"
               onClick={() => moveStep("back")}
               disabled={step === 0}
-              className="inline-flex min-h-11 items-center rounded-full border border-[rgba(153,148,168,0.18)] bg-white/78 px-4 py-2 text-sm font-semibold text-[var(--brand-text)] disabled:opacity-50"
+              className="inline-flex min-h-11 items-center rounded-full border border-[rgba(153,148,168,0.18)] bg-white/78 px-4 py-2 text-sm font-semibold text-brand-text disabled:opacity-50"
             >
               Back
             </button>
-            <div className="text-sm text-[var(--brand-text-muted)]">
+            <div className="text-sm text-brand-text-muted">
               Step {step + 1} of {steps.length}
             </div>
             <button
               type="button"
               onClick={() => moveStep("forward")}
               disabled={step === steps.length - 1 || !stepIsReady(step, form)}
-              className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-indigo)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+              className="inline-flex min-h-11 items-center rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
             >
               Next step
             </button>
@@ -715,37 +715,37 @@ export function VenueOnboardingWizard({
 
         <aside className="space-y-6">
           <section className={sectionClassName}>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
               Public profile preview
             </div>
             <div className="mt-4 overflow-hidden rounded-[1.45rem] border border-[rgba(153,148,168,0.12)] bg-white">
               <div className="h-40 bg-[linear-gradient(135deg,rgba(30,27,46,1),rgba(232,97,77,0.84))]" />
               <div className="p-5">
                 <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-[var(--brand-indigo)]">
+                  <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-brand-indigo">
                     {form.venueType}
                   </span>
-                  <span className="rounded-full bg-[rgba(245,240,232,0.92)] px-3 py-1 text-xs font-semibold text-[var(--brand-text)]">
+                  <span className="rounded-full bg-[rgba(245,240,232,0.92)] px-3 py-1 text-xs font-semibold text-brand-text">
                     {selectedTierDetails.name}
                   </span>
                 </div>
-                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-brand-text">
                   {form.businessName || "Venue name"}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                   {form.summary}
                 </p>
                 <div className="mt-4 grid gap-3">
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {form.address || "Venue address"} · {form.area}
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {form.capacityStanding} standing · {form.capacitySeated} seated
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     Deal: {form.dealTitle || "No deal yet"}
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-[var(--brand-text)]">
+                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     Plan: {selectedTierDetails.price}
                   </div>
                 </div>
@@ -753,7 +753,7 @@ export function VenueOnboardingWizard({
                   {amenities.map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-[rgba(153,148,168,0.14)] px-3 py-1 text-xs font-semibold text-[var(--brand-text-muted)]"
+                      className="rounded-full border border-[rgba(153,148,168,0.14)] px-3 py-1 text-xs font-semibold text-brand-text-muted"
                     >
                       {item}
                     </span>
@@ -764,7 +764,7 @@ export function VenueOnboardingWizard({
           </section>
 
           <section className={sectionClassName}>
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
               Review notes
             </div>
             <div className="mt-4 space-y-3">
@@ -776,7 +776,7 @@ export function VenueOnboardingWizard({
               ].map((note) => (
                 <div
                   key={note}
-                  className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/78 px-4 py-3 text-sm leading-7 text-[var(--brand-text-muted)]"
+                  className="rounded-[1.1rem] border border-[rgba(153,148,168,0.12)] bg-white/78 px-4 py-3 text-sm leading-7 text-brand-text-muted"
                 >
                   {note}
                 </div>

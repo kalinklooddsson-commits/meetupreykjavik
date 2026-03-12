@@ -12,11 +12,12 @@ import {
 } from "lucide-react";
 import type { Route } from "next";
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 
 import {
   demoAuthAccounts,
-  MOCK_PASSWORD_HINT,
 } from "@/lib/auth/mock-auth-config";
+import { refreshUser } from "@/hooks/use-user";
 import type { AccountType } from "@/types/domain";
 
 type AuthMode = "login" | "signup" | "forgot-password" | "reset-password";
@@ -32,17 +33,20 @@ type AuthPanelProps = {
 };
 
 const inputClassName =
-  "mt-1.5 w-full rounded-xl border border-[var(--brand-border)] bg-white px-4 py-3 text-sm text-[var(--brand-text)] outline-none transition-colors focus-visible:border-[var(--brand-indigo)] focus-visible:ring-2 focus-visible:ring-[rgba(79,70,229,0.1)]";
+  "mt-1.5 w-full rounded-xl border border-brand-border bg-white px-4 py-3 text-sm text-brand-text outline-none transition-colors focus-visible:border-brand-indigo focus-visible:ring-2 focus-visible:ring-[rgba(79,70,229,0.1)]";
 
-const roleOptions: Array<{
-  value: AccountType;
-  label: string;
-  Icon: typeof UsersRound;
-}> = [
-  { value: "user", label: "Member", Icon: UsersRound },
-  { value: "organizer", label: "Organizer", Icon: CalendarDays },
-  { value: "venue", label: "Venue partner", Icon: Store },
-  { value: "admin", label: "Admin", Icon: ShieldCheck },
+const roleIcons: Record<string, typeof UsersRound> = {
+  member: UsersRound,
+  organizer: CalendarDays,
+  venuePartner: Store,
+  admin: ShieldCheck,
+};
+
+const roleValues: Array<{ key: string; value: AccountType }> = [
+  { key: "member", value: "user" },
+  { key: "organizer", value: "organizer" },
+  { key: "venuePartner", value: "venue" },
+  { key: "admin", value: "admin" },
 ];
 
 export function AuthPanel({
@@ -59,11 +63,15 @@ export function AuthPanel({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const tFields = useTranslations("auth.fields");
+  const tRoles = useTranslations("auth.roles");
+  const tAuth = useTranslations("auth");
+  const tErrors = useTranslations("auth.errors");
   const [form, setForm] = useState({
     displayName: "",
     email: "",
-    password: MOCK_PASSWORD_HINT,
-    confirmPassword: MOCK_PASSWORD_HINT,
+    password: "",
+    confirmPassword: "",
     token: "",
     locale: "en",
     requestedAccountType: "user",
@@ -74,8 +82,7 @@ export function AuthPanel({
   const isReset = mode === "reset-password";
   const urlResetToken = searchParams.get("token_hash") ?? searchParams.get("token") ?? "";
   const resolvedResetToken = form.token || urlResetToken;
-  const activeRole =
-    roleOptions.find((option) => option.value === form.requestedAccountType) ?? roleOptions[0];
+  const activeRoleValue = form.requestedAccountType;
 
   function updateField(field: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -132,15 +139,16 @@ export function AuthPanel({
       setError(
         payload.details?.formErrors?.[0] ??
           payload.note ??
-          "Something went wrong.",
+          tErrors("generic"),
       );
       return;
     }
 
     setError("");
-    setSuccess(payload.data?.message ?? "Success.");
+    setSuccess(payload.data?.message ?? tErrors("success"));
 
     if (payload.data?.redirectTo) {
+      refreshUser();
       router.push(payload.data.redirectTo as Route);
       router.refresh();
     }
@@ -149,17 +157,17 @@ export function AuthPanel({
   return (
     <div className="mx-auto max-w-lg px-4 py-12">
       <div className="text-center">
-        <Link href="/" className="mb-6 inline-flex items-center gap-2 text-[var(--brand-text)]">
-          <Compass className="h-5 w-5 text-[var(--brand-indigo)]" />
+        <Link href="/" className="mb-6 inline-flex items-center gap-2 text-brand-text">
+          <Compass className="h-5 w-5 text-brand-indigo" />
           <span className="text-sm font-bold">MeetupReykjavik</span>
         </Link>
-        <div className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-[var(--brand-indigo)]">
+        <div className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo">
           {eyebrow}
         </div>
-        <h1 className="font-editorial mt-2 text-3xl tracking-tight text-[var(--brand-text)]">
+        <h1 className="font-editorial mt-2 text-3xl tracking-tight text-brand-text">
           {title}
         </h1>
-        <p className="mt-2 text-sm text-[var(--brand-text-muted)]">{description}</p>
+        <p className="mt-2 text-sm text-brand-text-muted">{description}</p>
       </div>
 
       <form
@@ -174,36 +182,37 @@ export function AuthPanel({
       >
         {isSignup ? (
           <>
-            <label className="block text-sm font-medium text-[var(--brand-text)]">
-              Display name
+            <label className="block text-sm font-medium text-brand-text">
+              {tFields("displayName")}
               <input
                 name="displayName"
                 value={form.displayName}
                 onChange={(e) => updateField("displayName", e.target.value)}
-                placeholder="Your public name"
+                placeholder={tFields("displayNamePlaceholder")}
                 autoComplete="name"
                 className={inputClassName}
               />
             </label>
 
             <div>
-              <div className="text-sm font-medium text-[var(--brand-text)]">Account type</div>
+              <div className="text-sm font-medium text-brand-text">{tFields("accountType")}</div>
               <div className="mt-2 grid grid-cols-2 gap-2">
-                {roleOptions.map((option) => {
-                  const selected = option.value === activeRole.value;
+                {roleValues.map((role) => {
+                  const selected = role.value === activeRoleValue;
+                  const Icon = roleIcons[role.key];
                   return (
                     <button
-                      key={option.value}
+                      key={role.value}
                       type="button"
-                      onClick={() => updateField("requestedAccountType", option.value)}
+                      onClick={() => updateField("requestedAccountType", role.value)}
                       className={`flex items-center gap-2.5 rounded-xl border px-3 py-3 text-left text-sm transition ${
                         selected
-                          ? "border-[var(--brand-indigo)] bg-[rgba(79,70,229,0.06)] font-semibold text-[var(--brand-indigo)]"
-                          : "border-[var(--brand-border)] bg-white text-[var(--brand-text-muted)] hover:border-[var(--brand-indigo)]"
+                          ? "border-brand-indigo bg-[rgba(79,70,229,0.06)] font-semibold text-brand-indigo"
+                          : "border-brand-border bg-white text-brand-text-muted hover:border-brand-indigo"
                       }`}
                     >
-                      <option.Icon className="h-4 w-4 shrink-0" />
-                      {option.label}
+                      <Icon className="h-4 w-4 shrink-0" />
+                      {tRoles(role.key)}
                     </button>
                   );
                 })}
@@ -213,8 +222,8 @@ export function AuthPanel({
         ) : null}
 
         {isReset ? null : (
-          <label className="block text-sm font-medium text-[var(--brand-text)]">
-            Email
+          <label className="block text-sm font-medium text-brand-text">
+            {tFields("email")}
             <input
               name="email"
               type="email"
@@ -230,14 +239,14 @@ export function AuthPanel({
         )}
 
         {isForgot ? null : (
-          <label className="block text-sm font-medium text-[var(--brand-text)]">
-            Password
+          <label className="block text-sm font-medium text-brand-text">
+            {tFields("password")}
             <input
               name="password"
               type="password"
               value={form.password}
               onChange={(e) => updateField("password", e.target.value)}
-              placeholder="Minimum 8 characters"
+              placeholder={tFields("passwordPlaceholder")}
               autoComplete={isReset || isSignup ? "new-password" : "current-password"}
               className={inputClassName}
             />
@@ -246,25 +255,25 @@ export function AuthPanel({
 
         {isReset ? (
           <>
-            <label className="block text-sm font-medium text-[var(--brand-text)]">
-              Reset token
+            <label className="block text-sm font-medium text-brand-text">
+              {tFields("resetToken")}
               <input
                 name="token"
                 value={resolvedResetToken}
                 onChange={(e) => updateField("token", e.target.value)}
-                placeholder="Token from recovery email"
+                placeholder={tFields("resetTokenPlaceholder")}
                 autoComplete="one-time-code"
                 className={inputClassName}
               />
             </label>
-            <label className="block text-sm font-medium text-[var(--brand-text)]">
-              Confirm password
+            <label className="block text-sm font-medium text-brand-text">
+              {tFields("confirmPassword")}
               <input
                 name="confirmPassword"
                 type="password"
                 value={form.confirmPassword}
                 onChange={(e) => updateField("confirmPassword", e.target.value)}
-                placeholder="Repeat your new password"
+                placeholder={tFields("confirmPasswordPlaceholder")}
                 autoComplete="new-password"
                 className={inputClassName}
               />
@@ -273,8 +282,8 @@ export function AuthPanel({
         ) : null}
 
         {isSignup ? (
-          <label className="block text-sm font-medium text-[var(--brand-text)]">
-            Language
+          <label className="block text-sm font-medium text-brand-text">
+            {tFields("language")}
             <select
               name="locale"
               value={form.locale}
@@ -308,7 +317,7 @@ export function AuthPanel({
         <button
           type="submit"
           disabled={isPending}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {primaryLabel}
           <ArrowRight className="h-4 w-4" />
@@ -317,24 +326,24 @@ export function AuthPanel({
         {mode === "login" ? (
           <Link
             href={"/forgot-password" as Route}
-            className="block text-center text-sm text-[var(--brand-text-muted)] hover:text-[var(--brand-indigo)]"
+            className="block text-center text-sm text-brand-text-muted hover:text-brand-indigo"
           >
-            Forgot password?
+            {tAuth("login.forgotPassword")}
           </Link>
         ) : null}
 
         <Link
           href={secondaryHref as Route}
-          className="block text-center text-sm font-semibold text-[var(--brand-indigo)]"
+          className="block text-center text-sm font-semibold text-brand-indigo"
         >
           {secondaryLabel}
         </Link>
       </form>
 
       {mode === "login" ? (
-        <div className="mt-8 border-t border-[var(--brand-border-light)] pt-6">
-          <div className="text-xs font-bold uppercase tracking-wider text-[var(--brand-text-light)]">
-            Demo accounts
+        <div className="mt-8 border-t border-brand-border-light pt-6">
+          <div className="text-xs font-bold uppercase tracking-wider text-brand-text-light">
+            {tAuth("demoAccounts")}
           </div>
           <div className="mt-3 space-y-2">
             {demoAuthAccounts.map((account) => (
@@ -350,17 +359,17 @@ export function AuthPanel({
                     requestedAccountType: account.accountType,
                   }));
                 }}
-                className="flex w-full items-center justify-between gap-3 rounded-xl border border-[var(--brand-border-light)] bg-white px-4 py-3 text-left transition hover:border-[var(--brand-indigo)]"
+                className="flex w-full items-center justify-between gap-3 rounded-xl border border-brand-border-light bg-white px-4 py-3 text-left transition hover:border-brand-indigo"
               >
                 <div>
-                  <div className="text-sm font-semibold text-[var(--brand-text)]">
+                  <div className="text-sm font-semibold text-brand-text">
                     {account.displayName}
                   </div>
-                  <div className="mt-0.5 text-xs text-[var(--brand-text-muted)]">
+                  <div className="mt-0.5 text-xs text-brand-text-muted">
                     {account.email}
                   </div>
                 </div>
-                <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--brand-indigo)]">
+                <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-indigo">
                   {account.accountType}
                 </span>
               </button>

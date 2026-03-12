@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { routing } from "@/i18n/routing";
 
+const MOCK_SESSION_COOKIE = "meetupreykjavik-session";
+
 const PROTECTED_PREFIXES = ["/dashboard", "/organizer", "/venue", "/admin"];
 
 function isProtectedRoute(pathname: string): boolean {
@@ -11,8 +13,16 @@ function isProtectedRoute(pathname: string): boolean {
   );
 }
 
+function redirectToLogin(request: NextRequest, pathname: string) {
+  const loginUrl = request.nextUrl.clone();
+  loginUrl.pathname = "/login";
+  loginUrl.searchParams.set("redirect", pathname);
+  return NextResponse.redirect(loginUrl);
+}
+
 export default async function middleware(request: NextRequest) {
   const response = NextResponse.next();
+  const { pathname } = request.nextUrl;
   const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
   const isDevelopment = process.env.NODE_ENV !== "production";
   const contentSecurityPolicy = [
@@ -49,11 +59,18 @@ export default async function middleware(request: NextRequest) {
     });
   }
 
+  // Skip auth processing for the callback route — it handles its own session
+  if (pathname.startsWith("/auth/callback")) {
+    return response;
+  }
+
   // Supabase session refresh and route protection
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const useLiveAuth =
+    supabaseUrl && supabaseAnonKey && process.env.ENABLE_SUPABASE_AUTH === "true";
 
-  if (supabaseUrl && supabaseAnonKey) {
+  if (useLiveAuth) {
     const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         getAll() {
@@ -73,13 +90,44 @@ export default async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { pathname } = request.nextUrl;
-
     if (isProtectedRoute(pathname) && !user) {
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/login";
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
+      return redirectToLogin(request, pathname);
+    }
+  } else if (supabaseUrl && supabaseAnonKey) {
+    // Supabase is configured but ENABLE_SUPABASE_AUTH is not "true" — still
+    // refresh the session so tokens stay fresh, but fall back to mock-session
+    // cookie for route protection.
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          for (const { name, value, options } of cookiesToSet) {
+            request.cookies.set(name, value);
+            response.cookies.set(name, value, options);
+          }
+        },
+      },
+    });
+
+    // Still refresh the Supabase token even when using mock auth — this keeps
+    // the token valid for any background Supabase data queries.
+    await supabase.auth.getUser();
+
+    if (isProtectedRoute(pathname)) {
+      const hasMockSession = request.cookies.has(MOCK_SESSION_COOKIE);
+      if (!hasMockSession) {
+        return redirectToLogin(request, pathname);
+      }
+    }
+  } else {
+    // No Supabase env at all — mock-only mode
+    if (isProtectedRoute(pathname)) {
+      const hasMockSession = request.cookies.has(MOCK_SESSION_COOKIE);
+      if (!hasMockSession) {
+        return redirectToLogin(request, pathname);
+      }
     }
   }
 

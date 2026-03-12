@@ -59,16 +59,16 @@ export function ContactForm() {
   return (
     <div className="paper-panel-premium editorial-shell space-y-5 rounded-[1.7rem] border border-[rgba(255,255,255,0.74)] p-5 sm:p-6">
       <div>
-        <div className="font-editorial text-3xl tracking-[-0.05em] text-[var(--brand-text)]">
+        <div className="font-editorial text-3xl tracking-[-0.05em] text-brand-text">
           {t("title")}
         </div>
-        <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+        <p className="mt-3 text-sm leading-7 text-brand-text-muted">
           {t("description")}
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
+        <label className="block text-sm font-semibold text-brand-text">
           {t("fields.name")}
           <input
             id="contact-name"
@@ -79,7 +79,7 @@ export function ContactForm() {
             className="field-luxe mt-2 px-4 py-3 text-sm outline-none"
           />
         </label>
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
+        <label className="block text-sm font-semibold text-brand-text">
           {t("fields.email")}
           <input
             id="contact-email"
@@ -95,7 +95,7 @@ export function ContactForm() {
         </label>
       </div>
 
-      <label className="block text-sm font-semibold text-[var(--brand-text)]">
+      <label className="block text-sm font-semibold text-brand-text">
         {t("fields.topic")}
         <select
           id="contact-topic"
@@ -112,7 +112,7 @@ export function ContactForm() {
         </select>
       </label>
 
-      <label className="block text-sm font-semibold text-[var(--brand-text)]">
+      <label className="block text-sm font-semibold text-brand-text">
         {t("fields.message")}
         <textarea
           id="contact-message"
@@ -128,7 +128,7 @@ export function ContactForm() {
         <button
           type="button"
           onClick={submit}
-          className="inline-flex min-h-11 items-center rounded-full bg-[var(--brand-coral)] px-5 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.22)] transition hover:-translate-y-0.5"
+          className="inline-flex min-h-11 items-center rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.22)] transition hover:-translate-y-0.5"
         >
           {t("submit")}
         </button>
@@ -136,7 +136,7 @@ export function ContactForm() {
           <p
             role="status"
             aria-live="polite"
-            className="text-sm leading-7 text-[var(--brand-text-muted)]"
+            className="text-sm leading-7 text-brand-text-muted"
           >
             {status}
           </p>

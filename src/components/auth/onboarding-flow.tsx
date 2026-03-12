@@ -238,7 +238,7 @@ export function OnboardingFlow({
                   >
                     <span
                       className={`mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
-                        index <= step ? "bg-[var(--brand-coral)] text-white" : "bg-white/10 text-white/70"
+                        index <= step ? "bg-brand-coral text-white" : "bg-white/10 text-white/70"
                       }`}
                     >
                       {index < step ? <Check className="h-4 w-4" /> : <item.icon className="h-4 w-4" />}
@@ -261,17 +261,17 @@ export function OnboardingFlow({
                   <activeStep.icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+                  <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
                     {activeStep.label}
                   </div>
-                  <h2 className="font-editorial mt-1 text-4xl tracking-[-0.05em] text-[var(--brand-text)]">
+                  <h2 className="font-editorial mt-1 text-4xl tracking-[-0.05em] text-brand-text">
                     {activeStep.title}
                   </h2>
                 </div>
               </div>
 
               <div className="mt-5">
-                <div className="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+                <div className="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-[0.18em] text-brand-text-light">
                   <span>
                     Step {step + 1} of {steps.length}
                   </span>
@@ -285,7 +285,7 @@ export function OnboardingFlow({
                 </div>
               </div>
 
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--brand-text-muted)]">
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-brand-text-muted">
                 {activeStep.description}
               </p>
 
@@ -313,8 +313,8 @@ export function OnboardingFlow({
                           : "border-[rgba(153,148,168,0.14)] bg-white"
                       }`}
                     >
-                      <div className="font-semibold text-[var(--brand-text)]">{option.title}</div>
-                      <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                      <div className="font-semibold text-brand-text">{option.title}</div>
+                      <p className="mt-2 text-sm leading-7 text-brand-text-muted">
                         {option.body}
                       </p>
                     </button>
@@ -325,10 +325,10 @@ export function OnboardingFlow({
               {step === 1 ? (
                 <div className="mt-8">
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                    <div className="text-sm font-semibold text-[var(--brand-text)]">
+                    <div className="text-sm font-semibold text-brand-text">
                       Pick at least 3 interests
                     </div>
-                    <div className="inline-flex items-center gap-2 rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-indigo)]">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-brand-indigo">
                       {selectedInterests.length} selected
                     </div>
                   </div>
@@ -343,8 +343,8 @@ export function OnboardingFlow({
                           onClick={() => toggleInterest(category.name)}
                           className={`inline-flex items-center gap-3 rounded-full border px-4 py-3 text-sm font-medium transition ${
                             active
-                              ? "border-[rgba(79,70,229,0.22)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                              : "border-[rgba(153,148,168,0.16)] bg-white text-[var(--brand-text)]"
+                              ? "border-[rgba(79,70,229,0.22)] bg-[rgba(79,70,229,0.08)] text-brand-indigo"
+                              : "border-[rgba(153,148,168,0.16)] bg-white text-brand-text"
                           }`}
                         >
                           <span className="font-black">{category.letter}</span>
@@ -358,7 +358,7 @@ export function OnboardingFlow({
                       <span className="editorial-icon-chip">
                         <ArrowRight className="h-4 w-4" />
                       </span>
-                      <p className="text-sm leading-7 text-[var(--brand-text-muted)]">
+                      <p className="text-sm leading-7 text-brand-text-muted">
                         These interests will later shape recommendations, category landing order,
                         group suggestions, and organizer invites once the live backend is wired.
                       </p>
@@ -381,10 +381,10 @@ export function OnboardingFlow({
                         <span className="mx-auto flex h-18 w-18 items-center justify-center rounded-[1.8rem] bg-[linear-gradient(135deg,rgba(79,70,229,0.92),rgba(232,97,77,0.82))] text-white">
                           <UserRound className="h-8 w-8" />
                         </span>
-                        <div className="mt-4 font-semibold text-[var(--brand-text)]">
+                        <div className="mt-4 font-semibold text-brand-text">
                           Optional profile photo
                         </div>
-                        <p className="mt-2 text-sm leading-7 text-[var(--brand-text-muted)]">
+                        <p className="mt-2 text-sm leading-7 text-brand-text-muted">
                           Leave it empty for now and finish onboarding anyway.
                         </p>
                       </div>
@@ -392,7 +392,7 @@ export function OnboardingFlow({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-[var(--brand-text)]">
+                    <label className="block text-sm font-semibold text-brand-text">
                       Photo URL
                       <input
                         id="onboarding-photo-url"
@@ -408,7 +408,7 @@ export function OnboardingFlow({
                         className="field-luxe mt-2 px-4 py-3 text-sm outline-none"
                       />
                     </label>
-                    <p className="mt-3 text-sm leading-7 text-[var(--brand-text-muted)]">
+                    <p className="mt-3 text-sm leading-7 text-brand-text-muted">
                       This is a temporary mock input so the full onboarding step exists before
                       Supabase storage is connected for uploads.
                     </p>
@@ -420,7 +420,7 @@ export function OnboardingFlow({
                 <div
                   role="status"
                   aria-live="polite"
-                  className="mt-6 rounded-[1.2rem] border border-[rgba(232,97,77,0.16)] bg-[rgba(232,97,77,0.08)] px-4 py-3 text-sm text-[var(--brand-coral-dark)]"
+                  className="mt-6 rounded-[1.2rem] border border-[rgba(232,97,77,0.16)] bg-[rgba(232,97,77,0.08)] px-4 py-3 text-sm text-brand-coral-dark"
                 >
                   {message}
                 </div>
@@ -429,7 +429,7 @@ export function OnboardingFlow({
               <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
                 <Link
                   href="/signup"
-                  className="text-sm font-semibold text-[var(--brand-text-muted)]"
+                  className="text-sm font-semibold text-brand-text-muted"
                 >
                   Back to signup
                 </Link>
@@ -438,7 +438,7 @@ export function OnboardingFlow({
                     <button
                       type="button"
                       onClick={() => setStep((current) => current - 1)}
-                      className="rounded-full border border-[var(--brand-border)] px-5 py-3 text-sm font-semibold text-[var(--brand-text)]"
+                      className="rounded-full border border-brand-border px-5 py-3 text-sm font-semibold text-brand-text"
                     >
                       Back
                     </button>
@@ -446,7 +446,7 @@ export function OnboardingFlow({
                   <button
                     type="button"
                     onClick={goNext}
-                    className="rounded-full bg-[var(--brand-coral)] px-6 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
+                    className="rounded-full bg-brand-coral px-6 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
                   >
                     {step === 2 ? "Finish onboarding" : "Continue"}
                   </button>

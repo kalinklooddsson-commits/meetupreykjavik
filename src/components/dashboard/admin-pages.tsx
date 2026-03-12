@@ -235,10 +235,10 @@ export function AdminOverviewScreen() {
           ].map((item) => (
             <article
               key={item.title}
-              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+              className="rounded-lg border border-brand-border-light bg-white p-3"
             >
-              <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+              <div className="font-semibold text-brand-text">{item.title}</div>
+              <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                 {item.note}
               </p>
             </article>
@@ -404,7 +404,7 @@ export function AdminUsersScreen() {
           </div>
           <div className="mt-5 space-y-4">
             <div>
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Trust signals
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -416,7 +416,7 @@ export function AdminUsersScreen() {
               </div>
             </div>
             <div>
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Interests and badges
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -458,7 +458,7 @@ export function AdminUsersScreen() {
             <KeyValueList items={adminPortalData.clientDossier.items} />
           </div>
           <div className="mt-5">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Interests and trust
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -482,20 +482,20 @@ export function AdminUsersScreen() {
         >
           <div className="grid gap-5 xl:grid-cols-2">
             <div>
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Recent attendance
               </div>
               <div className="mt-3 space-y-3">
                 {adminPortalData.clientDossier.recentAttendance.map((item) => (
                   <div
                     key={item.title}
-                    className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+                    className="rounded-lg border border-brand-border-light bg-white p-3"
                   >
-                    <div className="font-semibold text-[var(--brand-text)]">{item.title}</div>
-                    <div className="mt-1 text-sm text-[var(--brand-text-muted)]">
+                    <div className="font-semibold text-brand-text">{item.title}</div>
+                    <div className="mt-1 text-sm text-brand-text-muted">
                       {item.venue}
                     </div>
-                    <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                    <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                       {item.note}
                     </p>
                   </div>
@@ -505,17 +505,17 @@ export function AdminUsersScreen() {
 
             <div className="space-y-5">
               <div>
-                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                   Venue preferences
                 </div>
                 <div className="mt-3 space-y-3">
                   {adminPortalData.clientDossier.venuePreferences.map((item) => (
                     <div
                       key={item.venue}
-                      className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+                      className="rounded-lg border border-brand-border-light bg-white p-3"
                     >
-                      <div className="font-semibold text-[var(--brand-text)]">{item.venue}</div>
-                      <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                      <div className="font-semibold text-brand-text">{item.venue}</div>
+                      <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                         {item.reason}
                       </p>
                     </div>
@@ -524,7 +524,7 @@ export function AdminUsersScreen() {
               </div>
 
               <div>
-                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                   Privacy and admin notes
                 </div>
                 <div className="mt-3 space-y-3">
@@ -533,8 +533,8 @@ export function AdminUsersScreen() {
                       key={item.label}
                       className="flex items-start justify-between gap-4 rounded-[1rem] border border-[rgba(153,148,168,0.12)] bg-[rgba(245,240,232,0.84)] px-4 py-3"
                     >
-                      <div className="text-sm text-[var(--brand-text-muted)]">{item.label}</div>
-                      <div className="text-right text-sm font-semibold text-[var(--brand-text)]">
+                      <div className="text-sm text-brand-text-muted">{item.label}</div>
+                      <div className="text-right text-sm font-semibold text-brand-text">
                         {item.value}
                       </div>
                     </div>
@@ -542,7 +542,7 @@ export function AdminUsersScreen() {
                   {adminPortalData.clientDossier.adminNotes.map((item) => (
                     <div
                       key={item}
-                      className="rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                      className="rounded-md border border-brand-border-light bg-white px-3 py-2 text-sm leading-relaxed text-brand-text-muted"
                     >
                       {item}
                     </div>
@@ -651,16 +651,16 @@ export function AdminGroupsScreen() {
             {adminPortalData.groups.queue.map((group) => (
               <div
                 key={group.key}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+                className="rounded-lg border border-brand-border-light bg-white p-3"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{group.name}</div>
+                  <div className="font-semibold text-brand-text">{group.name}</div>
                   <ToneBadge tone={statusTone(group.status)}>{group.status}</ToneBadge>
                 </div>
-                <p className="mt-2 text-sm text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm text-brand-text-muted">
                   Organizer: {group.organizer}
                 </p>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                   {group.note}
                 </p>
               </div>
@@ -798,9 +798,9 @@ export function AdminEventsScreen() {
           {adminPortalData.events.calendar.map((item, index) => (
             <div
               key={`${item.day}-${index}`}
-              className="flex items-center justify-between gap-3 rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2"
+              className="flex items-center justify-between gap-3 rounded-md border border-brand-border-light bg-white px-3 py-2"
             >
-              <div className="font-semibold text-[var(--brand-text)]">{item.label}</div>
+              <div className="font-semibold text-brand-text">{item.label}</div>
               <ToneBadge tone="sand">{item.day} Mar</ToneBadge>
             </div>
           ))}
@@ -818,7 +818,7 @@ export function AdminEventsScreen() {
               {adminPortalData.events.audienceStrategy.rules.map((rule) => (
                 <div
                   key={rule}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                  className="rounded-md border border-brand-border-light bg-white px-3 py-2 text-sm leading-relaxed text-brand-text-muted"
                 >
                   {rule}
                 </div>
@@ -835,15 +835,15 @@ export function AdminEventsScreen() {
             {adminPortalData.events.audienceStrategy.segments.map((segment) => (
               <article
                 key={segment.key}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+                className="rounded-lg border border-brand-border-light bg-white p-3"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{segment.label}</div>
+                  <div className="font-semibold text-brand-text">{segment.label}</div>
                   <ToneBadge tone={segment.current >= segment.target ? "sage" : "coral"}>
                     {segment.current} / {segment.target}
                   </ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                   {segment.note}
                 </p>
               </article>
@@ -1010,7 +1010,7 @@ export function AdminVenuesScreen() {
               {adminPortalData.venues.matching.map((note) => (
                 <div
                   key={note}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                  className="rounded-md border border-brand-border-light bg-white px-3 py-2 text-sm leading-relaxed text-brand-text-muted"
                 >
                   {note}
                 </div>
@@ -1159,13 +1159,13 @@ export function AdminRevenueScreen() {
           {adminPortalData.revenue.plans.map((plan) => (
             <article
               key={plan.name}
-              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+              className="rounded-lg border border-brand-border-light bg-white p-3"
             >
               <ToneBadge tone="sand">{plan.price}</ToneBadge>
-              <div className="mt-2 text-base font-semibold text-[var(--brand-text)]">
+              <div className="mt-2 text-base font-semibold text-brand-text">
                 {plan.name}
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+              <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                 {plan.description}
               </p>
             </article>
@@ -1182,12 +1182,12 @@ export function AdminRevenueScreen() {
           {adminPortalData.revenue.policies.map((policy) => (
             <article
               key={policy.label}
-              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+              className="rounded-lg border border-brand-border-light bg-white p-3"
             >
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 {policy.label}
               </div>
-              <div className="mt-3 font-semibold text-[var(--brand-text)]">
+              <div className="mt-3 font-semibold text-brand-text">
                 {policy.value}
               </div>
             </article>
@@ -1324,10 +1324,10 @@ export function AdminAnalyticsScreen() {
           {adminPortalData.analyticsDeck.map((chart) => (
             <article
               key={chart.key}
-              className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+              className="rounded-lg border border-brand-border-light bg-white p-3"
             >
               <div className="flex items-center justify-between gap-3">
-                <div className="font-semibold text-[var(--brand-text)]">{chart.title}</div>
+                <div className="font-semibold text-brand-text">{chart.title}</div>
                 <ToneBadge tone={chart.tone}>
                   {chart.data[chart.data.length - 1] ?? 0}
                 </ToneBadge>
@@ -1474,13 +1474,13 @@ export function AdminContentScreen() {
             {adminPortalData.content.sections.map((section) => (
               <div
                 key={section.key}
-                className="rounded-lg border border-[var(--brand-border-light)] bg-white p-3"
+                className="rounded-lg border border-brand-border-light bg-white p-3"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{section.title}</div>
+                  <div className="font-semibold text-brand-text">{section.title}</div>
                   <ToneBadge tone={statusTone(section.status)}>{section.status}</ToneBadge>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                   {section.note}
                 </p>
               </div>
@@ -1498,10 +1498,10 @@ export function AdminContentScreen() {
               {adminPortalData.content.categories.map((category) => (
                 <div
                   key={category.key}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2"
+                  className="rounded-md border border-brand-border-light bg-white px-3 py-2"
                 >
-                  <div className="font-semibold text-[var(--brand-text)]">{category.name}</div>
-                  <div className="text-sm text-[var(--brand-text-muted)]">
+                  <div className="font-semibold text-brand-text">{category.name}</div>
+                  <div className="text-sm text-brand-text-muted">
                     {category.count} active items
                   </div>
                 </div>
@@ -1654,7 +1654,7 @@ export function AdminModerationScreen() {
               {adminPortalData.moderation.pendingApproval.map((item) => (
                 <div
                   key={item}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2 text-sm font-semibold text-[var(--brand-text)]"
+                  className="rounded-md border border-brand-border-light bg-white px-3 py-2 text-sm font-semibold text-brand-text"
                 >
                   {item}
                 </div>
@@ -1670,7 +1670,7 @@ export function AdminModerationScreen() {
               {adminPortalData.moderation.autoFlagged.map((item) => (
                 <div
                   key={item}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                  className="rounded-md border border-brand-border-light bg-white px-3 py-2 text-sm leading-relaxed text-brand-text-muted"
                 >
                   {item}
                 </div>
@@ -1816,13 +1816,13 @@ export function AdminCommsScreen() {
             {adminPortalData.comms.templates.map((template) => (
               <article
                 key={template.key}
-                className="rounded-md border border-[var(--brand-border-light)] bg-white px-3 py-2 text-sm font-semibold text-[var(--brand-text)]"
+                className="rounded-md border border-brand-border-light bg-white px-3 py-2 text-sm font-semibold text-brand-text"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>{template.name}</div>
                   <ToneBadge tone={template.tone}>{template.audience}</ToneBadge>
                 </div>
-                <div className="mt-2 text-xs leading-6 text-[var(--brand-text-muted)]">
+                <div className="mt-2 text-xs leading-6 text-brand-text-muted">
                   {template.subject}
                 </div>
               </article>

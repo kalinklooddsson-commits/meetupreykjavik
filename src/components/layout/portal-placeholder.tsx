@@ -26,10 +26,10 @@ export function PortalPlaceholder({
       links={links}
     >
       <div className="paper-panel rounded-[1.75rem] p-7">
-        <div className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--brand-text-light)]">
+        <div className="text-xs font-bold uppercase tracking-[0.22em] text-brand-text-light">
           {panelTitle}
         </div>
-        <p className="mt-4 max-w-3xl text-sm leading-8 text-[var(--brand-text-muted)]">
+        <p className="mt-4 max-w-3xl text-sm leading-8 text-brand-text-muted">
           {panelBody}
         </p>
       </div>

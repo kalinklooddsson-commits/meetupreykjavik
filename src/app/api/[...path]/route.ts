@@ -509,7 +509,7 @@ async function handleLiveAuthRequest(request: NextRequest, key: string) {
         email: body.email,
         password: body.password,
         options: {
-          emailRedirectTo: `${env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/login`,
+          emailRedirectTo: `${env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/auth/callback`,
           data: {
             display_name: body.displayName,
             locale: body.locale ?? "en",
@@ -568,7 +568,7 @@ async function handleLiveAuthRequest(request: NextRequest, key: string) {
     case "POST /api/auth/forgot-password": {
       const body = (await parseValidatedBody(request, key)) as { email: string };
       const { error } = await routeClient.supabase.auth.resetPasswordForEmail(body.email, {
-        redirectTo: `${env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/reset-password`,
+        redirectTo: `${env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "")}/auth/callback?next=/reset-password`,
       });
 
       if (error) {

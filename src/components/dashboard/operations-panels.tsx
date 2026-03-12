@@ -168,12 +168,12 @@ function ActionButton({
 }) {
   const toneClass =
     tone === "coral"
-      ? "border-[rgba(232,97,77,0.18)] bg-[rgba(232,97,77,0.08)] text-[var(--brand-coral)]"
+      ? "border-[rgba(232,97,77,0.18)] bg-[rgba(232,97,77,0.08)] text-brand-coral"
       : tone === "sage"
-        ? "border-[rgba(124,154,130,0.24)] bg-[rgba(124,154,130,0.12)] text-[var(--brand-sage)]"
+        ? "border-[rgba(124,154,130,0.24)] bg-[rgba(124,154,130,0.12)] text-brand-sage"
         : tone === "basalt"
-          ? "border-[rgba(30,27,46,0.16)] bg-[rgba(30,27,46,0.08)] text-[var(--brand-basalt)]"
-          : "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]";
+          ? "border-[rgba(30,27,46,0.16)] bg-[rgba(30,27,46,0.08)] text-brand-basalt"
+          : "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-brand-indigo";
 
   return (
     <button
@@ -248,13 +248,13 @@ export function OrganizerAttendeeControlCenter({
         ].map((item) => (
           <div
             key={item.label}
-            className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+            className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3"
           >
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               {item.label}
             </div>
             <div className="mt-2 flex items-center justify-between gap-3">
-              <div className="text-lg font-semibold text-[var(--brand-text)]">
+              <div className="text-lg font-semibold text-brand-text">
                 {item.value}
               </div>
               <ToneBadge tone={item.tone}>{item.label}</ToneBadge>
@@ -263,9 +263,9 @@ export function OrganizerAttendeeControlCenter({
         ))}
       </div>
 
-      <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4">
-        <label className="ops-search-shell flex items-center gap-3 rounded-full border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3">
-          <Search className="h-4 w-4 text-[var(--brand-text-light)]" />
+      <div className="rounded-lg border border-brand-border-light bg-white p-4">
+        <label className="ops-search-shell flex items-center gap-3 rounded-full border border-brand-border bg-brand-sand-light px-4 py-3">
+          <Search className="h-4 w-4 text-brand-text-light" />
           <input
             type="search"
             name="organizer-attendee-search"
@@ -278,18 +278,18 @@ export function OrganizerAttendeeControlCenter({
             autoComplete="off"
             spellCheck={false}
             placeholder="Search attendee, status, ticket, or note"
-            className="w-full border-none bg-transparent text-sm text-[var(--brand-text)] outline-none"
+            className="w-full border-none bg-transparent text-sm text-brand-text outline-none"
           />
         </label>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
         <div className="space-y-3">
-          <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--brand-text-light)]">
+          <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
             Attendee queue
           </div>
           {filtered.length === 0 ? (
-            <div className="rounded-lg border border-[var(--brand-border-light)] bg-white px-4 py-6 text-sm text-[var(--brand-text-muted)]">
+            <div className="rounded-lg border border-brand-border-light bg-white px-4 py-6 text-sm text-brand-text-muted">
               No attendees match the current search.
             </div>
           ) : null}
@@ -302,15 +302,15 @@ export function OrganizerAttendeeControlCenter({
                 "ops-selection-card block w-full rounded-md border p-4 text-left transition",
                 attendee.name === selected?.name
                   ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                  : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+                  : "border-brand-border-light bg-white hover:border-[rgba(79,70,229,0.16)]",
               )}
             >
               <div className="flex items-center justify-between gap-3">
-                <div className="font-semibold text-[var(--brand-text)]">{attendee.name}</div>
+                <div className="font-semibold text-brand-text">{attendee.name}</div>
                 <ToneBadge tone={toneForStatus(attendee.status)}>{attendee.status}</ToneBadge>
               </div>
-              <div className="mt-2 text-sm text-[var(--brand-text-muted)]">{attendee.ticket}</div>
-              <div className="mt-3 text-xs text-[var(--brand-text-light)]">
+              <div className="mt-2 text-sm text-brand-text-muted">{attendee.ticket}</div>
+              <div className="mt-3 text-xs text-brand-text-light">
                 Check-in: {attendee.checkedIn}
               </div>
             </button>
@@ -318,13 +318,13 @@ export function OrganizerAttendeeControlCenter({
         </div>
 
         {selected ? (
-          <div className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+          <div className="ops-detail-panel rounded-lg border border-brand-border-light bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="text-lg font-semibold text-[var(--brand-text)]">
+                <div className="text-lg font-semibold text-brand-text">
                   {selected.name}
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
                   Ticket status and event-fit notes stay here so approvals do not happen blindly.
                 </p>
               </div>
@@ -343,12 +343,12 @@ export function OrganizerAttendeeControlCenter({
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                  className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3"
                 >
-                  <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+                  <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                     {item.label}
                   </div>
-                  <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+                  <div className="mt-2 text-sm font-semibold text-brand-text">
                     {item.value}
                   </div>
                 </div>
@@ -356,19 +356,19 @@ export function OrganizerAttendeeControlCenter({
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
-                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              <div className="rounded-md border border-brand-border-light bg-white px-4 py-3">
+                <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                   Paid attendees
                 </div>
-                <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+                <div className="mt-2 text-sm font-semibold text-brand-text">
                   {paidCount} in current event lane
                 </div>
               </div>
-              <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
-                <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+              <div className="rounded-md border border-brand-border-light bg-white px-4 py-3">
+                <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                   Approval-sensitive
                 </div>
-                <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">
+                <div className="mt-2 text-sm font-semibold text-brand-text">
                   {pendingCount} need a decision
                 </div>
               </div>
@@ -451,17 +451,17 @@ export function VenueBookingCommandCenter({
     <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
       <div className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Needs reply
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{pendingCount}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{pendingCount}</div>
           </div>
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Accepted
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{acceptedCount}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{acceptedCount}</div>
           </div>
         </div>
         {queue.map((booking) => (
@@ -473,17 +473,17 @@ export function VenueBookingCommandCenter({
               "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               booking.key === selected?.key
                 ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+                : "border-brand-border-light bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="font-semibold text-[var(--brand-text)]">{booking.event}</div>
+              <div className="font-semibold text-brand-text">{booking.event}</div>
               <ToneBadge tone={toneForStatus(booking.status)}>{booking.status}</ToneBadge>
             </div>
-            <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
+            <div className="mt-2 text-sm text-brand-text-muted">
               {booking.organizer} · {booking.date}
             </div>
-            <div className="mt-3 text-xs text-[var(--brand-text-light)]">
+            <div className="mt-3 text-xs text-brand-text-light">
               {booking.attendance}
             </div>
           </button>
@@ -491,50 +491,50 @@ export function VenueBookingCommandCenter({
       </div>
 
       {selected ? (
-        <div className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel rounded-lg border border-brand-border-light bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <div className="text-lg font-semibold text-[var(--brand-text)]">
+              <div className="text-lg font-semibold text-brand-text">
                 {selected.event}
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+              <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
                 {selected.organizer} wants {selected.attendance} on {selected.date}.
               </p>
             </div>
             <ToneBadge tone={toneForStatus(selected.status)}>{selected.status}</ToneBadge>
           </div>
 
-          <div className="mt-5 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="mt-5 rounded-md border border-brand-border-light bg-brand-sand-light p-4">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Organizer note
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+            <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
               {selected.message}
             </p>
           </div>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-white px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Attendance ask
               </div>
-              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.attendance}</div>
+              <div className="mt-2 text-sm font-semibold text-brand-text">{selected.attendance}</div>
             </div>
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-white px-4 py-3">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-white px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Current status
               </div>
-              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.status}</div>
+              <div className="mt-2 text-sm font-semibold text-brand-text">{selected.status}</div>
             </div>
           </div>
 
-          <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+          <label className="mt-5 block text-sm font-semibold text-brand-text">
             Venue reply draft
             <textarea
               value={replyDraft}
               onChange={(event) => setReplyDraft(event.target.value)}
               rows={5}
-              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
             />
           </label>
 
@@ -633,19 +633,19 @@ export function VenueAvailabilityStudio({
     <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
       <div className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Weekly blocks
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+            <div className="mt-2 text-lg font-semibold text-brand-text">
               {schedule.reduce((total, day) => total + day.blocks.length, 0)}
             </div>
           </div>
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Exceptions
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{exceptionList.length}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{exceptionList.length}</div>
           </div>
         </div>
         {schedule.map((day) => (
@@ -657,14 +657,14 @@ export function VenueAvailabilityStudio({
               "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               day.day === selected?.day
                 ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+                : "border-brand-border-light bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="font-semibold text-[var(--brand-text)]">{day.day}</div>
+              <div className="font-semibold text-brand-text">{day.day}</div>
               <ToneBadge tone="sand">{day.blocks.length} blocks</ToneBadge>
             </div>
-            <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
+            <div className="mt-2 text-sm text-brand-text-muted">
               {day.blocks[0]}
             </div>
           </button>
@@ -672,9 +672,9 @@ export function VenueAvailabilityStudio({
       </div>
 
       {selected ? (
-        <div className="ops-detail-panel space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-5 rounded-lg border border-brand-border-light bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-lg font-semibold text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-brand-text">
               {selected.day} availability
             </div>
             <ToneBadge tone="indigo">Editable locally</ToneBadge>
@@ -684,13 +684,13 @@ export function VenueAvailabilityStudio({
             {selected.blocks.map((block) => (
               <div
                 key={block}
-                className="flex items-center justify-between gap-3 rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3"
+                className="flex items-center justify-between gap-3 rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3"
               >
-                <div className="text-sm font-semibold text-[var(--brand-text)]">{block}</div>
+                <div className="text-sm font-semibold text-brand-text">{block}</div>
                 <button
                   type="button"
                   onClick={() => removeBlock(block)}
-                  className="text-[var(--brand-coral)] transition hover:opacity-80"
+                  className="text-brand-coral transition hover:opacity-80"
                   aria-label={`Remove ${block}`}
                 >
                   <Minus className="h-4 w-4" />
@@ -720,16 +720,16 @@ export function VenueAvailabilityStudio({
             />
           </div>
 
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-white p-4">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-white p-4">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Exceptions
             </div>
-            <label className="mt-3 block text-sm font-semibold text-[var(--brand-text)]">
+            <label className="mt-3 block text-sm font-semibold text-brand-text">
               Add one-off exception
               <input
                 value={newException}
                 onChange={(event) => setNewException(event.target.value)}
-                className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-brand-coral"
               />
             </label>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -744,7 +744,7 @@ export function VenueAvailabilityStudio({
               {exceptionList.map((item) => (
                 <div
                   key={item}
-                  className="rounded-full bg-[rgba(245,240,232,0.88)] px-3 py-2 text-sm text-[var(--brand-text-muted)]"
+                  className="rounded-full bg-[rgba(245,240,232,0.88)] px-3 py-2 text-sm text-brand-text-muted"
                 >
                   {item}
                 </div>
@@ -781,23 +781,23 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
     <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
       <div className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Active
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{activeCount}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{activeCount}</div>
           </div>
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Draft
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{draftCount}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{draftCount}</div>
           </div>
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Paused
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{pausedCount}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{pausedCount}</div>
           </div>
         </div>
         {inventory.map((deal) => (
@@ -809,17 +809,17 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
               "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               deal.key === selected?.key
                 ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+                : "border-brand-border-light bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="font-semibold text-[var(--brand-text)]">{deal.title}</div>
+              <div className="font-semibold text-brand-text">{deal.title}</div>
               <ToneBadge tone={toneForStatus(deal.status)}>{deal.status}</ToneBadge>
             </div>
-            <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
+            <div className="mt-2 text-sm text-brand-text-muted">
               {deal.tier} · {deal.type}
             </div>
-            <div className="mt-3 text-xs text-[var(--brand-text-light)]">
+            <div className="mt-3 text-xs text-brand-text-light">
               {deal.redemption}
             </div>
           </button>
@@ -827,9 +827,9 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
       </div>
 
       {selected ? (
-        <div className="ops-detail-panel rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel rounded-lg border border-brand-border-light bg-white p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="text-lg font-semibold text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-brand-text">
               {selected.title}
             </div>
             <div className="flex flex-wrap gap-2">
@@ -838,36 +838,36 @@ export function VenueDealStudio({ deals }: { deals: readonly VenueDeal[] }) {
             </div>
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Deal type
               </div>
-              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.type}</div>
+              <div className="mt-2 text-sm font-semibold text-brand-text">{selected.type}</div>
             </div>
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Redemption
               </div>
-              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.redemption}</div>
+              <div className="mt-2 text-sm font-semibold text-brand-text">{selected.redemption}</div>
             </div>
           </div>
 
-          <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+          <label className="mt-5 block text-sm font-semibold text-brand-text">
             Operational note
             <textarea
               value={selected.note}
               onChange={(event) => mutateSelected({ note: event.target.value })}
               rows={5}
-              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-brand-coral"
             />
           </label>
 
-          <label className="mt-5 block text-sm font-semibold text-[var(--brand-text)]">
+          <label className="mt-5 block text-sm font-semibold text-brand-text">
             Redemption summary
             <input
               value={selected.redemption}
               onChange={(event) => mutateSelected({ redemption: event.target.value })}
-              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-brand-coral"
             />
           </label>
 
@@ -932,17 +932,17 @@ export function VenueProfileSectionEditor({
     <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
       <div className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Sections
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{editor.length}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{editor.length}</div>
           </div>
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Editable fields
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{totalFields}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{totalFields}</div>
           </div>
         </div>
         {editor.map((section) => (
@@ -954,11 +954,11 @@ export function VenueProfileSectionEditor({
               "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               section.key === selected?.key
                 ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+                : "border-brand-border-light bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
-            <div className="font-semibold text-[var(--brand-text)]">{section.title}</div>
-            <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
+            <div className="font-semibold text-brand-text">{section.title}</div>
+            <div className="mt-2 text-sm text-brand-text-muted">
               {section.items.length} editable fields
             </div>
           </button>
@@ -966,23 +966,23 @@ export function VenueProfileSectionEditor({
       </div>
 
       {selected ? (
-        <div className="ops-detail-panel space-y-4 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-          <div className="text-lg font-semibold text-[var(--brand-text)]">
+        <div className="ops-detail-panel space-y-4 rounded-lg border border-brand-border-light bg-white p-5">
+          <div className="text-lg font-semibold text-brand-text">
             {selected.title}
           </div>
-          <p className="text-sm leading-relaxed text-[var(--brand-text-muted)]">
+          <p className="text-sm leading-relaxed text-brand-text-muted">
             Keep this section specific enough that organizers can decide if the room fits before they ever message you.
           </p>
           {selected.items.map((item) => (
             <label
               key={item.label}
-              className="block text-sm font-semibold text-[var(--brand-text)]"
+              className="block text-sm font-semibold text-brand-text"
             >
               {item.label}
               <input
                 value={item.value}
                 onChange={(event) => updateItem(item.label, event.target.value)}
-                className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-brand-coral"
               />
             </label>
           ))}
@@ -1039,13 +1039,13 @@ export function AdminContentControlCenter({
         {sectionState.map((section) => (
           <article
             key={section.key}
-            className="rounded-lg border border-[var(--brand-border-light)] bg-white p-4"
+            className="rounded-lg border border-brand-border-light bg-white p-4"
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="font-semibold text-[var(--brand-text)]">{section.title}</div>
+              <div className="font-semibold text-brand-text">{section.title}</div>
               <ToneBadge tone={toneForStatus(section.status)}>{section.status}</ToneBadge>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+            <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
               {section.note}
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -1073,11 +1073,11 @@ export function AdminContentControlCenter({
       </div>
 
       <div className="space-y-5">
-        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-          <div className="text-lg font-semibold text-[var(--brand-text)]">
+        <div className="rounded-lg border border-brand-border-light bg-white p-5">
+          <div className="text-lg font-semibold text-brand-text">
             Featured categories
           </div>
-          <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+          <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
             Pick which categories should dominate the discovery and homepage rails.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -1089,8 +1089,8 @@ export function AdminContentControlCenter({
                 className={cn(
                   pillBase,
                   featuredCategories.includes(category.key)
-                    ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                    : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
+                    ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-brand-indigo"
+                    : "border-[rgba(153,148,168,0.14)] bg-white text-brand-text-muted",
                 )}
               >
                 {category.name}
@@ -1099,20 +1099,20 @@ export function AdminContentControlCenter({
           </div>
         </div>
 
-        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-          <div className="text-lg font-semibold text-[var(--brand-text)]">
+        <div className="rounded-lg border border-brand-border-light bg-white p-5">
+          <div className="text-lg font-semibold text-brand-text">
             Editorial queue actions
           </div>
           <div className="mt-4 space-y-3">
             {blogState.map((post) => (
               <div
                 key={post.key}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                className="rounded-md border border-brand-border-light bg-brand-sand-light p-4"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <div className="font-semibold text-[var(--brand-text)]">{post.title}</div>
-                    <div className="mt-1 text-sm text-[var(--brand-text-muted)]">
+                    <div className="font-semibold text-brand-text">{post.title}</div>
+                    <div className="mt-1 text-sm text-brand-text-muted">
                       {post.category}
                     </div>
                   </div>
@@ -1207,8 +1207,8 @@ export function AdminCommsStudio({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
-      <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-        <div className="text-lg font-semibold text-[var(--brand-text)]">
+      <div className="space-y-5 rounded-lg border border-brand-border-light bg-white p-5">
+        <div className="text-lg font-semibold text-brand-text">
           Compose message
         </div>
         <div className="flex flex-wrap gap-2">
@@ -1220,8 +1220,8 @@ export function AdminCommsStudio({
               className={cn(
                 pillBase,
                 selectedAudiences.includes(audience)
-                  ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-[var(--brand-indigo)]"
-                  : "border-[rgba(153,148,168,0.14)] bg-white text-[var(--brand-text-muted)]",
+                  ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)] text-brand-indigo"
+                  : "border-[rgba(153,148,168,0.14)] bg-white text-brand-text-muted",
               )}
             >
               {audience}
@@ -1229,40 +1229,40 @@ export function AdminCommsStudio({
           ))}
         </div>
 
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
+        <label className="block text-sm font-semibold text-brand-text">
           Subject
           <input
             value={composer.subject}
             onChange={(event) =>
               setComposer((current) => ({ ...current, subject: event.target.value }))
             }
-            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
           />
         </label>
 
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
+        <label className="block text-sm font-semibold text-brand-text">
           Preheader
           <input
             value={composer.preheader}
             onChange={(event) =>
               setComposer((current) => ({ ...current, preheader: event.target.value }))
             }
-            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
           />
         </label>
 
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
+        <label className="block text-sm font-semibold text-brand-text">
           Headline
           <input
             value={composer.headline}
             onChange={(event) =>
               setComposer((current) => ({ ...current, headline: event.target.value }))
             }
-            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
           />
         </label>
 
-        <label className="block text-sm font-semibold text-[var(--brand-text)]">
+        <label className="block text-sm font-semibold text-brand-text">
           Intro / body opener
           <textarea
             value={composer.preview}
@@ -1270,29 +1270,29 @@ export function AdminCommsStudio({
               setComposer((current) => ({ ...current, preview: event.target.value }))
             }
             rows={6}
-            className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+            className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
           />
         </label>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block text-sm font-semibold text-[var(--brand-text)]">
+          <label className="block text-sm font-semibold text-brand-text">
             CTA label
             <input
               value={composer.ctaLabel}
               onChange={(event) =>
                 setComposer((current) => ({ ...current, ctaLabel: event.target.value }))
               }
-              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
             />
           </label>
-          <label className="block text-sm font-semibold text-[var(--brand-text)]">
+          <label className="block text-sm font-semibold text-brand-text">
             Footer note
             <input
               value={composer.footer}
               onChange={(event) =>
                 setComposer((current) => ({ ...current, footer: event.target.value }))
               }
-              className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
             />
           </label>
         </div>
@@ -1314,8 +1314,8 @@ export function AdminCommsStudio({
       </div>
 
       <div className="space-y-5">
-        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-          <div className="text-lg font-semibold text-[var(--brand-text)]">
+        <div className="rounded-lg border border-brand-border-light bg-white p-5">
+          <div className="text-lg font-semibold text-brand-text">
             Templates
           </div>
           <div className="mt-4 grid gap-3">
@@ -1328,16 +1328,16 @@ export function AdminCommsStudio({
                   "rounded-md border px-4 py-3 text-left transition",
                   selectedTemplateKey === template.key
                     ? "border-[rgba(79,70,229,0.18)] bg-[rgba(79,70,229,0.08)]"
-                    : "border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] hover:border-[rgba(79,70,229,0.16)]",
+                    : "border-brand-border-light bg-brand-sand-light hover:border-[rgba(79,70,229,0.16)]",
                 )}
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm font-semibold text-[var(--brand-text)]">
+                  <div className="text-sm font-semibold text-brand-text">
                     {template.name}
                   </div>
                   <ToneBadge tone={template.tone}>{template.audience}</ToneBadge>
                 </div>
-                <div className="mt-2 text-xs leading-6 text-[var(--brand-text-muted)]">
+                <div className="mt-2 text-xs leading-6 text-brand-text-muted">
                   {template.subject}
                 </div>
               </button>
@@ -1345,62 +1345,62 @@ export function AdminCommsStudio({
           </div>
         </div>
 
-        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-          <div className="text-lg font-semibold text-[var(--brand-text)]">
+        <div className="rounded-lg border border-brand-border-light bg-white p-5">
+          <div className="text-lg font-semibold text-brand-text">
             Email preview
           </div>
-          <div className="mt-4 rounded-lg border border-[var(--brand-border-light)] bg-[rgba(245,240,232,0.68)] p-4">
-            <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-              <div className="text-[11px] font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="mt-4 rounded-lg border border-brand-border-light bg-[rgba(245,240,232,0.68)] p-4">
+            <div className="rounded-lg border border-brand-border-light bg-white p-5">
+              <div className="text-[11px] font-medium uppercase tracking-wider text-brand-text-light">
                 {selectedTemplate?.audience ?? "Audience"}
               </div>
-              <div className="mt-3 text-xs leading-6 text-[var(--brand-text-light)]">
+              <div className="mt-3 text-xs leading-6 text-brand-text-light">
                 {composer.preheader}
               </div>
-              <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">
+              <div className="mt-2 text-lg font-semibold text-brand-text">
                 {composer.headline}
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+              <p className="mt-4 text-sm leading-relaxed text-brand-text-muted">
                 {composer.preview}
               </p>
               <div className="mt-4 space-y-2">
                 {(selectedTemplate?.bullets ?? []).map((bullet) => (
                   <div
                     key={bullet}
-                    className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-text-muted)]"
+                    className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3 text-sm leading-relaxed text-brand-text-muted"
                   >
                     {bullet}
                   </div>
                 ))}
               </div>
-              <div className="mt-5 inline-flex min-h-11 items-center rounded-full bg-[var(--brand-indigo)] px-5 py-3 text-sm font-bold text-white">
+              <div className="mt-5 inline-flex min-h-11 items-center rounded-full bg-brand-indigo px-5 py-3 text-sm font-bold text-white">
                 {composer.ctaLabel}
               </div>
-              <div className="mt-5 text-xs leading-6 text-[var(--brand-text-light)]">
+              <div className="mt-5 text-xs leading-6 text-brand-text-light">
                 {composer.footer}
               </div>
             </div>
           </div>
         </div>
 
-        <div className="rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
-          <div className="text-lg font-semibold text-[var(--brand-text)]">
+        <div className="rounded-lg border border-brand-border-light bg-white p-5">
+          <div className="text-lg font-semibold text-brand-text">
             Latest outbound
           </div>
           <div className="mt-4 space-y-3">
             {historyState.map((entry) => (
               <div
                 key={entry.key}
-                className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                className="rounded-md border border-brand-border-light bg-brand-sand-light p-4"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <div className="font-semibold text-[var(--brand-text)]">{entry.title}</div>
+                  <div className="font-semibold text-brand-text">{entry.title}</div>
                   <ToneBadge tone="indigo">{entry.result}</ToneBadge>
                 </div>
-                <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
+                <div className="mt-2 text-sm text-brand-text-muted">
                   {entry.audience}
                 </div>
-                <div className="mt-2 text-xs text-[var(--brand-text-light)]">
+                <div className="mt-2 text-xs text-brand-text-light">
                   {entry.sent}
                 </div>
               </div>
@@ -1470,11 +1470,11 @@ export function MemberSettingsStudio({
               "block w-full rounded-md border p-4 text-left transition",
               section.key === selected?.key
                 ? "border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+                : "border-brand-border-light bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
-            <div className="font-semibold text-[var(--brand-text)]">{section.title}</div>
-            <div className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+            <div className="font-semibold text-brand-text">{section.title}</div>
+            <div className="mt-2 text-sm leading-relaxed text-brand-text-muted">
               {section.description}
             </div>
           </button>
@@ -1482,12 +1482,12 @@ export function MemberSettingsStudio({
       </div>
 
       {selected ? (
-        <div className="space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="space-y-5 rounded-lg border border-brand-border-light bg-white p-5">
           <div>
-            <div className="text-lg font-semibold text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-brand-text">
               {selected.title}
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
               {selected.description}
             </p>
           </div>
@@ -1496,13 +1496,13 @@ export function MemberSettingsStudio({
             {selected.items.map((item) => (
               <label
                 key={item.label}
-                className="block text-sm font-semibold text-[var(--brand-text)]"
+                className="block text-sm font-semibold text-brand-text"
               >
                 {item.label}
                 <input
                   value={item.value}
                   onChange={(event) => updateItem(item.label, event.target.value)}
-                  className="mt-2 w-full rounded-md border border-[var(--brand-border)] bg-[var(--brand-sand-light)] px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+                  className="mt-2 w-full rounded-md border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
             ))}
@@ -1527,7 +1527,7 @@ export function MemberSettingsStudio({
             <div
               role="status"
               aria-live="polite"
-              className="rounded-md border border-[rgba(124,154,130,0.2)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-[var(--brand-sage)]"
+              className="rounded-md border border-[rgba(124,154,130,0.2)] bg-[rgba(124,154,130,0.12)] px-4 py-3 text-sm text-brand-sage"
             >
               {message}
             </div>
@@ -1585,17 +1585,17 @@ export function OrganizerVenueRequestStudio({
     <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
       <div className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Accepted threads
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{acceptedCount}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{acceptedCount}</div>
           </div>
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Needs reply
             </div>
-            <div className="mt-2 text-lg font-semibold text-[var(--brand-text)]">{pendingCount}</div>
+            <div className="mt-2 text-lg font-semibold text-brand-text">{pendingCount}</div>
           </div>
         </div>
         {matches.map((match) => (
@@ -1610,15 +1610,15 @@ export function OrganizerVenueRequestStudio({
               "ops-selection-card block w-full rounded-md border p-4 text-left transition",
               match.venue.slug === selected?.venue.slug
                 ? "ops-selection-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                : "border-[var(--brand-border-light)] bg-white hover:border-[rgba(79,70,229,0.16)]",
+                : "border-brand-border-light bg-white hover:border-[rgba(79,70,229,0.16)]",
             )}
           >
             <div className="h-24 rounded-lg" style={{ background: match.venue.art }} />
             <div className="mt-4 flex items-center justify-between gap-3">
-              <div className="font-semibold text-[var(--brand-text)]">{match.venue.name}</div>
+              <div className="font-semibold text-brand-text">{match.venue.name}</div>
               <ToneBadge tone="sage">{match.score} fit</ToneBadge>
             </div>
-            <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
+            <div className="mt-2 text-sm text-brand-text-muted">
               {match.venue.area} · {match.nextSlot}
             </div>
           </button>
@@ -1626,46 +1626,46 @@ export function OrganizerVenueRequestStudio({
       </div>
 
       {selected ? (
-        <div className="ops-detail-panel space-y-5 rounded-lg border border-[var(--brand-border-light)] bg-white p-5">
+        <div className="ops-detail-panel space-y-5 rounded-lg border border-brand-border-light bg-white p-5">
           <div>
-            <div className="text-lg font-semibold text-[var(--brand-text)]">
+            <div className="text-lg font-semibold text-brand-text">
               {selected.venue.name}
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+            <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
               {selected.fit}
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Match score
               </div>
-              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.score}</div>
+              <div className="mt-2 text-sm font-semibold text-brand-text">{selected.score}</div>
             </div>
-            <div className="rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-3">
-              <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+            <div className="rounded-md border border-brand-border-light bg-brand-sand-light px-4 py-3">
+              <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
                 Next open slot
               </div>
-              <div className="mt-2 text-sm font-semibold text-[var(--brand-text)]">{selected.nextSlot}</div>
+              <div className="mt-2 text-sm font-semibold text-brand-text">{selected.nextSlot}</div>
             </div>
           </div>
 
-          <label className="block text-sm font-semibold text-[var(--brand-text)]">
+          <label className="block text-sm font-semibold text-brand-text">
             Requested slot
             <input
               value={requestDate}
               onChange={(event) => setRequestDate(event.target.value)}
-              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-brand-coral"
             />
           </label>
 
-          <label className="block text-sm font-semibold text-[var(--brand-text)]">
+          <label className="block text-sm font-semibold text-brand-text">
             Booking request note
             <textarea
               value={requestNote}
               onChange={(event) => setRequestNote(event.target.value)}
               rows={5}
-              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-[var(--brand-coral)]"
+              className="luxe-field mt-2 w-full rounded-md px-4 py-3 outline-none transition focus:border-brand-coral"
             />
           </label>
 
@@ -1678,29 +1678,29 @@ export function OrganizerVenueRequestStudio({
             />
           </div>
 
-          <div className="rounded-md border border-[var(--brand-border-light)] bg-white p-4">
-            <div className="text-xs font-medium uppercase tracking-wider text-[var(--brand-text-light)]">
+          <div className="rounded-md border border-brand-border-light bg-white p-4">
+            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">
               Request pipeline
             </div>
             <div className="mt-3 space-y-3">
               {pipelineState.length === 0 ? (
-                <div className="rounded-lg border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] px-4 py-5 text-sm text-[var(--brand-text-muted)]">
+                <div className="rounded-lg border border-brand-border-light bg-brand-sand-light px-4 py-5 text-sm text-brand-text-muted">
                   No venue requests are in motion yet. Queue one from this panel to start the thread.
                 </div>
               ) : null}
               {pipelineState.map((item) => (
                 <div
                   key={item.key}
-                  className="dashboard-stream-card rounded-md border border-[var(--brand-border-light)] bg-[var(--brand-sand-light)] p-4"
+                  className="dashboard-stream-card rounded-md border border-brand-border-light bg-brand-sand-light p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <div className="font-semibold text-[var(--brand-text)]">{item.venue}</div>
+                    <div className="font-semibold text-brand-text">{item.venue}</div>
                     <ToneBadge tone={toneForStatus(item.status)}>{item.status}</ToneBadge>
                   </div>
-                  <div className="mt-2 text-sm text-[var(--brand-text-muted)]">
+                  <div className="mt-2 text-sm text-brand-text-muted">
                     {item.date}
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+                  <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
                     {item.note}
                   </p>
                 </div>

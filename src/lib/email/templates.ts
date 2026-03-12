@@ -29,11 +29,11 @@ const t = (locale: Locale, en: string, is: string) =>
 
 function emailWrapper(locale: Locale, body: string): string {
   const unsubscribeUrl = `${SITE_URL()}/settings/notifications`;
-  const unsubscribeLabel = t(locale, "Unsubscribe", "Afskraning");
+  const unsubscribeLabel = t(locale, "Unsubscribe", "Afskráning");
   const tagline = t(
     locale,
     "MeetupReykjavik — Connecting Reykjavik's community",
-    "MeetupReykjavik — Tengum samfelag Reykjavikur",
+    "MeetupReykjavik — Tengum samfélag Reykjavíkur",
   );
 
   return `<!DOCTYPE html>
@@ -101,7 +101,7 @@ function detailTable(rows: string): string {
 /* -------------------------------------------------------------------------- */
 
 export function welcomeEmail(displayName: string, locale: Locale = "en") {
-  const subject = t(locale, `Welcome to MeetupReykjavik, ${displayName}!`, `Velkomin/n i MeetupReykjavik, ${displayName}!`);
+  const subject = t(locale, `Welcome to MeetupReykjavik, ${displayName}!`, `Velkomin/n í MeetupReykjavik, ${displayName}!`);
 
   const body = [
     heading(t(locale, `Welcome, ${displayName}!`, `Velkomin/n, ${displayName}!`)),
@@ -109,23 +109,23 @@ export function welcomeEmail(displayName: string, locale: Locale = "en") {
       t(
         locale,
         "We're glad you've joined the community. MeetupReykjavik helps you discover events, meet new people, and explore everything Reykjavik has to offer.",
-        "Vid erum annaegd ad thu hafir gengid i samfelagid. MeetupReykjavik hjalpardur ad finna vidburdi, hitta nytt folk og kanna allt sem Reykjavik hefur uppbod.",
+        "Við erum ánægð að þú hafir gengið í samfélagið. MeetupReykjavik hjálpar þér að finna viðburði, hitta nýtt fólk og kanna allt sem Reykjavík hefur uppá að bjóða.",
       ),
     ),
     paragraph(
       t(
         locale,
         "Here are a few tips to get started:",
-        "Her eru nokkur rad til ad byrja:",
+        "Hér eru nokkur ráð til að byrja:",
       ),
     ),
     `<ul style="margin:0 0 16px;padding-left:20px;font-size:16px;line-height:1.8;color:${COLORS.textDark};font-family:${FONT_STACK};">
-      <li>${t(locale, "Browse upcoming events and RSVP to the ones you like", "Skodadu komandi vidburdi og skraddu thig a tha sem thu hefur ahuga a")}</li>
-      <li>${t(locale, "Join groups that match your interests", "Gastu i hopa sem passa vid ahugumal thin")}</li>
-      <li>${t(locale, "Complete your profile to connect with others", "Klattu vid profil thitt til ad tengjast odrum")}</li>
+      <li>${t(locale, "Browse upcoming events and RSVP to the ones you like", "Skoðaðu komandi viðburði og skráðu þig á þá sem þú hefur áhuga á")}</li>
+      <li>${t(locale, "Join groups that match your interests", "Gakktu í hópa sem passa við áhugamál þín")}</li>
+      <li>${t(locale, "Complete your profile to connect with others", "Ljúktu við prófílið þitt til að tengjast öðrum")}</li>
     </ul>`,
     ctaButton(
-      t(locale, "Explore Events", "Skoda vidburdi"),
+      t(locale, "Explore Events", "Skoða viðburði"),
       `${SITE_URL()}/events`,
     ),
   ].join("");
@@ -148,34 +148,34 @@ export function rsvpConfirmationEmail(
   const subject = t(
     locale,
     `You're going! ${eventTitle}`,
-    `Thu ert a leid! ${eventTitle}`,
+    `Þú ert á leið! ${eventTitle}`,
   );
 
   const eventUrl = `${SITE_URL()}/events/${eventSlug}`;
   const cancelUrl = `${eventUrl}?action=cancel`;
 
   const body = [
-    heading(t(locale, "You're going!", "Thu ert a leid!")),
+    heading(t(locale, "You're going!", "Þú ert á leið!")),
     paragraph(
       t(
         locale,
         `Hi ${displayName}, your RSVP for the following event is confirmed:`,
-        `Hae ${displayName}, skraning thin a eftirfarandi vidburdi er stadfest:`,
+        `Hæ ${displayName}, skráning þín á eftirfarandi viðburði er staðfest:`,
       ),
     ),
     detailTable(
       [
-        detailRow(t(locale, "Event", "Vidburdir"), eventTitle),
+        detailRow(t(locale, "Event", "Viðburður"), eventTitle),
         detailRow(t(locale, "Date", "Dagsetning"), eventDate),
-        detailRow(t(locale, "Venue", "Stadur"), venueName),
+        detailRow(t(locale, "Venue", "Staður"), venueName),
       ].join(""),
     ),
     ctaButton(
-      t(locale, "View Event", "Skoda vidburd"),
+      t(locale, "View Event", "Skoða viðburð"),
       eventUrl,
     ),
     paragraph(
-      `<a href="${cancelUrl}" style="color:${COLORS.textMuted};font-size:14px;font-family:${FONT_STACK};">${t(locale, "Cancel RSVP", "Afskra mig")}</a>`,
+      `<a href="${cancelUrl}" style="color:${COLORS.textMuted};font-size:14px;font-family:${FONT_STACK};">${t(locale, "Cancel RSVP", "Afskrá mig")}</a>`,
     ),
   ].join("");
 
@@ -197,29 +197,29 @@ export function eventReminder24hEmail(
   const subject = t(
     locale,
     `Reminder: ${eventTitle} is tomorrow`,
-    `Aminning: ${eventTitle} er a morgun`,
+    `Áminning: ${eventTitle} er á morgun`,
   );
 
   const eventUrl = `${SITE_URL()}/events/${eventSlug}`;
 
   const body = [
-    heading(t(locale, "Your event is tomorrow!", "Vidburdir thinn er a morgun!")),
+    heading(t(locale, "Your event is tomorrow!", "Viðburðurinn þinn er á morgun!")),
     paragraph(
       t(
         locale,
         `Hi ${displayName}, just a friendly reminder that you have an event coming up tomorrow.`,
-        `Hae ${displayName}, vinsamleg aminning um ad thu ert med vidburd a morgun.`,
+        `Hæ ${displayName}, vinsamleg áminning um að þú ert með viðburð á morgun.`,
       ),
     ),
     detailTable(
       [
-        detailRow(t(locale, "Event", "Vidburdir"), eventTitle),
+        detailRow(t(locale, "Event", "Viðburður"), eventTitle),
         detailRow(t(locale, "Date", "Dagsetning"), eventDate),
-        detailRow(t(locale, "Venue", "Stadur"), venueName),
+        detailRow(t(locale, "Venue", "Staður"), venueName),
       ].join(""),
     ),
     ctaButton(
-      t(locale, "View Event & Directions", "Skoda vidburd og leidarvisir"),
+      t(locale, "View Event & Directions", "Skoða viðburð og leiðarvísi"),
       eventUrl,
     ),
   ].join("");
@@ -242,7 +242,7 @@ export function eventReminder2hEmail(
   const subject = t(
     locale,
     `Starting soon: ${eventTitle}`,
-    `Byrjar bradum: ${eventTitle}`,
+    `Byrjar bráðum: ${eventTitle}`,
   );
 
   const eventUrl = `${SITE_URL()}/events/${eventSlug}`;
@@ -253,11 +253,11 @@ export function eventReminder2hEmail(
       t(
         locale,
         `Hi ${displayName}, ${eventTitle} starts at ${eventTime} at ${venueName}. See you there!`,
-        `Hae ${displayName}, ${eventTitle} byrjar kl. ${eventTime} a ${venueName}. Sjaum thig thar!`,
+        `Hæ ${displayName}, ${eventTitle} byrjar kl. ${eventTime} á ${venueName}. Sjáum þig þar!`,
       ),
     ),
     ctaButton(
-      t(locale, "Get Directions", "Fa leidarvisir"),
+      t(locale, "Get Directions", "Fá leiðarvísi"),
       eventUrl,
     ),
   ].join("");
@@ -278,22 +278,22 @@ export function waitlistPromotedEmail(
   const subject = t(
     locale,
     `You're in! A spot opened for ${eventTitle}`,
-    `Thu ert kominn/komin inn! Saeti losadi a ${eventTitle}`,
+    `Þú ert kominn/komin inn! Sæti losnaði á ${eventTitle}`,
   );
 
   const eventUrl = `${SITE_URL()}/events/${eventSlug}`;
 
   const body = [
-    heading(t(locale, "You're in!", "Thu ert kominn/komin inn!")),
+    heading(t(locale, "You're in!", "Þú ert kominn/komin inn!")),
     paragraph(
       t(
         locale,
         `Great news, ${displayName}! A spot has opened up for ${eventTitle} and you've been moved off the waitlist. Your attendance is now confirmed.`,
-        `Fraebaer frettir, ${displayName}! Saeti hefur losad a ${eventTitle} og thu hefur verid faerd af bidalista. Madmot thin er nu stadfest.`,
+        `Frábærar fréttir, ${displayName}! Sæti hefur losað á ${eventTitle} og þú hefur verið færð af biðlista. Mætting þín er nú staðfest.`,
       ),
     ),
     ctaButton(
-      t(locale, "View Event", "Skoda vidburd"),
+      t(locale, "View Event", "Skoða viðburð"),
       eventUrl,
     ),
   ].join("");
@@ -313,7 +313,7 @@ export function weeklyDigestEmail(
   const subject = t(
     locale,
     "This week in Reykjavik",
-    "Thessi vika i Reykjavik",
+    "Þessi vika í Reykjavík",
   );
 
   const eventListHtml = events
@@ -329,17 +329,17 @@ export function weeklyDigestEmail(
     .join("");
 
   const body = [
-    heading(t(locale, `Hi ${displayName}, here's your week`, `Hae ${displayName}, her er vikan thin`)),
+    heading(t(locale, `Hi ${displayName}, here's your week`, `Hæ ${displayName}, hér er vikan þín`)),
     paragraph(
       t(
         locale,
         "Here are the top upcoming events we picked for you:",
-        "Her eru efstu komandi vidburdirnir sem vid voldum fyrir thig:",
+        "Hér eru efstu komandi viðburðirnir sem við völdum fyrir þig:",
       ),
     ),
     `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;margin:16px 0;">${eventListHtml}</table>`,
     ctaButton(
-      t(locale, "Explore All Events", "Skoda alla vidburdi"),
+      t(locale, "Explore All Events", "Skoða alla viðburði"),
       `${SITE_URL()}/events`,
     ),
   ].join("");
@@ -362,24 +362,24 @@ export function bookingRequestEmail(
   const subject = t(
     locale,
     `New booking request for ${venueName}`,
-    `Ny bokunarbeidni fyrir ${venueName}`,
+    `Ný bókunarbeiðni fyrir ${venueName}`,
   );
 
   const acceptUrl = `${SITE_URL()}/api/bookings/${bookingId}?action=accept`;
   const declineUrl = `${SITE_URL()}/api/bookings/${bookingId}?action=decline`;
 
   const body = [
-    heading(t(locale, "New Booking Request", "Ny bokunarbeidni")),
+    heading(t(locale, "New Booking Request", "Ný bókunarbeiðni")),
     paragraph(
       t(
         locale,
         `${organizerName} has requested to book ${venueName} for an event.`,
-        `${organizerName} hefur beitt um ad boka ${venueName} fyrir vidburd.`,
+        `${organizerName} hefur beðið um að bóka ${venueName} fyrir viðburð.`,
       ),
     ),
     detailTable(
       [
-        detailRow(t(locale, "Event", "Vidburdir"), eventTitle),
+        detailRow(t(locale, "Event", "Viðburður"), eventTitle),
         detailRow(t(locale, "Organizer", "Skipuleggjandi"), organizerName),
         detailRow(t(locale, "Date", "Dagsetning"), date),
       ].join(""),
@@ -387,7 +387,7 @@ export function bookingRequestEmail(
     `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
 <tr>
   <td style="background-color:${COLORS.coral};border-radius:6px;padding:14px 28px;">
-    <a href="${acceptUrl}" style="color:${COLORS.white};font-size:16px;font-weight:700;text-decoration:none;font-family:${FONT_STACK};">${t(locale, "Accept", "Samthykkja")}</a>
+    <a href="${acceptUrl}" style="color:${COLORS.white};font-size:16px;font-weight:700;text-decoration:none;font-family:${FONT_STACK};">${t(locale, "Accept", "Samþykkja")}</a>
   </td>
   <td style="width:16px;"></td>
   <td style="background-color:${COLORS.textMuted};border-radius:6px;padding:14px 28px;">
@@ -414,27 +414,27 @@ export function bookingAcceptedEmail(
   const subject = t(
     locale,
     `Booking confirmed: ${venueName} for ${eventTitle}`,
-    `Bokun stadfest: ${venueName} fyrir ${eventTitle}`,
+    `Bókun staðfest: ${venueName} fyrir ${eventTitle}`,
   );
 
   const body = [
-    heading(t(locale, "Booking Confirmed!", "Bokun stadfest!")),
+    heading(t(locale, "Booking Confirmed!", "Bókun staðfest!")),
     paragraph(
       t(
         locale,
         `Great news, ${organizerName}! ${venueName} has accepted your booking request.`,
-        `Fraebaer frettir, ${organizerName}! ${venueName} hefur samthykkt bokunarbeidni thina.`,
+        `Frábærar fréttir, ${organizerName}! ${venueName} hefur samþykkt bókunarbeiðni þína.`,
       ),
     ),
     detailTable(
       [
-        detailRow(t(locale, "Event", "Vidburdir"), eventTitle),
-        detailRow(t(locale, "Venue", "Stadur"), venueName),
+        detailRow(t(locale, "Event", "Viðburður"), eventTitle),
+        detailRow(t(locale, "Venue", "Staður"), venueName),
         detailRow(t(locale, "Date", "Dagsetning"), date),
       ].join(""),
     ),
     ctaButton(
-      t(locale, "View Booking Details", "Skoda bokunarupplysingar"),
+      t(locale, "View Booking Details", "Skoða bókunarupplýsingar"),
       `${SITE_URL()}/dashboard/bookings`,
     ),
   ].join("");
@@ -456,25 +456,25 @@ export function newEventEmail(
   const subject = t(
     locale,
     `New event in ${groupName}: ${eventTitle}`,
-    `Nyr vidburdir i ${groupName}: ${eventTitle}`,
+    `Nýr viðburður í ${groupName}: ${eventTitle}`,
   );
 
   const eventUrl = `${SITE_URL()}/events/${eventSlug}`;
 
   const body = [
-    heading(t(locale, "New Event", "Nyr vidburdir")),
+    heading(t(locale, "New Event", "Nýr viðburður")),
     paragraph(
       t(
         locale,
         `Hi ${displayName}, a new event has been posted in ${groupName}:`,
-        `Hae ${displayName}, nyr vidburdir hefur verid birt i ${groupName}:`,
+        `Hæ ${displayName}, nýr viðburður hefur verið birtur í ${groupName}:`,
       ),
     ),
     paragraph(
       `<strong style="font-size:18px;color:${COLORS.indigo};">${eventTitle}</strong>`,
     ),
     ctaButton(
-      t(locale, "Attend This Event", "Maeta a vidburd"),
+      t(locale, "Attend This Event", "Mæta á viðburð"),
       eventUrl,
     ),
   ].join("");
@@ -508,17 +508,17 @@ export function postEventRatingEmail(
     .join("");
 
   const body = [
-    heading(t(locale, "How was it?", "Hvernig var thad?")),
+    heading(t(locale, "How was it?", "Hvernig var það?")),
     paragraph(
       t(
         locale,
         `Hi ${displayName}, we'd love to hear how ${eventTitle} went. Your feedback helps the community!`,
-        `Hae ${displayName}, vid myndum gjarna heyra hvernig ${eventTitle} gekk. Endurgjof thin hjalparsafillag inu!`,
+        `Hæ ${displayName}, við myndum gjarna heyra hvernig ${eventTitle} gekk. Endurgjöf þín hjálpar samfélaginu!`,
       ),
     ),
     `<div style="text-align:center;margin:24px 0;">${starsHtml}</div>`,
     ctaButton(
-      t(locale, "Leave a Review", "Skrifa umsogn"),
+      t(locale, "Leave a Review", "Skrifa umsögn"),
       rateUrl,
     ),
   ].join("");
@@ -539,7 +539,7 @@ export function accountUpgradeEmail(
   const subject = t(
     locale,
     `Welcome to ${planName}!`,
-    `Velkomin/n i ${planName}!`,
+    `Velkomin/n í ${planName}!`,
   );
 
   const featureList = features
@@ -550,17 +550,17 @@ export function accountUpgradeEmail(
     .join("");
 
   const body = [
-    heading(t(locale, `Welcome to ${planName}!`, `Velkomin/n i ${planName}!`)),
+    heading(t(locale, `Welcome to ${planName}!`, `Velkomin/n í ${planName}!`)),
     paragraph(
       t(
         locale,
         `Hi ${displayName}, your account has been upgraded. Here's what you now have access to:`,
-        `Hae ${displayName}, reikningur thinn hefur verid uppfaerdur. Her er hvad thu hefur nu adgang ad:`,
+        `Hæ ${displayName}, reikningur þinn hefur verið uppfærður. Hér er hvað þú hefur nú aðgang að:`,
       ),
     ),
     `<ul style="margin:0 0 16px;padding-left:20px;line-height:1.8;">${featureList}</ul>`,
     ctaButton(
-      t(locale, "Go to Dashboard", "Fara i yfirlit"),
+      t(locale, "Go to Dashboard", "Fara í yfirlit"),
       `${SITE_URL()}/dashboard`,
     ),
   ].join("");
@@ -580,27 +580,27 @@ export function venueApprovedEmail(
   const subject = t(
     locale,
     `${venueName} is approved on MeetupReykjavik`,
-    `${venueName} hefur verid samthykkt a MeetupReykjavik`,
+    `${venueName} hefur verið samþykkt á MeetupReykjavik`,
   );
 
   const body = [
-    heading(t(locale, "Your venue is approved!", "Stadur thinn hefur verid samthykktur!")),
+    heading(t(locale, "Your venue is approved!", "Staður þinn hefur verið samþykktur!")),
     paragraph(
       t(
         locale,
         `Congratulations! ${venueName} has been verified and is now live on MeetupReykjavik. Organizers can now discover and book your space.`,
-        `Til hamingju! ${venueName} hefur verid stadfestur og er nu i lufithi a MeetupReykjavik. Skipuleggjendur geta nu fundid og bokad rumid thitt.`,
+        `Til hamingju! ${venueName} hefur verið staðfestur og er nú í lofti á MeetupReykjavik. Skipuleggjendur geta nú fundið og bókað rýmið þitt.`,
       ),
     ),
     paragraph(
       t(
         locale,
         "From your dashboard you can manage bookings, set availability, create deals, and update your venue profile.",
-        "Fra yfirlitinu thinu geturdu stjornad bokunum, stillt frambodstimaoghalda thurft ad, buid til tilbod og uppfaert stadssnid.",
+        "Frá yfirlitinu þínu geturðu stjórnað bókunum, stillt framboðstíma, búið til tilboð og uppfært staðarsnið.",
       ),
     ),
     ctaButton(
-      t(locale, "Open Venue Dashboard", "Opna yfirlit stadar"),
+      t(locale, "Open Venue Dashboard", "Opna yfirlit staðar"),
       dashboardUrl,
     ),
   ].join("");

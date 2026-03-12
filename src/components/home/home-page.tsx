@@ -21,18 +21,18 @@ import {
 } from "@/lib/home-data";
 
 const TAG_COLORS: Record<string, string> = {
-  Social: "bg-[var(--brand-coral-soft)] text-[var(--brand-coral-dark)]",
-  Outdoors: "bg-[rgba(124,154,130,0.14)] text-[var(--brand-sage)]",
-  Tech: "bg-[var(--brand-indigo-soft)] text-[var(--brand-indigo)]",
-  Music: "bg-[var(--brand-sand)] text-[var(--brand-text)]",
-  Food: "bg-[var(--brand-coral-soft)] text-[var(--brand-coral-dark)]",
+  Social: "bg-brand-coral-soft text-brand-coral-dark",
+  Outdoors: "bg-[rgba(124,154,130,0.14)] text-brand-sage",
+  Tech: "bg-brand-indigo-soft text-brand-indigo",
+  Music: "bg-brand-sand text-brand-text",
+  Food: "bg-brand-coral-soft text-brand-coral-dark",
 };
 
 const toneMap = {
-  coral: "bg-[var(--brand-coral-soft)] text-[var(--brand-coral-dark)]",
-  sage: "bg-[rgba(124,154,130,0.12)] text-[var(--brand-sage)]",
-  indigo: "bg-[var(--brand-indigo-soft)] text-[var(--brand-indigo)]",
-  sand: "bg-[var(--brand-sand)] text-[var(--brand-text)]",
+  coral: "bg-brand-coral-soft text-brand-coral-dark",
+  sage: "bg-[rgba(124,154,130,0.12)] text-brand-sage",
+  indigo: "bg-brand-indigo-soft text-brand-indigo",
+  sand: "bg-brand-sand text-brand-text",
 } as const;
 
 function slugify(value: string) {
@@ -57,17 +57,17 @@ function SectionHeading({
   return (
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--brand-indigo)]">
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo">
           {eyebrow}
         </span>
-        <h2 className="font-editorial mt-2 text-3xl leading-tight tracking-[-0.04em] text-[var(--brand-text)] sm:text-4xl">
+        <h2 className="font-editorial mt-2 text-3xl leading-tight tracking-[-0.04em] text-brand-text sm:text-4xl">
           {title}
         </h2>
       </div>
       {actionHref && actionLabel ? (
         <Link
           href={actionHref as import("next").Route}
-          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--brand-indigo)] transition-colors hover:text-[var(--brand-indigo-light)]"
+          className="inline-flex items-center gap-2 text-sm font-bold text-brand-indigo transition-colors hover:text-brand-indigo-light"
         >
           {actionLabel}
           <ArrowRight className="h-4 w-4" />
@@ -84,7 +84,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
   return (
     <Link
       href={`/events/${event.slug}` as import("next").Route}
-      className="group block min-w-[306px] max-w-[306px] flex-shrink-0 overflow-hidden rounded-2xl border border-[var(--brand-border-light)] bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+      className="group block min-w-[280px] max-w-[306px] flex-shrink-0 overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
     >
       <div className="relative h-[175px] overflow-hidden">
         <Image
@@ -97,7 +97,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(30,27,46,0.5)]" />
 
         <div className="absolute left-4 top-4 rounded-xl bg-white px-3 py-1.5 text-center shadow-md">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--brand-coral)]">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-coral">
             Mar
           </div>
           <div className="text-xl font-black leading-tight tracking-tight">{event.date}</div>
@@ -110,7 +110,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
         </span>
 
         {event.deal ? (
-          <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[var(--brand-coral-dark)] backdrop-blur-sm">
+          <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-brand-coral-dark backdrop-blur-sm">
             <Sparkles className="h-3 w-3" />
             {event.deal}
           </span>
@@ -118,10 +118,10 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
       </div>
 
       <div className="px-5 py-4">
-        <h3 className="text-base font-bold tracking-tight text-[var(--brand-text)] group-hover:text-[var(--brand-indigo)]">
+        <h3 className="text-base font-bold tracking-tight text-brand-text group-hover:text-brand-indigo">
           {event.title}
         </h3>
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--brand-text-muted)]">
+        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-brand-text-muted">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="h-3.5 w-3.5" />
             {event.day} · {event.time}
@@ -132,11 +132,11 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
           </span>
         </div>
         <div className="mt-3 flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 text-sm text-[var(--brand-text-muted)]">
+          <span className="inline-flex items-center gap-1.5 text-sm text-brand-text-muted">
             <Users className="h-3.5 w-3.5" />
             {event.attendees} {t("going")}
           </span>
-          <span className="rounded-full bg-[var(--brand-coral)] px-4 py-2 text-xs font-bold text-white shadow-sm">
+          <span className="rounded-full bg-brand-coral px-4 py-2 text-xs font-bold text-white shadow-sm">
             {tCta("rsvp")}
           </span>
         </div>
@@ -151,7 +151,7 @@ function GroupCard({ group }: { group: (typeof groups)[number] }) {
   return (
     <Link
       href={`/groups/${group.slug}` as import("next").Route}
-      className="group block overflow-hidden rounded-2xl border border-[var(--brand-border-light)] bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
     >
       <div className="relative h-36 overflow-hidden">
         <Image
@@ -164,20 +164,20 @@ function GroupCard({ group }: { group: (typeof groups)[number] }) {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(30,27,46,0.45)]" />
       </div>
       <div className="px-5 py-4">
-        <span className="inline-flex rounded-full bg-[rgba(79,70,229,0.08)] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[var(--brand-indigo)]">
+        <span className="inline-flex rounded-full bg-[rgba(79,70,229,0.08)] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-indigo">
           {group.category}
         </span>
-        <h3 className="mt-2 text-base font-bold tracking-tight text-[var(--brand-text)] group-hover:text-[var(--brand-indigo)]">
+        <h3 className="mt-2 text-base font-bold tracking-tight text-brand-text group-hover:text-brand-indigo">
           {group.name}
         </h3>
-        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-brand-text-muted">
           {group.description}
         </p>
-        <div className="mt-3 flex items-center justify-between border-t border-[var(--brand-border-light)] pt-3">
-          <span className="text-sm font-semibold text-[var(--brand-text)]">
+        <div className="mt-3 flex items-center justify-between border-t border-brand-border-light pt-3">
+          <span className="text-sm font-semibold text-brand-text">
             {group.members} members
           </span>
-          <span className="text-sm font-bold text-[var(--brand-indigo)]">
+          <span className="text-sm font-bold text-brand-indigo">
             {t("viewGroup")}
           </span>
         </div>
@@ -193,7 +193,7 @@ function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
   return (
     <Link
       href={`/venues/${venue.slug}` as import("next").Route}
-      className="group block min-w-[280px] max-w-[280px] flex-shrink-0 overflow-hidden rounded-2xl border border-[var(--brand-border-light)] bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+      className="group block min-w-[260px] max-w-[280px] flex-shrink-0 overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
     >
       <div className="relative h-40 overflow-hidden">
         <Image
@@ -213,20 +213,20 @@ function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
       </div>
       <div className="px-5 py-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-[var(--brand-text-muted)]">
+          <span className="text-sm text-brand-text-muted">
             {venue.events} {tHome("hostedEvents")}
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--brand-coral-soft)] px-2.5 py-1 text-sm font-bold text-[var(--brand-coral-dark)]">
+          <span className="inline-flex items-center gap-1 rounded-full bg-brand-coral-soft px-2.5 py-1 text-sm font-bold text-brand-coral-dark">
             <Star className="h-3 w-3 fill-current" />
             {venue.rating.toFixed(1)}
           </span>
         </div>
         {venue.deal ? (
-          <div className="mt-3 rounded-xl bg-[rgba(232,97,77,0.06)] px-3 py-2 text-sm font-medium text-[var(--brand-coral-dark)]">
+          <div className="mt-3 rounded-xl bg-[rgba(232,97,77,0.06)] px-3 py-2 text-sm font-medium text-brand-coral-dark">
             {tHome("memberDeal")}: {venue.deal}
           </div>
         ) : null}
-        <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--brand-indigo)]">
+        <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-brand-indigo">
           {tCta("exploreVenue")}
           <ArrowRight className="h-3.5 w-3.5" />
         </div>
@@ -276,10 +276,10 @@ export function HomePage() {
             {tHero("badge")}
           </span>
 
-          <h1 className="font-editorial mx-auto mt-6 max-w-3xl text-4xl leading-[0.96] tracking-[-0.05em] sm:text-5xl lg:text-6xl">
+          <h1 className="font-editorial mx-auto mt-6 max-w-3xl text-3xl leading-[0.96] tracking-[-0.05em] sm:text-4xl md:text-5xl lg:text-6xl">
             {tHero("titleLead")}
             <br />
-            <span className="text-[var(--brand-coral)] italic">{tHero("titleAccent")}</span>
+            <span className="text-brand-coral italic">{tHero("titleAccent")}</span>
           </h1>
 
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg">
@@ -289,7 +289,7 @@ export function HomePage() {
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/events"
-              className="rounded-full bg-[var(--brand-coral)] px-7 py-3.5 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5"
+              className="rounded-full bg-brand-coral px-7 py-3.5 text-sm font-bold text-white shadow-lg transition-transform hover:-translate-y-0.5"
             >
               {tCta("exploreEvents")}
             </Link>
@@ -301,7 +301,7 @@ export function HomePage() {
             </Link>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-2xl gap-4 sm:grid-cols-4">
+          <div className="mx-auto mt-12 grid max-w-2xl grid-cols-2 gap-4 sm:grid-cols-4">
             {localizedHeroStats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-2xl font-black tracking-tight text-white">
@@ -332,12 +332,12 @@ export function HomePage() {
       </section>
 
       {/* Categories */}
-      <section className="border-y border-[var(--brand-border-light)] bg-white px-4 py-16">
+      <section className="border-y border-brand-border-light bg-white px-4 py-16">
         <div className="section-shell text-center">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--brand-indigo)]">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo">
             {tSections("categoriesEyebrow")}
           </span>
-          <h2 className="font-editorial mt-2 text-3xl tracking-[-0.04em] text-[var(--brand-text)] sm:text-4xl">
+          <h2 className="font-editorial mt-2 text-3xl tracking-[-0.04em] text-brand-text sm:text-4xl">
             {tSections("categoriesTitle")}
           </h2>
           <div className="mt-8 flex flex-wrap justify-center gap-2.5">
@@ -345,7 +345,7 @@ export function HomePage() {
               <Link
                 key={category.name}
                 href={`/categories/${slugify(category.name)}` as import("next").Route}
-                className="inline-flex items-center gap-2.5 rounded-full border border-[var(--brand-border-light)] bg-white px-4 py-2.5 text-sm font-medium text-[var(--brand-text)] shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                className="inline-flex items-center gap-2.5 rounded-full border border-brand-border-light bg-white px-4 py-2.5 text-sm font-medium text-brand-text shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
               >
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-black ${toneMap[category.tone]}`}
@@ -353,7 +353,7 @@ export function HomePage() {
                   {category.letter}
                 </span>
                 {category.name}
-                <span className="text-xs text-[var(--brand-text-light)]">
+                <span className="text-xs text-brand-text-light">
                   {category.count}
                 </span>
               </Link>
@@ -372,18 +372,18 @@ export function HomePage() {
           {localizedSteps.map((step) => (
             <article
               key={step.number}
-              className="rounded-2xl border border-[var(--brand-border-light)] bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-brand-border-light bg-white p-6 shadow-sm"
             >
               <div className="flex items-center justify-between">
-                <span className="font-editorial text-4xl tracking-tight text-[var(--brand-indigo-soft)]">
+                <span className="font-editorial text-4xl tracking-tight text-brand-indigo-soft">
                   {step.number}
                 </span>
-                <CheckCircle2 className="h-5 w-5 text-[var(--brand-indigo)]" />
+                <CheckCircle2 className="h-5 w-5 text-brand-indigo" />
               </div>
-              <h3 className="mt-5 text-xl font-bold tracking-tight text-[var(--brand-text)]">
+              <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-text">
                 {step.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-text-muted)]">
+              <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
                 {step.description}
               </p>
             </article>
@@ -392,7 +392,7 @@ export function HomePage() {
       </section>
 
       {/* Groups */}
-      <section className="border-t border-[var(--brand-border-light)] bg-white px-4 py-16">
+      <section className="border-t border-brand-border-light bg-white px-4 py-16">
         <div className="section-shell">
           <SectionHeading
             eyebrow={tSections("groupsEyebrow")}
@@ -425,7 +425,7 @@ export function HomePage() {
 
       {/* CTA */}
       <section className="px-4 pb-16">
-        <div className="section-shell overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3730A3,#4F46E5_48%,#E8614D)] px-8 py-14 text-center text-white sm:px-12">
+        <div className="section-shell overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3730A3,#4F46E5_48%,#E8614D)] px-5 py-10 text-center text-white sm:px-8 md:px-12 sm:py-14">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
             {tSections("joinEyebrow")}
           </span>
@@ -438,7 +438,7 @@ export function HomePage() {
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/signup"
-              className="rounded-full bg-white px-7 py-3.5 text-sm font-bold shadow-lg transition-transform hover:-translate-y-0.5" style={{ color: "#3730A3" }}
+              className="rounded-full bg-white px-7 py-3.5 text-sm font-bold shadow-lg transition-transform hover:-translate-y-0.5 text-brand-indigo"
             >
               {tCta("signupFreeLong")}
             </Link>
