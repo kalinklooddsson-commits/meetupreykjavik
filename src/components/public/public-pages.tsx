@@ -1765,9 +1765,13 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
 export function GroupsIndexScreen({
   groups = publicGroups,
   eventCount = publicEvents.length,
+  searchQuery,
+  activeCategory,
 }: {
   groups?: PublicGroup[];
   eventCount?: number;
+  searchQuery?: string;
+  activeCategory?: string;
 } = {}) {
   const t = useTranslations("groupsPage");
   const totalMembers = groups.reduce((sum, g) => sum + g.members, 0);
@@ -1864,6 +1868,19 @@ export function GroupsIndexScreen({
       {/* Groups grid */}
       <section className="bg-brand-sand">
         <div className="section-shell py-10">
+          {/* Search results banner */}
+          {searchQuery && (
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand-indigo/20 bg-brand-indigo/5 px-5 py-4">
+              <Search className="h-5 w-5 text-brand-indigo" />
+              <span className="font-semibold text-brand-text">
+                {groups.length} result{groups.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}&rdquo;
+              </span>
+              <a href="/groups" className="ml-auto text-sm font-medium text-brand-indigo hover:underline">
+                Clear search
+              </a>
+            </div>
+          )}
+
           {/* Strongest groups showcase */}
           <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("showcase.topGroups")}</h2>
           <div className="mb-10 grid gap-4 lg:grid-cols-3">
@@ -1914,17 +1931,38 @@ export function GroupsIndexScreen({
             })}
           </div>
 
-          {/* Category filter chips */}
+          {/* Category filter chips — interactive links */}
           <div className="mb-6 flex flex-wrap items-center gap-2">
             <span className="mr-1 text-sm font-medium text-gray-500">{t("grid.filterByCategory")}</span>
-            {allCategories.map((cat) => (
-              <span
-                key={cat}
-                className="inline-flex items-center rounded-full border border-brand-border-light bg-white px-3.5 py-1.5 text-xs font-semibold text-gray-700 shadow-[0_1px_2px_rgba(42,38,56,0.04)] transition hover:border-brand-indigo/30 hover:bg-brand-indigo-soft"
-              >
-                {cat}
-              </span>
-            ))}
+            <Link
+              href="/groups"
+              className={cn(
+                "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
+                !activeCategory
+                  ? "bg-brand-indigo text-white"
+                  : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
+              )}
+            >
+              {t("filters.all")}
+            </Link>
+            {allCategories.map((cat) => {
+              const isActive = activeCategory?.toLowerCase() === cat.toLowerCase();
+              const href = (`/groups?category=${encodeURIComponent(cat.toLowerCase())}`) as Route;
+              return (
+                <Link
+                  key={cat}
+                  href={isActive ? "/groups" : href}
+                  className={cn(
+                    "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
+                    isActive
+                      ? "bg-brand-indigo text-white"
+                      : "border border-brand-border-light bg-white text-gray-700 shadow-[0_1px_2px_rgba(42,38,56,0.04)] hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
+                  )}
+                >
+                  {cat}
+                </Link>
+              );
+            })}
           </div>
 
           <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("grid.activeGroups")}</h2>
@@ -2205,14 +2243,22 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
 
 export function VenuesIndexScreen({
   venues = publicVenues,
+  searchQuery,
+  activeType,
+  activeArea,
 }: {
   venues?: PublicVenue[];
+  searchQuery?: string;
+  activeType?: string;
+  activeArea?: string;
 } = {}) {
   const t = useTranslations("venuesPage");
   const sourcedPlaces = getFeaturedSourcedPlaces(6);
   const avgRating = (venues.reduce((sum, v) => sum + v.rating, 0) / venues.length).toFixed(1);
   const totalCapacity = venues.reduce((sum, v) => sum + v.capacity, 0);
   const neighborhoods = areaHighlights(venues).slice(0, 4);
+  const allTypes = Array.from(new Set(publicVenues.map((v) => v.type)));
+  const allAreas = Array.from(new Set(publicVenues.map((v) => v.area)));
 
   return (
     <>
@@ -2301,6 +2347,84 @@ export function VenuesIndexScreen({
                     {area.capacity.toLocaleString()} seats
                   </p>
                 </div>
+              );
+            })}
+          </div>
+
+          {/* Search results banner */}
+          {searchQuery && (
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand-indigo/20 bg-brand-indigo/5 px-5 py-4">
+              <Search className="h-5 w-5 text-brand-indigo" />
+              <span className="font-semibold text-brand-text">
+                {venues.length} result{venues.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}&rdquo;
+              </span>
+              <a href="/venues" className="ml-auto text-sm font-medium text-brand-indigo hover:underline">
+                Clear search
+              </a>
+            </div>
+          )}
+
+          {/* Type filter chips */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="mr-1 text-sm font-medium text-gray-500">{t("grid.filterByType")}</span>
+            <Link
+              href="/venues"
+              className={cn(
+                "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
+                !activeType && !activeArea
+                  ? "bg-brand-indigo text-white"
+                  : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30",
+              )}
+            >
+              {t("filters.all")}
+            </Link>
+            {allTypes.map((vType) => {
+              const isActive = activeType?.toLowerCase() === vType.toLowerCase();
+              const params = new URLSearchParams();
+              if (!isActive) params.set("type", vType.toLowerCase());
+              if (activeArea) params.set("area", activeArea);
+              const qs = params.toString();
+              const href = (qs ? `/venues?${qs}` : "/venues") as Route;
+              return (
+                <Link
+                  key={vType}
+                  href={href}
+                  className={cn(
+                    "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
+                    isActive
+                      ? "bg-brand-indigo text-white"
+                      : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30",
+                  )}
+                >
+                  {vType}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Area filter chips */}
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="mr-1 text-sm font-medium text-gray-500">{t("grid.filterByArea")}</span>
+            {allAreas.map((vArea) => {
+              const isActive = activeArea?.toLowerCase() === vArea.toLowerCase();
+              const params = new URLSearchParams();
+              if (activeType) params.set("type", activeType);
+              if (!isActive) params.set("area", vArea.toLowerCase());
+              const qs = params.toString();
+              const href = (qs ? `/venues?${qs}` : "/venues") as Route;
+              return (
+                <Link
+                  key={vArea}
+                  href={href}
+                  className={cn(
+                    "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
+                    isActive
+                      ? "bg-brand-coral text-white"
+                      : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-coral/30",
+                  )}
+                >
+                  {vArea}
+                </Link>
               );
             })}
           </div>

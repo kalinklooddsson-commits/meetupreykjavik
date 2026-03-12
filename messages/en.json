@@ -741,6 +741,9 @@
       "activeGroups": "Active groups",
       "filterByCategory": "Filter by category"
     },
+    "filters": {
+      "all": "All"
+    },
     "showcase": {
       "topGroups": "Most Active Groups"
     },
@@ -779,7 +782,12 @@
       "combinedSeats": "{capacity} combined seats. Best-rated: {topVenue} ({topRating})."
     },
     "grid": {
-      "partnerVenues": "Partner venues"
+      "partnerVenues": "Partner venues",
+      "filterByType": "Type:",
+      "filterByArea": "Area:"
+    },
+    "filters": {
+      "all": "All"
     },
     "sourced": {
       "title": "More places in Reykjavik",

@@ -8,8 +8,43 @@ export const metadata: Metadata = {
     "Explore partner venues across Reykjavik — bars, cafés, restaurants, and coworking spaces that host community events.",
 };
 
-export default async function VenuesPage() {
+export default async function VenuesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; type?: string; area?: string }>;
+}) {
+  const { q, type, area } = await searchParams;
   const venues = await fetchVenues();
 
-  return <VenuesIndexScreen venues={venues} />;
+  let filteredVenues = venues;
+  if (q) {
+    const query = q.toLowerCase();
+    filteredVenues = filteredVenues.filter(
+      (v) =>
+        v.name.toLowerCase().includes(query) ||
+        v.type.toLowerCase().includes(query) ||
+        v.area.toLowerCase().includes(query) ||
+        v.summary.toLowerCase().includes(query) ||
+        v.amenities.some((a: string) => a.toLowerCase().includes(query)),
+    );
+  }
+  if (type) {
+    filteredVenues = filteredVenues.filter(
+      (v) => v.type.toLowerCase() === type.toLowerCase(),
+    );
+  }
+  if (area) {
+    filteredVenues = filteredVenues.filter(
+      (v) => v.area.toLowerCase() === area.toLowerCase(),
+    );
+  }
+
+  return (
+    <VenuesIndexScreen
+      venues={filteredVenues}
+      searchQuery={q}
+      activeType={type}
+      activeArea={area}
+    />
+  );
 }

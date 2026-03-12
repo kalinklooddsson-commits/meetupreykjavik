@@ -447,10 +447,36 @@ function SearchOverlay({
             </p>
           </div>
 
-          {/* Popular section */}
+          {/* Quick links */}
           <div className="mt-3 border-t border-gray-100 pt-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-              Popular
+              Browse
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {[
+                { label: "Events", href: "/events" },
+                { label: "Groups", href: "/groups" },
+                { label: "Venues", href: "/venues" },
+              ].map((link) => (
+                <button
+                  key={link.label}
+                  type="button"
+                  onClick={() => {
+                    router.push(link.href as Route);
+                    onClose();
+                  }}
+                  className="rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:border-brand-indigo hover:text-brand-indigo"
+                >
+                  {link.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Popular categories */}
+          <div className="mt-3 border-t border-gray-100 pt-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              Popular categories
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
               {["Music", "Tech", "Art", "Outdoors", "Food"].map((tag) => (
@@ -458,7 +484,7 @@ function SearchOverlay({
                   key={tag}
                   type="button"
                   onClick={() => {
-                    router.push(`/events?q=${encodeURIComponent(tag)}` as Route);
+                    router.push(`/events?category=${encodeURIComponent(tag.toLowerCase())}` as Route);
                     onClose();
                   }}
                   className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 transition hover:border-brand-indigo hover:text-brand-indigo"

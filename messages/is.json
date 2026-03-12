@@ -741,6 +741,9 @@
       "activeGroups": "Virkir hópar",
       "filterByCategory": "Sía eftir flokki"
     },
+    "filters": {
+      "all": "Allt"
+    },
     "showcase": {
       "topGroups": "Virkustu hóparnir"
     },
@@ -779,7 +782,12 @@
       "combinedSeats": "{capacity} sæti samtals. Hæst metinn: {topVenue} ({topRating})."
     },
     "grid": {
-      "partnerVenues": "Samstarfsstaðir"
+      "partnerVenues": "Samstarfsstaðir",
+      "filterByType": "Tegund:",
+      "filterByArea": "Svæði:"
+    },
+    "filters": {
+      "all": "Allt"
     },
     "sourced": {
       "title": "Fleiri staðir í Reykjavík",
