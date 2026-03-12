@@ -5,24 +5,24 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-brand-indigo: var(--brand-indigo);
-  --color-brand-indigo-dark: var(--brand-indigo-dark);
-  --color-brand-indigo-light: var(--brand-indigo-light);
-  --color-brand-indigo-soft: var(--brand-indigo-soft);
-  --color-brand-coral: var(--brand-coral);
-  --color-brand-coral-dark: var(--brand-coral-dark);
-  --color-brand-coral-soft: var(--brand-coral-soft);
-  --color-brand-sand: var(--brand-sand);
-  --color-brand-sand-light: var(--brand-sand-light);
-  --color-brand-sand-dark: var(--brand-sand-dark);
-  --color-brand-sage: var(--brand-sage);
-  --color-brand-basalt: var(--brand-basalt);
-  --color-brand-basalt-light: var(--brand-basalt-light);
-  --color-brand-text: var(--brand-text);
-  --color-brand-text-muted: var(--brand-text-muted);
-  --color-brand-text-light: var(--brand-text-light);
-  --color-brand-border: var(--brand-border);
-  --color-brand-border-light: var(--brand-border-light);
+  --color-brand-indigo: #3730a3;
+  --color-brand-indigo-dark: #2e2890;
+  --color-brand-indigo-light: #4f46e5;
+  --color-brand-indigo-soft: #c7d2fe;
+  --color-brand-coral: #e8614d;
+  --color-brand-coral-dark: #d4503d;
+  --color-brand-coral-soft: #fde8e4;
+  --color-brand-sand: #f5f0e8;
+  --color-brand-sand-light: #faf8f4;
+  --color-brand-sand-dark: #ede7db;
+  --color-brand-sage: #7c9a82;
+  --color-brand-basalt: #1e1b2e;
+  --color-brand-basalt-light: #2d2945;
+  --color-brand-text: #2a2638;
+  --color-brand-text-muted: #6e6a7a;
+  --color-brand-text-light: #9994a8;
+  --color-brand-border: #ddd7cb;
+  --color-brand-border-light: #ebe6dc;
 }
 
 :root {

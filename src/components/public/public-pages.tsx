@@ -177,17 +177,18 @@ function areaHighlights(venues: PublicVenue[]) {
   return Array.from(
     venues.reduce(
       (map, venue) => {
+        const rating = venue.rating ?? 0;
         const current = map.get(venue.area) ?? {
           area: venue.area,
           venues: 0,
           capacity: 0,
           topVenue: venue.name,
-          topRating: venue.rating,
+          topRating: rating,
         };
         current.venues += 1;
-        current.capacity += venue.capacity;
-        if (venue.rating > current.topRating) {
-          current.topRating = venue.rating;
+        current.capacity += venue.capacity ?? 0;
+        if (rating > (current.topRating ?? 0)) {
+          current.topRating = rating;
           current.topVenue = venue.name;
         }
         map.set(venue.area, current);
@@ -343,7 +344,8 @@ function blogSignals(posts: BlogPost[], t: (key: string, values?: Record<string,
 }
 
 /** Extract image URL from gradient+url art strings */
-function extractImageUrl(art: string): string | null {
+function extractImageUrl(art: string | undefined | null): string | null {
+  if (!art) return null;
   const match = art.match(/url\(['"]?([^'")\s]+)['"]?\)/);
   return match ? match[1] : null;
 }
@@ -386,13 +388,13 @@ function getCategoryBundle(slug: string) {
   );
   const groups = publicGroups.filter((group) =>
     matchesCategoryText(
-      `${group.category} ${group.summary} ${group.tags.join(" ")} ${group.organizer}`,
+      `${group.category} ${group.summary} ${(group.tags ?? []).join(" ")} ${group.organizer}`,
       keywords,
     ),
   );
   const venues = publicVenues.filter((venue) => {
-    const venueText = `${venue.type} ${venue.summary} ${venue.amenities.join(" ")}`;
-    const venueEventMatch = venue.upcomingEventSlugs.some((eventSlug) =>
+    const venueText = `${venue.type} ${venue.summary} ${(venue.amenities ?? []).join(" ")}`;
+    const venueEventMatch = (venue.upcomingEventSlugs ?? []).some((eventSlug) =>
       events.some((event) => event.slug === eventSlug),
     );
     return venueEventMatch || matchesCategoryText(venueText, keywords);
@@ -767,9 +769,9 @@ function GroupCard({
         <p className="mt-1.5 line-clamp-2 text-sm text-gray-600">{group.summary}</p>
 
         {/* Tags (first 3) */}
-        {group.tags.length > 0 && (
+        {(group.tags ?? []).length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
-            {group.tags.slice(0, 3).map((tag) => (
+            {(group.tags ?? []).slice(0, 3).map((tag) => (
               <span
                 key={tag}
                 className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600"
@@ -805,9 +807,11 @@ function GroupCard({
 }
 
 function VenueCard({ venue }: { venue: PublicVenue }) {
-  const nextEvent = publicEvents.find((event) => venue.upcomingEventSlugs.includes(event.slug));
+  const slugs = venue.upcomingEventSlugs ?? [];
+  const nextEvent = slugs.length > 0 ? publicEvents.find((event) => slugs.includes(event.slug)) : undefined;
   const imageUrl = extractImageUrl(venue.art);
-  const fullStars = Math.floor(venue.rating);
+  const rating = venue.rating ?? 0;
+  const fullStars = Math.floor(rating);
   const emptyStars = 5 - fullStars;
 
   return (
@@ -827,7 +831,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
           </>
         ) : (
-          <div className="absolute inset-0" style={{ background: venue.art }} />
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-indigo/30 to-brand-coral/20" style={venue.art ? { background: venue.art } : undefined} />
         )}
 
         {/* Venue type badge – top left */}
@@ -864,7 +868,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
             {Array.from({ length: emptyStars }).map((_, i) => (
               <Star key={`e${i}`} className="h-3.5 w-3.5 fill-current text-gray-300" />
             ))}
-            <span className="ml-1 text-sm font-semibold text-gray-700">{venue.rating}</span>
+            <span className="ml-1 text-sm font-semibold text-gray-700">{rating}</span>
           </div>
           <span className="rounded-full bg-brand-indigo-soft px-2.5 py-0.5 text-xs font-medium text-brand-indigo">
             {venue.area}
@@ -881,9 +885,9 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         </div>
 
         {/* Amenity pills */}
-        {venue.amenities.length > 0 ? (
+        {(venue.amenities ?? []).length > 0 ? (
           <div className="mt-3 flex flex-wrap gap-1.5">
-            {venue.amenities.slice(0, 4).map((amenity) => (
+            {(venue.amenities ?? []).slice(0, 4).map((amenity) => (
               <span key={amenity} className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-600">
                 {amenity}
               </span>
@@ -979,24 +983,35 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
     <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       <div className="relative h-48 bg-gray-200">
         {imageSrc ? (
-          <Image
-            fill
-            alt={`${place.name} in ${place.area}`}
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 33vw"
-            src={imageSrc}
-            unoptimized={imageSrc.startsWith("https://")}
-          />
-        ) : null}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-          <div className="flex items-center gap-2">
-            <span className="rounded-full bg-black/30 px-2.5 py-1 text-xs font-medium">{place.laneLabel}</span>
-            <span className="rounded-full bg-black/30 px-2.5 py-1 text-xs font-medium">{place.kindLabel}</span>
+          <>
+            <Image
+              fill
+              alt={`${place.name} in ${place.area}`}
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              src={imageSrc}
+              unoptimized={imageSrc.startsWith("https://")}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-black/30 px-2.5 py-1 text-xs font-medium">{place.laneLabel}</span>
+                <span className="rounded-full bg-black/30 px-2.5 py-1 text-xs font-medium">{place.kindLabel}</span>
+              </div>
+              <h3 className="mt-2 text-xl font-bold">{place.name}</h3>
+              <p className="text-sm text-white/80">{place.area}</p>
+            </div>
+          </>
+        ) : (
+          <div className="flex h-full flex-col items-start justify-end bg-gradient-to-br from-brand-indigo to-brand-indigo-light p-4 text-white">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-black/20 px-2.5 py-1 text-xs font-medium">{place.laneLabel}</span>
+              <span className="rounded-full bg-black/20 px-2.5 py-1 text-xs font-medium">{place.kindLabel}</span>
+            </div>
+            <h3 className="mt-2 text-xl font-bold">{place.name}</h3>
+            <p className="text-sm text-white/80">{place.area}</p>
           </div>
-          <h3 className="mt-2 text-xl font-bold">{place.name}</h3>
-          <p className="text-sm text-white/80">{place.area}</p>
-        </div>
+        )}
       </div>
       <div className="p-5 space-y-3">
         <p className="text-sm text-gray-600">{place.summary}</p>
@@ -1110,7 +1125,7 @@ function Breadcrumbs({
       <ol className="flex flex-wrap items-center gap-1.5">
         {crumbs.map((crumb, i) => (
           <li key={crumb.label} className="flex items-center gap-1.5">
-            {i > 0 && <span className="text-gray-300">/</span>}
+            {i > 0 && <span className="text-gray-400" aria-hidden="true">/</span>}
             {crumb.href && i < crumbs.length - 1 ? (
               <Link href={crumb.href} className="transition hover:text-brand-indigo">
                 {crumb.label}
@@ -1192,7 +1207,7 @@ function IndexHero({
             {stats.map((stat) => (
               <div key={stat.label}>
                 <div className="text-2xl font-bold sm:text-3xl">{stat.value}</div>
-                <div className="mt-1 text-sm text-white/60">{stat.label}</div>
+                <div className="mt-1 text-sm text-white/80">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -1433,7 +1448,7 @@ export function EventsIndexScreen({
             <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/80">
               {t("cta.description")}
             </p>
-            <p className="mx-auto mt-2 max-w-md text-sm text-white/60">
+            <p className="mx-auto mt-2 max-w-md text-sm text-white/80">
               {t("cta.subtitle")}
             </p>
             <Link
@@ -1539,7 +1554,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
             </div>
 
             {/* Gallery 2x2 grid */}
-            {event.gallery.length > 0 ? (
+            {(event.gallery ?? []).length > 0 ? (
               <div>
                 <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
                   {t("sections.gallery")}
@@ -1562,7 +1577,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
             ) : null}
 
             {/* Comments */}
-            {event.comments.length > 0 ? (
+            {(event.comments ?? []).length > 0 ? (
               <div>
                 <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
                   {t("sections.comments")}
@@ -1590,7 +1605,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
             ) : null}
 
             {/* Ratings */}
-            {event.ratings.length > 0 ? (
+            {(event.ratings ?? []).length > 0 ? (
               <div>
                 <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
                   {t("sections.reviews")}
@@ -1786,8 +1801,8 @@ export function GroupsIndexScreen({
   /* Map group slugs to their next upcoming event title */
   const nextEventByGroup = new Map<string, string>();
   for (const group of groups) {
-    if (group.upcomingEventSlugs.length > 0) {
-      const event = publicEvents.find((e) => e.slug === group.upcomingEventSlugs[0]);
+    if ((group.upcomingEventSlugs ?? []).length > 0) {
+      const event = publicEvents.find((e) => e.slug === (group.upcomingEventSlugs ?? [])[0]);
       if (event) nextEventByGroup.set(group.slug, event.title);
     }
   }
@@ -1968,7 +1983,7 @@ export function GroupsIndexScreen({
           <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("grid.activeGroups")}</h2>
           <div className="reveal-group grid gap-6 md:grid-cols-2">
             {groups.map((group) => (
-              <GroupCard key={group.slug} group={group} />
+              <GroupCard key={group.slug} group={group} upcomingTitle={nextEventByGroup.get(group.slug)} />
             ))}
           </div>
 
@@ -1996,7 +2011,7 @@ export function GroupsIndexScreen({
               <div className="mt-6 shrink-0 sm:mt-0 sm:ml-auto">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-coral shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition hover:scale-105 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-indigo shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition hover:scale-105 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                 >
                   {t("startGroup.button")}
                   <ArrowRight className="h-4 w-4" />
@@ -2015,7 +2030,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
   const t = useTranslations("groupDetailPage");
   const tNav = useTranslations("nav");
   const upcomingEvents = publicEvents.filter((event) =>
-    group.upcomingEventSlugs.includes(event.slug),
+    (group.upcomingEventSlugs ?? []).includes(event.slug),
   );
   const operatingSignals = groupOperatingSignals(group, upcomingEvents);
   const signalIcons = [Users, TrendingUp, CalendarDays];
@@ -2041,19 +2056,19 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
       >
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.members")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.members")}</div>
             <div className="text-2xl font-bold">{group.members}</div>
           </div>
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.activity")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.activity")}</div>
             <div className="text-2xl font-bold">{group.activity}%</div>
           </div>
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.organizer")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.organizer")}</div>
             <div className="text-lg font-semibold">{group.organizer}</div>
           </div>
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.upcoming")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.upcoming")}</div>
             <div className="text-2xl font-bold">{upcomingEvents.length}</div>
           </div>
         </div>
@@ -2074,7 +2089,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
                 ))}
               </div>
               <div className="mt-5 flex flex-wrap gap-2">
-                {group.tags.map((tag) => (
+                {(group.tags ?? []).map((tag) => (
                   <ToneBadge key={tag} tone={categoryTone(group.category)}>{tag}</ToneBadge>
                 ))}
               </div>
@@ -2209,7 +2224,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
               </h3>
               <div className="space-y-3">
                 {[
-                  { label: t("labels.bestKnownFor"), value: group.tags.join(" · ") },
+                  { label: t("labels.bestKnownFor"), value: (group.tags ?? []).join(" · ") },
                   {
                     label: t("labels.whyThisGroupMatters"),
                     value: groupArchetype(group),
@@ -2254,8 +2269,8 @@ export function VenuesIndexScreen({
 } = {}) {
   const t = useTranslations("venuesPage");
   const sourcedPlaces = getFeaturedSourcedPlaces(6);
-  const avgRating = (venues.reduce((sum, v) => sum + v.rating, 0) / venues.length).toFixed(1);
-  const totalCapacity = venues.reduce((sum, v) => sum + v.capacity, 0);
+  const avgRating = venues.length > 0 ? (venues.reduce((sum, v) => sum + (v.rating ?? 0), 0) / venues.length).toFixed(1) : "0.0";
+  const totalCapacity = venues.reduce((sum, v) => sum + (v.capacity ?? 0), 0);
   const neighborhoods = areaHighlights(venues).slice(0, 4);
   const allTypes = Array.from(new Set(publicVenues.map((v) => v.type)));
   const allAreas = Array.from(new Set(publicVenues.map((v) => v.area)));
@@ -2339,10 +2354,12 @@ export function VenuesIndexScreen({
                   <div className="text-xs font-medium text-gray-500">
                     {t("neighborhoods.venues", { count: area.venues })}
                   </div>
-                  <div className="mt-3 truncate text-sm font-semibold text-gray-800">
-                    <Star className="mr-1 inline h-3.5 w-3.5 fill-current text-yellow-400" />
-                    {area.topVenue} ({area.topRating.toFixed(1)})
-                  </div>
+                  {area.topVenue && (
+                    <div className="mt-3 truncate text-sm font-semibold text-gray-800">
+                      <Star className="mr-1 inline h-3.5 w-3.5 fill-current text-yellow-400" />
+                      {area.topVenue} {area.topRating != null ? `(${area.topRating.toFixed(1)})` : ""}
+                    </div>
+                  )}
                   <p className="mt-1 text-xs leading-relaxed text-gray-500">
                     {area.capacity.toLocaleString()} seats
                   </p>
@@ -2494,7 +2511,7 @@ export function VenuesIndexScreen({
             <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/70">
               {t("cta.description")}
             </p>
-            <p className="mx-auto mt-2 text-sm text-white/50">
+            <p className="mx-auto mt-2 text-sm text-white/75">
               {t("cta.benefit")}
             </p>
             <Link
@@ -2515,7 +2532,7 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
   const t = useTranslations("venueDetailPage");
   const tNav = useTranslations("nav");
   const upcomingEvents = publicEvents.filter((event) =>
-    venue.upcomingEventSlugs.includes(event.slug),
+    (venue.upcomingEventSlugs ?? []).includes(event.slug),
   );
   const nearbyVenues = publicVenues
     .filter((item) => item.slug !== venue.slug && item.area === venue.area)
@@ -2542,22 +2559,22 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
       >
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.area")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.area")}</div>
             <div className="text-lg font-semibold">{venue.area}</div>
           </div>
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.capacity")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.capacity")}</div>
             <div className="text-2xl font-bold">{venue.capacity}</div>
           </div>
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.rating")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.rating")}</div>
             <div className="flex items-center gap-1 text-2xl font-bold">
               <Star className="h-5 w-5 fill-current text-yellow-400" />
               {venue.rating}
             </div>
           </div>
           <div>
-            <div className="text-sm text-white/60">{t("heroStats.events")}</div>
+            <div className="text-sm text-white/80">{t("heroStats.events")}</div>
             <div className="text-2xl font-bold">{upcomingEvents.length}</div>
           </div>
         </div>
@@ -2580,7 +2597,7 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
             </div>
 
             {/* Gallery 2x2 grid */}
-            {venue.gallery.length > 0 ? (
+            {(venue.gallery ?? []).length > 0 ? (
               <div>
                 <h2 className="font-editorial mb-5 text-2xl tracking-tight text-gray-900">
                   {t("sections.gallery")}
@@ -2740,7 +2757,7 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                 {t("sections.amenities")}
               </h3>
               <div className="grid grid-cols-1 gap-2.5">
-                {venue.amenities.map((amenity) => (
+                {(venue.amenities ?? []).map((amenity) => (
                   <div key={amenity} className="flex items-center gap-2.5 text-sm text-gray-700">
                     <BadgeCheck className="h-4 w-4 shrink-0 text-brand-sage" />
                     {amenity}
@@ -2941,7 +2958,7 @@ export function BlogIndexScreen() {
         <div className="section-shell relative z-10 py-16 text-white sm:py-24">
           <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("hero.eyebrow")}</span>
           <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{t("hero.title")}</h1>
-          <p className="mt-5 max-w-2xl text-base text-white/70 sm:text-lg">{t("hero.description")}</p>
+          <p className="mt-5 max-w-2xl text-base text-white/85 sm:text-lg">{t("hero.description")}</p>
         </div>
       </section>
 
@@ -3029,13 +3046,13 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
         <div className="section-shell relative z-10 py-10 text-white sm:py-14 md:py-20">
           <div className="flex items-center gap-3">
             <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium">{post.category}</span>
-            <span className="text-sm text-white/60">{post.readTime}</span>
+            <span className="text-sm text-white/80">{post.readTime}</span>
           </div>
           <h1 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             {post.title}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{post.excerpt}</p>
-          <p className="mt-4 text-sm text-white/60">{post.publishedAt}</p>
+          <p className="mt-4 text-sm text-white/80">{post.publishedAt}</p>
         </div>
       </section>
 
@@ -3134,9 +3151,9 @@ export function AboutScreen() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-brand-indigo/40 to-[#312e81]/80" />
         <div className="section-shell relative z-10 py-20 text-center text-white sm:py-28 md:py-36">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("hero.eyebrow")}</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
           <h1 className="mx-auto mt-4 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">{t("hero.title")}</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80">{t("hero.description")}</p>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85">{t("hero.description")}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
               href="/events"
@@ -3279,9 +3296,9 @@ export function PricingScreen() {
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative z-10 py-16 text-center text-white sm:py-24">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("hero.eyebrow")}</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
           <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">{t("hero.title")}</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base text-white/80 sm:text-lg">{t("hero.description", { commission: ticketCommissionRate })}</p>
+          <p className="mx-auto mt-5 max-w-2xl text-base text-white/85 sm:text-lg">{t("hero.description", { commission: ticketCommissionRate })}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90 text-brand-indigo">
               {t("hero.getStartedFree")}
@@ -3833,7 +3850,7 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
                   key={group.slug}
                   group={group}
                   upcomingTitle={
-                    publicEvents.find((event) => group.upcomingEventSlugs.includes(event.slug))?.title
+                    publicEvents.find((event) => (group.upcomingEventSlugs ?? []).includes(event.slug))?.title
                   }
                 />
               ))}
@@ -4013,7 +4030,7 @@ export function ForOrganizersScreen() {
       <section className="bg-white">
         <div className="section-shell py-16">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral">{t("features.eyebrow")}</span>
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-indigo">{t("features.eyebrow")}</span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900">{t("features.heading")}</h2>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -4164,7 +4181,7 @@ export function ForVenuesScreen() {
       <section className="bg-white">
         <div className="section-shell py-16">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-widest text-brand-sage">{t("benefits.eyebrow")}</span>
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand-indigo">{t("benefits.eyebrow")}</span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900">{t("features.heading")}</h2>
             <p className="mt-4 text-base text-gray-600">{t("benefits.subtitle")}</p>
           </div>

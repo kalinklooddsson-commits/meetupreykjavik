@@ -132,7 +132,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
           <div className="text-[10px] font-bold uppercase tracking-wider text-brand-coral">
             Mar
           </div>
-          <div className="text-xl font-black leading-tight tracking-tight">
+          <div className="text-xl font-black leading-tight tracking-tight text-brand-text">
             {event.date}
           </div>
         </div>
@@ -347,7 +347,7 @@ export function HomePage() {
 
         {/* Content */}
         <div className="section-shell relative z-10 flex min-h-[85vh] flex-col items-center justify-center px-4 py-24 text-center">
-          <span className="inline-flex rounded-full border border-white/12 bg-white/8 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/70 backdrop-blur-sm">
+          <span className="inline-flex rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/90 backdrop-blur-sm">
             {tHero("badge")}
           </span>
 
@@ -359,7 +359,7 @@ export function HomePage() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/60 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/80 sm:text-xl">
             {tHero("subtitleTop")}
             <br className="hidden sm:block" /> {tHero("subtitleBottom")}
           </p>
@@ -373,7 +373,7 @@ export function HomePage() {
             </Link>
             <Link
               href="/groups"
-              className="rounded-full border border-white/18 bg-white/6 px-8 py-4 text-sm font-semibold text-white/90 backdrop-blur-sm transition-colors hover:bg-white/12"
+              className="rounded-full border border-white/35 bg-white/12 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             >
               {tCta("startGroup")}
             </Link>
@@ -392,7 +392,7 @@ export function HomePage() {
                 <div className="text-2xl font-black tracking-tight text-white sm:text-3xl">
                   {stat.value}
                 </div>
-                <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-white/50">
+                <div className="mt-1 text-[11px] font-medium uppercase tracking-wider text-white/75">
                   {stat.label}
                 </div>
               </div>
@@ -566,25 +566,25 @@ export function HomePage() {
       {/* ============================================================ */}
       <section className="px-4 pb-20">
         <div className="section-shell overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3730A3_0%,#4F46E5_40%,#E8614D_100%)] px-6 py-16 text-center text-white sm:px-12 sm:py-20">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/60">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/85">
             {tSections("joinEyebrow")}
           </span>
           <h2 className="font-editorial mx-auto mt-4 max-w-2xl text-3xl leading-tight tracking-[-0.04em] sm:text-4xl lg:text-5xl">
             {tSections("joinTitle")}
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
             {tSections("joinDescription")}
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-coral shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              className="rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-indigo shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
             >
               {tCta("signupFreeLong")}
             </Link>
             <Link
               href="/for-venues"
-              className="rounded-full border border-white/20 bg-white/8 px-8 py-4 text-sm font-semibold text-white/90 backdrop-blur-sm transition-colors hover:bg-white/15"
+              className="rounded-full border border-white/35 bg-white/15 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25"
             >
               {tCta("partnerVenue")}
             </Link>

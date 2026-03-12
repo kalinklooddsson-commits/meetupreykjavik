@@ -1935,7 +1935,6 @@ export const pricingFaq = [
 ] as const;
 
 export const publicCategoryOptions = [
-  "All",
   ...homepageCategories.map((category) => category.name.split(" & ")[0]),
 ] as const;
 
