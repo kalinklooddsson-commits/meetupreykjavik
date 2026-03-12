@@ -12,6 +12,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { categories } from "@/lib/home-data";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import {
   minimumTicketPriceIsk,
   publicGroups,
@@ -62,7 +63,7 @@ function stepIsReady(stepIndex: number, form: ReturnType<typeof createInitialFor
     case 4:
       return form.isFree || getTicketPriceIsk(form.ticketPrice) >= minimumTicketPriceIsk;
     case 5:
-      return Boolean(form.description.trim().length >= 100);
+      return Boolean(form.description.replace(/<[^>]*>/g, "").trim().length >= 100);
     case 6:
       return true;
     default:
@@ -688,15 +689,15 @@ export function OrganizerEventWizard({
 
           {step === 5 ? (
             <section className={sectionClassName}>
-              <label className="block text-sm font-semibold text-brand-text">
+              <div className="block text-sm font-semibold text-brand-text">
                 Event description
-                <textarea
-                  value={form.description}
-                  onChange={(event) => updateField("description", event.target.value)}
-                  rows={8}
-                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
+                <RichTextEditor
+                  content={form.description}
+                  onChange={(html) => updateField("description", html)}
+                  placeholder="Describe your event in detail (min 100 characters)…"
+                  className="mt-2"
                 />
-              </label>
+              </div>
               <div className="mt-5 grid gap-5 md:grid-cols-2">
                 <label className="block text-sm font-semibold text-brand-text">
                   Featured photo URL
@@ -908,9 +909,11 @@ export function OrganizerEventWizard({
                 <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-brand-text">
                   {form.title || "Event title"}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
-                  {form.description}
-                </p>
+                {/* Safe: content comes from user's own Tiptap editor in this form (StarterKit restricts to safe HTML subset) */}
+                <div
+                  className="prose prose-sm mt-3 max-w-none text-brand-text-muted"
+                  dangerouslySetInnerHTML={{ __html: form.description }}
+                />
                 <div className="mt-4 grid gap-3">
                   <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {selectedGroup?.name} · hosted by {organizerName}
