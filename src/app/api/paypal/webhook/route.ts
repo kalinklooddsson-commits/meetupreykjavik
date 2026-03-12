@@ -3,6 +3,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { hasPayPalEnv, verifyWebhookSignature } from "@/lib/payments/paypal";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
+/**
+ * In-memory dedup for webhook retries (per serverless instance).
+ * Keeps the last 500 transmission IDs and auto-expires after 10 minutes.
+ */
+const processedTransmissions = new Map<string, number>();
+const DEDUP_MAX = 500;
+const DEDUP_TTL = 10 * 60 * 1000;
+
+function isDuplicate(transmissionId: string): boolean {
+  if (!transmissionId) return false;
+
+  // Cleanup expired entries periodically
+  if (processedTransmissions.size > DEDUP_MAX) {
+    const cutoff = Date.now() - DEDUP_TTL;
+    for (const [id, ts] of processedTransmissions) {
+      if (ts < cutoff) processedTransmissions.delete(id);
+    }
+  }
+
+  if (processedTransmissions.has(transmissionId)) return true;
+  processedTransmissions.set(transmissionId, Date.now());
+  return false;
+}
+
 export async function POST(request: NextRequest) {
   if (!hasPayPalEnv()) {
     return NextResponse.json(
@@ -40,6 +64,12 @@ export async function POST(request: NextRequest) {
       { error: "Invalid webhook signature." },
       { status: 401 },
     );
+  }
+
+  // Idempotency: skip if we already processed this transmission
+  const transmissionId = headers["paypal-transmission-id"];
+  if (isDuplicate(transmissionId)) {
+    return NextResponse.json({ received: true, deduplicated: true });
   }
 
   let event: { event_type?: string; resource?: Record<string, unknown> };
