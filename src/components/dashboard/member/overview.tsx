@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Settings,
 } from "lucide-react";
+import { RsvpButton } from "@/components/public/rsvp-button";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -34,7 +35,7 @@ function memberLinks(activeKey: string) {
     { key: "groups", label: "Groups", href: "/dashboard/groups" as Route },
     { key: "messages", label: "Messages", href: "/dashboard/messages" as Route },
     { key: "transactions", label: "Payments", href: "/dashboard/transactions" as Route },
-    { key: "profile", label: "Profile", href: "/profile/baldvin" as Route },
+    { key: "profile", label: "Profile", href: "/settings" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
@@ -78,7 +79,7 @@ export async function MemberOverviewScreen() {
         title={profile.name}
         description={profile.bio || "Complete your bio to help organizers understand your interests."}
         actionLabel="Edit profile"
-        actionHref={"/profile/baldvin" as Route}
+        actionHref={"/settings" as Route}
       >
         <div className="flex flex-wrap items-center gap-4">
           <AvatarStamp name={profile.name} size="lg" />
@@ -133,7 +134,7 @@ export async function MemberOverviewScreen() {
         actionHref={"/dashboard/calendar" as Route}
       >
         <DashboardTable
-          columns={["Event", "Venue", "Status", "Seat / Position", "Note"]}
+          columns={["Event", "Venue", "Status", "Seat / Position", "Action"]}
           rows={data.upcomingEvents.map((e) => ({
             key: e.event.slug,
             cells: [
@@ -149,7 +150,7 @@ export async function MemberOverviewScreen() {
                 {e.status}
               </ToneBadge>,
               e.seat,
-              <span key="note" className="text-brand-text-muted">{e.note}</span>,
+              <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
             ],
           }))}
           caption="Your upcoming events"
@@ -188,7 +189,7 @@ export async function MemberOverviewScreen() {
           icon={MessageSquare}
         />
         <QuickActionCard
-          href={"/dashboard/settings" as Route}
+          href={"/settings" as Route}
           title="Settings"
           description="Profile, notifications, privacy, and billing preferences."
           icon={Settings}

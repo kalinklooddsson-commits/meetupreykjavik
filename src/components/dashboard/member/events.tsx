@@ -10,6 +10,7 @@ import {
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getMemberPortalData } from "@/lib/dashboard-fetchers";
 import { EventsFilterBar } from "./events-filter-bar";
+import { RsvpButton } from "@/components/public/rsvp-button";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -20,7 +21,7 @@ function memberLinks(activeKey: string) {
     { key: "groups", label: "Groups", href: "/dashboard/groups" as Route },
     { key: "messages", label: "Messages", href: "/dashboard/messages" as Route },
     { key: "transactions", label: "Payments", href: "/dashboard/transactions" as Route },
-    { key: "profile", label: "Profile", href: "/profile/baldvin" as Route },
+    { key: "profile", label: "Profile", href: "/settings" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
@@ -101,7 +102,7 @@ export async function MemberCalendarScreen() {
         description="Events matched to your interests, attendance history, and group activity."
       >
         <DashboardTable
-          columns={["Event", "Venue", "Match", "Why"]}
+          columns={["Event", "Venue", "Match", "Why", "Action"]}
           rows={data.recommendations.map((r) => ({
             key: r.event.slug,
             cells: [
@@ -115,6 +116,7 @@ export async function MemberCalendarScreen() {
               r.event.venueName,
               <ToneBadge key="score" tone="indigo">{r.score}</ToneBadge>,
               <span key="reason" className="text-brand-text-muted">{r.reason}</span>,
+              <RsvpButton key="rsvp" eventSlug={r.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
             ],
           }))}
           caption="Recommended events"

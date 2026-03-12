@@ -26,6 +26,7 @@ export const apiSpecRoutes: ApiSpecRoute[] = [
   { category: "users", method: "GET", pattern: "/api/users", description: "List users with filters.", implementation: "scaffold" },
   { category: "users", method: "GET", pattern: "/api/users/[id]", description: "Get a single user profile.", implementation: "mock" },
   { category: "users", method: "PATCH", pattern: "/api/users/[id]", description: "Update a profile.", implementation: "scaffold" },
+  { category: "users", method: "PATCH", pattern: "/api/profile", description: "Update the current user's profile.", implementation: "scaffold" },
   { category: "users", method: "DELETE", pattern: "/api/users/[id]", description: "Delete an account.", implementation: "scaffold" },
   { category: "users", method: "PATCH", pattern: "/api/users/[id]/type", description: "Change account type.", implementation: "scaffold" },
   { category: "users", method: "PATCH", pattern: "/api/users/[id]/status", description: "Suspend, activate, or ban a user.", implementation: "scaffold" },

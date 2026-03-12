@@ -31,7 +31,7 @@ function memberLinks(activeKey: string) {
     { key: "groups", label: "Groups", href: "/dashboard/groups" as Route },
     { key: "messages", label: "Messages", href: "/dashboard/messages" as Route },
     { key: "transactions", label: "Payments", href: "/dashboard/transactions" as Route },
-    { key: "profile", label: "Profile", href: "/profile/baldvin" as Route },
+    { key: "profile", label: "Profile", href: "/settings" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
@@ -56,7 +56,7 @@ export async function MemberProfileScreen({ slug }: { slug?: string }) {
       description={`Profile overview for ${profile.name}.`}
       links={memberLinks("profile")}
       roleMode="member"
-      primaryAction={{ href: "/dashboard/settings" as Route, label: "Edit settings" }}
+      primaryAction={{ href: "/settings" as Route, label: "Edit settings" }}
     >
       {/* ── Identity header ─────────────────────────────────── */}
       <Surface
@@ -64,7 +64,7 @@ export async function MemberProfileScreen({ slug }: { slug?: string }) {
         title={profile.name}
         description={profile.bio}
         actionLabel="Edit profile"
-        actionHref={"/dashboard/settings" as Route}
+        actionHref={"/settings" as Route}
       >
         <div className="flex flex-wrap items-start gap-5">
           <AvatarStamp name={profile.name} size="lg" />
@@ -295,7 +295,7 @@ export async function MemberSettingsScreen() {
           title={section.title}
           description={section.description}
           actionLabel={section.key === "profile" ? "Edit profile" : undefined}
-          actionHref={section.key === "profile" ? ("/dashboard/settings/edit" as Route) : undefined}
+          actionHref={section.key === "profile" ? ("/settings" as Route) : undefined}
         >
           <KeyValueList
             items={section.items.map((item) => ({
