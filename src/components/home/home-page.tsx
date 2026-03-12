@@ -356,7 +356,7 @@ export function HomePage() {
           <h1 className="font-editorial mx-auto mt-8 max-w-4xl text-5xl leading-[0.94] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
             {tHero("titleLead")}
             <br />
-            <span className="text-brand-coral italic">
+            <span className="text-brand-coral">
               {tHero("titleAccent")}
             </span>
           </h1>
@@ -498,7 +498,7 @@ export function HomePage() {
                 <p className="mt-1 text-xs font-medium text-gray-600">
                   {category.count} {tSocial("meetups")}
                 </p>
-                <ArrowRight className="mt-3 h-3.5 w-3.5 text-brand-text-light transition-colors group-hover:text-brand-indigo" />
+                <ArrowRight className="mt-3 h-3.5 w-3.5 text-gray-400 transition-colors group-hover:text-brand-indigo" />
               </Link>
             ))}
           </div>

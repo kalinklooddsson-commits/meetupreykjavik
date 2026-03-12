@@ -1485,7 +1485,7 @@ export function EventsIndexScreen({
                       laneColor,
                     )}
                   >
-                    <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
+                    <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500">
                       {laneIcon}
                       {lane.label}
                     </div>
@@ -1606,7 +1606,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-indigo-soft">
                         <Icon className="h-5 w-5 text-brand-indigo" />
                       </div>
-                      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
                         {signal.label}
                       </div>
                       <div className="mt-2 text-sm font-semibold leading-6 text-gray-900">
@@ -1762,7 +1762,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                     key={item.label}
                     className="rounded-lg border border-brand-border-light bg-brand-sand-light px-4 py-3"
                   >
-                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
                       {item.label}
                     </div>
                     <div className="mt-2 text-sm leading-relaxed text-gray-700">{item.value}</div>
@@ -2182,7 +2182,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
                       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-coral-soft">
                         <Icon className="h-5 w-5 text-brand-coral" />
                       </div>
-                      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                      <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
                         {signal.label}
                       </div>
                       <div className="mt-2 text-sm font-semibold leading-6 text-gray-900">
@@ -2305,7 +2305,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
                     key={item.label}
                     className="rounded-lg border border-brand-border-light bg-brand-sand-light px-4 py-3"
                   >
-                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
                       {item.label}
                     </div>
                     <div className="mt-2 text-sm leading-relaxed text-gray-700">{item.value}</div>
@@ -2419,7 +2419,7 @@ export function VenuesIndexScreen({
                   key={area.area}
                   className={`rounded-2xl border border-brand-border-light border-l-4 ${borderColors[i % borderColors.length]} bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition hover:shadow-md`}
                 >
-                  <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
+                  <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500">
                     {area.area}
                   </div>
                   <div className="mt-2 text-3xl font-extrabold tracking-tight text-gray-900">
@@ -2551,7 +2551,7 @@ export function VenuesIndexScreen({
       {sourcedPlaces.length > 0 ? (
         <section className="bg-gray-50">
           <div className="section-shell py-12">
-            <div className="mb-2 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
+            <div className="mb-2 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500">
               {t("sourced.eyebrow")}
             </div>
             <div className="mb-8 flex items-center justify-between">
@@ -2935,7 +2935,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
                     key={signal.label}
                     className="rounded-xl border border-brand-border-light bg-brand-sand-light p-4"
                   >
-                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
                       {signal.label}
                     </div>
                     <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
@@ -2983,7 +2983,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
                     key={item.label}
                     className="rounded-lg border border-brand-border-light bg-brand-sand-light px-4 py-3"
                   >
-                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                    <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
                       {item.label}
                     </div>
                     <div className="mt-2 text-sm leading-relaxed text-gray-700">{item.value}</div>
@@ -3157,7 +3157,7 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
                   key={item.label}
                   className="rounded-xl border border-brand-border-light bg-brand-sand-light p-4"
                 >
-                  <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                  <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
                     {item.label}
                   </div>
                   <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">

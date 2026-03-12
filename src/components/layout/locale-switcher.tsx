@@ -49,8 +49,8 @@ export function LocaleSwitcher({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-full border border-brand-border bg-white/72 p-1",
-        compact && "border-transparent bg-transparent p-0",
+        "inline-flex items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50/80 p-0.5",
+        compact && "border-gray-200 bg-gray-50/80",
         className,
       )}
       aria-label={t("switcher")}
@@ -63,11 +63,11 @@ export function LocaleSwitcher({
           disabled={isBusy}
           onClick={() => void switchLocale(nextLocale)}
           className={cn(
-            "min-h-11 min-w-11 rounded-full px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] transition-colors",
-            compact && "min-h-9 min-w-9 px-2.5 py-1.5 tracking-[0.14em]",
+            "rounded-md px-2 py-1 text-[0.6875rem] font-bold uppercase tracking-[0.08em] transition-all duration-150",
+            compact && "px-2 py-1",
             locale === nextLocale
-              ? "bg-brand-indigo text-white"
-              : "text-brand-text-light hover:text-brand-indigo",
+              ? "bg-white text-gray-900 shadow-sm ring-1 ring-gray-200"
+              : "text-gray-500 hover:text-gray-700",
             isBusy ? "cursor-wait opacity-70" : "cursor-pointer",
           )}
         >

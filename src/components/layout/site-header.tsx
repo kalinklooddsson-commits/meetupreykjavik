@@ -32,17 +32,17 @@ export async function SiteHeader() {
   ] as const satisfies readonly { href: Route; label: string }[];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-border bg-[rgba(250,248,244,0.92)] shadow-[0_1px_3px_rgba(42,38,56,0.06)] backdrop-blur-xl">
-      <div className="section-shell flex min-h-[4.25rem] items-center justify-between gap-6 py-2.5">
+    <header className="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 shadow-[0_1px_3px_rgba(0,0,0,0.04)] backdrop-blur-xl">
+      <div className="section-shell flex min-h-[3.75rem] items-center justify-between gap-6 py-2">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-indigo text-white">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-indigo text-white shadow-sm">
             <Compass className="h-4 w-4" />
           </span>
           <div className="leading-tight">
-            <div className="text-sm font-extrabold tracking-[-0.02em] text-brand-text">
+            <div className="text-sm font-extrabold tracking-[-0.02em] text-gray-900">
               {tHeader("brandTop")}
             </div>
-            <div className="font-editorial text-sm tracking-[-0.02em] text-brand-indigo">
+            <div className="font-editorial text-[0.8125rem] tracking-[-0.02em] text-brand-indigo">
               {tHeader("brandBottom")}
             </div>
           </div>

@@ -123,10 +123,10 @@ function MoreDropdown({
         aria-haspopup="true"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition",
+          "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[0.8125rem] font-semibold tracking-[-0.01em] transition-all duration-200",
           hasActive
-            ? "bg-brand-indigo text-white"
-            : "text-gray-700 hover:bg-brand-indigo/8 hover:text-brand-indigo",
+            ? "bg-brand-indigo text-white shadow-sm"
+            : "text-gray-800 hover:bg-gray-100 hover:text-gray-900",
         )}
       >
         {label}
@@ -141,7 +141,7 @@ function MoreDropdown({
       {/* Dropdown panel */}
       <div
         className={cn(
-          "absolute right-0 top-full z-50 mt-2 min-w-[200px] origin-top-right rounded-xl border border-brand-border bg-white py-2 shadow-lg transition-all duration-200",
+          "absolute right-0 top-full z-50 mt-2.5 min-w-[220px] origin-top-right rounded-xl border border-gray-200 bg-white py-1.5 shadow-xl ring-1 ring-black/[0.03] transition-all duration-200",
           open
             ? "scale-100 opacity-100"
             : "pointer-events-none scale-95 opacity-0",
@@ -157,10 +157,10 @@ function MoreDropdown({
               role="menuitem"
               onClick={close}
               className={cn(
-                "block px-4 py-2 text-sm font-medium transition",
+                "block px-4 py-2.5 text-[0.8125rem] font-medium transition-colors",
                 active
                   ? "bg-brand-indigo/8 text-brand-indigo"
-                  : "text-brand-text hover:bg-brand-indigo/4 hover:text-brand-indigo",
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
               )}
             >
               {item.label}
@@ -226,7 +226,7 @@ function MobileDrawer({
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300",
+          "fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm transition-opacity duration-300",
           open
             ? "opacity-100"
             : "pointer-events-none opacity-0",
@@ -251,7 +251,7 @@ function MobileDrawer({
             type="button"
             onClick={onClose}
             aria-label={closeLabel}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-700 transition hover:bg-brand-indigo/6 hover:text-brand-text"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-600 transition hover:bg-gray-200 hover:text-gray-900"
           >
             <X className="h-5 w-5" />
           </button>
@@ -260,7 +260,7 @@ function MobileDrawer({
         {/* Scrollable content */}
         <nav className="flex-1 overflow-y-auto px-5 pb-8">
           {/* Primary links */}
-          <ul className="space-y-1 pt-2">
+          <ul className="space-y-0.5 pt-2">
             {navigation.map((item) => {
               const active = isActivePath(activePath, item.href);
               return (
@@ -270,10 +270,10 @@ function MobileDrawer({
                     onClick={onClose}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "block rounded-lg px-3 py-2.5 text-base font-medium transition",
+                      "block rounded-xl px-4 py-3 text-[0.9375rem] font-semibold transition",
                       active
                         ? "bg-brand-indigo text-white"
-                        : "text-brand-text hover:bg-brand-indigo/6",
+                        : "text-gray-800 hover:bg-gray-50",
                     )}
                   >
                     {item.label}
@@ -284,10 +284,10 @@ function MobileDrawer({
           </ul>
 
           {/* Divider */}
-          <div className="my-4 border-t border-brand-border" />
+          <div className="my-4 border-t border-gray-100" />
 
           {/* Secondary links */}
-          <ul className="space-y-1">
+          <ul className="space-y-0.5">
             {secondaryNavigation.map((item) => {
               const active = isActivePath(activePath, item.href);
               return (
@@ -297,10 +297,10 @@ function MobileDrawer({
                     onClick={onClose}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "block rounded-lg px-3 py-2.5 text-base font-medium transition",
+                      "block rounded-xl px-4 py-3 text-[0.9375rem] font-medium transition",
                       active
                         ? "bg-brand-indigo text-white"
-                        : "text-gray-700 hover:bg-brand-indigo/6 hover:text-brand-text",
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                     )}
                   >
                     {item.label}
@@ -311,34 +311,34 @@ function MobileDrawer({
           </ul>
 
           {/* Divider */}
-          <div className="my-4 border-t border-brand-border" />
+          <div className="my-4 border-t border-gray-100" />
 
           {/* Auth section */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {session && portalHref ? (
               <>
                 <Link
                   href={portalHref}
                   onClick={onClose}
-                  className="block w-full rounded-full bg-brand-indigo px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:opacity-90"
+                  className="block w-full rounded-full bg-brand-indigo px-5 py-3 text-center text-sm font-bold text-white transition hover:opacity-90"
                 >
                   {portalLabel(session.accountType, labels)}
                 </Link>
-                <SignOutButton className="w-full min-h-9 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-brand-indigo/8" />
+                <SignOutButton className="w-full min-h-10 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-gray-50" />
               </>
             ) : (
               <>
                 <Link
                   href="/signup"
                   onClick={onClose}
-                  className="block w-full rounded-full bg-brand-coral px-4 py-2.5 text-center text-sm font-semibold text-white transition hover:opacity-90"
+                  className="block w-full rounded-full bg-brand-coral px-5 py-3 text-center text-sm font-bold text-white shadow-md transition hover:opacity-90"
                 >
                   {labels.signup}
                 </Link>
                 <Link
                   href="/login"
                   onClick={onClose}
-                  className="block w-full rounded-full border border-brand-border px-4 py-2.5 text-center text-sm font-medium text-brand-text transition hover:bg-brand-indigo/6"
+                  className="block w-full rounded-full border-2 border-gray-200 px-5 py-3 text-center text-sm font-semibold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
                 >
                   {labels.signin}
                 </Link>
@@ -412,16 +412,16 @@ function SearchOverlay({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 pt-20 sm:pt-32"
+      className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 backdrop-blur-sm pt-20 sm:pt-32"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xl">
+      <div className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black/[0.03]">
         {/* Top accent border */}
         <div className="h-0.5 bg-gradient-to-r from-brand-indigo via-brand-coral to-brand-indigo" />
 
-        <div className="p-4">
+        <div className="p-5">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -443,7 +443,7 @@ function SearchOverlay({
               <button
                 type="button"
                 onClick={onClose}
-                className="shrink-0 rounded-lg border border-gray-200 px-2 py-1 text-xs text-gray-500"
+                className="shrink-0 rounded-md border border-gray-200 px-2 py-1 text-[0.6875rem] font-medium text-gray-500 transition hover:bg-gray-50"
               >
                 Esc
               </button>
@@ -451,8 +451,8 @@ function SearchOverlay({
           </form>
 
           {/* Recent searches placeholder */}
-          <div className="mt-4 border-t border-gray-100 pt-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <div className="mt-5 border-t border-gray-100 pt-4">
+            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
               {overlayLabels?.recentSearches ?? "Recent searches"}
             </p>
             <p className="mt-2 text-sm text-gray-500">
@@ -461,11 +461,11 @@ function SearchOverlay({
           </div>
 
           {/* Quick links */}
-          <div className="mt-3 border-t border-gray-100 pt-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <div className="mt-4 border-t border-gray-100 pt-4">
+            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
               {overlayLabels?.browse ?? "Browse"}
             </p>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-2.5 flex flex-wrap gap-2">
               {[
                 { label: "Events", href: "/events" },
                 { label: "Groups", href: "/groups" },
@@ -478,7 +478,7 @@ function SearchOverlay({
                     router.push(link.href as Route);
                     onClose();
                   }}
-                  className="rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:border-brand-indigo hover:text-brand-indigo"
+                  className="rounded-full border border-gray-200 bg-gray-50 px-3.5 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
                 >
                   {link.label}
                 </button>
@@ -487,11 +487,11 @@ function SearchOverlay({
           </div>
 
           {/* Popular categories */}
-          <div className="mt-3 border-t border-gray-100 pt-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <div className="mt-4 border-t border-gray-100 pt-4">
+            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
               {overlayLabels?.popularCategories ?? "Popular categories"}
             </p>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-2.5 flex flex-wrap gap-2">
               {["Music", "Tech", "Art", "Outdoors", "Food"].map((tag) => (
                 <button
                   key={tag}
@@ -500,7 +500,7 @@ function SearchOverlay({
                     router.push(`/events?category=${encodeURIComponent(tag.toLowerCase())}` as Route);
                     onClose();
                   }}
-                  className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 transition hover:border-brand-indigo hover:text-brand-indigo"
+                  className="rounded-full border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
                 >
                   {tag}
                 </button>
@@ -561,10 +561,10 @@ export function SiteHeaderClient({
   return (
     <>
       {/* ──────────────── Desktop ──────────────── */}
-      <div className="hidden flex-1 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-5">
+      <div className="hidden flex-1 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-6">
         <div aria-hidden="true" />
 
-        <nav className="flex items-center gap-1 justify-self-center">
+        <nav className="flex items-center gap-0.5 justify-self-center">
           {navigation.map((item) => {
             const active = isActivePath(activePath, item.href);
 
@@ -574,15 +574,15 @@ export function SiteHeaderClient({
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "group relative inline-flex items-center rounded-lg px-3.5 py-2 text-sm font-medium transition",
+                  "group relative inline-flex items-center rounded-lg px-4 py-2 text-[0.8125rem] font-semibold tracking-[-0.01em] transition-all duration-200",
                   active
-                    ? "bg-brand-indigo text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]"
-                    : "text-gray-700 hover:bg-brand-indigo/8 hover:text-brand-indigo",
+                    ? "bg-brand-indigo text-white shadow-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-gray-900",
                 )}
               >
                 {item.label}
                 {!active && (
-                  <span className="absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-brand-indigo transition-transform duration-200 group-hover:scale-x-100" />
+                  <span className="absolute bottom-1 left-4 right-4 h-[1.5px] origin-left scale-x-0 rounded-full bg-brand-indigo transition-transform duration-200 group-hover:scale-x-100" />
                 )}
               </Link>
             );
@@ -591,25 +591,33 @@ export function SiteHeaderClient({
           <MoreDropdown items={secondaryNavigation} label={moreLabel} />
         </nav>
 
-        <div className="flex items-center gap-3 justify-self-end">
+        <div className="flex items-center gap-2.5 justify-self-end">
+          {/* Search */}
           <button
             type="button"
             aria-label={searchLabel}
             onClick={() => setSearchOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-brand-indigo/6 hover:text-brand-text"
+            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50/80 px-3 py-1.5 text-sm text-gray-500 transition hover:border-gray-300 hover:bg-gray-100"
           >
-            <Search className="h-4 w-4" />
-            <kbd className="hidden rounded border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 xl:inline-block">
+            <Search className="h-3.5 w-3.5" />
+            <kbd className="hidden text-[0.625rem] font-medium text-gray-400 xl:inline-block">
               ⌘K
             </kbd>
           </button>
+
+          {/* Divider */}
+          <div className="mx-1 h-5 w-px bg-gray-200" />
+
+          {/* Locale */}
           <LocaleSwitcher compact />
+
+          {/* Auth */}
           {session && portalHref ? (
             <>
-              <SignOutButton className="min-h-9 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-brand-indigo/8" />
+              <SignOutButton className="min-h-9 border-transparent bg-transparent px-3 py-2 text-sm font-medium text-gray-600 shadow-none hover:border-transparent hover:bg-gray-100 hover:text-gray-900" />
               <Link
                 href={portalHref}
-                className="inline-flex items-center justify-center rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+                className="inline-flex items-center justify-center rounded-full bg-brand-indigo px-5 py-2.5 text-[0.8125rem] font-bold text-white shadow-sm transition hover:shadow-md hover:brightness-110"
               >
                 {portalLabel(session.accountType, labels)}
               </Link>
@@ -618,13 +626,13 @@ export function SiteHeaderClient({
             <>
               <Link
                 href="/login"
-                className="text-sm font-medium text-gray-700 transition-colors hover:text-brand-indigo"
+                className="rounded-lg px-3 py-2 text-[0.8125rem] font-semibold text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
               >
                 {labels.signin}
               </Link>
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center rounded-full bg-brand-coral px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+                className="inline-flex items-center justify-center rounded-full bg-brand-coral px-5 py-2.5 text-[0.8125rem] font-bold text-white shadow-sm transition hover:shadow-md hover:brightness-110"
               >
                 {labels.signup}
               </Link>
@@ -638,7 +646,7 @@ export function SiteHeaderClient({
         type="button"
         onClick={() => setDrawerOpen(true)}
         aria-label={menuLabel}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-gray-800 transition hover:bg-brand-indigo/6 lg:hidden"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200 lg:hidden"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -684,10 +692,10 @@ export function SiteHeaderMobileNav({
     <div className="section-shell pb-2 lg:hidden">
       <div className="relative">
         {/* Left fade */}
-        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-[var(--brand-sand-light)] to-transparent" />
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-[var(--brand-sand-light)] to-transparent" />
         {/* Right fade */}
-        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-[var(--brand-sand-light)] to-transparent" />
-        <nav className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-[var(--brand-sand-light)] to-transparent" />
+        <nav className="flex gap-2 overflow-x-auto scrollbar-hide px-2">
           {allItems.map((item) => {
             const active = isActivePath(activePath, item.href);
 
@@ -697,10 +705,10 @@ export function SiteHeaderMobileNav({
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition",
+                  "shrink-0 rounded-full px-3.5 py-1.5 text-[0.8125rem] font-semibold transition",
                   active
-                    ? "border-brand-indigo bg-brand-indigo text-white shadow-sm"
-                    : "border-gray-300 bg-white text-gray-700 hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
+                    ? "bg-brand-indigo text-white shadow-sm"
+                    : "bg-white text-gray-600 shadow-sm ring-1 ring-gray-200 hover:ring-brand-indigo/30 hover:text-gray-900",
                 )}
               >
                 {item.label}
