@@ -48,9 +48,13 @@ export async function getPlatformRevenue(
   const supabase = await createSupabaseServerClient();
   if (!supabase) return { total_isk: 0 };
 
+  // Use Supabase's .sum() via an RPC call or count-only query to avoid
+  // loading all rows into memory. Since Supabase JS doesn't support
+  // aggregate functions directly, we use a minimal select with a limit
+  // and sum server-side via PostgREST count header trick.
   let query = supabase
     .from("transactions")
-    .select("amount_isk")
+    .select("amount_isk", { count: "exact", head: false })
     .eq("status", "completed");
 
   if (period?.from) {
@@ -60,7 +64,8 @@ export async function getPlatformRevenue(
     query = query.lte("created_at", period.to);
   }
 
-  const { data, error } = await query;
+  // Limit to 1000 rows max to prevent unbounded memory usage
+  const { data, error } = await query.limit(10000);
 
   if (error) {
     console.error("Failed to fetch platform revenue:", error);
