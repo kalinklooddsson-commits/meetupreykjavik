@@ -19,6 +19,7 @@ import { categories } from "@/lib/home-data";
 import { portalPathForRole } from "@/lib/auth/mock-auth-config";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 import { writeSessionDraft } from "@/lib/storage/session-drafts";
+import { ImageUpload } from "@/components/ui/image-upload";
 import type { AccountType, Locale } from "@/types/domain";
 
 type OnboardingFlowProps = {
@@ -132,7 +133,23 @@ export function OnboardingFlow({
       return;
     }
 
-    startTransition(() => {
+    startTransition(async () => {
+      // Persist to database
+      try {
+        await fetch("/api/onboarding/complete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            locale,
+            interests: selectedInterests,
+            avatarUrl: photoUrl || undefined,
+          }),
+        });
+      } catch {
+        // Best-effort: save locally even if API call fails
+      }
+
+      // Also keep local draft as backup
       writeSessionDraft(
         storageKey,
         {
@@ -392,25 +409,17 @@ export function OnboardingFlow({
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-brand-text">
-                      Photo URL
-                      <input
-                        id="onboarding-photo-url"
-                        name="photoUrl"
-                        type="url"
-                        value={photoUrl}
-                        onChange={(event) => setPhotoUrl(event.target.value)}
-                        placeholder="https://example.com/profile-photo.jpg"
-                        autoComplete="url"
-                        autoCapitalize="none"
-                        inputMode="url"
-                        spellCheck={false}
-                        className="field-luxe mt-2 px-4 py-3 text-sm outline-none"
-                      />
-                    </label>
+                    <ImageUpload
+                      value={photoUrl}
+                      onChange={(url) => setPhotoUrl(url)}
+                      label="Upload a profile photo"
+                      hint="PNG, JPG or WebP up to 5 MB"
+                      folder="profiles"
+                      aspectHint="Square works best"
+                    />
                     <p className="mt-3 text-sm leading-7 text-brand-text-muted">
-                      This is a temporary mock input so the full onboarding step exists before
-                      Supabase storage is connected for uploads.
+                      A photo helps with trust, approvals, and warmer introductions.
+                      You can always change it later in your settings.
                     </p>
                   </div>
                 </div>

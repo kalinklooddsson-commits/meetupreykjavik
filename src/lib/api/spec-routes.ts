@@ -21,6 +21,8 @@ export const apiSpecRoutes: ApiSpecRoute[] = [
   { category: "auth", method: "POST", pattern: "/api/auth/reset-password", description: "Set a new password from a reset token.", implementation: "scaffold" },
   { category: "auth", method: "GET", pattern: "/api/auth/me", description: "Return current session and account type.", implementation: "mock" },
 
+  { category: "auth", method: "POST", pattern: "/api/onboarding/complete", description: "Persist onboarding preferences to user profile.", implementation: "scaffold" },
+
   { category: "users", method: "GET", pattern: "/api/users", description: "List users with filters.", implementation: "scaffold" },
   { category: "users", method: "GET", pattern: "/api/users/[id]", description: "Get a single user profile.", implementation: "mock" },
   { category: "users", method: "PATCH", pattern: "/api/users/[id]", description: "Update a profile.", implementation: "scaffold" },

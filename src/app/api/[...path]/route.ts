@@ -27,7 +27,7 @@ import {
   rsvpSchema,
 } from "@/lib/validators/events";
 import { groupSchema } from "@/lib/validators/groups";
-import { profileSchema } from "@/lib/validators/profiles";
+import { profileSchema, onboardingSchema } from "@/lib/validators/profiles";
 import {
   bookingRequestSchema,
   venueAvailabilitySchema,
@@ -74,6 +74,7 @@ const bodySchemaMap: Record<string, ZodType> = {
   "POST /api/auth/login": loginSchema,
   "POST /api/auth/forgot-password": forgotPasswordSchema,
   "POST /api/auth/reset-password": resetPasswordSchema,
+  "POST /api/onboarding/complete": onboardingSchema,
   "PATCH /api/users/[id]": profileSchema.partial(),
   "POST /api/groups": groupSchema,
   "PATCH /api/groups/[slug]": groupSchema.partial(),
@@ -1077,6 +1078,22 @@ async function handleLiveDataRequest(
           body.counterOffer as Parameters<typeof updateBookingStatus>[2],
         );
         return successResponse(data);
+      }
+
+      // ── Onboarding ──
+      case "POST /api/onboarding/complete": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const onbBody = (await parseValidatedBody(request, key)) as {
+          locale: string;
+          interests: string[];
+          avatarUrl?: string;
+        };
+        const onbData = await updateProfile(session.id, {
+          locale: onbBody.locale as "en" | "is",
+          interests: onbBody.interests,
+          ...(onbBody.avatarUrl ? { avatar_url: onbBody.avatarUrl } : {}),
+        });
+        return successResponse(onbData);
       }
 
       // ── Users / Profiles ──

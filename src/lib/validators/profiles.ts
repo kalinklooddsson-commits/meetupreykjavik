@@ -15,7 +15,7 @@ export const profileSchema = z.object({
   bio: z.string().trim().max(300).optional(),
   city: z.string().trim().min(2).max(80).default("Reykjavik"),
   languages: z.array(z.string().trim().min(2).max(32)).max(6).default([]),
-  interests: z.array(z.uuid()).max(10).default([]),
+  interests: z.array(z.string().trim().min(2).max(60)).max(10).default([]),
   locale: z.enum(locales).default("en"),
   ageRange: z.string().trim().max(40).optional(),
   accountType: z.enum(accountTypes).default("user"),
@@ -25,6 +25,6 @@ export const profileSchema = z.object({
 
 export const onboardingSchema = z.object({
   locale: z.enum(locales),
-  interests: z.array(z.uuid()).min(3).max(10),
+  interests: z.array(z.string().trim().min(2).max(60)).min(3).max(10),
   avatarUrl: optionalUrlSchema,
 });
