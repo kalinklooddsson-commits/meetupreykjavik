@@ -47,7 +47,7 @@ export async function SiteFooter() {
               <Compass className="h-5 w-5" />
             </span>
             <div>
-              <div className="text-sm font-bold uppercase tracking-[0.18em] text-white/60">
+              <div className="text-sm font-bold uppercase tracking-[0.18em] text-white/70">
                 Meetup
               </div>
               <div className="font-editorial text-2xl text-white">
@@ -61,7 +61,7 @@ export async function SiteFooter() {
 
           {/* Newsletter signup */}
           <div className="mt-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/60">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">
               {tFooter("newsletter")}
             </p>
             <form className="mt-2 flex gap-2">
@@ -108,7 +108,7 @@ export async function SiteFooter() {
       </div>
       {/* Social links & copyright */}
       <div className="section-shell mt-10 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
-        <p className="text-sm text-white/60">
+        <p className="text-sm text-white/70">
           &copy; {new Date().getFullYear()} MeetupReykjavik. {tFooter("copyright")}
         </p>
         <div className="flex items-center gap-2">

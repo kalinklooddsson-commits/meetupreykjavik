@@ -154,7 +154,7 @@ export const venues: HomeVenue[] = [
     photo: "/place-images/reykjavik/dill-0aeca160.jpg",
   },
   {
-    slug: "grandi-hub",
+    slug: "stofan-cafe",
     name: "Stofan Cafe",
     type: "Cafe & Lounge",
     area: "Vesturgata",
