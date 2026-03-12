@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { hasPayPalEnv, verifyWebhookSignature } from "@/lib/payments/paypal";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   if (!hasPayPalEnv()) {
@@ -53,41 +54,80 @@ export async function POST(request: NextRequest) {
 
   const eventType = event.event_type;
 
-  switch (eventType) {
-    case "PAYMENT.CAPTURE.COMPLETED": {
-      const captureId = event.resource?.id as string | undefined;
-      const amount = event.resource?.amount as
-        | { value?: string; currency_code?: string }
-        | undefined;
-      console.log(
-        `[PayPal Webhook] Payment captured: ${captureId}, amount: ${amount?.value} ${amount?.currency_code}`,
-      );
-      // TODO: Update transaction status in database, fulfill ticket
-      break;
-    }
+  try {
+    switch (eventType) {
+      case "PAYMENT.CAPTURE.COMPLETED": {
+        const captureId = event.resource?.id as string | undefined;
+        if (captureId) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            // Mark the matching transaction as completed by PayPal capture ID
+            await supabase
+              .from("transactions")
+              .update({ status: "completed" })
+              .eq("payment_id", captureId)
+              .eq("payment_provider", "paypal");
+          }
+        }
+        break;
+      }
 
-    case "BILLING.SUBSCRIPTION.ACTIVATED": {
-      const subscriptionId = event.resource?.id as string | undefined;
-      const planId = event.resource?.plan_id as string | undefined;
-      console.log(
-        `[PayPal Webhook] Subscription activated: ${subscriptionId}, plan: ${planId}`,
-      );
-      // TODO: Activate user subscription in database
-      break;
-    }
+      case "PAYMENT.CAPTURE.DENIED":
+      case "PAYMENT.CAPTURE.REFUNDED": {
+        const captureId = event.resource?.id as string | undefined;
+        const newStatus = eventType === "PAYMENT.CAPTURE.DENIED" ? "failed" : "refunded";
+        if (captureId) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            await supabase
+              .from("transactions")
+              .update({ status: newStatus })
+              .eq("payment_id", captureId)
+              .eq("payment_provider", "paypal");
+          }
+        }
+        break;
+      }
 
-    case "BILLING.SUBSCRIPTION.CANCELLED": {
-      const subscriptionId = event.resource?.id as string | undefined;
-      console.log(
-        `[PayPal Webhook] Subscription cancelled: ${subscriptionId}`,
-      );
-      // TODO: Deactivate user subscription in database
-      break;
-    }
+      case "BILLING.SUBSCRIPTION.ACTIVATED": {
+        const subscriptionId = event.resource?.id as string | undefined;
+        const subscriberEmail = (event.resource?.subscriber as Record<string, unknown>)?.email_address as string | undefined;
+        if (subscriptionId && subscriberEmail) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            // Activate premium for the user matching this email
+            await supabase
+              .from("profiles")
+              .update({ is_premium: true, premium_tier: "supporter" })
+              .eq("email", subscriberEmail);
+          }
+        }
+        break;
+      }
 
-    default:
-      console.log(`[PayPal Webhook] Unhandled event type: ${eventType}`);
-      break;
+      case "BILLING.SUBSCRIPTION.CANCELLED":
+      case "BILLING.SUBSCRIPTION.EXPIRED":
+      case "BILLING.SUBSCRIPTION.SUSPENDED": {
+        const subscriberEmail = (event.resource?.subscriber as Record<string, unknown>)?.email_address as string | undefined;
+        if (subscriberEmail) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            await supabase
+              .from("profiles")
+              .update({ is_premium: false, premium_tier: null })
+              .eq("email", subscriberEmail);
+          }
+        }
+        break;
+      }
+
+      default:
+        // Unhandled event types are silently acknowledged
+        break;
+    }
+  } catch (error) {
+    // Log but don't fail — PayPal expects a 200 response
+    console.error(`PayPal webhook handler error for ${eventType}:`, error);
   }
 
   return NextResponse.json({ received: true });
