@@ -9,6 +9,21 @@ import type { NextRequest } from "next/server";
  *  2. Block direct access to internal API routes from foreign origins on mutating methods
  */
 
+const CSP_DIRECTIVES = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.paypal.com https://www.sandbox.paypal.com",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://*.paypal.com",
+  "font-src 'self'",
+  "connect-src 'self' https://*.supabase.co https://api.resend.com https://api.paypal.com https://api.sandbox.paypal.com",
+  "frame-src https://www.paypal.com https://www.sandbox.paypal.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "upgrade-insecure-requests",
+].join("; ");
+
 const SECURITY_HEADERS: Record<string, string> = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
@@ -16,6 +31,7 @@ const SECURITY_HEADERS: Record<string, string> = {
   "X-DNS-Prefetch-Control": "on",
   "Permissions-Policy":
     "camera=(), microphone=(), geolocation=(self), interest-cohort=()",
+  "Content-Security-Policy": CSP_DIRECTIVES,
 };
 
 export function middleware(request: NextRequest) {
