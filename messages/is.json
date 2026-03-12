@@ -41,7 +41,19 @@
     "signupFreeLong": "Stofna aðgang",
     "rsvp": "Skráning",
     "viewGroup": "Skoða hóp",
+    "viewEvent": "Skoða viðburð",
+    "viewVenue": "Skoða stað",
     "exploreVenue": "Skoða stað"
+  },
+  "cards": {
+    "going": "mæta",
+    "fillingFast": "Fyllist hratt",
+    "hot": "Vinsælt",
+    "members": "meðlimir",
+    "organizedBy": "Skipulagt af",
+    "nextEvent": "Næst: {title}",
+    "noUpcoming": "Engir viðburðir í nánd",
+    "openForBookings": "Opið fyrir bókanir"
   },
   "header": {
     "brandTop": "Meetup",

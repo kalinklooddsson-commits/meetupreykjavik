@@ -554,6 +554,8 @@ function Section({
 /* ── Card components ───────────────────────────────────── */
 
 function EventCard({ event }: { event: PublicEvent }) {
+  const tCta = useTranslations("cta");
+  const tCards = useTranslations("cards");
   const fill = occupancyPercent(event.attendees, event.capacity);
   const startsAt = new Date(event.startsAt);
   const badgeWeekday = startsAt.toLocaleString("en-GB", {
@@ -672,10 +674,10 @@ function EventCard({ event }: { event: PublicEvent }) {
           <div className="mt-4">
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span>
-                {event.attendees}/{event.capacity} going
+                {event.attendees}/{event.capacity} {tCards("going")}
               </span>
               {fill > 75 ? (
-                <span className="font-semibold text-brand-coral">Filling fast</span>
+                <span className="font-semibold text-brand-coral">{tCards("fillingFast")}</span>
               ) : null}
             </div>
             <div className="mt-1 h-1 rounded-full bg-gray-100">
@@ -696,7 +698,7 @@ function EventCard({ event }: { event: PublicEvent }) {
             href={eventHref(event.slug)}
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
           >
-            View event
+            {tCta("viewEvent")}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -712,6 +714,8 @@ function GroupCard({
   group: PublicGroup;
   upcomingTitle?: string;
 }) {
+  const tCta = useTranslations("cta");
+  const tCards = useTranslations("cards");
   const imageUrl = extractImageUrl(group.banner);
   const isHot = group.activity > 80;
 
@@ -744,14 +748,14 @@ function GroupCard({
         {isHot && (
           <div className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-brand-coral/90 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
             <TrendingUp className="h-3 w-3" />
-            Hot
+            {tCards("hot")}
           </div>
         )}
 
         {/* Member count on banner */}
         <div className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/40 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
           <UsersRound className="h-3.5 w-3.5" />
-          {group.members} members
+          {group.members} {tCards("members")}
         </div>
       </div>
 
@@ -784,20 +788,20 @@ function GroupCard({
 
         {/* Organizer */}
         <p className="mt-3 text-xs text-gray-400">
-          Organized by{" "}
+          {tCards("organizedBy")}{" "}
           <span className="font-medium text-gray-600">{group.organizer}</span>
         </p>
 
         {/* Footer */}
         <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
           <div className="text-sm text-gray-500">
-            {upcomingTitle ? `Next: ${upcomingTitle}` : "No upcoming events"}
+            {upcomingTitle ? tCards("nextEvent", { title: upcomingTitle }) : tCards("noUpcoming")}
           </div>
           <Link
             href={groupHref(group.slug)}
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
           >
-            View group
+            {tCta("viewGroup")}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -807,6 +811,8 @@ function GroupCard({
 }
 
 function VenueCard({ venue }: { venue: PublicVenue }) {
+  const tCta = useTranslations("cta");
+  const tCards = useTranslations("cards");
   const slugs = venue.upcomingEventSlugs ?? [];
   const nextEvent = slugs.length > 0 ? publicEvents.find((event) => slugs.includes(event.slug)) : undefined;
   const imageUrl = extractImageUrl(venue.art);
@@ -913,14 +919,14 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
                   <span className="truncate">{nextEvent.title}</span>
                 </span>
               ) : (
-                <span className="text-gray-400">Open for bookings</span>
+                <span className="text-gray-400">{tCards("openForBookings")}</span>
               )}
             </div>
             <Link
               href={venueHref(venue.slug)}
               className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
             >
-              View venue
+              {tCta("viewVenue")}
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -976,6 +982,7 @@ function BlogCard({ post }: { post: BlogPost }) {
 }
 
 function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
+  const tCta = useTranslations("cta");
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
 
@@ -1039,7 +1046,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
           href={venueHref(place.slug)}
           className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
         >
-          View venue
+          {tCta("viewVenue")}
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

@@ -41,7 +41,19 @@
     "signupFreeLong": "Create your account",
     "rsvp": "RSVP",
     "viewGroup": "View group",
+    "viewEvent": "View event",
+    "viewVenue": "View venue",
     "exploreVenue": "Explore venue"
+  },
+  "cards": {
+    "going": "going",
+    "fillingFast": "Filling fast",
+    "hot": "Hot",
+    "members": "members",
+    "organizedBy": "Organized by",
+    "nextEvent": "Next: {title}",
+    "noUpcoming": "No upcoming events",
+    "openForBookings": "Open for bookings"
   },
   "header": {
     "brandTop": "Meetup",

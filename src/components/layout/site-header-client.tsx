@@ -700,7 +700,7 @@ export function SiteHeaderMobileNav({
                   "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition",
                   active
                     ? "border-brand-indigo bg-brand-indigo text-white"
-                    : "border-brand-border bg-white text-brand-text-muted",
+                    : "border-brand-border bg-white text-brand-text-muted hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
                 )}
               >
                 {item.label}
