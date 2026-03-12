@@ -795,6 +795,7 @@
       "all": "All"
     },
     "sourced": {
+      "eyebrow": "Discover",
       "title": "More places in Reykjavik",
       "description": "Discover venues across the city that could host your next event.",
       "seeAll": "See all"
@@ -1126,5 +1127,29 @@
     "empty": {
       "noUpcomingEvents": "No upcoming events."
     }
+  },
+  "sourcedVenueDetail": {
+    "eyebrow": "Venue",
+    "claimVenue": "Claim this venue",
+    "visitWebsite": "Visit website",
+    "about": "About",
+    "location": "Location",
+    "venueRead": "Venue read",
+    "photoAttribution": "Photo attribution",
+    "details": "Details",
+    "type": "Type",
+    "area": "Area",
+    "address": "Address",
+    "website": "Website",
+    "available": "Available",
+    "notAvailable": "Not available",
+    "partnerPath": "Partner path",
+    "profileState": "Profile state",
+    "readyForClaim": "Ready for claim and onboarding",
+    "venueLane": "Venue lane",
+    "externalReference": "External reference",
+    "officialWebsiteFound": "Official website found",
+    "manualOutreachRequired": "Manual outreach may be required",
+    "similarPlaces": "Similar places"
   }
 }

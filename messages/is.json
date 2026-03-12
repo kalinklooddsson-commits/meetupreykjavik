@@ -795,6 +795,7 @@
       "all": "Allt"
     },
     "sourced": {
+      "eyebrow": "Uppgötva",
       "title": "Fleiri staðir í Reykjavík",
       "description": "Uppgötvaðu staði víðs vegar um borgina sem gætu hýst næsta viðburð þinn.",
       "seeAll": "Sjá alla"
@@ -1126,5 +1127,29 @@
     "empty": {
       "noUpcomingEvents": "Engir væntanlegir viðburðir."
     }
+  },
+  "sourcedVenueDetail": {
+    "eyebrow": "Staður",
+    "claimVenue": "Eignaðu þér þennan stað",
+    "visitWebsite": "Heimsækja vefsíðu",
+    "about": "Um",
+    "location": "Staðsetning",
+    "venueRead": "Staðaryfirlit",
+    "photoAttribution": "Myndaréttur",
+    "details": "Upplýsingar",
+    "type": "Tegund",
+    "area": "Svæði",
+    "address": "Heimilisfang",
+    "website": "Vefsíða",
+    "available": "Tiltækt",
+    "notAvailable": "Ekki tiltækt",
+    "partnerPath": "Samstarfsleið",
+    "profileState": "Staða prófíls",
+    "readyForClaim": "Tilbúið til eignar og uppsetningar",
+    "venueLane": "Staðarflokkur",
+    "externalReference": "Ytri tilvísun",
+    "officialWebsiteFound": "Opinber vefsíða fannst",
+    "manualOutreachRequired": "Handvirk útrás gæti verið nauðsynleg",
+    "similarPlaces": "Svipaðir staðir"
   }
 }

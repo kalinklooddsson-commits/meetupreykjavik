@@ -1385,7 +1385,7 @@ export function EventsIndexScreen({
                       ? "bg-brand-indigo text-white"
                       : usedCategories.includes(cat)
                         ? "bg-brand-indigo/10 text-brand-indigo ring-1 ring-brand-indigo/20 hover:bg-brand-indigo/20"
-                        : "bg-gray-100 text-gray-400",
+                        : "bg-gray-100 text-gray-500 cursor-default",
                   )}
                 >
                   {cat}
@@ -2480,7 +2480,7 @@ export function VenuesIndexScreen({
         <section className="bg-gray-50">
           <div className="section-shell py-12">
             <div className="mb-2 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-brand-text-light">
-              {t("sourced.title")}
+              {t("sourced.eyebrow")}
             </div>
             <div className="mb-8 flex items-center justify-between">
               <div>
@@ -2776,6 +2776,7 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
 
 export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
   const tNav = useTranslations("nav");
+  const t = useTranslations("sourcedVenueDetail");
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
   const signals = sourcedPlaceSignals(place);
@@ -2805,7 +2806,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
           </>
         ) : null}
         <div className="section-shell relative z-10 py-10 text-white sm:py-14 md:py-20">
-          <span className="text-xs font-semibold uppercase tracking-widest text-white/85">Venue</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-white/85">{t("eyebrow")}</span>
           <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{place.name}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{place.summary}</p>
           <div className="mt-6 flex flex-wrap gap-3">
@@ -2813,7 +2814,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
               href="/venue/onboarding"
               className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
             >
-              Claim this venue
+              {t("claimVenue")}
               <ArrowRight className="h-4 w-4" />
             </Link>
             {place.website ? (
@@ -2823,7 +2824,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
                 rel="noreferrer"
                 target="_blank"
               >
-                Visit website
+                {t("visitWebsite")}
               </a>
             ) : null}
           </div>
@@ -2831,9 +2832,9 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
       </section>
 
       <section className="section-shell py-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-6">
-            <Section title="About">
+            <Section title={t("about")}>
               <p className="text-sm leading-relaxed text-gray-600">{place.summary}</p>
               {place.address ? (
                 <div className="mt-3 flex items-center gap-2 text-sm text-gray-500">
@@ -2844,7 +2845,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
             </Section>
 
             {place.latitude && place.longitude ? (
-              <Section title="Location">
+              <Section title={t("location")}>
                 <VenueMap
                   latitude={place.latitude}
                   longitude={place.longitude}
@@ -2854,7 +2855,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
               </Section>
             ) : null}
 
-            <Section title="Venue read">
+            <Section title={t("venueRead")}>
               <div className="grid gap-4 md:grid-cols-3">
                 {signals.map((signal) => (
                   <div
@@ -2874,7 +2875,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
             </Section>
 
             {hasPhoto && place.image?.credit ? (
-              <Section title="Photo attribution">
+              <Section title={t("photoAttribution")}>
                 <p className="text-sm text-gray-600">{place.image.credit}</p>
                 {place.image.license ? (
                   <p className="mt-1 text-sm text-gray-500">{place.image.license}</p>
@@ -2884,25 +2885,25 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
           </div>
 
           <div className="space-y-6">
-            <Section title="Details">
+            <Section title={t("details")}>
               <KeyValueList
                 items={[
-                  { key: "type", label: "Type", value: place.kindLabel },
-                  { key: "area", label: "Area", value: place.area || "Reykjavik" },
-                  { key: "address", label: "Address", value: place.address || "Not available" },
-                  { key: "website", label: "Website", value: place.website ? "Available" : "Not available" },
+                  { key: "type", label: t("type"), value: place.kindLabel },
+                  { key: "area", label: t("area"), value: place.area || "Reykjavik" },
+                  { key: "address", label: t("address"), value: place.address || t("notAvailable") },
+                  { key: "website", label: t("website"), value: place.website ? t("available") : t("notAvailable") },
                 ]}
               />
             </Section>
 
-            <Section title="Partner path">
+            <Section title={t("partnerPath")}>
               <div className="space-y-3">
                 {[
-                  { label: "Profile state", value: "Ready for claim and onboarding" },
-                  { label: "Venue lane", value: place.laneLabel },
+                  { label: t("profileState"), value: t("readyForClaim") },
+                  { label: t("venueLane"), value: place.laneLabel },
                   {
-                    label: "External reference",
-                    value: place.website ? "Official website found" : "Manual outreach may be required",
+                    label: t("externalReference"),
+                    value: place.website ? t("officialWebsiteFound") : t("manualOutreachRequired"),
                   },
                 ].map((item) => (
                   <div
@@ -2919,7 +2920,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
             </Section>
 
             {relatedPlaces.length > 0 ? (
-              <Section title="Similar places">
+              <Section title={t("similarPlaces")}>
                 <div className="space-y-3">
                   {relatedPlaces.map((item) => (
                     <Link
@@ -3449,7 +3450,7 @@ export function PricingScreen() {
       </section>
 
       {/* Feature comparison */}
-      <section className="border-t border-gray-200 bg-brand-basalt">
+      <section className="overflow-hidden border-t border-gray-200 bg-brand-basalt">
         <div className="section-shell py-12">
           <h2 className="mb-2 text-center text-2xl font-bold text-white">{t("comparison.title")}</h2>
           <p className="mb-8 text-center text-sm text-gray-400">{t("comparison.description")}</p>
@@ -3557,7 +3558,7 @@ export function PrivacyScreen() {
       />
 
       <section className="section-shell py-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-6">
             {sections.map((section) => (
               <Section key={section.title} title={section.title}>
@@ -3624,7 +3625,7 @@ export function TermsScreen() {
       />
 
       <section className="section-shell py-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-6">
             {sections.map((section) => (
               <Section key={section.title} title={section.title}>
