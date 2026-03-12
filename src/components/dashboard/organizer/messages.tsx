@@ -7,6 +7,7 @@ import {
   ActivityFeed,
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
+import { MessageActions } from "../member/message-actions";
 import { getOrganizerPortalData } from "@/lib/dashboard-fetchers";
 
 function organizerLinks(activeKey: string) {
@@ -45,7 +46,7 @@ export async function OrganizerMessagesScreen() {
           description="All conversations related to your events and venue partnerships."
         >
           <DashboardTable
-            columns={["From", "Subject", "Channel", "Status", "Time"]}
+            columns={["From", "Subject", "Channel", "Status", "Action"]}
             rows={data.messages.map((m) => ({
               key: m.key,
               cells: [
@@ -69,9 +70,7 @@ export async function OrganizerMessagesScreen() {
                 <ToneBadge key="status" tone={messageTone(m.status)}>
                   {m.status}
                 </ToneBadge>,
-                <span key="meta" className="text-sm text-brand-text-muted">
-                  {m.meta}
-                </span>,
+                <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
               ],
             }))}
             caption="Organizer messages"

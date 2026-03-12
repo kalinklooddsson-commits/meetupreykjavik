@@ -154,7 +154,7 @@ export async function OrganizerVenuesScreen() {
                 </p>
               </div>
               <Link
-                href={"/organizer/venues/request" as Route}
+                href={"/organizer/venues" as Route}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2.5 text-sm font-medium text-white transition hover:bg-brand-indigo/90"
               >
                 New venue request

@@ -38,8 +38,8 @@ export async function OrganizerGroupsScreen() {
       links={organizerLinks("groups")}
       roleMode="organizer"
       primaryAction={{
-        href: "/organizer/groups/new" as Route,
-        label: "Create group",
+        href: "/groups" as Route,
+        label: "Browse groups",
       }}
     >
       <div className="space-y-6">
