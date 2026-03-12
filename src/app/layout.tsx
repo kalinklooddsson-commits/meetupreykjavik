@@ -5,6 +5,7 @@ import { getLocale } from "next-intl/server";
 
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { ToastProvider } from "@/components/ui/toast";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -61,7 +62,9 @@ export default async function RootLayout({
       data-scroll-behavior="smooth" className={cn("font-sans", geist.variable)}
     >
       <body className={`${dmSans.variable} ${fraunces.variable} antialiased`}>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

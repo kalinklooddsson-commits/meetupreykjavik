@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Check, Loader2, Calendar } from "lucide-react";
+import { useToast } from "@/components/ui/toast";
 
 interface RsvpButtonProps {
   eventSlug: string;
@@ -11,6 +12,7 @@ interface RsvpButtonProps {
 
 export function RsvpButton({ eventSlug, className = "" }: RsvpButtonProps) {
   const t = useTranslations("common");
+  const { toast } = useToast();
   const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -28,13 +30,17 @@ export function RsvpButton({ eventSlug, className = "" }: RsvpButtonProps) {
         if (result.ok) {
           setState("idle");
           setMessage("");
+          toast("info", "RSVP cancelled");
         } else {
           setState("going");
-          setMessage(result.details?.formErrors?.[0] ?? "Could not cancel RSVP");
+          const msg = result.details?.formErrors?.[0] ?? "Could not cancel RSVP";
+          setMessage(msg);
+          toast("error", msg);
         }
       } catch {
         setState("going");
         setMessage("Network error. Try again.");
+        toast("error", "Network error. Try again.");
       }
       return;
     }
@@ -51,16 +57,21 @@ export function RsvpButton({ eventSlug, className = "" }: RsvpButtonProps) {
       if (result.ok) {
         setState("going");
         setMessage("");
+        toast("success", "You're going! See you there.");
       } else if (response.status === 403) {
         setState("error");
         setMessage("Sign in to RSVP");
+        toast("error", "Sign in to RSVP");
       } else {
         setState("error");
-        setMessage(result.details?.formErrors?.[0] ?? "Could not RSVP");
+        const msg = result.details?.formErrors?.[0] ?? "Could not RSVP";
+        setMessage(msg);
+        toast("error", msg);
       }
     } catch {
       setState("error");
       setMessage("Network error. Try again.");
+      toast("error", "Network error. Try again.");
     }
   }
 
