@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { Users, MessageCircle, CalendarDays } from "lucide-react";
+import { LeaveGroupButton } from "./groups-actions";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -21,7 +22,7 @@ function memberLinks(activeKey: string) {
     { key: "groups", label: "Groups", href: "/dashboard/groups" as Route },
     { key: "messages", label: "Messages", href: "/dashboard/messages" as Route },
     { key: "transactions", label: "Payments", href: "/dashboard/transactions" as Route },
-    { key: "profile", label: "Profile", href: "/profile/baldvin" as Route },
+    { key: "profile", label: "Profile", href: "/settings" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
@@ -84,7 +85,7 @@ export async function MemberGroupsScreen() {
         actionHref={"/groups" as Route}
       >
         <DashboardTable
-          columns={["Group", "Your Role", "Next Event", "Unread"]}
+          columns={["Group", "Your Role", "Next Event", "Unread", "Action"]}
           rows={data.groups.map((g) => ({
             key: g.group.slug,
             cells: [
@@ -106,6 +107,7 @@ export async function MemberGroupsScreen() {
               <ToneBadge key="unread" tone={g.unread.includes("0") ? "neutral" : "coral"}>
                 {g.unread}
               </ToneBadge>,
+              <LeaveGroupButton key="leave" groupSlug={g.group.slug} groupName={g.group.name} />,
             ],
           }))}
           caption="Your groups"
