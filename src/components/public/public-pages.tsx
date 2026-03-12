@@ -1172,10 +1172,12 @@ export function EventsIndexScreen({
   events = publicEvents,
   groupCount = publicGroups.length,
   venueCount = publicVenues.length,
+  searchQuery,
 }: {
   events?: PublicEvent[];
   groupCount?: number;
   venueCount?: number;
+  searchQuery?: string;
 } = {}) {
   const t = useTranslations("eventsPage");
   const featured = events[0];
@@ -1202,6 +1204,26 @@ export function EventsIndexScreen({
           { href: "/groups", label: t("actions.exploreGroups") },
         ]}
       />
+
+      {/* Search results banner */}
+      {searchQuery && (
+        <section className="section-shell py-6">
+          <div className="flex items-center gap-3 rounded-2xl border border-brand-indigo/20 bg-brand-indigo/5 px-5 py-4">
+            <Search className="h-5 w-5 text-brand-indigo" />
+            <div>
+              <span className="font-semibold text-brand-text">
+                {events.length} result{events.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}&rdquo;
+              </span>
+            </div>
+            <a
+              href="/events"
+              className="ml-auto text-sm font-medium text-brand-indigo hover:underline"
+            >
+              Clear search
+            </a>
+          </div>
+        </section>
+      )}
 
       {/* Featured event spotlight */}
       <section className="reveal section-shell py-12">

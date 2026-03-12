@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { categories } from "@/lib/home-data";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { ImageUpload } from "@/components/ui/image-upload";
 import {
   minimumTicketPriceIsk,
   publicGroups,
@@ -699,22 +700,17 @@ export function OrganizerEventWizard({
                 />
               </div>
               <div className="mt-5 grid gap-5 md:grid-cols-2">
-                <label className="block text-sm font-semibold text-brand-text">
-                  Featured photo URL
-                  <input
-                    id="event-featured-photo"
-                    name="featuredPhotoUrl"
-                    type="url"
+                <div className="block text-sm font-semibold text-brand-text">
+                  Featured photo
+                  <ImageUpload
                     value={form.featuredPhotoUrl}
-                    onChange={(event) => updateField("featuredPhotoUrl", event.target.value)}
-                    placeholder="Optional for now"
-                    autoComplete="url"
-                    autoCapitalize="none"
-                    inputMode="url"
-                    spellCheck={false}
-                    className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
+                    onChange={(url) => updateField("featuredPhotoUrl", url)}
+                    label="Drop event photo here"
+                    hint="PNG, JPG or WebP up to 5 MB"
+                    aspectHint="16:9 recommended"
+                    className="mt-2"
                   />
-                </label>
+                </div>
                 <label className="block text-sm font-semibold text-brand-text">
                   Gallery notes
                   <input
