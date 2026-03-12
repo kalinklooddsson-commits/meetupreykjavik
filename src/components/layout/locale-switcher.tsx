@@ -37,8 +37,8 @@ export function LocaleSwitcher({
       }
 
       window.location.reload();
-    } catch (error) {
-      console.error(error);
+    } catch {
+      // Locale switch failed — reset pending state
     } finally {
       setPendingLocale(null);
     }

@@ -129,8 +129,7 @@ export function PayPalCheckout({
       .Buttons({
         createOrder,
         onApprove,
-        onError: (err: unknown) => {
-          console.error("PayPal button error:", err);
+        onError: (_err: unknown) => {
           onError?.("An error occurred with PayPal.");
         },
       })

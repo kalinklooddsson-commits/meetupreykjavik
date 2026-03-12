@@ -23,10 +23,7 @@ export async function sendEmail(
   const { to, subject, html } = options;
 
   if (!hasResendEnv()) {
-    console.log("[email] RESEND_API_KEY not set — logging email instead of sending");
-    console.log(`[email] To: ${Array.isArray(to) ? to.join(", ") : to}`);
-    console.log(`[email] Subject: ${subject}`);
-    console.log(`[email] HTML length: ${html.length} chars`);
+    // In development without Resend, return a mock ID silently
     return { id: `mock_${Date.now()}_${Math.random().toString(36).slice(2, 8)}` };
   }
 
