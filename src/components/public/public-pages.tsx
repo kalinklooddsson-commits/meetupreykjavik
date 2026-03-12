@@ -3356,7 +3356,7 @@ export function PricingScreen() {
             <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("members.title")}</h2>
             <p className="mt-2 text-sm text-gray-600">{t("members.description")}</p>
           </div>
-          <div className="reveal-group grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {userTiers.map((tier, i) => (
               <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-indigo ring-2 ring-brand-indigo/20 shadow-lg" : "border-gray-200")}>
                 {i === 1 ? (<div className="rounded-t-2xl bg-brand-indigo py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("members.mostPopular")}</div>) : null}
@@ -3395,7 +3395,7 @@ export function PricingScreen() {
             <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("organizers.title")}</h2>
             <p className="mt-2 text-sm text-gray-600">{t("organizers.description", { commission: ticketCommissionRate })}</p>
           </div>
-          <div className="reveal-group grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {organizerTiers.map((tier, i) => (
               <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-coral ring-2 ring-brand-coral/20 shadow-lg" : "border-gray-200")}>
                 {i === 1 ? (<div className="rounded-t-2xl bg-brand-coral py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("organizers.recommended")}</div>) : null}
@@ -3434,7 +3434,7 @@ export function PricingScreen() {
             <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("venues.title")}</h2>
             <p className="mt-2 text-sm text-gray-600">{t("venues.description")}</p>
           </div>
-          <div className="reveal-group grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {venueTiers.map((tier, i) => (
               <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-sage ring-2 ring-brand-sage/20 shadow-lg" : "border-gray-200")}>
                 {i === 1 ? (<div className="rounded-t-2xl bg-brand-sage py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("venues.bestValue")}</div>) : null}
@@ -3467,7 +3467,7 @@ export function PricingScreen() {
         <div className="section-shell py-12">
           <h2 className="mb-2 text-center text-2xl font-bold text-white">{t("comparison.title")}</h2>
           <p className="mb-8 text-center text-sm text-gray-400">{t("comparison.description")}</p>
-          <div className="reveal mb-10">
+          <div className="mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.memberPlans")}</h3>
             <div className="overflow-x-auto rounded-xl border border-white/15">
               <table className="w-full min-w-[540px] text-left text-sm">
@@ -3480,7 +3480,7 @@ export function PricingScreen() {
               </table>
             </div>
           </div>
-          <div className="reveal mb-10">
+          <div className="mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.organizerPlans")}</h3>
             <div className="overflow-x-auto rounded-xl border border-white/15">
               <table className="w-full min-w-[540px] text-left text-sm">
@@ -3493,7 +3493,7 @@ export function PricingScreen() {
               </table>
             </div>
           </div>
-          <div className="reveal">
+          <div>
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.venuePlans")}</h3>
             <div className="overflow-x-auto rounded-xl border border-white/15">
               <table className="w-full min-w-[540px] text-left text-sm">
