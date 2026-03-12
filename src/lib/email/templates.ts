@@ -503,7 +503,7 @@ export function postEventRatingEmail(
   const starsHtml = [1, 2, 3, 4, 5]
     .map(
       (n) =>
-        `<a href="${rateUrl}&rating=${n}" style="font-size:28px;text-decoration:none;padding:0 4px;color:${COLORS.coral};">${n <= 0 ? "&#9734;" : "&#9733;"}</a>`,
+        `<a href="${rateUrl}&rating=${n}" style="font-size:28px;text-decoration:none;padding:0 4px;color:${COLORS.coral};" title="${n} star${n > 1 ? "s" : ""}">&#9734;</a>`,
     )
     .join("");
 

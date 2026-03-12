@@ -8,13 +8,56 @@ export async function createRsvp(
   const supabase = await createSupabaseServerClient();
   if (!supabase) throw new Error("Database unavailable");
 
+  // Check for existing active RSVP (prevent duplicates)
+  const { data: existing } = await supabase
+    .from("rsvps")
+    .select("id")
+    .eq("event_id", eventId)
+    .eq("user_id", userId)
+    .in("status", ["going", "waitlisted"])
+    .maybeSingle();
+
+  if (existing) {
+    throw new Error("You already have an active RSVP for this event.");
+  }
+
+  // Check event capacity before allowing RSVP
+  const { data: event } = await supabase
+    .from("events")
+    .select("capacity")
+    .eq("id", eventId)
+    .single();
+
+  if (event?.capacity) {
+    const { count } = await supabase
+      .from("rsvps")
+      .select("id", { count: "exact", head: true })
+      .eq("event_id", eventId)
+      .eq("status", "going");
+
+    if (count !== null && count >= event.capacity) {
+      throw new Error("This event is full. You have been added to the waitlist.");
+    }
+  }
+
+  const status =
+    event?.capacity &&
+    (await supabase
+      .from("rsvps")
+      .select("id", { count: "exact", head: true })
+      .eq("event_id", eventId)
+      .eq("status", "going")
+      .then(({ count: c }) => c !== null && c >= event.capacity))
+      ? "waitlisted"
+      : "going";
+
   const { data, error } = await supabase
     .from("rsvps")
     .insert({
       event_id: eventId,
       user_id: userId,
       ticket_tier_id: ticketTierId ?? null,
-      status: "going",
+      status,
     })
     .select()
     .single();
@@ -32,10 +75,12 @@ export async function cancelRsvp(eventId: string, userId: string) {
     .update({ status: "cancelled" })
     .eq("event_id", eventId)
     .eq("user_id", userId)
+    .eq("status", "going")
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error("No active RSVP found to cancel.");
   return data;
 }
 

@@ -1,5 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+
+import { hasTrustedOrigin } from "@/lib/security/request";
+import { forbiddenResponse } from "@/lib/security/response";
+import { sendEmail, hasResendEnv } from "@/lib/email/resend";
 
 const contactSchema = z.object({
   name: z.string().min(1).max(200),
@@ -8,7 +12,11 @@ const contactSchema = z.object({
   message: z.string().min(10).max(5000),
 });
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return forbiddenResponse("Cross-site contact submissions are not allowed.");
+  }
+
   try {
     const body = await request.json();
     const parsed = contactSchema.safeParse(body);
@@ -22,8 +30,16 @@ export async function POST(request: Request) {
 
     const { name, email, topic, message } = parsed.data;
 
-    // Log for now — in production, send via Resend or store in Supabase
-    console.log("[Contact Form]", { name, email, topic, messageLength: message.length });
+    // Send via Resend if configured, otherwise log
+    if (hasResendEnv()) {
+      await sendEmail({
+        to: "hello@meetupreykjavik.com",
+        subject: `[Contact] ${topic} — from ${name}`,
+        html: `<p><strong>From:</strong> ${name} (${email})</p><p><strong>Topic:</strong> ${topic}</p><hr/><p>${message.replace(/\n/g, "<br/>")}</p>`,
+      });
+    } else {
+      console.log("[Contact Form]", { name, email, topic, messageLength: message.length });
+    }
 
     return NextResponse.json({
       ok: true,

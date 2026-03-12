@@ -971,7 +971,7 @@ async function handleLiveDataRequest(
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const data = await updateBookingStatus(
           match.params.id,
-          body.status as string,
+          body.status as import("@/types/domain").BookingStatus,
           body.counterOffer as Parameters<typeof updateBookingStatus>[2],
         );
         return successResponse(data);

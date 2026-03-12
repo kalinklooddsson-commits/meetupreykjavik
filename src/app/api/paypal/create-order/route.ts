@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getCurrentAppSession } from "@/lib/auth/session";
 import { hasPayPalEnv, createTicketOrder } from "@/lib/payments/paypal";
 import { MIN_TICKET_PRICE_ISK } from "@/lib/payments/constants";
 
 export async function POST(request: NextRequest) {
+  const session = await getCurrentAppSession();
+  if (!session) {
+    return NextResponse.json({ error: "Authentication required." }, { status: 401 });
+  }
+
   if (!hasPayPalEnv()) {
     return NextResponse.json(
       { error: "Payment processing is not available yet." },

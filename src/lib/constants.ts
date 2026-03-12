@@ -21,7 +21,7 @@ export const footerColumns = [
       { href: "/events", label: "Events" },
       { href: "/groups", label: "Groups" },
       { href: "/venues", label: "Venues" },
-      { href: "/pricing", label: "Categories" },
+      { href: "/categories", label: "Categories" },
     ],
   },
   {
@@ -29,16 +29,16 @@ export const footerColumns = [
     links: [
       { href: "/about", label: "About" },
       { href: "/pricing", label: "Pricing" },
-      { href: "/blog", label: "Blog" },
-      { href: "/venues", label: "For Venues" },
+      { href: "/for-organizers", label: "For Organizers" },
+      { href: "/for-venues", label: "For Venues" },
     ],
   },
   {
     title: "Legal",
     links: [
       { href: "/privacy", label: "Privacy" },
-      { href: "/privacy", label: "Terms" },
-      { href: "/privacy", label: "Contact" },
+      { href: "/terms", label: "Terms" },
+      { href: "/contact", label: "Contact" },
     ],
   },
 ] as const satisfies ReadonlyArray<{

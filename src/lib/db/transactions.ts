@@ -10,7 +10,7 @@ export async function createTransaction(transaction: TransactionInsert) {
 
   const { data, error } = await supabase
     .from("transactions")
-    .insert({ ...transaction, status: "completed" })
+    .insert({ ...transaction, status: transaction.status ?? "completed" })
     .select()
     .single();
 

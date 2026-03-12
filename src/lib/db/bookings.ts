@@ -1,7 +1,10 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Database, Json } from "@/types/database";
+import { bookingStatuses, type BookingStatus } from "@/types/domain";
 
 type BookingInsert = Database["public"]["Tables"]["venue_bookings"]["Insert"];
+
+const validStatuses = new Set<string>(bookingStatuses);
 
 export async function createBooking(booking: BookingInsert) {
   const supabase = await createSupabaseServerClient();
@@ -40,9 +43,13 @@ export async function getVenueBookings(venueId: string) {
 
 export async function updateBookingStatus(
   bookingId: string,
-  status: string,
+  status: BookingStatus,
   counterOffer?: Json,
 ) {
+  if (!validStatuses.has(status)) {
+    throw new Error(`Invalid booking status: ${status}`);
+  }
+
   const supabase = await createSupabaseServerClient();
   if (!supabase) throw new Error("Database unavailable");
 
