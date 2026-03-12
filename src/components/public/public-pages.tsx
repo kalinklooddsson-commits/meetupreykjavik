@@ -1058,6 +1058,43 @@ function FilterBar({
   );
 }
 
+function TimeFilterBar({
+  items,
+  activeValue,
+  activeCategory,
+}: {
+  items: Array<{ label: string; value: string }>;
+  activeValue?: string;
+  activeCategory?: string;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item) => {
+        const isActive = activeValue === item.value;
+        const params = new URLSearchParams();
+        if (!isActive) params.set("when", item.value);
+        if (activeCategory) params.set("category", activeCategory);
+        const qs = params.toString();
+        const href = (qs ? `/events?${qs}` : "/events") as Route;
+        return (
+          <Link
+            key={item.value}
+            href={href}
+            className={cn(
+              "rounded-full px-4 py-2 text-sm font-medium transition",
+              isActive
+                ? "bg-brand-indigo text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200",
+            )}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ── Breadcrumbs ─────────────────────────────────────── */
 
 function Breadcrumbs({
@@ -1174,11 +1211,15 @@ export function EventsIndexScreen({
   groupCount = publicGroups.length,
   venueCount = publicVenues.length,
   searchQuery,
+  activeCategory,
+  activeWhen,
 }: {
   events?: PublicEvent[];
   groupCount?: number;
   venueCount?: number;
   searchQuery?: string;
+  activeCategory?: string;
+  activeWhen?: string;
 } = {}) {
   const t = useTranslations("eventsPage");
   const featured = events[0];
@@ -1300,27 +1341,54 @@ export function EventsIndexScreen({
           <h2 className="mb-2 text-2xl font-bold text-gray-900">{t("grid.allEvents")}</h2>
           <p className="mb-6 text-sm text-gray-500">{t("grid.filterByCategory")}</p>
 
-          {/* Category filter chips */}
+          {/* Category filter chips — interactive links */}
           <div className="mb-6 flex flex-wrap gap-2">
-            {publicCategoryOptions.map((cat) => (
-              <span
-                key={cat}
-                className={cn(
-                  "rounded-full px-4 py-1.5 text-xs font-semibold transition cursor-pointer",
-                  usedCategories.includes(cat)
-                    ? "bg-brand-indigo/10 text-brand-indigo ring-1 ring-brand-indigo/20"
-                    : "bg-gray-100 text-gray-400",
-                )}
-              >
-                {cat}
-              </span>
-            ))}
+            <Link
+              href="/events"
+              className={cn(
+                "rounded-full px-4 py-1.5 text-xs font-semibold transition",
+                !activeCategory
+                  ? "bg-brand-indigo text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200",
+              )}
+            >
+              {t("filters.all")}
+            </Link>
+            {publicCategoryOptions.map((cat) => {
+              const isActive = activeCategory?.toLowerCase() === cat.toLowerCase();
+              const catParam = cat.toLowerCase();
+              const href = activeWhen
+                ? (`/events?category=${encodeURIComponent(catParam)}&when=${activeWhen}` as Route)
+                : (`/events?category=${encodeURIComponent(catParam)}` as Route);
+              return (
+                <Link
+                  key={cat}
+                  href={isActive ? "/events" : href}
+                  className={cn(
+                    "rounded-full px-4 py-1.5 text-xs font-semibold transition",
+                    isActive
+                      ? "bg-brand-indigo text-white"
+                      : usedCategories.includes(cat)
+                        ? "bg-brand-indigo/10 text-brand-indigo ring-1 ring-brand-indigo/20 hover:bg-brand-indigo/20"
+                        : "bg-gray-100 text-gray-400",
+                  )}
+                >
+                  {cat}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Time filters */}
-          <FilterBar
-            items={[t("filters.today"), t("filters.thisWeek"), t("filters.weekend"), t("filters.month")]}
-            activeIndex={1}
+          {/* Time filters — interactive links */}
+          <TimeFilterBar
+            items={[
+              { label: t("filters.today"), value: "today" },
+              { label: t("filters.thisWeek"), value: "this-week" },
+              { label: t("filters.weekend"), value: "weekend" },
+              { label: t("filters.month"), value: "month" },
+            ]}
+            activeValue={activeWhen}
+            activeCategory={activeCategory}
           />
 
           {/* Discovery lanes */}

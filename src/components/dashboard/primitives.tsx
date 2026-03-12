@@ -528,23 +528,28 @@ export function ToneBadge({
 
 export function FilterChips({
   items,
+  onSelect,
 }: {
   items: Array<{ key: string; label: string; active?: boolean; tone?: DashboardTone }>;
+  onSelect?: (key: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap gap-1.5" role="group">
       {items.map((item) => (
-        <span
+        <button
+          type="button"
           key={item.key}
+          onClick={onSelect ? () => onSelect(item.key) : undefined}
           className={cn(
-            "inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium",
+            "inline-flex cursor-pointer items-center rounded-md border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand-indigo",
             item.active
               ? toneClasses[item.tone ?? "indigo"]
-              : "border-brand-border-light bg-white text-brand-text-muted",
+              : "border-brand-border-light bg-white text-brand-text-muted hover:border-brand-indigo/40 hover:text-brand-text",
           )}
+          aria-pressed={item.active}
         >
           {item.label}
-        </span>
+        </button>
       ))}
     </div>
   );

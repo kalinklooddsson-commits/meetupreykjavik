@@ -695,6 +695,7 @@
       "readMore": "Learn more"
     },
     "filters": {
+      "all": "All",
       "allEvents": "All events",
       "today": "Today",
       "thisWeek": "This Week",

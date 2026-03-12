@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Route } from "next";
 import {
   CalendarClock,
@@ -253,13 +254,16 @@ export async function OrganizerOverviewScreen() {
             {organizerPortalData.nextEvents.map((event) => (
               <div
                 key={event.slug}
-                className="rounded-lg border border-brand-border-light bg-white p-4"
+                className="rounded-lg border border-brand-border-light bg-white p-4 transition-colors hover:border-brand-indigo/30"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <div className="text-sm font-semibold text-brand-text">
+                    <Link
+                      href={`/organizer/events/${event.slug}` as Route}
+                      className="text-sm font-semibold text-brand-text transition-colors hover:text-brand-indigo"
+                    >
                       {event.title}
-                    </div>
+                    </Link>
                     <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
                       {event.groupName} · {event.venueName} · {event.dateLabel}
                     </p>
@@ -566,7 +570,12 @@ export async function OrganizerEventsScreen() {
                 key: event.slug,
                 cells: [
                   <div key="event">
-                    <div className="font-semibold text-brand-text">{event.title}</div>
+                    <Link
+                      href={`/organizer/events/${event.slug}` as Route}
+                      className="font-semibold text-brand-text transition-colors hover:text-brand-indigo"
+                    >
+                      {event.title}
+                    </Link>
                     <div className="text-xs text-brand-text-muted">{event.dateLabel}</div>
                   </div>,
                   event.groupName,
@@ -590,16 +599,17 @@ export async function OrganizerEventsScreen() {
           >
             <div className="space-y-3">
               {organizerPortalData.events.map((event) => (
-                <div
+                <Link
                   key={event.slug}
-                  className="flex items-center justify-between gap-4 rounded-md border border-brand-border-light bg-white px-4 py-3"
+                  href={`/organizer/events/${event.slug}` as Route}
+                  className="flex items-center justify-between gap-4 rounded-md border border-brand-border-light bg-white px-4 py-3 transition-colors hover:border-brand-indigo/30"
                 >
                   <div>
                     <div className="font-semibold text-brand-text">{event.dateLabel}</div>
                     <div className="text-sm text-brand-text-muted">{event.title}</div>
                   </div>
                   <ToneBadge tone={statusTone(event.status)}>{event.status}</ToneBadge>
-                </div>
+                </Link>
               ))}
             </div>
           </Surface>

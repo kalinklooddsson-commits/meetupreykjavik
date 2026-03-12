@@ -695,6 +695,7 @@
       "readMore": "Sjá nánar"
     },
     "filters": {
+      "all": "Allt",
       "allEvents": "Allir viðburðir",
       "today": "Í dag",
       "thisWeek": "Þessa viku",
