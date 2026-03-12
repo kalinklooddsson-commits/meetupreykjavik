@@ -193,7 +193,7 @@ function GroupCard({ group }: { group: (typeof groups)[number] }) {
       href={`/groups/${group.slug}` as import("next").Route}
       className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
-      <div className="relative h-36 overflow-hidden">
+      <div className="relative h-44 overflow-hidden">
         <Image
           src={group.photo}
           alt={group.name}
@@ -381,6 +381,23 @@ export function HomePage() {
             </Link>
           </div>
 
+          {/* Hero search */}
+          <form
+            action="/events"
+            className="mt-8 flex w-full max-w-lg items-center rounded-full bg-white/15 px-5 py-3 backdrop-blur-sm border border-white/25 transition-colors focus-within:bg-white/25"
+          >
+            <Search className="h-5 w-5 shrink-0 text-white/70" />
+            <input
+              type="search"
+              name="q"
+              placeholder={tHero("searchPlaceholder")}
+              className="ml-3 flex-1 bg-transparent text-sm text-white placeholder:text-white/60 outline-none"
+            />
+            <button type="submit" className="ml-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-white/30">
+              {tCta("explore")}
+            </button>
+          </form>
+
           {/* Spacer before floating stats */}
           <div className="flex-1" />
 
@@ -436,11 +453,13 @@ export function HomePage() {
         <div className="section-shell flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-center sm:gap-8">
           {/* Overlapping avatar circles */}
           <div className="flex -space-x-3">
-            {avatarColors.map((color, i) => (
+            {["S","K","E","H","M","J","Þ","A"].map((initial, i) => (
               <div
                 key={i}
-                className={`h-10 w-10 rounded-full border-2 border-white ${color} shadow-sm`}
-              />
+                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-xs font-bold text-white shadow-sm ${avatarColors[i]}`}
+              >
+                {initial}
+              </div>
             ))}
           </div>
           <p className="text-base font-semibold tracking-tight text-brand-text sm:text-lg">

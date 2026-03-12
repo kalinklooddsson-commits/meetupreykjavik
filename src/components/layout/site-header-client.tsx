@@ -126,7 +126,7 @@ function MoreDropdown({
           "inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition",
           hasActive
             ? "bg-brand-indigo text-white"
-            : "text-brand-text-muted hover:bg-brand-indigo/6 hover:text-brand-text",
+            : "text-gray-700 hover:bg-brand-indigo/8 hover:text-brand-indigo",
         )}
       >
         {label}
@@ -251,7 +251,7 @@ function MobileDrawer({
             type="button"
             onClick={onClose}
             aria-label={closeLabel}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-brand-text-muted transition hover:bg-brand-indigo/6 hover:text-brand-text"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-700 transition hover:bg-brand-indigo/6 hover:text-brand-text"
           >
             <X className="h-5 w-5" />
           </button>
@@ -300,7 +300,7 @@ function MobileDrawer({
                       "block rounded-lg px-3 py-2.5 text-base font-medium transition",
                       active
                         ? "bg-brand-indigo text-white"
-                        : "text-brand-text-muted hover:bg-brand-indigo/6 hover:text-brand-text",
+                        : "text-gray-700 hover:bg-brand-indigo/6 hover:text-brand-text",
                     )}
                   >
                     {item.label}
@@ -574,10 +574,10 @@ export function SiteHeaderClient({
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "group relative inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium transition",
+                  "group relative inline-flex items-center rounded-lg px-3.5 py-2 text-sm font-medium transition",
                   active
                     ? "bg-brand-indigo text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]"
-                    : "text-brand-text-muted hover:bg-brand-indigo/6 hover:text-brand-text",
+                    : "text-gray-700 hover:bg-brand-indigo/8 hover:text-brand-indigo",
                 )}
               >
                 {item.label}
@@ -596,7 +596,7 @@ export function SiteHeaderClient({
             type="button"
             aria-label={searchLabel}
             onClick={() => setSearchOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-brand-text-muted transition hover:bg-brand-indigo/6 hover:text-brand-text"
+            className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-700 transition hover:bg-brand-indigo/6 hover:text-brand-text"
           >
             <Search className="h-4 w-4" />
             <kbd className="hidden rounded border border-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 xl:inline-block">
@@ -618,7 +618,7 @@ export function SiteHeaderClient({
             <>
               <Link
                 href="/login"
-                className="text-sm font-medium text-brand-text transition-colors hover:text-brand-indigo"
+                className="text-sm font-medium text-gray-700 transition-colors hover:text-brand-indigo"
               >
                 {labels.signin}
               </Link>
@@ -638,7 +638,7 @@ export function SiteHeaderClient({
         type="button"
         onClick={() => setDrawerOpen(true)}
         aria-label={menuLabel}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-brand-text transition hover:bg-brand-indigo/6 lg:hidden"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-gray-800 transition hover:bg-brand-indigo/6 lg:hidden"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -699,8 +699,8 @@ export function SiteHeaderMobileNav({
                 className={cn(
                   "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition",
                   active
-                    ? "border-brand-indigo bg-brand-indigo text-white"
-                    : "border-brand-border bg-white text-brand-text-muted hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
+                    ? "border-brand-indigo bg-brand-indigo text-white shadow-sm"
+                    : "border-gray-300 bg-white text-gray-700 hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
                 )}
               >
                 {item.label}

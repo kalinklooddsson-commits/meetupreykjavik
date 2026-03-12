@@ -32,8 +32,8 @@ export async function SiteHeader() {
   ] as const satisfies readonly { href: Route; label: string }[];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[rgba(221,215,203,0.7)] bg-[rgba(250,248,244,0.92)] backdrop-blur-xl">
-      <div className="section-shell flex min-h-16 items-center justify-between gap-6 py-2">
+    <header className="sticky top-0 z-50 border-b border-brand-border bg-[rgba(250,248,244,0.92)] shadow-[0_1px_3px_rgba(42,38,56,0.06)] backdrop-blur-xl">
+      <div className="section-shell flex min-h-[4.25rem] items-center justify-between gap-6 py-2.5">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-indigo text-white">
             <Compass className="h-4 w-4" />

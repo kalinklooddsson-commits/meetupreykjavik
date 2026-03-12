@@ -977,46 +977,34 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
 
 function BlogCard({ post }: { post: BlogPost }) {
   const tCta = useTranslations("cta");
-  const imageUrl = extractImageUrl(post.hero);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
-      <div className="relative h-44 overflow-hidden bg-gray-200">
-        {imageUrl ? (
-          <>
-            <Image
-              fill
-              alt={post.title}
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              src={imageUrl}
-              unoptimized={imageUrl.startsWith("https://")}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          </>
-        ) : (
-          <div className="absolute inset-0" style={{ background: post.hero }} />
-        )}
+    <Link href={blogHref(post.slug)} className="group block overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative h-48 overflow-hidden">
+        <Image
+          src={extractImageUrl(post.hero) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg"}
+          alt={post.title}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          unoptimized={(extractImageUrl(post.hero) ?? "").startsWith("https://")}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-brand-indigo backdrop-blur-sm">
+          {post.category}
+        </span>
       </div>
       <div className="p-5">
-        <div className="flex items-center gap-2">
-          <ToneBadge tone="indigo">{post.category}</ToneBadge>
-          <span className="text-xs text-gray-500">{post.readTime}</span>
-        </div>
-        <h2 className="mt-3 text-xl font-bold text-gray-900">{post.title}</h2>
-        <p className="mt-2 text-sm text-gray-600">{post.excerpt}</p>
-        <div className="mt-4 flex items-center justify-between">
-          <div className="text-sm text-gray-500">{post.publishedAt}</div>
-          <Link
-            href={blogHref(post.slug)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
-          >
-            {tCta("readArticle")}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+        <h3 className="text-lg font-bold tracking-tight text-gray-900 group-hover:text-brand-indigo transition-colors">
+          {post.title}
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-gray-600 line-clamp-2">{post.excerpt}</p>
+        <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+          <span>{post.publishedAt}</span>
+          <span className="font-medium text-brand-indigo">{tCta("readArticle")} &rarr;</span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
