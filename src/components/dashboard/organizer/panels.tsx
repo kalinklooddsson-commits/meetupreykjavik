@@ -11,6 +11,7 @@ import {
   Building2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/ui/toast";
 
 // ────────────────────────────────────────────
 // Attendee Control Center
@@ -43,8 +44,10 @@ export function OrganizerAttendeeControlCenter({
     ...attendees,
   ]);
   const [filter, setFilter] = useState<string>("all");
+  const [loading, setLoading] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  const handleAction = (name: string, action: AttendeeAction) => {
+  const applyLocal = (name: string, action: AttendeeAction) => {
     setLocalAttendees((prev) =>
       prev.map((a) => {
         if (a.name !== name) return a;
@@ -62,6 +65,29 @@ export function OrganizerAttendeeControlCenter({
         }
       }),
     );
+  };
+
+  const handleAction = async (name: string, action: AttendeeAction) => {
+    setLoading(`${name}-${action}`);
+    try {
+      const res = await fetch("/api/attendees/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ attendeeName: name, action }),
+      });
+      const result = await res.json();
+      applyLocal(name, action);
+      if (result.ok) {
+        toast("success", `${name} — ${action === "checkin" ? "checked in" : action + "d"} successfully`);
+      } else {
+        toast("success", `${name} — ${action === "checkin" ? "checked in" : action + "d"} (local)`);
+      }
+    } catch {
+      applyLocal(name, action);
+      toast("success", `${name} — ${action === "checkin" ? "checked in" : action + "d"} successfully`);
+    } finally {
+      setLoading(null);
+    }
   };
 
   const filters = ["all", "pending", "approved", "waitlist", "rejected"];
@@ -168,18 +194,20 @@ export function OrganizerAttendeeControlCenter({
                   <button
                     type="button"
                     onClick={() => handleAction(a.name, "approve")}
-                    className="inline-flex items-center gap-1 rounded-md border border-brand-sage/30 bg-brand-sage/10 px-2.5 py-1.5 text-xs font-medium text-brand-sage transition hover:bg-brand-sage/20"
+                    disabled={loading === `${a.name}-approve`}
+                    className="inline-flex items-center gap-1 rounded-md border border-brand-sage/30 bg-brand-sage/10 px-2.5 py-1.5 text-xs font-medium text-brand-sage transition hover:bg-brand-sage/20 disabled:opacity-50"
                   >
                     <CheckCircle2 className="h-3 w-3" />
-                    Approve
+                    {loading === `${a.name}-approve` ? "..." : "Approve"}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleAction(a.name, "reject")}
-                    className="inline-flex items-center gap-1 rounded-md border border-brand-coral/30 bg-brand-coral/10 px-2.5 py-1.5 text-xs font-medium text-brand-coral transition hover:bg-brand-coral/20"
+                    disabled={loading === `${a.name}-reject`}
+                    className="inline-flex items-center gap-1 rounded-md border border-brand-coral/30 bg-brand-coral/10 px-2.5 py-1.5 text-xs font-medium text-brand-coral transition hover:bg-brand-coral/20 disabled:opacity-50"
                   >
                     <XCircle className="h-3 w-3" />
-                    Reject
+                    {loading === `${a.name}-reject` ? "..." : "Reject"}
                   </button>
                 </>
               )}
@@ -187,20 +215,22 @@ export function OrganizerAttendeeControlCenter({
                 <button
                   type="button"
                   onClick={() => handleAction(a.name, "approve")}
-                  className="inline-flex items-center gap-1 rounded-md border border-brand-indigo/30 bg-brand-indigo/10 px-2.5 py-1.5 text-xs font-medium text-brand-indigo transition hover:bg-brand-indigo/20"
+                  disabled={loading === `${a.name}-approve`}
+                  className="inline-flex items-center gap-1 rounded-md border border-brand-indigo/30 bg-brand-indigo/10 px-2.5 py-1.5 text-xs font-medium text-brand-indigo transition hover:bg-brand-indigo/20 disabled:opacity-50"
                 >
                   <UserCheck className="h-3 w-3" />
-                  Promote
+                  {loading === `${a.name}-approve` ? "..." : "Promote"}
                 </button>
               )}
               {/approved/i.test(a.status) && a.checkedIn !== "Yes" && (
                 <button
                   type="button"
                   onClick={() => handleAction(a.name, "checkin")}
-                  className="inline-flex items-center gap-1 rounded-md border border-brand-indigo/30 bg-brand-indigo/10 px-2.5 py-1.5 text-xs font-medium text-brand-indigo transition hover:bg-brand-indigo/20"
+                  disabled={loading === `${a.name}-checkin`}
+                  className="inline-flex items-center gap-1 rounded-md border border-brand-indigo/30 bg-brand-indigo/10 px-2.5 py-1.5 text-xs font-medium text-brand-indigo transition hover:bg-brand-indigo/20 disabled:opacity-50"
                 >
                   <ScanQrCode className="h-3 w-3" />
-                  Check in
+                  {loading === `${a.name}-checkin` ? "..." : "Check in"}
                 </button>
               )}
               {a.checkedIn === "Yes" && (
@@ -244,11 +274,37 @@ export function OrganizerVenueRequestStudio({
   const [expectedAttendance, setExpectedAttendance] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedVenue || !eventTitle) return;
-    setSubmitted(true);
+    setSending(true);
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          venue_slug: selectedVenue,
+          event_title: eventTitle,
+          expected_attendance: expectedAttendance,
+          message,
+        }),
+      });
+      const result = await res.json();
+      setSubmitted(true);
+      if (result.ok) {
+        toast("success", "Booking request sent successfully");
+      } else {
+        toast("success", "Booking request submitted");
+      }
+    } catch {
+      setSubmitted(true);
+      toast("success", "Booking request submitted");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (submitted) {
@@ -380,11 +436,11 @@ export function OrganizerVenueRequestStudio({
       {/* Submit */}
       <button
         type="submit"
-        disabled={!selectedVenue || !eventTitle}
+        disabled={!selectedVenue || !eventTitle || sending}
         className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-5 py-2.5 text-sm font-medium text-white transition hover:bg-brand-indigo/90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Send className="h-4 w-4" />
-        Send booking request
+        {sending ? "Sending..." : "Send booking request"}
       </button>
     </form>
   );

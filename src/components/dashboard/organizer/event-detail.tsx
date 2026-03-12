@@ -91,8 +91,8 @@ export async function OrganizerEventDetailScreen({ slug }: { slug: string }) {
       roleMode="organizer"
       breadcrumbs={["Events", event.title]}
       primaryAction={{
-        href: `/organizer/events/${slug}/checkin` as Route,
-        label: "QR Check-in",
+        href: `/events/${slug}` as Route,
+        label: "View public event",
       }}
     >
       <div className="space-y-6">
@@ -289,10 +289,10 @@ export async function OrganizerEventDetailScreen({ slug }: { slug: string }) {
               </div>
             </div>
             <Link
-              href={`/organizer/events/${slug}/checkin` as Route}
+              href={`/events/${slug}` as Route}
               className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2.5 text-sm font-medium text-white transition hover:bg-brand-indigo/90"
             >
-              Open check-in
+              View event page
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
