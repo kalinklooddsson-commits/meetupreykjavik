@@ -1,4 +1,4 @@
-import { OrganizerNotificationsScreen } from "@/components/dashboard/organizer-pages";
+import { OrganizerNotificationsScreen } from "@/components/dashboard/organizer/messages";
 
 export default function OrganizerNotificationsPage() {
   return <OrganizerNotificationsScreen />;

@@ -1,4 +1,4 @@
-import { VenueDealsScreen } from "@/components/dashboard/venue-pages";
+import { VenueDealsScreen } from "@/components/dashboard/venue/deals";
 
 export default function VenueDealsPage() {
   return <VenueDealsScreen />;

@@ -1,4 +1,4 @@
-import { AdminContentScreen } from "@/components/dashboard/admin-pages";
+import { AdminContentScreen } from "@/components/dashboard/admin/settings";
 
 export default function AdminContentPage() {
   return <AdminContentScreen />;
