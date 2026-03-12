@@ -1453,7 +1453,7 @@ export function EventsIndexScreen({
             </p>
             <Link
               href="/signup"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-10 py-4 text-base font-semibold text-brand-indigo shadow-lg shadow-black/20 transition hover:bg-white/90"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-10 py-4 text-base font-semibold text-brand-indigo-light shadow-lg shadow-black/20 transition hover:bg-white/90"
             >
               {t("cta.button")}
               <ArrowRight className="h-4 w-4" />
@@ -2011,7 +2011,7 @@ export function GroupsIndexScreen({
               <div className="mt-6 shrink-0 sm:mt-0 sm:ml-auto">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-indigo shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition hover:scale-105 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-indigo-light shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition hover:scale-105 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
                 >
                   {t("startGroup.button")}
                   <ArrowRight className="h-4 w-4" />
@@ -3157,7 +3157,7 @@ export function AboutScreen() {
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
               href="/events"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo shadow-lg transition hover:bg-white/90"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo-light shadow-lg transition hover:bg-white/90"
             >
               {t("hero.exploreEvents")}
               <ArrowRight className="h-4 w-4" />
@@ -3266,7 +3266,7 @@ export function AboutScreen() {
           <h3 className="text-3xl font-bold">{t("cta.title")}</h3>
           <p className="mx-auto mt-4 max-w-lg text-base text-white/80">{t("cta.description")}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo shadow-lg transition hover:bg-white/90">
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo-light shadow-lg transition hover:bg-white/90">
               {t("cta.createAccount")}
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -3300,7 +3300,7 @@ export function PricingScreen() {
           <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">{t("hero.title")}</h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-white/85 sm:text-lg">{t("hero.description", { commission: ticketCommissionRate })}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90 text-brand-indigo">
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90 text-brand-indigo-light">
               {t("hero.getStartedFree")}
               <ArrowRight className="h-4 w-4" />
             </Link>
@@ -4131,7 +4131,7 @@ export function ForOrganizersScreen() {
           <h3 className="text-3xl font-bold">{t("cta.heading")}</h3>
           <p className="mx-auto mt-4 max-w-lg text-base text-white/80">{t("cta.description")}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo shadow-lg transition hover:bg-white/90">
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-indigo-light shadow-lg transition hover:bg-white/90">
               {t("cta.button")}
               <ArrowRight className="h-4 w-4" />
             </Link>

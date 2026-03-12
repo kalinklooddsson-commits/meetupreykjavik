@@ -1,5 +1,3 @@
-import { hasSupabaseEnv } from "@/lib/env";
-import * as db from "@/lib/db";
 import {
   publicEvents,
   publicGroups,
@@ -43,15 +41,5 @@ export async function fetchVenueBySlug(slug: string) {
 }
 
 export async function fetchCategories() {
-  if (!hasSupabaseEnv()) return [];
-  return db.getCategories();
-}
-[];
-  return db.getCategories();
-}
-[];
-  return db.getCategories();
-}
-[];
-  return db.getCategories();
+  return [];
 }
