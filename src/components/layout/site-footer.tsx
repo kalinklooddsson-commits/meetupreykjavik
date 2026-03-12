@@ -130,6 +130,7 @@ export async function SiteFooter() {
             className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Instagram className="h-4 w-4" />
+            <span className="sr-only">Follow us on Instagram</span>
           </a>
           <a
             href="https://facebook.com/meetupreykjavik"
@@ -139,6 +140,7 @@ export async function SiteFooter() {
             className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Facebook className="h-4 w-4" />
+            <span className="sr-only">Follow us on Facebook</span>
           </a>
           <a
             href="https://x.com/meetupreykjavik"
@@ -148,6 +150,7 @@ export async function SiteFooter() {
             className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Twitter className="h-4 w-4" />
+            <span className="sr-only">Follow us on X</span>
           </a>
         </div>
       </div>

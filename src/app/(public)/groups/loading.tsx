@@ -1,26 +1,39 @@
 export default function GroupsLoading() {
   return (
     <div className="animate-pulse">
-      <section className="section-shell py-10">
-        <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
-          <div>
-            <div className="h-4 w-16 rounded bg-gray-200" />
-            <div className="mt-3 h-10 w-3/4 rounded bg-gray-200" />
-            <div className="mt-4 h-16 w-full rounded bg-gray-200" />
-          </div>
-          <div className="h-64 rounded-2xl bg-gray-200" />
+      {/* Hero skeleton — matches IndexHero */}
+      <section className="bg-gray-900">
+        <div className="section-shell py-10 sm:py-16 md:py-24">
+          <div className="h-3 w-24 rounded bg-white/20" />
+          <div className="mt-4 h-10 w-2/3 rounded bg-white/20 sm:h-14" />
+          <div className="mt-5 h-5 w-full max-w-lg rounded bg-white/20" />
         </div>
       </section>
 
-      <section className="section-shell py-8">
+      {/* Filter bar skeleton */}
+      <section className="section-shell py-6">
+        <div className="flex gap-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-9 w-24 rounded-full bg-gray-200" />
+          ))}
+        </div>
+      </section>
+
+      {/* Cards skeleton — matches GroupCard (h-40 image + h-1 bar + p-5 body) */}
+      <section className="section-shell pb-12">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
-              <div className="h-36 bg-gray-200" />
+            <div key={i} className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+              <div className="h-40 bg-gray-200" />
+              <div className="h-1 w-full bg-gray-200" />
               <div className="p-5">
-                <div className="h-3 w-16 rounded bg-gray-200" />
-                <div className="mt-3 h-5 w-3/4 rounded bg-gray-200" />
-                <div className="mt-2 h-8 w-full rounded bg-gray-200" />
+                <div className="h-5 w-3/4 rounded bg-gray-200" />
+                <div className="mt-2 h-10 w-full rounded bg-gray-200" />
+                <div className="mt-3 flex gap-2">
+                  <div className="h-6 w-14 rounded-full bg-gray-200" />
+                  <div className="h-6 w-16 rounded-full bg-gray-200" />
+                  <div className="h-6 w-12 rounded-full bg-gray-200" />
+                </div>
               </div>
             </div>
           ))}

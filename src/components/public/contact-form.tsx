@@ -1,10 +1,16 @@
 "use client";
 
-import { startTransition, useState } from "react";
+import { startTransition, useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 import { writeSessionDraft } from "@/lib/storage/session-drafts";
 import { useToast } from "@/components/ui/toast";
+
+type FieldErrors = {
+  name?: string;
+  email?: string;
+  message?: string;
+};
 
 export function ContactForm() {
   const t = useTranslations("contactForm");
@@ -25,6 +31,7 @@ export function ContactForm() {
   const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(initialForm));
   const [status, setStatus] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const { toast } = useToast();
   const isDirty = JSON.stringify(form) !== savedSnapshot;
 
@@ -34,14 +41,47 @@ export function ContactForm() {
     startTransition(() => {
       setForm((current) => ({ ...current, [field]: value }));
     });
+    // Clear error for this field when user starts typing
+    if (fieldErrors[field as keyof FieldErrors]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  }
+
+  const validateField = useCallback(
+    (field: keyof FieldErrors, value: string): string | undefined => {
+      const trimmed = value.trim();
+      switch (field) {
+        case "name":
+          if (!trimmed) return t("errors.nameRequired") ?? "Name is required";
+          return undefined;
+        case "email":
+          if (!trimmed) return t("errors.emailRequired") ?? "Email is required";
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed))
+            return t("errors.emailInvalid") ?? "Please enter a valid email address";
+          return undefined;
+        case "message":
+          if (!trimmed) return t("errors.messageRequired") ?? "Message is required";
+          return undefined;
+        default:
+          return undefined;
+      }
+    },
+    [t],
+  );
+
+  function handleBlur(field: keyof FieldErrors) {
+    const error = validateField(field, form[field]);
+    setFieldErrors((prev) => ({ ...prev, [field]: error }));
   }
 
   async function submit() {
-    const trimmedName = form.name.trim();
-    const trimmedEmail = form.email.trim();
-    const trimmedMessage = form.message.trim();
+    // Validate all fields
+    const nameError = validateField("name", form.name);
+    const emailError = validateField("email", form.email);
+    const messageError = validateField("message", form.message);
 
-    if (!trimmedName || !trimmedEmail || !trimmedMessage) {
+    if (nameError || emailError || messageError) {
+      setFieldErrors({ name: nameError, email: emailError, message: messageError });
       setStatus(t("status.incomplete"));
       return;
     }
@@ -67,6 +107,7 @@ export function ContactForm() {
         toast("success", "Message sent! We'll be in touch.");
         startTransition(() => {
           setForm(initialForm);
+          setFieldErrors({});
         });
       } else {
         setStatus(result.error ?? "Could not send message.");
@@ -81,7 +122,11 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="paper-panel-premium editorial-shell space-y-5 rounded-[1.7rem] border border-[rgba(255,255,255,0.74)] p-5 sm:p-6">
+    <form
+      onSubmit={(e) => { e.preventDefault(); submit(); }}
+      aria-busy={submitting}
+      className="paper-panel-premium editorial-shell space-y-5 rounded-[1.7rem] border border-[rgba(255,255,255,0.74)] p-5 sm:p-6"
+    >
       <div>
         <div className="font-editorial text-3xl tracking-[-0.05em] text-brand-text">
           {t("title")}
@@ -99,10 +144,18 @@ export function ContactForm() {
             name="name"
             value={form.name}
             onChange={(event) => updateField("name", event.target.value)}
+            onBlur={() => handleBlur("name")}
             autoComplete="name"
             required
+            aria-invalid={fieldErrors.name ? true : undefined}
+            aria-describedby={fieldErrors.name ? "contact-name-error" : undefined}
             className="field-luxe mt-2 px-4 py-3 text-sm outline-none"
           />
+          {fieldErrors.name && (
+            <span id="contact-name-error" className="mt-1 block text-xs text-red-600" role="alert">
+              {fieldErrors.name}
+            </span>
+          )}
         </label>
         <label className="block text-sm font-semibold text-brand-text">
           {t("fields.email")}
@@ -112,12 +165,20 @@ export function ContactForm() {
             type="email"
             value={form.email}
             onChange={(event) => updateField("email", event.target.value)}
+            onBlur={() => handleBlur("email")}
             autoComplete="email"
             autoCapitalize="none"
             spellCheck={false}
             required
+            aria-invalid={fieldErrors.email ? true : undefined}
+            aria-describedby={fieldErrors.email ? "contact-email-error" : undefined}
             className="field-luxe mt-2 px-4 py-3 text-sm outline-none"
           />
+          {fieldErrors.email && (
+            <span id="contact-email-error" className="mt-1 block text-xs text-red-600" role="alert">
+              {fieldErrors.email}
+            </span>
+          )}
         </label>
       </div>
 
@@ -145,29 +206,35 @@ export function ContactForm() {
           name="message"
           value={form.message}
           onChange={(event) => updateField("message", event.target.value)}
+          onBlur={() => handleBlur("message")}
           rows={7}
           required
+          aria-invalid={fieldErrors.message ? true : undefined}
+          aria-describedby={fieldErrors.message ? "contact-message-error" : undefined}
           className="field-luxe mt-2 rounded-[1.2rem] px-4 py-3 text-sm leading-7 outline-none"
         />
+        {fieldErrors.message && (
+          <span id="contact-message-error" className="mt-1 block text-xs text-red-600" role="alert">
+            {fieldErrors.message}
+          </span>
+        )}
       </label>
 
       <div className="editorial-muted-panel flex flex-wrap items-center justify-between gap-3 px-4 py-3">
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex min-h-11 items-center rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.22)] transition hover:-translate-y-0.5 disabled:opacity-60"
+          className="inline-flex min-h-11 items-center rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_18px_38px_rgba(232,97,77,0.22)] transition hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? t("status.sending") ?? "Sending…" : t("submit")}
         </button>
-        {status ? (
-          <p
-            role="status"
-            aria-live="polite"
-            className="text-sm leading-7 text-brand-text-muted"
-          >
-            {status}
-          </p>
-        ) : null}
+        <p
+          role="status"
+          aria-live="polite"
+          className="text-sm leading-7 text-brand-text-muted"
+        >
+          {status}
+        </p>
       </div>
     </form>
   );

@@ -6,6 +6,21 @@ export const metadata: Metadata = {
   title: "Venues",
   description:
     "Explore partner venues across Reykjavik — bars, cafés, restaurants, and coworking spaces that host community events.",
+  alternates: {
+    canonical: "/venues",
+  },
+  openGraph: {
+    title: "Venues",
+    description:
+      "Explore partner venues across Reykjavik — bars, cafés, restaurants, and coworking spaces that host community events.",
+    url: "/venues",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Venues",
+    description:
+      "Explore partner venues across Reykjavik — bars, cafés, restaurants, and coworking spaces.",
+  },
 };
 
 export default async function VenuesPage({

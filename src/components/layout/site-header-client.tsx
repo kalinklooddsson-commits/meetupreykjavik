@@ -428,6 +428,9 @@ function SearchOverlay({
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search"
       className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 backdrop-blur-sm pt-20 sm:pt-32"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -618,6 +621,7 @@ export function SiteHeaderClient({
           <button
             type="button"
             aria-label={searchLabel}
+            aria-keyshortcuts="Meta+K"
             onClick={() => setSearchOpen(true)}
             className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50/80 px-3 py-1.5 text-sm text-gray-500 transition hover:border-gray-300 hover:bg-gray-100"
           >
@@ -717,7 +721,24 @@ export function SiteHeaderMobileNav({
         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-[var(--brand-sand-light)] to-transparent" />
         {/* Right fade */}
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-[var(--brand-sand-light)] to-transparent" />
-        <nav className="flex gap-2 overflow-x-auto scrollbar-hide px-2">
+        <nav
+          className="flex gap-2 overflow-x-auto scrollbar-hide px-2"
+          role="tablist"
+          aria-label="Site navigation"
+          onKeyDown={(e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+              const links = Array.from(e.currentTarget.querySelectorAll<HTMLAnchorElement>("a"));
+              const idx = links.indexOf(e.target as HTMLAnchorElement);
+              if (idx < 0) return;
+              const next = e.key === "ArrowRight"
+                ? links[(idx + 1) % links.length]
+                : links[(idx - 1 + links.length) % links.length];
+              next?.focus();
+              next?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+              e.preventDefault();
+            }
+          }}
+        >
           {allItems.map((item) => {
             const active = isActivePath(activePath, item.href);
 
@@ -725,6 +746,9 @@ export function SiteHeaderMobileNav({
               <Link
                 key={item.href}
                 href={item.href}
+                role="tab"
+                tabIndex={active ? 0 : -1}
+                aria-selected={active}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "shrink-0 rounded-full px-3.5 py-1.5 text-[0.8125rem] font-semibold transition",

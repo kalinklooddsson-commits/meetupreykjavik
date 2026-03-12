@@ -6,6 +6,21 @@ export const metadata: Metadata = {
   title: "Events",
   description:
     "Browse upcoming events in Reykjavik — socials, workshops, tastings, and outdoor adventures curated by real organizers.",
+  alternates: {
+    canonical: "/events",
+  },
+  openGraph: {
+    title: "Events",
+    description:
+      "Browse upcoming events in Reykjavik — socials, workshops, tastings, and outdoor adventures curated by real organizers.",
+    url: "/events",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Events",
+    description:
+      "Browse upcoming events in Reykjavik — socials, workshops, tastings, and outdoor adventures.",
+  },
 };
 
 export default async function EventsPage({

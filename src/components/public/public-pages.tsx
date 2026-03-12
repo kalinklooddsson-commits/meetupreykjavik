@@ -87,6 +87,10 @@ const AVATAR_COLORS = [
   "#6366F1", "#EC4899", "#14B8A6", "#8B5CF6",
 ];
 
+/* ── Blur placeholder for hero images ──────────────────── */
+const BLUR_DATA_URL =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzJhMjYzOCIvPjwvc3ZnPg==";
+
 /* ── Helpers ───────────────────────────────────────────── */
 
 function eventHref(slug: string) {
@@ -1014,7 +1018,15 @@ function BlogCard({ post }: { post: BlogPost }) {
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-gray-600 line-clamp-2">{post.excerpt}</p>
         <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-          <span>{post.publishedAt}</span>
+          <span className="flex items-center gap-2">
+            {post.publishedAt}
+            {post.readTime ? (
+              <span className="inline-flex items-center gap-1 text-xs text-gray-400">
+                <Clock3 className="h-3 w-3" />
+                {post.readTime}
+              </span>
+            ) : null}
+          </span>
           <span className="font-medium text-brand-indigo">{tCta("readArticle")} &rarr;</span>
         </div>
       </div>
@@ -1104,19 +1116,21 @@ function FilterBar({
   activeIndex?: number;
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2" role="group" aria-label="Filter options">
       {items.map((item, i) => (
-        <span
+        <button
           key={item}
+          type="button"
+          aria-pressed={i === activeIndex}
           className={cn(
-            "rounded-full px-4 py-2 text-sm font-medium transition",
+            "rounded-full px-4 py-2 text-sm font-medium transition cursor-pointer",
             i === activeIndex
               ? "bg-brand-indigo text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200",
           )}
         >
           {item}
-        </span>
+        </button>
       ))}
     </div>
   );
@@ -1132,7 +1146,7 @@ function TimeFilterBar({
   activeCategory?: string;
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2" role="group" aria-label="Time filters">
       {items.map((item) => {
         const isActive = activeValue === item.value;
         const params = new URLSearchParams();
@@ -1144,6 +1158,7 @@ function TimeFilterBar({
           <Link
             key={item.value}
             href={href}
+            aria-current={isActive ? "page" : undefined}
             className={cn(
               "rounded-full px-4 py-2 text-sm font-medium transition",
               isActive
@@ -1219,6 +1234,8 @@ function IndexHero({
         sizes="100vw"
         src={imageSrc}
         priority
+        placeholder="blur"
+        blurDataURL={BLUR_DATA_URL}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-gray-900/60 to-gray-900/90" />
       <div className="section-shell relative z-10 py-10 text-white sm:py-16 md:py-24">

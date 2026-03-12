@@ -6,6 +6,21 @@ export const metadata: Metadata = {
   title: "Groups",
   description:
     "Find and join community groups in Reykjavik — from hiking and nightlife to tech meetups and language exchanges.",
+  alternates: {
+    canonical: "/groups",
+  },
+  openGraph: {
+    title: "Groups",
+    description:
+      "Find and join community groups in Reykjavik — from hiking and nightlife to tech meetups and language exchanges.",
+    url: "/groups",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Groups",
+    description:
+      "Find and join community groups in Reykjavik — hiking, nightlife, tech meetups, and more.",
+  },
 };
 
 export default async function GroupsPage({

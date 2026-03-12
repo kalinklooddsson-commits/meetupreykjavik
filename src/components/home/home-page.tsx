@@ -343,6 +343,8 @@ export function HomePage() {
             className="object-cover opacity-20"
             sizes="100vw"
             priority
+            placeholder="blur"
+            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzJhMjYzOCIvPjwvc3ZnPg=="
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[rgba(30,27,46,0.5)] via-[rgba(30,27,46,0.3)] to-[rgba(30,27,46,0.85)]" />
         </div>
