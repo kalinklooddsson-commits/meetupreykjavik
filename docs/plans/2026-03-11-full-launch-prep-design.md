@@ -90,7 +90,7 @@ src/lib/db/
 ## Phase 4: Frontend Polish
 
 ### Tailwind v4 Fix
-- Audit all `text-[var(--brand-*)]` across codebase
+- Audit all arbitrary brand color classes across codebase
 - Replace with inline `style={{ color: "..." }}`
 
 ### Leaflet Maps

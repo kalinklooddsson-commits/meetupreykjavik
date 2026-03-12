@@ -33,6 +33,7 @@ const TAG_COLORS: Record<string, string> = {
   Tech: "bg-brand-indigo-soft text-brand-indigo",
   Music: "bg-brand-sand text-brand-text",
   Food: "bg-brand-coral-soft text-brand-coral-dark",
+  Language: "bg-brand-indigo-soft text-brand-indigo",
 };
 
 const toneMap = {

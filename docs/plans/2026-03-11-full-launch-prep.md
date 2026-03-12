@@ -1420,7 +1420,7 @@ git commit -m "feat: add Resend email service with 5 HTML templates"
 
 **Step 1: Find all instances**
 
-Search the codebase for `text-[var(--brand` and `text-[#` patterns. These are ambiguous in Tailwind v4 and may silently fail.
+Search the codebase for arbitrary brand color class patterns. These are ambiguous in Tailwind v4 and may silently fail.
 
 ```bash
 grep -rn "text-\[var(--brand" src/ --include="*.tsx"
