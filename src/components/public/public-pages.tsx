@@ -1036,7 +1036,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
             target="_blank"
           >
             <Globe2 className="h-4 w-4" />
-            Website
+            {tCta("website")}
           </a>
         ) : null}
         {hasPhoto && place.image?.credit ? (
