@@ -31,6 +31,7 @@ import {
   OrganizerAttendeeControlCenter,
   OrganizerVenueRequestStudio,
 } from "@/components/dashboard/operations-panels";
+import { QrCheckin } from "@/components/dashboard/qr-checkin";
 import type { ComponentProps } from "react";
 
 function organizerLinks(activeHref: Route) {
@@ -771,12 +772,22 @@ export async function OrganizerEventDetailScreen({ slug }: { slug: string }) {
         </Surface>
       </div>
 
-      <Surface
-        eyebrow="Action desk"
-        title="Attendee operations"
-      >
-        <OrganizerAttendeeControlCenter attendees={event.attendees} />
-      </Surface>
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Surface
+          eyebrow="Action desk"
+          title="Attendee operations"
+        >
+          <OrganizerAttendeeControlCenter attendees={event.attendees} />
+        </Surface>
+
+        <Surface
+          eyebrow="Door check"
+          title="QR check-in"
+          description="Scan attendee QR codes or search by name to check in at the door."
+        >
+          <QrCheckin eventSlug={event.slug} attendees={event.attendees} />
+        </Surface>
+      </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.96fr_1.04fr]">
         <Surface
