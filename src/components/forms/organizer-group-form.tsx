@@ -80,27 +80,45 @@ export function OrganizerGroupForm({
     setForm((current) => ({ ...current, [field]: value }));
   }
 
-  function saveDraft() {
-    startTransition(() => {
-      const payload = {
-        ...form,
-        slug,
-        tags,
-        organizerName,
-        status: form.accepted ? "pending_review" : "draft",
-      };
+  async function saveDraft() {
+    const payload = {
+      ...form,
+      slug,
+      tags,
+      organizerName,
+      status: form.accepted ? "pending_review" : "draft",
+    };
 
-      writeSessionDraft(
-        "meetupreykjavik-group-draft",
-        payload,
-      );
-      setSavedSnapshot(JSON.stringify(form));
-      setMessage(
-        form.accepted
-          ? "Group draft saved locally and marked ready for moderation review."
-          : "Group draft saved locally. Accept the checklist when you are ready to submit.",
-      );
-    });
+    writeSessionDraft("meetupreykjavik-group-draft", payload);
+    setSavedSnapshot(JSON.stringify(form));
+
+    if (form.accepted) {
+      setMessage("Submitting group to server...");
+      try {
+        const response = await fetch("/api/groups", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name,
+            description: form.description,
+            visibility: form.visibility,
+            join_mode: form.joinMode,
+            tags: tags,
+            banner_url: null,
+          }),
+        });
+        const result = await response.json();
+        if (result.ok) {
+          setMessage("Group submitted for review! You'll be notified when it's approved.");
+        } else {
+          setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+        }
+      } catch {
+        setMessage("Could not reach the server. Group saved locally as a draft.");
+      }
+    } else {
+      setMessage("Group draft saved locally. Accept the checklist when you are ready to submit.");
+    }
   }
 
   const readiness = [

@@ -172,26 +172,63 @@ export function OrganizerEventWizard({
     });
   }
 
-  function saveDraft(action: "draft" | "publish-ready") {
-    startTransition(() => {
-      writeSessionDraft(
-        "meetupreykjavik-event-draft",
-        {
-          ...form,
-          slug,
-          tags,
-          ticketPriceIsk,
-          organizerName,
-          status: action === "publish-ready" ? "ready_for_review" : "draft",
-        },
-      );
-      setSavedSnapshot(JSON.stringify(form));
-      setMessage(
-        action === "publish-ready"
-          ? "Event draft saved locally and marked ready for review."
-          : "Event draft saved locally. Nothing has been published or deployed.",
-      );
-    });
+  async function saveDraft(action: "draft" | "publish-ready") {
+    // Always save locally first
+    writeSessionDraft(
+      "meetupreykjavik-event-draft",
+      {
+        ...form,
+        slug,
+        tags,
+        ticketPriceIsk,
+        organizerName,
+        status: action === "publish-ready" ? "ready_for_review" : "draft",
+      },
+    );
+    setSavedSnapshot(JSON.stringify(form));
+
+    if (action === "publish-ready") {
+      // Submit to API
+      setMessage("Submitting event to server...");
+      try {
+        const selectedVenue = publicVenues.find((v) => v.slug === form.venueSlug);
+        const response = await fetch("/api/events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: form.title,
+            description: form.description,
+            group_id: null,
+            category_id: null,
+            event_type: form.locationMode === "online" ? "online" : "in_person",
+            starts_at: form.startsOn && form.startTime
+              ? new Date(`${form.startsOn}T${form.startTime}`).toISOString()
+              : null,
+            ends_at: form.startsOn && form.endTime
+              ? new Date(`${form.startsOn}T${form.endTime}`).toISOString()
+              : null,
+            venue_name: selectedVenue?.name ?? form.venueAddress ?? null,
+            venue_address: form.venueAddress || selectedVenue?.address || null,
+            online_link: form.onlineLink || null,
+            attendee_limit: form.attendeeLimit || null,
+            is_free: form.isFree,
+            rsvp_mode: form.rsvpMode,
+            featured_photo_url: form.featuredPhotoUrl || null,
+            tags: tags.length > 0 ? tags : null,
+          }),
+        });
+        const result = await response.json();
+        if (result.ok) {
+          setMessage("Event submitted successfully! It's now saved as a draft on the server.");
+        } else {
+          setMessage(`Server responded: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+        }
+      } catch {
+        setMessage("Could not reach the server. Event saved locally as a draft.");
+      }
+    } else {
+      setMessage("Event draft saved locally. Nothing has been published or deployed.");
+    }
   }
 
   return (

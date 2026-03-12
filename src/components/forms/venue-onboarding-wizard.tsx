@@ -148,23 +148,54 @@ export function VenueOnboardingWizard({
     });
   }
 
-  function saveDraft(action: "draft" | "review") {
-    startTransition(() => {
-      writeSessionDraft(
-        "meetupreykjavik-venue-onboarding",
-        {
-          ...form,
-          amenities,
-          status: action === "review" ? "ready_for_review" : "draft",
-        },
-      );
-      setSavedSnapshot(JSON.stringify(form));
-      setMessage(
-        action === "review"
-          ? "Venue onboarding draft saved locally and marked ready for review."
-          : "Venue onboarding draft saved locally. Nothing has been submitted or deployed.",
-      );
-    });
+  async function saveDraft(action: "draft" | "review") {
+    writeSessionDraft(
+      "meetupreykjavik-venue-onboarding",
+      {
+        ...form,
+        amenities,
+        status: action === "review" ? "ready_for_review" : "draft",
+      },
+    );
+    setSavedSnapshot(JSON.stringify(form));
+
+    if (action === "review") {
+      setMessage("Submitting venue application...");
+      try {
+        const response = await fetch("/api/venues", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.businessName,
+            legal_name: form.legalName,
+            kennitala: form.kennitala,
+            type: form.venueType,
+            description: form.description,
+            address: form.address,
+            city: "Reykjavik",
+            capacity_seated: form.capacitySeated || null,
+            capacity_standing: form.capacityStanding || null,
+            capacity_total: (form.capacitySeated || 0) + (form.capacityStanding || 0) || null,
+            amenities: amenities,
+            phone: form.phone,
+            email: form.email,
+            website: form.website,
+            opening_hours: form.openingHours || null,
+            partnership_tier: form.partnershipTier || "free",
+          }),
+        });
+        const result = await response.json();
+        if (result.ok) {
+          setMessage("Venue application submitted! Our team will review it shortly.");
+        } else {
+          setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+        }
+      } catch {
+        setMessage("Could not reach the server. Application saved locally.");
+      }
+    } else {
+      setMessage("Venue onboarding draft saved locally. Nothing has been submitted or deployed.");
+    }
   }
 
   return (

@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { ZodError, type ZodType } from "zod";
 
-import { env, hasLiveSupabaseAuth } from "@/lib/env";
+import { env, hasLiveSupabaseAuth, hasSupabaseEnv } from "@/lib/env";
 import {
   clearMockSessionCookie,
   createMockSessionFromAccount,
@@ -52,6 +52,17 @@ import {
   validationErrorResponse,
 } from "@/lib/api/responses";
 import { forbiddenResponse } from "@/lib/security/response";
+
+// Database layer imports
+import { createEvent, updateEvent, deleteEvent, getEvents, getEventBySlug } from "@/lib/db/events";
+import { createGroup, getGroups, getGroupBySlug, joinGroup, leaveGroup } from "@/lib/db/groups";
+import { createVenue, updateVenue, getVenues, getVenueBySlug } from "@/lib/db/venues";
+import { createRsvp, cancelRsvp, getEventRsvps } from "@/lib/db/rsvps";
+import { createBooking, getVenueBookings, updateBookingStatus } from "@/lib/db/bookings";
+import { updateProfile, getProfileById } from "@/lib/db/profiles";
+import { getUserNotifications, markNotificationRead } from "@/lib/db/notifications";
+import { getUserConversations, sendMessage } from "@/lib/db/messages";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const bodySchemaMap: Record<string, ZodType> = {
   "POST /api/auth/signup": signupSchema,
@@ -622,6 +633,427 @@ async function handleLiveAuthRequest(request: NextRequest, key: string) {
   }
 }
 
+/**
+ * Live Supabase data handler — dispatches validated requests to real db functions.
+ * Returns null if the route isn't handled yet (falls through to scaffold).
+ */
+async function handleLiveDataRequest(
+  request: NextRequest,
+  key: string,
+  match: NonNullable<ReturnType<typeof findApiSpecRoute>>,
+) {
+  const session = await resolveAppSession(request);
+
+  try {
+    switch (key) {
+      // ── Events CRUD ──
+      case "GET /api/events": {
+        const url = request.nextUrl;
+        const result = await getEvents({
+          category: url.searchParams.get("category") ?? undefined,
+          limit: Number(url.searchParams.get("limit") ?? 20),
+          offset: Number(url.searchParams.get("offset") ?? 0),
+          status: url.searchParams.get("status") ?? "published",
+        });
+        return successResponse(result);
+      }
+      case "GET /api/events/[slug]": {
+        const data = await getEventBySlug(match.params.slug);
+        if (!data) return successResponse(null);
+        return successResponse(data);
+      }
+      case "POST /api/events": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await parseValidatedBody(request, key);
+        const slug = `${(body as Record<string, string>).title?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
+        const data = await createEvent({
+          ...(body as Record<string, unknown>),
+          slug,
+          host_id: session.id,
+          status: "draft",
+        } as Parameters<typeof createEvent>[0]);
+        return successResponse(data, { status: 201 });
+      }
+      case "PATCH /api/events/[slug]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await parseValidatedBody(request, key);
+        const data = await updateEvent(match.params.slug, body as Parameters<typeof updateEvent>[1]);
+        return successResponse(data);
+      }
+      case "DELETE /api/events/[slug]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        await deleteEvent(match.params.slug);
+        return successResponse({ deleted: true });
+      }
+
+      // ── RSVPs ──
+      case "POST /api/events/[slug]/rsvp": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, string> | null;
+        const data = await createRsvp(event.id, session.id, body?.ticketTierId);
+        return successResponse(data, { status: 201 });
+      }
+      case "DELETE /api/events/[slug]/rsvp": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        const data = await cancelRsvp(event.id, session.id);
+        return successResponse(data);
+      }
+      case "GET /api/events/[slug]/attendees": {
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return successResponse([]);
+        const data = await getEventRsvps(event.id);
+        return successResponse(data);
+      }
+
+      // ── Event comments ──
+      case "POST /api/events/[slug]/comments": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const { data, error } = await supabase
+          .from("event_comments")
+          .insert({
+            event_id: event.id,
+            user_id: session.id,
+            text: body.text as string,
+            parent_id: (body.parentId as string) ?? null,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+      case "GET /api/events/[slug]/comments": {
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return successResponse([]);
+        const { data } = await supabase
+          .from("event_comments")
+          .select("*, profiles:user_id (*)")
+          .eq("event_id", event.id)
+          .order("created_at", { ascending: true });
+        return successResponse(data ?? []);
+      }
+
+      // ── Event ratings ──
+      case "POST /api/events/[slug]/rate": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const { data, error } = await supabase
+          .from("event_ratings")
+          .insert({
+            event_id: event.id,
+            user_id: session.id,
+            rating: body.rating as number,
+            text: (body.text as string) ?? null,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+
+      // ── Groups CRUD ──
+      case "GET /api/groups": {
+        const url = request.nextUrl;
+        const data = await getGroups({
+          category: url.searchParams.get("category") ?? undefined,
+          limit: Number(url.searchParams.get("limit") ?? 20),
+        });
+        return successResponse(data);
+      }
+      case "GET /api/groups/[slug]": {
+        const data = await getGroupBySlug(match.params.slug);
+        if (!data) return successResponse(null);
+        return successResponse(data);
+      }
+      case "POST /api/groups": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await parseValidatedBody(request, key);
+        const slug = `${(body as Record<string, string>).name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
+        const data = await createGroup({
+          ...(body as Record<string, unknown>),
+          slug,
+          organizer_id: session.id,
+          status: "pending",
+        } as Parameters<typeof createGroup>[0]);
+        return successResponse(data, { status: 201 });
+      }
+      case "POST /api/groups/[slug]/join": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const group = await getGroupBySlug(match.params.slug);
+        if (!group) return validationMessage("Group not found.");
+        const data = await joinGroup(group.id, session.id);
+        return successResponse(data, { status: 201 });
+      }
+      case "POST /api/groups/[slug]/leave": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const group = await getGroupBySlug(match.params.slug);
+        if (!group) return validationMessage("Group not found.");
+        await leaveGroup(group.id, session.id);
+        return successResponse({ left: true });
+      }
+      case "GET /api/groups/[slug]/members": {
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const group = await getGroupBySlug(match.params.slug);
+        if (!group) return successResponse([]);
+        const { data } = await supabase
+          .from("group_members")
+          .select("*, profiles:user_id (*)")
+          .eq("group_id", group.id);
+        return successResponse(data ?? []);
+      }
+
+      // ── Venues CRUD ──
+      case "GET /api/venues": {
+        const url = request.nextUrl;
+        const data = await getVenues({
+          type: url.searchParams.get("type") ?? undefined,
+          limit: Number(url.searchParams.get("limit") ?? 20),
+        });
+        return successResponse(data);
+      }
+      case "GET /api/venues/[slug]": {
+        const data = await getVenueBySlug(match.params.slug);
+        if (!data) return successResponse(null);
+        return successResponse(data);
+      }
+      case "POST /api/venues": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await parseValidatedBody(request, key);
+        const slug = `${(body as Record<string, string>).name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
+        const data = await createVenue({
+          ...(body as Record<string, unknown>),
+          slug,
+          owner_id: session.id,
+          status: "pending",
+        } as Parameters<typeof createVenue>[0]);
+        return successResponse(data, { status: 201 });
+      }
+      case "PATCH /api/venues/[slug]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await parseValidatedBody(request, key);
+        const data = await updateVenue(match.params.slug, body as Parameters<typeof updateVenue>[1]);
+        return successResponse(data);
+      }
+
+      // ── Venue deals ──
+      case "POST /api/venues/[slug]/deals": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const venue = await getVenueBySlug(match.params.slug);
+        if (!venue) return validationMessage("Venue not found.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const { data, error } = await supabase
+          .from("venue_deals")
+          .insert({ ...body, venue_id: venue.id })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+      case "GET /api/venues/[slug]/deals": {
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const venue = await getVenueBySlug(match.params.slug);
+        if (!venue) return successResponse([]);
+        const { data } = await supabase
+          .from("venue_deals")
+          .select("*")
+          .eq("venue_id", venue.id)
+          .eq("is_active", true);
+        return successResponse(data ?? []);
+      }
+
+      // ── Venue reviews ──
+      case "POST /api/venues/[slug]/reviews": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const venue = await getVenueBySlug(match.params.slug);
+        if (!venue) return validationMessage("Venue not found.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const { data, error } = await supabase
+          .from("venue_reviews")
+          .insert({
+            venue_id: venue.id,
+            reviewer_id: session.id,
+            rating: body.rating as number,
+            text: (body.text as string) ?? null,
+            reviewer_type: (body.reviewerType as string) ?? "attendee",
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+      case "GET /api/venues/[slug]/reviews": {
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const venue = await getVenueBySlug(match.params.slug);
+        if (!venue) return successResponse([]);
+        const { data } = await supabase
+          .from("venue_reviews")
+          .select("*, profiles:reviewer_id (*)")
+          .eq("venue_id", venue.id)
+          .order("created_at", { ascending: false });
+        return successResponse(data ?? []);
+      }
+
+      // ── Venue availability ──
+      case "POST /api/venues/[slug]/availability": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const venue = await getVenueBySlug(match.params.slug);
+        if (!venue) return validationMessage("Venue not found.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const { data, error } = await supabase
+          .from("venue_availability")
+          .insert({ ...body, venue_id: venue.id })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+      case "GET /api/venues/[slug]/availability": {
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const venue = await getVenueBySlug(match.params.slug);
+        if (!venue) return successResponse([]);
+        const { data } = await supabase
+          .from("venue_availability")
+          .select("*")
+          .eq("venue_id", venue.id)
+          .eq("is_blocked", false);
+        return successResponse(data ?? []);
+      }
+
+      // ── Bookings ──
+      case "POST /api/bookings": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const data = await createBooking({
+          ...body,
+          organizer_id: session.id,
+          status: "pending",
+        } as Parameters<typeof createBooking>[0]);
+        return successResponse(data, { status: 201 });
+      }
+      case "GET /api/bookings": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        // Return bookings relevant to the user's role
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const { data } = await supabase
+          .from("venue_bookings")
+          .select("*, profiles:organizer_id (*), venues:venue_id (*)")
+          .or(`organizer_id.eq.${session.id},venue_id.in.(select id from venues where owner_id = '${session.id}')`)
+          .order("requested_date", { ascending: false });
+        return successResponse(data ?? []);
+      }
+      case "PATCH /api/bookings/[id]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const data = await updateBookingStatus(
+          match.params.id,
+          body.status as string,
+          body.counterOffer as Parameters<typeof updateBookingStatus>[2],
+        );
+        return successResponse(data);
+      }
+
+      // ── Users / Profiles ──
+      case "PATCH /api/users/[id]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await parseValidatedBody(request, key);
+        const data = await updateProfile(match.params.id, body as Parameters<typeof updateProfile>[1]);
+        return successResponse(data);
+      }
+      case "GET /api/users/[id]": {
+        const data = await getProfileById(match.params.id);
+        return successResponse(data);
+      }
+
+      // ── Notifications ──
+      case "GET /api/notifications": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const data = await getUserNotifications(session.id);
+        return successResponse({ accountType: session.accountType, notifications: data });
+      }
+      case "PATCH /api/notifications/read": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await request.json();
+        if (body.id) {
+          await markNotificationRead(body.id);
+        }
+        return successResponse({ marked: true });
+      }
+
+      // ── Messages ──
+      case "GET /api/messages": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const data = await getUserConversations(session.id);
+        return successResponse({ accountType: session.accountType, threads: data });
+      }
+      case "POST /api/messages": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const body = await request.json();
+        const data = await sendMessage({
+          sender_id: session.id,
+          receiver_id: body.receiverId,
+          subject: body.subject ?? "",
+          body: body.body,
+        });
+        return successResponse(data, { status: 201 });
+      }
+
+      // ── Admin stats ──
+      case "GET /api/admin/stats": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const [users, events, groups, venues] = await Promise.all([
+          supabase.from("profiles").select("id", { count: "exact", head: true }),
+          supabase.from("events").select("id", { count: "exact", head: true }),
+          supabase.from("groups").select("id", { count: "exact", head: true }),
+          supabase.from("venues").select("id", { count: "exact", head: true }),
+        ]);
+        return successResponse({
+          totalUsers: users.count ?? 0,
+          totalEvents: events.count ?? 0,
+          totalGroups: groups.count ?? 0,
+          totalVenues: venues.count ?? 0,
+        });
+      }
+
+      default:
+        return null; // Fall through to scaffold
+    }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Database operation failed";
+    console.error(`Live handler error for ${key}:`, err);
+    return validationErrorResponse({
+      formErrors: [message],
+      fieldErrors: {},
+    });
+  }
+}
+
 async function handleApiRequest(request: NextRequest, method: ApiMethod) {
   const path = request.nextUrl.pathname;
   const match = findApiSpecRoute(method, path);
@@ -664,6 +1096,12 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
 
       const validatedBody = await parseValidatedBody(request, key);
       return serviceUnavailableResponse(match, { body: validatedBody });
+    }
+
+    // Attempt live Supabase handler before falling back to scaffold
+    if (hasSupabaseEnv()) {
+      const liveResult = await handleLiveDataRequest(request, key, match);
+      if (liveResult) return liveResult;
     }
 
     const validatedBody = await parseValidatedBody(request, key);

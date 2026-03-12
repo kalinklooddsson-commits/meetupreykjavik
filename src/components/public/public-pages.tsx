@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Route } from "next";
 import { useTranslations } from "next-intl";
+import { RsvpButton } from "@/components/public/rsvp-button";
 import {
   ArrowRight,
   BadgeCheck,
@@ -460,6 +461,7 @@ function DetailHero({
   art,
   children,
   actions,
+  rsvpSlot,
 }: {
   eyebrow: string;
   title: string;
@@ -467,6 +469,7 @@ function DetailHero({
   art: string;
   children?: React.ReactNode;
   actions?: Array<{ href: Route; label: string; primary?: boolean }>;
+  rsvpSlot?: React.ReactNode;
 }) {
   const imageUrl = extractImageUrl(art);
 
@@ -519,6 +522,7 @@ function DetailHero({
             )}
           </div>
         ) : null}
+        {rsvpSlot ? <div id="rsvp" className="mt-5">{rsvpSlot}</div> : null}
         {children}
       </div>
     </section>
@@ -1385,9 +1389,10 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
         description={event.summary}
         art={event.art}
         actions={[
-          { href: "/signup", label: t("actions.rsvp"), primary: true },
+          { href: `/events/${event.slug}#rsvp` as Route, label: t("actions.rsvp"), primary: true },
           ...(group ? [{ href: groupHref(group.slug), label: t("actions.viewGroup") }] : []),
         ]}
+        rsvpSlot={<RsvpButton eventSlug={event.slug} />}
       />
 
       <section className="section-shell py-10 lg:py-14">

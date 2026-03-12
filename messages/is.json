@@ -663,7 +663,14 @@
     "or": "eða",
     "and": "og",
     "free": "Ókeypis",
-    "paid": "Greitt"
+    "paid": "Greitt",
+    "attendEvent": "Mæta á viðburð",
+    "youreGoing": "Þú ert á leið!",
+    "cancelRsvp": "Hætta við",
+    "signInToRsvp": "Skráðu þig inn til að mæta",
+    "joinGroup": "Ganga í hóp",
+    "leaveGroup": "Yfirgefa hóp",
+    "memberOfGroup": "Þú ert meðlimur"
   },
   "eventsPage": {
     "hero": {

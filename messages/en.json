@@ -663,7 +663,14 @@
     "or": "or",
     "and": "and",
     "free": "Free",
-    "paid": "Paid"
+    "paid": "Paid",
+    "attendEvent": "Attend this event",
+    "youreGoing": "You're going!",
+    "cancelRsvp": "Cancel RSVP",
+    "signInToRsvp": "Sign in to RSVP",
+    "joinGroup": "Join group",
+    "leaveGroup": "Leave group",
+    "memberOfGroup": "You're a member"
   },
   "eventsPage": {
     "hero": {
