@@ -66,7 +66,7 @@ export const events: HomeEvent[] = [
     venueSlug: "lebowski-bar",
     attendees: 43,
     deal: "2-for-1 drinks",
-    photo: "/place-images/reykjavik/reykjavik-871-2-78434189.jpg",
+    photo: "/place-images/reykjavik/venues/lebowski-bar.jpg",
   },
   {
     id: 2,
@@ -77,7 +77,7 @@ export const events: HomeEvent[] = [
     date: "16",
     time: "09:00",
     venue: "Esja Trailhead",
-    venueSlug: "grandi-hub",
+    venueSlug: "esja-trailhead",
     attendees: 27,
     photo: "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
   },
@@ -93,7 +93,7 @@ export const events: HomeEvent[] = [
     venueSlug: "grandi-hub",
     attendees: 61,
     deal: "Free coffee",
-    photo: "/place-images/reykjavik/hof-i-deccf755.jpg",
+    photo: "/place-images/reykjavik/venues/grandi-hub.jpg",
   },
   {
     id: 4,
@@ -104,10 +104,10 @@ export const events: HomeEvent[] = [
     date: "20",
     time: "18:00",
     venue: "Hlemmur Mathöll",
-    venueSlug: "stofan-cafe",
+    venueSlug: "hlemmur-square",
     attendees: 35,
     deal: "10% off tastings",
-    photo: "/place-images/reykjavik/dill-0aeca160.jpg",
+    photo: "/place-images/reykjavik/venues/hlemmur-square.jpg",
   },
   {
     id: 5,
@@ -117,10 +117,10 @@ export const events: HomeEvent[] = [
     day: "Sat 22 Mar",
     date: "22",
     time: "20:30",
-    venue: "Iðnó Cultural House",
+    venue: "Kex Hostel",
     venueSlug: "kex-hostel",
     attendees: 52,
-    photo: "/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg",
+    photo: "/place-images/reykjavik/venues/kex-hostel.jpg",
   },
   {
     id: 6,
@@ -134,7 +134,7 @@ export const events: HomeEvent[] = [
     venueSlug: "stofan-cafe",
     attendees: 29,
     deal: "Free coffee",
-    photo: "/place-images/reykjavik/listasafn-einars-jonssonar-e07f8c3b.JPG",
+    photo: "/place-images/reykjavik/venues/stofan-cafe.jpg",
   },
 ] as const;
 
@@ -153,7 +153,7 @@ export const groups: HomeGroup[] = [
     category: "Expat",
     members: 512,
     description: "A landing spot for newcomers finding events, friends, and practical city tips.",
-    photo: "/place-images/reykjavik/reykjavik-871-2-78434189.jpg",
+    photo: "/place-images/reykjavik/venues/lebowski-bar.jpg",
   },
   {
     slug: "tech-community-rvk",
@@ -161,7 +161,7 @@ export const groups: HomeGroup[] = [
     category: "Tech",
     members: 198,
     description: "Developers, founders, and designers sharing talks, demos, and open studio nights.",
-    photo: "/place-images/reykjavik/hof-i-deccf755.jpg",
+    photo: "/place-images/reykjavik/venues/grandi-hub.jpg",
   },
   {
     slug: "creative-reykjavik",
@@ -169,7 +169,7 @@ export const groups: HomeGroup[] = [
     category: "Arts",
     members: 203,
     description: "Gallery walks, sketchbook meetups, and after-hours openings around the city.",
-    photo: "/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg",
+    photo: "/place-images/reykjavik/venues/kex-hostel.jpg",
   },
 ] as const;
 
@@ -182,7 +182,7 @@ export const venues: HomeVenue[] = [
     rating: 4.7,
     events: 31,
     deal: "Happy hour until 21:00",
-    photo: "/place-images/reykjavik/ufa-40055fa7.jpg",
+    photo: "/place-images/reykjavik/venues/lebowski-bar.jpg",
   },
   {
     slug: "kex-hostel",
@@ -192,17 +192,17 @@ export const venues: HomeVenue[] = [
     rating: 4.8,
     events: 23,
     deal: "Welcome drink for hosts",
-    photo: "/place-images/reykjavik/dill-0aeca160.jpg",
+    photo: "/place-images/reykjavik/venues/kex-hostel.jpg",
   },
   {
     slug: "stofan-cafe",
-    name: "Stofan Cafe",
+    name: "Stofan Café",
     type: "Cafe & Lounge",
     area: "Vesturgata",
     rating: 4.9,
     events: 18,
     deal: "Coffee bundle for groups",
-    photo: "/place-images/reykjavik/hafnarborg-1be7b43b.jpg",
+    photo: "/place-images/reykjavik/venues/stofan-cafe.jpg",
   },
 ] as const;
 

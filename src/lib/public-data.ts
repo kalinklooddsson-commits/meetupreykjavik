@@ -100,7 +100,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A warm, hosted social night with easy intros, small-group prompts, and a venue perk on arrival.",
     description: [
       "This format is built for people who want a social night that feels designed rather than chaotic. Hosts open with simple conversation prompts, table rotations stay light, and the pace is relaxed enough for newcomers.",
-      "The venue partner supports the night with a member deal and a dedicated arrival area, which means the event feels intentional from the first minute instead of improvised at the bar counter.",
+      "The venue partner supports the night with a member deal and a dedicated arrival area, which means the event feels intentional from the first minute instead of improvised at the bar counter."
     ],
     attendees: 43,
     capacity: 60,
@@ -112,19 +112,17 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h and 2h reminders with arrival note",
     hostContact: "Kari Sigurdsson via host inbox",
     shareLabel: "Share with one friend before checkout",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
+    art: "url('/place-images/reykjavik/venues/lebowski-bar.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
-      "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "url('/place-images/reykjavik/venues/lebowski-bar.jpg')"
     ],
     comments: [
       { author: "Anna", text: "Love that this one has a host and not just a crowd.", postedAt: "2 hours ago" },
-      { author: "Marta", text: "The last edition felt welcoming even if you came alone.", postedAt: "Yesterday" },
+      { author: "Marta", text: "The last edition felt welcoming even if you came alone.", postedAt: "Yesterday" }
     ],
     ratings: [
       { author: "Jon", rating: 5, text: "Good energy, well-paced, and the venue actually fit the format." },
-      { author: "Sofia", rating: 4, text: "Would go again. The smaller group intros helped a lot." },
+      { author: "Sofia", rating: 4, text: "Would go again. The smaller group intros helped a lot." }
     ],
   },
   {
@@ -144,7 +142,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A beginner-friendly mountain morning with route pacing, coffee after, and a proper meetup point.",
     description: [
       "The hike is designed for steady pacing rather than speed. Organizers split the group naturally based on comfort and make the route feel accessible to people who are still learning the local trails.",
-      "What makes this format work is the social structure around it: clear arrival instructions, warm-up chat, and a simple cafe finish after the descent so the meetup does not end at the parking lot.",
+      "What makes this format work is the social structure around it: clear arrival instructions, warm-up chat, and a simple cafe finish after the descent so the meetup does not end at the parking lot."
     ],
     attendees: 27,
     capacity: 35,
@@ -156,18 +154,15 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder plus weather update at 07:00",
     hostContact: "Helga Arnadottir via organizer notes",
     shareLabel: "Share with your hiking pair or ride-share thread",
-    art: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+    art: "linear-gradient(135deg, rgba(45,80,22,0.2), rgba(120,160,80,0.15)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(124,154,130,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
-      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(124,154,130,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(124,154,130,0.35)), url('/place-images/reykjavik/arb-jarsafn-c71d7348.jpg')",
     ],
     comments: [
       { author: "Brynjar", text: "Great host notes in advance. Easy to join solo.", postedAt: "5 hours ago" },
-      { author: "Lina", text: "Happy this one keeps a no-drop pace.", postedAt: "1 day ago" },
+      { author: "Lina", text: "Happy this one keeps a no-drop pace.", postedAt: "1 day ago" }
     ],
     ratings: [
-      { author: "Rakel", rating: 5, text: "Clear communication and a genuinely friendly group." },
+      { author: "Rakel", rating: 5, text: "Clear communication and a genuinely friendly group." }
     ],
   },
   {
@@ -187,7 +182,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "Hands-on workshop covering data flow, streaming, and real app tradeoffs in modern React.",
     description: [
       "The session moves beyond slides and into implementation patterns. Participants work through a guided app slice, compare server and client boundaries, and walk away with a mental model rather than just a buzzword recap.",
-      "This format also fits the broader platform vision: serious organizers, strong partner venues, and events that feel useful enough to justify a recurring community around them.",
+      "This format also fits the broader platform vision: serious organizers, strong partner venues, and events that feel useful enough to justify a recurring community around them."
     ],
     attendees: 61,
     capacity: 80,
@@ -199,18 +194,16 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h, 2h, and post-event feedback prompt",
     hostContact: "Bjorn Olafsson via organizer inbox",
     shareLabel: "Share with your team before approval closes",
-    art: "linear-gradient(135deg, rgba(55,48,163,0.55), rgba(30,27,46,0.45)), url('/place-images/reykjavik/generated/grandi101.svg')",
+    art: "url('/place-images/reykjavik/venues/grandi-hub.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(245,240,232,0.2)), url('/place-images/reykjavik/generated/grandi101.svg')",
-      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/ufa-40055fa7.jpg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(55,48,163,0.5)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
+      "url('/place-images/reykjavik/venues/grandi-hub.jpg')"
     ],
     comments: [
       { author: "Aron", text: "Nice to see a technical event with real implementation time.", postedAt: "3 hours ago" },
-      { author: "Mia", text: "Would love a follow-up on auth and caching patterns.", postedAt: "2 days ago" },
+      { author: "Mia", text: "Would love a follow-up on auth and caching patterns.", postedAt: "2 days ago" }
     ],
     ratings: [
-      { author: "Einar", rating: 5, text: "Dense but practical. The venue setup also worked well." },
+      { author: "Einar", rating: 5, text: "Dense but practical. The venue setup also worked well." }
     ],
   },
   {
@@ -230,7 +223,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A guided tasting focused on volcanic soils, storytelling, and a premium seated format.",
     description: [
       "The evening combines education and atmosphere. Each pour is paired with a short story, and the layout keeps the room intimate enough for questions without making it feel formal.",
-      "This is the kind of venue-led format the product should eventually monetize well: premium inventory, limited capacity, and strong host credibility.",
+      "This is the kind of venue-led format the product should eventually monetize well: premium inventory, limited capacity, and strong host credibility."
     ],
     attendees: 24,
     capacity: 28,
@@ -242,17 +235,15 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "48h menu note and same-day arrival briefing",
     hostContact: "Sara Magnusdottir via tasting concierge",
     shareLabel: "Share privately with your table or tasting partner",
-    art: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(42,38,56,0.45)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
+    art: "url('/place-images/reykjavik/venues/apotek.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
-      "linear-gradient(135deg, rgba(42,38,56,0.5), rgba(232,97,77,0.3)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(232,97,77,0.4)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+      "url('/place-images/reykjavik/venues/apotek.jpg')"
     ],
     comments: [
-      { author: "Klara", text: "The seated format makes this feel premium, not rushed.", postedAt: "Today" },
+      { author: "Klara", text: "The seated format makes this feel premium, not rushed.", postedAt: "Today" }
     ],
     ratings: [
-      { author: "Ivar", rating: 5, text: "Excellent host and the venue fit the concept perfectly." },
+      { author: "Ivar", rating: 5, text: "Excellent host and the venue fit the concept perfectly." }
     ],
   },
   {
@@ -272,7 +263,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A social format for newcomers who want structure, easier intros, and no awkward room-reading.",
     description: [
       "This event is designed around clarity. Timed rounds, host prompts, and a strong arrival flow mean people can settle in fast even if they just moved to the city last week.",
-      "Because the format is repeatable, it gives the platform a strong example of how group identity, venue partnership, and event consistency can reinforce one another.",
+      "Because the format is repeatable, it gives the platform a strong example of how group identity, venue partnership, and event consistency can reinforce one another."
     ],
     attendees: 58,
     capacity: 70,
@@ -284,18 +275,16 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h and 3h reminders with intro prompt",
     hostContact: "Marta Polak via newcomer host desk",
     shareLabel: "Share with other newcomers before seats fill",
-    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.4)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
+    art: "url('/place-images/reykjavik/venues/kex-hostel.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
-      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(79,70,229,0.35)), url('/place-images/reykjavik/o-inn-aca1fd38.JPG')",
+      "url('/place-images/reykjavik/venues/kex-hostel.jpg')"
     ],
     comments: [
       { author: "Diego", text: "Exactly the kind of structure newcomers need.", postedAt: "4 hours ago" },
-      { author: "Freya", text: "I like that the venue keeps space near the host desk for arrivals.", postedAt: "Yesterday" },
+      { author: "Freya", text: "I like that the venue keeps space near the host desk for arrivals.", postedAt: "Yesterday" }
     ],
     ratings: [
-      { author: "Lukas", rating: 4, text: "Friendly crowd, not too forced, good host energy." },
+      { author: "Lukas", rating: 4, text: "Friendly crowd, not too forced, good host energy." }
     ],
   },
   {
@@ -315,7 +304,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A live jazz night with a hosted social layer and a streamed first set for remote members.",
     description: [
       "The event blends scene discovery with community hosting. Members can attend live for the full atmosphere or join the first set remotely before deciding to come to the next edition in person.",
-      "The hybrid format shows how the product can support different event shapes without flattening everything into the same RSVP experience.",
+      "The hybrid format shows how the product can support different event shapes without flattening everything into the same RSVP experience."
     ],
     attendees: 34,
     capacity: 90,
@@ -327,17 +316,15 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder and doors-open alert",
     hostContact: "Elin Thors via cultural host channel",
     shareLabel: "Share with your live or remote group",
-    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/gamli-gaukurinn.svg')",
+    art: "url('/place-images/reykjavik/venues/dillon.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(79,70,229,0.35)), url('/place-images/reykjavik/generated/gamli-gaukurinn.svg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "url('/place-images/reykjavik/venues/dillon.jpg')"
     ],
     comments: [
-      { author: "Runa", text: "Love that the first set is streamable.", postedAt: "Today" },
+      { author: "Runa", text: "Love that the first set is streamable.", postedAt: "Today" }
     ],
     ratings: [
-      { author: "Petur", rating: 5, text: "Great venue and strong curation." },
+      { author: "Petur", rating: 5, text: "Great venue and strong curation." }
     ],
   },
   {
@@ -357,7 +344,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A guided walk through six Icelandic craft beers with tasting notes, food pairings, and candid brewer stories.",
     description: [
       "This tasting is built for curiosity rather than expertise. Each pour comes with a short introduction from the host, covering ingredients, brewing approach, and the local story behind the label. The pace is relaxed and questions are welcome throughout.",
-      "The intimate room at Micro Bar means conversations happen naturally between pours. The format works well for both solo attendees and small groups, and the food pairing keeps things grounded across the evening.",
+      "The intimate room at Micro Bar means conversations happen naturally between pours. The format works well for both solo attendees and small groups, and the food pairing keeps things grounded across the evening."
     ],
     attendees: 35,
     capacity: 45,
@@ -369,19 +356,17 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder with tasting preview and arrival note",
     hostContact: "Sara Magnusdottir via host inbox",
     shareLabel: "Share with a friend who appreciates good craft beer",
-    art: "linear-gradient(135deg, rgba(180,130,60,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/micro-bar.svg')",
+    art: "url('/place-images/reykjavik/venues/micro-bar.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(180,130,60,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/micro-bar.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(180,130,60,0.35)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
-      "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(180,130,60,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "url('/place-images/reykjavik/venues/micro-bar.jpg')"
     ],
     comments: [
       { author: "Gunnar", text: "The brewer stories made this way more interesting than a standard tasting.", postedAt: "3 hours ago" },
-      { author: "Helga", text: "Small venue, big flavor. Perfect Saturday evening.", postedAt: "Yesterday" },
+      { author: "Helga", text: "Small venue, big flavor. Perfect Saturday evening.", postedAt: "Yesterday" }
     ],
     ratings: [
       { author: "Kristin", rating: 5, text: "Intimate, well-paced, and the food pairings were spot on." },
-      { author: "Olafur", rating: 4, text: "Great selection. Would love a seasonal follow-up." },
+      { author: "Olafur", rating: 4, text: "Great selection. Would love a seasonal follow-up." }
     ],
   },
   {
@@ -401,7 +386,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A welcoming morning flow class with a live-streamed option for remote participants who prefer to practice at home.",
     description: [
       "The class is designed for all levels, with modifications offered throughout. The instructor keeps the energy grounded and the cues clear, making it easy for beginners to follow along without feeling lost in a room full of experienced practitioners.",
-      "The hybrid format means you can join from home if the weather is rough or you prefer a quiet start. The live stream captures the instructor and the room ambiance, so remote participants still feel part of the group energy.",
+      "The hybrid format means you can join from home if the weather is rough or you prefer a quiet start. The live stream captures the instructor and the room ambiance, so remote participants still feel part of the group energy."
     ],
     attendees: 22,
     capacity: 30,
@@ -413,19 +398,17 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "Evening-before reminder with stream link and arrival note",
     hostContact: "Johanna Petursdottir via wellness inbox",
     shareLabel: "Share with a friend who needs a calmer morning routine",
-    art: "linear-gradient(135deg, rgba(160,190,170,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/generated/loft-hostel.svg')",
+    art: "url('/place-images/reykjavik/venues/loft-hostel.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(160,190,170,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/loft-hostel.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(160,190,170,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(160,190,170,0.35)), url('/place-images/reykjavik/arb-jarsafn-c71d7348.jpg')",
+      "url('/place-images/reykjavik/venues/loft-hostel.jpg')"
     ],
     comments: [
       { author: "Lilja", text: "The hybrid option is a lifesaver on dark mornings.", postedAt: "5 hours ago" },
-      { author: "Tomoko", text: "Really thoughtful modifications for beginners. I felt included.", postedAt: "2 days ago" },
+      { author: "Tomoko", text: "Really thoughtful modifications for beginners. I felt included.", postedAt: "2 days ago" }
     ],
     ratings: [
       { author: "Anna", rating: 5, text: "Best morning routine I have found in Reykjavik. Calm, clear, consistent." },
-      { author: "Markus", rating: 4, text: "Good energy and the stream quality was surprisingly solid." },
+      { author: "Markus", rating: 4, text: "Good energy and the stream quality was surprisingly solid." }
     ],
   },
   {
@@ -445,7 +428,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "Five early-stage founders pitch to a room of builders, operators, and curious locals in a structured but informal format.",
     description: [
       "Each founder gets eight minutes to present and four minutes for questions. The format keeps things tight without making it feel like a competition. The audience includes developers, designers, and people from outside tech who bring fresh perspective.",
-      "After the pitches, the room opens up for food and conversation. Hlemmur Square provides a good mix of energy and space, and the bar menu keeps the social half grounded in something more than networking platitudes.",
+      "After the pitches, the room opens up for food and conversation. Hlemmur Square provides a good mix of energy and space, and the bar menu keeps the social half grounded in something more than networking platitudes."
     ],
     attendees: 78,
     capacity: 120,
@@ -457,19 +440,17 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "48h reminder with pitch lineup and 2h doors-open alert",
     hostContact: "Bjorn Olafsson via organizer inbox",
     shareLabel: "Share with founders and curious builders in your network",
-    art: "linear-gradient(135deg, rgba(79,70,229,0.55), rgba(30,27,46,0.45)), url('/place-images/reykjavik/generated/hlemmur-square.svg')",
+    art: "url('/place-images/reykjavik/venues/hlemmur-square.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(79,70,229,0.5), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/hlemmur-square.svg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/ufa-40055fa7.jpg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+      "url('/place-images/reykjavik/venues/hlemmur-square.jpg')"
     ],
     comments: [
       { author: "Dagny", text: "The format is tight. Eight minutes forces clarity.", postedAt: "Today" },
-      { author: "Siggi", text: "Good mix of technical and non-technical audience. Makes the Q&A better.", postedAt: "3 hours ago" },
+      { author: "Siggi", text: "Good mix of technical and non-technical audience. Makes the Q&A better.", postedAt: "3 hours ago" }
     ],
     ratings: [
       { author: "Hanna", rating: 5, text: "One of the best startup events in the city. No fluff." },
-      { author: "Einar", rating: 4, text: "Strong lineup. The food hall setting keeps it relaxed after the pitches." },
+      { author: "Einar", rating: 4, text: "Strong lineup. The food hall setting keeps it relaxed after the pitches." }
     ],
   },
   {
@@ -489,7 +470,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "An open mic night for poetry, spoken word, and short prose in a live music cafe with warm acoustics and attentive listeners.",
     description: [
       "The format alternates between featured readers and open slots. Sign-up happens at the door and each performer gets five minutes. The host keeps the pacing warm and the transitions smooth, so even first-time readers feel supported.",
-      "Cafe Rosenberg brings natural atmosphere to the evening. The room is small enough that every voice carries, and the audience tends to be attentive and generous. It is one of the best rooms in Reykjavik for this kind of event.",
+      "Cafe Rosenberg brings natural atmosphere to the evening. The room is small enough that every voice carries, and the audience tends to be attentive and generous. It is one of the best rooms in Reykjavik for this kind of event."
     ],
     attendees: 28,
     capacity: 50,
@@ -501,19 +482,17 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder with featured reader lineup",
     hostContact: "Elin Thors via cultural host channel",
     shareLabel: "Share with a friend who writes or wants to listen",
-    art: "linear-gradient(135deg, rgba(200,160,100,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/cafe-rosenberg.svg')",
+    art: "url('/place-images/reykjavik/venues/cafe-rosenberg.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(200,160,100,0.45), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/cafe-rosenberg.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(200,160,100,0.35)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
-      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(200,160,100,0.35)), url('/place-images/reykjavik/hafnarborg-1be7b43b.jpg')",
+      "url('/place-images/reykjavik/venues/cafe-rosenberg.jpg')"
     ],
     comments: [
       { author: "Bjork", text: "The room is perfect for this. Every word lands.", postedAt: "4 hours ago" },
-      { author: "Jonas", text: "First time reading in front of people. The host made it easy.", postedAt: "Yesterday" },
+      { author: "Jonas", text: "First time reading in front of people. The host made it easy.", postedAt: "Yesterday" }
     ],
     ratings: [
       { author: "Ragnhildur", rating: 5, text: "Warm crowd, beautiful venue, and the pacing never dragged." },
-      { author: "David", rating: 5, text: "This is exactly the kind of event Reykjavik needs more of." },
+      { author: "David", rating: 5, text: "This is exactly the kind of event Reykjavik needs more of." }
     ],
   },
   {
@@ -533,7 +512,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A structured language table where Icelandic learners and native speakers practice together over coffee in a historic cafe.",
     description: [
       "The format uses timed conversation rounds with topic cards. Each table has a mix of skill levels and the host rotates participants every fifteen minutes. This keeps conversations fresh and gives everyone exposure to different speaking styles.",
-      "Mokka Kaffi provides the ideal setting: quiet enough for conversation, central enough for easy access, and historically significant enough that even the venue becomes a talking point. Coffee is self-serve and the atmosphere does the rest.",
+      "Mokka Kaffi provides the ideal setting: quiet enough for conversation, central enough for easy access, and historically significant enough that even the venue becomes a talking point. Coffee is self-serve and the atmosphere does the rest."
     ],
     attendees: 18,
     capacity: 25,
@@ -545,19 +524,17 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder with table assignment and topic preview",
     hostContact: "Pierre Dupont via language exchange inbox",
     shareLabel: "Share with someone learning Icelandic or wanting to help",
-    art: "linear-gradient(135deg, rgba(140,120,90,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/generated/mokka.svg')",
+    art: "url('/place-images/reykjavik/venues/mokka.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(140,120,90,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/mokka.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(140,120,90,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(140,120,90,0.35)), url('/place-images/reykjavik/arb-jarsafn-c71d7348.jpg')",
+      "url('/place-images/reykjavik/venues/mokka.jpg')"
     ],
     comments: [
       { author: "Margret", text: "The topic cards are a clever touch. No awkward silences.", postedAt: "2 hours ago" },
-      { author: "Ahmed", text: "I have been coming every week. My Icelandic has improved noticeably.", postedAt: "3 days ago" },
+      { author: "Ahmed", text: "I have been coming every week. My Icelandic has improved noticeably.", postedAt: "3 days ago" }
     ],
     ratings: [
       { author: "Katrin", rating: 5, text: "Best language practice format in the city. The cafe is lovely too." },
-      { author: "Liam", rating: 4, text: "Well-organized and very welcoming to beginners." },
+      { author: "Liam", rating: 4, text: "Well-organized and very welcoming to beginners." }
     ],
   },
   {
@@ -577,7 +554,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A hosted dinner night with communal seating, a set menu, and a social format that makes meeting people over food feel natural.",
     description: [
       "The evening starts with a welcome drink and a brief host introduction. Guests are seated at communal tables with a rotating conversation format during the first course. By the second course, the table has settled into its own rhythm.",
-      "Snaps Bistro Bar handles the food side beautifully. The set menu removes decision fatigue and the wine pairing option keeps the evening cohesive. This is one of those events where the venue and the format genuinely reinforce each other.",
+      "Snaps Bistro Bar handles the food side beautifully. The set menu removes decision fatigue and the wine pairing option keeps the evening cohesive. This is one of those events where the venue and the format genuinely reinforce each other."
     ],
     attendees: 42,
     capacity: 60,
@@ -589,21 +566,19 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "48h menu preview and same-day table assignment",
     hostContact: "Kari Sigurdsson via social host inbox",
     shareLabel: "Share with someone who enjoys a good dinner conversation",
-    art: "linear-gradient(135deg, rgba(190,140,100,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/snaps.svg')",
+    art: "url('/place-images/reykjavik/venues/hlemmur-square.jpg')",
     gallery: [
-      "linear-gradient(135deg, rgba(190,140,100,0.45), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/snaps.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(190,140,100,0.35)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(190,140,100,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+      "url('/place-images/reykjavik/venues/hlemmur-square.jpg')"
     ],
     comments: [
       { author: "Vala", text: "The communal table format works so well here. Met great people.", postedAt: "Today" },
-      { author: "Sven", text: "Set menu was excellent. The wine pairing elevated the whole evening.", postedAt: "Yesterday" },
+      { author: "Sven", text: "Set menu was excellent. The wine pairing elevated the whole evening.", postedAt: "Yesterday" }
     ],
     ratings: [
       { author: "Gudrun", rating: 5, text: "This is how dinner socials should be done. Food, people, and pacing all aligned." },
-      { author: "Leo", rating: 5, text: "Best Friday night event I have attended in Reykjavik." },
+      { author: "Leo", rating: 5, text: "Best Friday night event I have attended in Reykjavik." }
     ],
-  },
+  }
 ] as const;
 
 export const publicGroups: PublicGroup[] = [
@@ -616,16 +591,16 @@ export const publicGroups: PublicGroup[] = [
     summary: "Weekly hikes around Iceland with welcoming pacing and strong repeat attendance.",
     description: [
       "This group is built around consistency. The organizer posts clear route notes, weather context, and meetup logistics early so first-timers can join without guessing how serious the pace will be.",
-      "It is exactly the kind of durable local group the platform should spotlight: easy to understand, high trust, and strongly tied to place.",
+      "It is exactly the kind of durable local group the platform should spotlight: easy to understand, high trust, and strongly tied to place."
     ],
     organizer: "Helga Arnadottir",
-    banner: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+    banner: "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
     tags: ["Hikes", "Day trips", "Coffee after"],
     upcomingEventSlugs: ["saturday-hike-mt-esja"],
     pastEvents: ["Sunset walk at Grotta", "Hot spring day trip", "Midweek valley loop"],
     discussions: [
       { title: "Best boots for March conditions?", replies: 18, preview: "Members are comparing waterproof options and traction tips." },
-      { title: "Ride share thread for Esja", replies: 9, preview: "Coordinating pickup spots from central Reykjavik." },
+      { title: "Ride share thread for Esja", replies: 9, preview: "Coordinating pickup spots from central Reykjavik." }
     ],
   },
   {
@@ -637,16 +612,16 @@ export const publicGroups: PublicGroup[] = [
     summary: "A broad social landing place for newcomers building a real life in Reykjavik.",
     description: [
       "The group works because it balances practical life and social life. New members discover events, ask local questions, and get a first sense of rhythm in the city without needing three separate communities.",
-      "As a platform anchor, this group demonstrates how onboarding, recurring events, and profile identity can work together.",
+      "As a platform anchor, this group demonstrates how onboarding, recurring events, and profile identity can work together."
     ],
     organizer: "Marta Polak",
-    banner: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(245,240,232,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+    banner: "/place-images/reykjavik/venues/lebowski-bar.jpg",
     tags: ["New in town", "Social", "Resources"],
     upcomingEventSlugs: ["speed-friending-newcomers"],
     pastEvents: ["Sunday bakery crawl", "Language exchange intro", "Local rent Q and A"],
     discussions: [
       { title: "Best neighborhoods for first-year living", replies: 34, preview: "Members are comparing commute, noise, and rent tradeoffs." },
-      { title: "What should every newcomer know before winter?", replies: 21, preview: "Gear, routines, and social tips from long-time members." },
+      { title: "What should every newcomer know before winter?", replies: 21, preview: "Gear, routines, and social tips from long-time members." }
     ],
   },
   {
@@ -658,16 +633,16 @@ export const publicGroups: PublicGroup[] = [
     summary: "Developers, founders, and operators who prefer practical sessions over vague networking.",
     description: [
       "The community centers on applied learning. Workshops, demos, and founder sessions are usually small enough to stay useful and social enough to still generate good post-event conversation.",
-      "This is also one of the strongest cases for the organizer dashboard: recurring templates, attendee management, and analytics all matter here.",
+      "This is also one of the strongest cases for the organizer dashboard: recurring templates, attendee management, and analytics all matter here."
     ],
     organizer: "Bjorn Olafsson",
-    banner: "linear-gradient(135deg, rgba(55,48,163,0.55), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
+    banner: "linear-gradient(135deg, rgba(55,48,163,0.2), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/grandi-hub.svg')",
     tags: ["Workshops", "Founders", "Product"],
     upcomingEventSlugs: ["react-server-components-workshop", "startup-pitch-night"],
     pastEvents: ["Edge functions deep dive", "Startup operator breakfast", "Design systems night"],
     discussions: [
       { title: "Who wants a follow-up on auth architecture?", replies: 12, preview: "Members are proposing a smaller working session." },
-      { title: "Good coworking spaces for evening meetups", replies: 7, preview: "Venue recommendations and setup tradeoffs." },
+      { title: "Good coworking spaces for evening meetups", replies: 7, preview: "Venue recommendations and setup tradeoffs." }
     ],
   },
   {
@@ -679,16 +654,16 @@ export const publicGroups: PublicGroup[] = [
     summary: "Art nights, gallery walks, and small format culture events with a social core.",
     description: [
       "The group makes the arts scene feel approachable. Events are designed to reduce the barrier to entry, whether you come from the creative industries or simply want better ways to experience the city.",
-      "Its events also show how venue partnerships can serve culture without making the product feel corporate or generic.",
+      "Its events also show how venue partnerships can serve culture without making the product feel corporate or generic."
     ],
     organizer: "Elin Thors",
-    banner: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.4)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
+    banner: "/place-images/reykjavik/venues/kex-hostel.jpg",
     tags: ["Gallery walks", "Music", "Culture"],
     upcomingEventSlugs: ["harbor-jazz-social", "poetry-open-mic"],
     pastEvents: ["After-hours exhibition visit", "Sketchbook cafe session", "Studio open evening"],
     discussions: [
       { title: "Best small venues for creative formats", replies: 11, preview: "Members are sharing spaces that feel intimate without being cramped." },
-      { title: "Who is going to the jazz social?", replies: 6, preview: "Coordinating arrivals and post-set drinks." },
+      { title: "Who is going to the jazz social?", replies: 6, preview: "Coordinating arrivals and post-set drinks." }
     ],
   },
   {
@@ -700,16 +675,16 @@ export const publicGroups: PublicGroup[] = [
     summary: "Tastings, food walks, and kitchen culture events for people who take eating in Reykjavik seriously.",
     description: [
       "The group is built around discovery. Each event explores a different corner of the local food scene, from craft beer and natural wine to seasonal Icelandic ingredients. The format keeps things social and accessible rather than pretentious.",
-      "Members range from home cooks to hospitality professionals, and the discussions often surface restaurant tips, seasonal recommendations, and behind-the-scenes stories from the local food world.",
+      "Members range from home cooks to hospitality professionals, and the discussions often surface restaurant tips, seasonal recommendations, and behind-the-scenes stories from the local food world."
     ],
     organizer: "Sara Magnusdottir",
-    banner: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
+    banner: "/place-images/reykjavik/venues/hlemmur-square.jpg",
     tags: ["Tastings", "Food walks", "Wine", "Craft beer"],
     upcomingEventSlugs: ["wine-tasting-volcanic-terroir", "craft-beer-tasting-vesturgata"],
     pastEvents: ["Fermented food workshop", "Bakery crawl downtown", "Seasonal lamb tasting"],
     discussions: [
       { title: "Best bakeries for weekend pastries?", replies: 23, preview: "Members are comparing Sandholt, Braud, and the newer spots on Skolavordustigur." },
-      { title: "Natural wine worth trying this month", replies: 14, preview: "A few bottles from the latest imports are getting attention." },
+      { title: "Natural wine worth trying this month", replies: 14, preview: "A few bottles from the latest imports are getting attention." }
     ],
   },
   {
@@ -721,16 +696,16 @@ export const publicGroups: PublicGroup[] = [
     summary: "Social nights, dinner events, and weekend gatherings for people who want more than random bar hopping.",
     description: [
       "The group organizes structured social formats that make going out feel intentional. Dinner socials, hosted bar nights, and seasonal parties are designed with arrival flow, conversation structure, and venue partnerships that raise the quality above typical weekend plans.",
-      "It is one of the most active groups on the platform and a strong example of how nightlife formats can be community-driven without losing spontaneity.",
+      "It is one of the most active groups on the platform and a strong example of how nightlife formats can be community-driven without losing spontaneity."
     ],
     organizer: "Kari Sigurdsson",
-    banner: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(79,70,229,0.4)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+    banner: "/place-images/reykjavik/venues/lebowski-bar.jpg",
     tags: ["Social nights", "Dinner parties", "Weekend events", "Hosted bars"],
     upcomingEventSlugs: ["singles-night-25-35", "friday-dinner-social"],
     pastEvents: ["New Year rooftop social", "Valentine wine and dine", "Spring equinox gathering"],
     discussions: [
       { title: "Best venues for a 40-person dinner?", replies: 19, preview: "Members are comparing Snaps, Grillid, and Forrettabarinn for group bookings." },
-      { title: "Should we do a monthly theme night?", replies: 27, preview: "Strong interest in rotating cuisine or cocktail themes each month." },
+      { title: "Should we do a monthly theme night?", replies: 27, preview: "Strong interest in rotating cuisine or cocktail themes each month." }
     ],
   },
   {
@@ -742,16 +717,16 @@ export const publicGroups: PublicGroup[] = [
     summary: "Yoga, breathwork, and mindful movement events for people who want a calmer start to the day or week.",
     description: [
       "The group focuses on accessible wellness formats. Classes are designed for mixed levels, locations are chosen for atmosphere and calm, and the community tone stays grounded rather than performative.",
-      "Members join for the consistency as much as the content. Weekly morning sessions, seasonal retreats, and honest discussions about wellness in Reykjavik keep the group engaged beyond individual events.",
+      "Members join for the consistency as much as the content. Weekly morning sessions, seasonal retreats, and honest discussions about wellness in Reykjavik keep the group engaged beyond individual events."
     ],
     organizer: "Johanna Petursdottir",
-    banner: "linear-gradient(135deg, rgba(160,190,170,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+    banner: "/place-images/reykjavik/venues/loft-hostel.jpg",
     tags: ["Yoga", "Breathwork", "Morning sessions", "Mindfulness"],
     upcomingEventSlugs: ["morning-yoga-flow"],
     pastEvents: ["Sunset breathwork at Grotta", "New moon meditation circle", "Winter solstice yoga"],
     discussions: [
       { title: "Favorite spots for outdoor practice in spring?", replies: 11, preview: "Members are sharing sheltered spots near the shore and in Laugardalur." },
-      { title: "Interest check: weekend retreat in April", replies: 16, preview: "Gauging numbers for a cabin retreat with yoga and hot pot sessions." },
+      { title: "Interest check: weekend retreat in April", replies: 16, preview: "Gauging numbers for a cabin retreat with yoga and hot pot sessions." }
     ],
   },
   {
@@ -763,18 +738,18 @@ export const publicGroups: PublicGroup[] = [
     summary: "Weekly conversation tables for Icelandic learners, native speakers, and multilingual residents who want structured practice.",
     description: [
       "The group runs regular language tables with timed rotations, topic cards, and a mix of skill levels at each session. The format is designed to feel social rather than academic, and the host keeps the energy warm and the transitions smooth.",
-      "It has become one of the most reliable weekly meetups in the city. Members come for the practice and stay for the community. The discussions often extend into grammar tips, resource sharing, and cultural context that textbooks miss.",
+      "It has become one of the most reliable weekly meetups in the city. Members come for the practice and stay for the community. The discussions often extend into grammar tips, resource sharing, and cultural context that textbooks miss."
     ],
     organizer: "Pierre Dupont",
-    banner: "linear-gradient(135deg, rgba(79,70,229,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
+    banner: "/place-images/reykjavik/venues/stofan-cafe.jpg",
     tags: ["Icelandic", "Language tables", "Conversation practice", "Multilingual"],
     upcomingEventSlugs: ["language-exchange-thursday"],
     pastEvents: ["Icelandic movie night with subtitles", "Grammar workshop for beginners", "Holiday vocabulary session"],
     discussions: [
       { title: "Best apps for Icelandic vocabulary?", replies: 31, preview: "Members are comparing Drops, Memrise, and custom Anki decks." },
-      { title: "Tips for understanding spoken Icelandic faster", replies: 22, preview: "Podcast recommendations and shadowing techniques from advanced learners." },
+      { title: "Tips for understanding spoken Icelandic faster", replies: 22, preview: "Podcast recommendations and shadowing techniques from advanced learners." }
     ],
-  },
+  }
 ] as const;
 
 export const publicVenues: PublicVenue[] = [
@@ -788,7 +763,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A lively central venue that works especially well for hosted social nights and structured mixers.",
     description: [
       "Lebowski works because the room is flexible. Hosts can reserve a clear meetup zone, the bar supports quick arrivals, and the energy is social without becoming too loud too early.",
-      "For the platform, it is a strong example of a venue partner that benefits from recurring formats and member-only deals.",
+      "For the platform, it is a strong example of a venue partner that benefits from recurring formats and member-only deals."
     ],
     address: "Laugavegur 20b, 101 Reykjavik",
     amenities: ["Hosted meetup area", "Cocktail menu", "Late hours", "Group seating"],
@@ -799,16 +774,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "16:00-01:00" },
       { day: "Fri", open: "15:00-02:00", highlighted: true },
       { day: "Sat", open: "15:00-02:00" },
-      { day: "Sun", open: "16:00-00:00" },
+      { day: "Sun", open: "16:00-00:00" }
     ],
     deal: "2-for-1 welcome drink for MeetupReykjavik hosts before 21:00",
     upcomingEventSlugs: ["singles-night-25-35"],
     gallery: [
-      "linear-gradient(135deg, rgba(30,27,46,0.45), rgba(232,97,77,0.35)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(245,240,232,0.3)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(30,27,46,0.4)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "url('/place-images/reykjavik/venues/lebowski-bar.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
+    art: "url('/place-images/reykjavik/venues/lebowski-bar.jpg')",
     latitude: 64.1475,
     longitude: -21.9256,
   },
@@ -822,7 +795,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A flexible social venue with strong newcomer energy and space for host-led community formats.",
     description: [
       "Kex handles mixed crowds well. It has enough movement to feel alive, but enough structure to give an event a visible center and a good host station.",
-      "It is especially good for social formats that depend on a strong arrival flow and a forgiving environment for first-time attendees.",
+      "It is especially good for social formats that depend on a strong arrival flow and a forgiving environment for first-time attendees."
     ],
     address: "Skulagata 28, 101 Reykjavik",
     amenities: ["Arrival desk", "Food service", "Flexible tables", "Harbor access"],
@@ -833,16 +806,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "12:00-00:00" },
       { day: "Fri", open: "12:00-01:00", highlighted: true },
       { day: "Sat", open: "12:00-01:00" },
-      { day: "Sun", open: "12:00-22:00" },
+      { day: "Sun", open: "12:00-22:00" }
     ],
     deal: "Welcome drink for approved organizers and discounted group platters",
     upcomingEventSlugs: ["speed-friending-newcomers"],
     gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/o-inn-aca1fd38.JPG')",
+      "url('/place-images/reykjavik/venues/kex-hostel.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.4)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
+    art: "url('/place-images/reykjavik/venues/kex-hostel.jpg')",
     latitude: 64.1499,
     longitude: -21.9319,
   },
@@ -856,7 +827,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A practical venue for workshops, founder sessions, and technical community programming.",
     description: [
       "The venue suits events where clarity matters more than atmosphere alone. Seating, projection, wifi, and layout all support education-driven formats that still want some social tail after the session.",
-      "This is where the platform can demonstrate that venue partnerships are not just nightlife. Utility matters too.",
+      "This is where the platform can demonstrate that venue partnerships are not just nightlife. Utility matters too."
     ],
     address: "Grandagardur 16, 101 Reykjavik",
     amenities: ["Projector", "Fast wifi", "Stage zone", "Coffee setup"],
@@ -867,16 +838,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "08:00-21:00" },
       { day: "Fri", open: "08:00-18:00" },
       { day: "Sat", open: "Closed" },
-      { day: "Sun", open: "Closed" },
+      { day: "Sun", open: "Closed" }
     ],
     deal: "Free coffee service for workshop hosts on standard and premium plans",
     upcomingEventSlugs: ["react-server-components-workshop"],
     gallery: [
-      "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(55,48,163,0.3)), url('/place-images/reykjavik/ufa-40055fa7.jpg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(55,48,163,0.4)), url('/place-images/reykjavik/listasafn-einars-jonssonar-e07f8c3b.JPG')",
+      "url('/place-images/reykjavik/venues/grandi-hub.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
+    art: "url('/place-images/reykjavik/venues/grandi-hub.jpg')",
     latitude: 64.1562,
     longitude: -21.9558,
   },
@@ -890,7 +859,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A premium small-format wine venue suited to guided tastings and intimate hosted events.",
     description: [
       "Bryggjuhusid is one of the strongest examples of premium inventory in the venue network. Its seating, pacing, and staff support make it ideal for limited-capacity events that should feel worth paying for.",
-      "As the product matures, this type of venue is where margin, reviews, and recurring quality can compound.",
+      "As the product matures, this type of venue is where margin, reviews, and recurring quality can compound."
     ],
     address: "Bankastraeti 9, 101 Reykjavik",
     amenities: ["Seated tasting", "Curated menu", "Premium service", "Quiet format"],
@@ -901,16 +870,13 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:00-00:00" },
       { day: "Fri", open: "17:00-01:00" },
       { day: "Sat", open: "17:00-01:00" },
-      { day: "Sun", open: "Closed" },
+      { day: "Sun", open: "Closed" }
     ],
     deal: "Hosted tasting add-on menu for venue premium partners",
     upcomingEventSlugs: ["wine-tasting-volcanic-terroir"],
     gallery: [
-      "linear-gradient(135deg, rgba(232,97,77,0.45), rgba(42,38,56,0.4)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(232,97,77,0.35)), url('/place-images/reykjavik/hafnarborg-1be7b43b.jpg')",
     ],
-    art: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
+    art: "linear-gradient(135deg, rgba(30,30,60,0.2), rgba(80,40,20,0.15)), url('/place-images/reykjavik/generated/bryggjan-brugghus.svg')",
   },
   {
     slug: "loft-hostel",
@@ -922,7 +888,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A central social space with a rooftop terrace and a relaxed ground floor that works well for casual meetups and morning events.",
     description: [
       "Loft Hostel sits right on Bankastraeti with one of the better rooftop views in downtown Reykjavik. The ground floor bar doubles as a social hub with flexible seating that can accommodate everything from yoga mats to speed friending tables.",
-      "For the platform, it represents a versatile venue partner. The morning availability makes it unusual among bar-first venues, and the hostel crowd adds a natural international energy to any event held here.",
+      "For the platform, it represents a versatile venue partner. The morning availability makes it unusual among bar-first venues, and the hostel crowd adds a natural international energy to any event held here."
     ],
     address: "Bankastraeti 7a, 101 Reykjavik",
     amenities: ["Rooftop terrace", "Flexible ground floor", "Morning availability", "International crowd"],
@@ -933,16 +899,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "08:00-00:00" },
       { day: "Fri", open: "08:00-01:00", highlighted: true },
       { day: "Sat", open: "09:00-01:00" },
-      { day: "Sun", open: "09:00-22:00" },
+      { day: "Sun", open: "09:00-22:00" }
     ],
     deal: "Free room setup for morning wellness events booked through MeetupReykjavik",
     upcomingEventSlugs: ["morning-yoga-flow"],
     gallery: [
-      "linear-gradient(135deg, rgba(160,190,170,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/loft-hostel.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(160,190,170,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(160,190,170,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
+      "url('/place-images/reykjavik/venues/loft-hostel.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(160,190,170,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/generated/loft-hostel.svg')",
+    art: "url('/place-images/reykjavik/venues/loft-hostel.jpg')",
     latitude: 64.1471,
     longitude: -21.9331,
   },
@@ -956,7 +920,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "An intimate craft beer bar with a curated tap list and a room that turns every tasting into a conversation.",
     description: [
       "Micro Bar is one of the best small venues in the city for events that thrive on proximity. The tap list rotates with Icelandic and Nordic craft breweries, and the staff genuinely know the product, which elevates any hosted tasting format.",
-      "The tight room means events here feel like gatherings rather than performances. For organizers who want quality over headcount, this is one of the strongest venue options in downtown Reykjavik.",
+      "The tight room means events here feel like gatherings rather than performances. For organizers who want quality over headcount, this is one of the strongest venue options in downtown Reykjavik."
     ],
     address: "Vesturgata 2, 101 Reykjavik",
     amenities: ["Rotating tap list", "Tasting boards", "Knowledgeable staff", "Intimate seating"],
@@ -967,16 +931,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "16:00-00:00" },
       { day: "Fri", open: "15:00-01:00", highlighted: true },
       { day: "Sat", open: "14:00-01:00" },
-      { day: "Sun", open: "15:00-22:00" },
+      { day: "Sun", open: "15:00-22:00" }
     ],
     deal: "Tasting board discount for MeetupReykjavik hosted events of 10+ guests",
     upcomingEventSlugs: ["craft-beer-tasting-vesturgata"],
     gallery: [
-      "linear-gradient(135deg, rgba(180,130,60,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/micro-bar.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(180,130,60,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
-      "linear-gradient(135deg, rgba(55,48,163,0.4), rgba(180,130,60,0.35)), url('/place-images/reykjavik/ufa-40055fa7.jpg')",
+      "url('/place-images/reykjavik/venues/micro-bar.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(180,130,60,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/micro-bar.svg')",
+    art: "url('/place-images/reykjavik/venues/micro-bar.jpg')",
   },
   {
     slug: "hlemmur-square",
@@ -988,7 +950,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A food hall and bar venue with high ceilings, multiple zones, and enough capacity for large community events and pitch nights.",
     description: [
       "Hlemmur Square occupies the former bus station at the east end of Laugavegur. The space has been converted into a food hall with multiple kitchen stalls, a central bar, and enough open floor to host events from fifty to two hundred people.",
-      "For larger formats like pitch nights and community showcases, this is one of the few downtown venues that handles scale without losing atmosphere. The food stalls also mean attendees can eat during the event rather than scrambling for dinner plans afterward.",
+      "For larger formats like pitch nights and community showcases, this is one of the few downtown venues that handles scale without losing atmosphere. The food stalls also mean attendees can eat during the event rather than scrambling for dinner plans afterward."
     ],
     address: "Laugavegur 105, 105 Reykjavik",
     amenities: ["Multiple food stalls", "Central bar", "High ceilings", "Stage area", "Flexible layout"],
@@ -999,16 +961,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "11:00-23:00" },
       { day: "Fri", open: "11:00-01:00", highlighted: true },
       { day: "Sat", open: "11:00-01:00" },
-      { day: "Sun", open: "11:00-22:00" },
+      { day: "Sun", open: "11:00-22:00" }
     ],
     deal: "Reserved section and sound system access for events booked 2+ weeks in advance",
     upcomingEventSlugs: ["startup-pitch-night"],
     gallery: [
-      "linear-gradient(135deg, rgba(79,70,229,0.5), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/hlemmur-square.svg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/arb-jarsafn-c71d7348.jpg')",
+      "url('/place-images/reykjavik/venues/hlemmur-square.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(79,70,229,0.55), rgba(30,27,46,0.45)), url('/place-images/reykjavik/generated/hlemmur-square.svg')",
+    art: "url('/place-images/reykjavik/venues/hlemmur-square.jpg')",
     latitude: 64.1443,
     longitude: -21.9148,
   },
@@ -1022,7 +982,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A live music cafe with warm acoustics, candlelit tables, and a room that gives every performer and speaker a proper audience.",
     description: [
       "Cafe Rosenberg has been part of the Reykjavik music and cultural scene for years. The room is built for listening: the acoustics carry voices well, the seating draws attention forward, and the atmosphere is warm without being precious.",
-      "For community events like open mics, readings, and small cultural nights, this venue adds something that most bars cannot: genuine attention. The audience here tends to be engaged and generous, which makes it a strong fit for creative formats.",
+      "For community events like open mics, readings, and small cultural nights, this venue adds something that most bars cannot: genuine attention. The audience here tends to be engaged and generous, which makes it a strong fit for creative formats."
     ],
     address: "Klapparstígur 25-27, 101 Reykjavik",
     amenities: ["Stage with sound system", "Candlelit tables", "Good acoustics", "Bar service"],
@@ -1033,16 +993,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:00-00:00", highlighted: true },
       { day: "Fri", open: "17:00-01:00" },
       { day: "Sat", open: "17:00-01:00" },
-      { day: "Sun", open: "Closed" },
+      { day: "Sun", open: "Closed" }
     ],
     deal: "Free sound check and stage setup for MeetupReykjavik cultural events",
     upcomingEventSlugs: ["poetry-open-mic"],
     gallery: [
-      "linear-gradient(135deg, rgba(200,160,100,0.45), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/cafe-rosenberg.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(200,160,100,0.35)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
-      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(200,160,100,0.35)), url('/place-images/reykjavik/hafnarborg-1be7b43b.jpg')",
+      "url('/place-images/reykjavik/venues/cafe-rosenberg.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(200,160,100,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/cafe-rosenberg.svg')",
+    art: "url('/place-images/reykjavik/venues/cafe-rosenberg.jpg')",
   },
   {
     slug: "snaps",
@@ -1054,7 +1012,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A neighborhood bistro with communal table options, a strong kitchen, and a format that turns dinner into a social event.",
     description: [
       "Snaps sits on Thorsgata in a quieter part of downtown and runs a kitchen that locals return to regularly. The communal table setup makes it naturally suited to dinner socials, and the set menu option simplifies logistics for group events.",
-      "The wine list is well-curated and the staff understand how to pace a multi-course evening for a group. For organizers running dinner formats, Snaps offers reliable quality and an atmosphere that feels convivial without being loud.",
+      "The wine list is well-curated and the staff understand how to pace a multi-course evening for a group. For organizers running dinner formats, Snaps offers reliable quality and an atmosphere that feels convivial without being loud."
     ],
     address: "Þórsgata 1, 101 Reykjavik",
     amenities: ["Communal tables", "Set menu option", "Wine pairing", "Private dining area"],
@@ -1065,16 +1023,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:30-23:00" },
       { day: "Fri", open: "17:30-00:00", highlighted: true },
       { day: "Sat", open: "17:00-00:00" },
-      { day: "Sun", open: "17:00-22:00" },
+      { day: "Sun", open: "17:00-22:00" }
     ],
     deal: "Complimentary welcome drink for MeetupReykjavik dinner groups of 8+",
     upcomingEventSlugs: ["friday-dinner-social"],
     gallery: [
-      "linear-gradient(135deg, rgba(190,140,100,0.45), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/snaps.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(190,140,100,0.35)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(190,140,100,0.35)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+      "linear-gradient(135deg, rgba(190,140,100,0.2), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/snaps.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(190,140,100,0.5), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/snaps.svg')",
+    art: "linear-gradient(135deg, rgba(190,140,100,0.2), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/snaps.svg')",
   },
   {
     slug: "mokka",
@@ -1086,7 +1042,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "The oldest cafe in Reykjavik, with a timeless interior, strong coffee, and the kind of quiet atmosphere that suits book clubs and language tables.",
     description: [
       "Mokka Kaffi has been open since 1958 and still feels like a genuine Reykjavik institution. The interior is small, warm, and free from the self-conscious design of newer cafes. It is the kind of place where conversation happens naturally and quietly.",
-      "For small-format events like language exchanges, book discussions, and writing meetups, Mokka offers something rare: a venue where the atmosphere does the hosting. The coffee is strong, the waffles are legendary, and the room rewards intimacy over volume.",
+      "For small-format events like language exchanges, book discussions, and writing meetups, Mokka offers something rare: a venue where the atmosphere does the hosting. The coffee is strong, the waffles are legendary, and the room rewards intimacy over volume."
     ],
     address: "Skólavörðustígur 3a, 101 Reykjavik",
     amenities: ["Historic interior", "Strong coffee", "Quiet atmosphere", "Waffle menu"],
@@ -1097,16 +1053,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "09:00-18:00", highlighted: true },
       { day: "Fri", open: "09:00-18:00" },
       { day: "Sat", open: "10:00-18:00" },
-      { day: "Sun", open: "10:00-17:00" },
+      { day: "Sun", open: "10:00-17:00" }
     ],
     deal: "Reserved corner table for MeetupReykjavik language and book events on weekday afternoons",
     upcomingEventSlugs: ["language-exchange-thursday"],
     gallery: [
-      "linear-gradient(135deg, rgba(140,120,90,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/mokka.svg')",
-      "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(140,120,90,0.35)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(140,120,90,0.35)), url('/place-images/reykjavik/arb-jarsafn-c71d7348.jpg')",
+      "url('/place-images/reykjavik/venues/mokka.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(140,120,90,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/generated/mokka.svg')",
+    art: "url('/place-images/reykjavik/venues/mokka.jpg')",
   },
   {
     slug: "dillon",
@@ -1118,7 +1072,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A rock bar with a dive-bar soul. Great for low-key socials where the crowd does the work.",
     description: [
       "Dillon is loud, dark, and authentic. It works for casual meetups where people need an excuse to be in the same room, not a perfect venue experience.",
-      "Rock posters on the walls, cheap beer, and a crowd that skews creative. Hosts use it for no-frills socials.",
+      "Rock posters on the walls, cheap beer, and a crowd that skews creative. Hosts use it for no-frills socials."
     ],
     address: "Laugavegur 30, 101 Reykjavik",
     amenities: ["Live music stage", "Late hours", "Affordable drinks", "Standing room"],
@@ -1129,14 +1083,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:00-01:00" },
       { day: "Fri", open: "16:00-04:30", highlighted: true },
       { day: "Sat", open: "16:00-04:30" },
-      { day: "Sun", open: "17:00-01:00" },
+      { day: "Sun", open: "17:00-01:00" }
     ],
     deal: "Free entry for MeetupReykjavik group socials on weeknights",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/dillon.svg')",
+      "url('/place-images/reykjavik/venues/dillon.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/dillon.svg')",
+    art: "url('/place-images/reykjavik/venues/dillon.jpg')",
   },
   {
     slug: "reykjavik-roasters",
@@ -1148,7 +1102,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "The best specialty coffee in Reykjavik. Intimate space for small groups and morning meetups.",
     description: [
       "Small, warm, and focused. Reykjavik Roasters is ideal for intimate morning sessions, creative workshops of 8–15 people, or one-on-one mentor meetups.",
-      "The coffee is world-class and the atmosphere encourages real conversation over background noise.",
+      "The coffee is world-class and the atmosphere encourages real conversation over background noise."
     ],
     address: "Brautarholt 2, 105 Reykjavik",
     amenities: ["Specialty coffee", "Wi-Fi", "Morning hours", "Quiet seating"],
@@ -1159,14 +1113,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "08:00-17:00" },
       { day: "Fri", open: "08:00-17:00" },
       { day: "Sat", open: "09:00-17:00", highlighted: true },
-      { day: "Sun", open: "09:00-17:00" },
+      { day: "Sun", open: "09:00-17:00" }
     ],
     deal: "10% off group orders for MeetupReykjavik morning sessions",
     upcomingEventSlugs: ["morning-yoga-flow"],
     gallery: [
-      "linear-gradient(135deg, rgba(140,100,60,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/reykjavik-roasters.svg')",
+      "url('/place-images/reykjavik/venues/reykjavik-roasters.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(140,100,60,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/reykjavik-roasters.svg')",
+    art: "url('/place-images/reykjavik/venues/reykjavik-roasters.jpg')",
   },
   {
     slug: "apotek",
@@ -1178,7 +1132,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Upscale dining and cocktails in a former pharmacy. Premium venue for curated dinners and launches.",
     description: [
       "Apotek operates at a higher tier. The space is polished, the cocktail menu is serious, and the dining room can be sectioned for private events.",
-      "Best for organizers running premium formats — curated dinners, tasting events, or sponsor-backed launches.",
+      "Best for organizers running premium formats — curated dinners, tasting events, or sponsor-backed launches."
     ],
     address: "Austurstræti 16, 101 Reykjavik",
     amenities: ["Private dining", "Cocktail bar", "Central location", "Event coordination"],
@@ -1189,14 +1143,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "11:30-23:00" },
       { day: "Fri", open: "11:30-01:00", highlighted: true },
       { day: "Sat", open: "11:30-01:00" },
-      { day: "Sun", open: "11:30-22:00" },
+      { day: "Sun", open: "11:30-22:00" }
     ],
     deal: "Complimentary welcome cocktail for premium MeetupReykjavik dinner events",
     upcomingEventSlugs: ["wine-tasting-volcanic-terroir"],
     gallery: [
-      "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/apotek.svg')",
+      "url('/place-images/reykjavik/venues/apotek.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/apotek.svg')",
+    art: "url('/place-images/reykjavik/venues/apotek.jpg')",
   },
   {
     slug: "stofan-cafe",
@@ -1208,7 +1162,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A cozy living-room café with mismatched furniture. Perfect for book clubs and casual meetups.",
     description: [
       "Stofan feels like someone's living room — old couches, warm lighting, and an honest menu. It draws a mix of locals, students, and travelers.",
-      "Organizers use it for book clubs, casual language exchanges, and creative writing sessions. The vibe does the hosting.",
+      "Organizers use it for book clubs, casual language exchanges, and creative writing sessions. The vibe does the hosting."
     ],
     address: "Vesturgata 3, 101 Reykjavik",
     amenities: ["Cozy seating", "Coffee & cake", "Board games", "Quiet daytime"],
@@ -1219,14 +1173,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "10:00-23:00" },
       { day: "Fri", open: "10:00-01:00", highlighted: true },
       { day: "Sat", open: "10:00-01:00" },
-      { day: "Sun", open: "11:00-22:00" },
+      { day: "Sun", open: "11:00-22:00" }
     ],
     deal: "Free board game access for MeetupReykjavik hosted sessions",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(180,160,120,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/litla-kaffistofan.svg')",
+      "url('/place-images/reykjavik/venues/stofan-cafe.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(180,160,120,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/litla-kaffistofan.svg')",
+    art: "url('/place-images/reykjavik/venues/stofan-cafe.jpg')",
     latitude: 64.1483,
     longitude: -21.9411,
   },
@@ -1240,7 +1194,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Famous for sizzling fish pans. A seafood institution perfect for group dining events.",
     description: [
       "Messinn serves Icelandic fish in cast-iron skillets. The communal energy and simple menu make it ideal for foodie meetups and group dinners.",
-      "Tables can be combined for larger groups. The food is honest and the portions are generous — exactly what a dinner meetup needs.",
+      "Tables can be combined for larger groups. The food is honest and the portions are generous — exactly what a dinner meetup needs."
     ],
     address: "Grandi, Grandagarður 8, 101 Reykjavik",
     amenities: ["Group seating", "Seafood focus", "Casual dining", "Walk-in friendly"],
@@ -1251,14 +1205,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "11:30-14:00, 17:00-22:00" },
       { day: "Fri", open: "11:30-14:00, 17:00-22:00", highlighted: true },
       { day: "Sat", open: "12:00-22:00" },
-      { day: "Sun", open: "12:00-22:00" },
+      { day: "Sun", open: "12:00-22:00" }
     ],
     deal: "Reserved group table for MeetupReykjavik dinner socials, pre-order available",
     upcomingEventSlugs: ["friday-dinner-social"],
     gallery: [
-      "linear-gradient(135deg, rgba(60,90,120,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/messinn.svg')",
+      "linear-gradient(135deg, rgba(60,90,120,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/messinn.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(60,90,120,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/messinn.svg')",
+    art: "linear-gradient(135deg, rgba(60,90,120,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/messinn.svg')",
   },
   {
     slug: "tapas-barinn",
@@ -1270,7 +1224,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Icelandic tapas with a social format built for sharing. Great for food-forward group events.",
     description: [
       "The small-plates format is inherently social — people share food, pass dishes, and talk across the table. That makes Tapas Barinn a natural fit for food meetups.",
-      "The downstairs space can be reserved for groups and the menu covers everything from whale to lamb.",
+      "The downstairs space can be reserved for groups and the menu covers everything from whale to lamb."
     ],
     address: "Vesturgata 3b, 101 Reykjavik",
     amenities: ["Tapas format", "Downstairs event space", "Full bar", "Group reservations"],
@@ -1281,14 +1235,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:00-23:30" },
       { day: "Fri", open: "17:00-01:00", highlighted: true },
       { day: "Sat", open: "17:00-01:00" },
-      { day: "Sun", open: "17:00-23:00" },
+      { day: "Sun", open: "17:00-23:00" }
     ],
     deal: "Complimentary appetizer platter for MeetupReykjavik tasting groups of 8+",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(200,80,60,0.4), rgba(245,240,232,0.3)), url('/place-images/reykjavik/generated/tapas-barinn.svg')",
+      "linear-gradient(135deg, rgba(200,80,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/tapas-barinn.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(200,80,60,0.4), rgba(245,240,232,0.3)), url('/place-images/reykjavik/generated/tapas-barinn.svg')",
+    art: "linear-gradient(135deg, rgba(200,80,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/tapas-barinn.svg')",
   },
   {
     slug: "islenski-barinn",
@@ -1300,7 +1254,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Traditional Icelandic bar with a tourist-friendly atmosphere. Good for themed cultural meetups.",
     description: [
       "Íslenski Barinn leans into the Icelandic identity — fermented shark on the menu, traditional decor, and a crowd that mixes locals with visitors.",
-      "Works well for cultural meetups, expat welcome nights, and 'Taste of Iceland' themed events.",
+      "Works well for cultural meetups, expat welcome nights, and 'Taste of Iceland' themed events."
     ],
     address: "Ingólfsstræti 1a, 101 Reykjavik",
     amenities: ["Traditional menu", "Central location", "Group friendly", "Cultural atmosphere"],
@@ -1311,14 +1265,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "11:00-23:00" },
       { day: "Fri", open: "11:00-01:00", highlighted: true },
       { day: "Sat", open: "11:00-01:00" },
-      { day: "Sun", open: "12:00-22:00" },
+      { day: "Sun", open: "12:00-22:00" }
     ],
     deal: "Hákarl tasting included for MeetupReykjavik cultural experience groups",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(30,27,46,0.45), rgba(124,154,130,0.35)), url('/place-images/reykjavik/generated/islenski-barinn.svg')",
+      "linear-gradient(135deg, rgba(30,27,46,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/islenski-barinn.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(30,27,46,0.45), rgba(124,154,130,0.35)), url('/place-images/reykjavik/generated/islenski-barinn.svg')",
+    art: "linear-gradient(135deg, rgba(30,27,46,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/islenski-barinn.svg')",
   },
   {
     slug: "cafe-babalu",
@@ -1330,7 +1284,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A quirky, colorful café on the main shopping street. Intimate and personal.",
     description: [
       "Babalu is tiny and full of character — vintage decor, painted walls, and homemade cakes. The upstairs seating is cozy enough for 10-person creative sessions.",
-      "Works best for small groups who want personality over polish.",
+      "Works best for small groups who want personality over polish."
     ],
     address: "Skólavörðustígur 22a, 101 Reykjavik",
     amenities: ["Homemade cakes", "Upstairs seating", "Wi-Fi", "Coffee & crepes"],
@@ -1341,14 +1295,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "10:00-21:00" },
       { day: "Fri", open: "10:00-22:00", highlighted: true },
       { day: "Sat", open: "10:00-22:00" },
-      { day: "Sun", open: "10:00-21:00" },
+      { day: "Sun", open: "10:00-21:00" }
     ],
     deal: "Free slice of cake with coffee for MeetupReykjavik small group bookings",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(220,180,60,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/cafe-babalu.svg')",
+      "linear-gradient(135deg, rgba(220,180,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/cafe-babalu.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(220,180,60,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/cafe-babalu.svg')",
+    art: "linear-gradient(135deg, rgba(220,180,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/cafe-babalu.svg')",
   },
   {
     slug: "cafe-loki",
@@ -1360,7 +1314,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Traditional Icelandic food right by the church. A go-to for cultural and food meetups.",
     description: [
       "Café Loki sits across from Hallgrímskirkja and serves traditional Icelandic fare — rye bread, dried fish, and meat soup. The view and the menu give organizers a unique format hook.",
-      "Perfect for food tours, cultural introduction events, and newcomer welcome lunches.",
+      "Perfect for food tours, cultural introduction events, and newcomer welcome lunches."
     ],
     address: "Lokastígur 28, 101 Reykjavik",
     amenities: ["Traditional food", "Hallgrímskirkja view", "Group seating", "Daytime focus"],
@@ -1371,14 +1325,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "08:00-21:00" },
       { day: "Fri", open: "08:00-21:00" },
       { day: "Sat", open: "09:00-21:00", highlighted: true },
-      { day: "Sun", open: "09:00-21:00" },
+      { day: "Sun", open: "09:00-21:00" }
     ],
     deal: "Group tasting platter at a fixed rate for MeetupReykjavik food events",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(90,70,50,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/cafe-loki.svg')",
+      "linear-gradient(135deg, rgba(90,70,50,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/cafe-loki.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(90,70,50,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/cafe-loki.svg')",
+    art: "linear-gradient(135deg, rgba(90,70,50,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/cafe-loki.svg')",
   },
   {
     slug: "skuli-craft-bar",
@@ -1390,7 +1344,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "The craft beer spot downtown. 14 rotating taps and a knowledgeable crowd.",
     description: [
       "Skúli is where Reykjavik's craft beer community gathers. 14 taps rotating Icelandic and international brews. The bar staff know their stuff.",
-      "Ideal for beer tastings, casual Friday meetups, and social groups that want a relaxed, quality-focused venue.",
+      "Ideal for beer tastings, casual Friday meetups, and social groups that want a relaxed, quality-focused venue."
     ],
     address: "Aðalstræti 9, 101 Reykjavik",
     amenities: ["14 craft taps", "Beer flights", "Knowledgeable staff", "Central location"],
@@ -1401,14 +1355,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "14:00-23:30" },
       { day: "Fri", open: "14:00-01:00", highlighted: true },
       { day: "Sat", open: "12:00-01:00" },
-      { day: "Sun", open: "14:00-23:00" },
+      { day: "Sun", open: "14:00-23:00" }
     ],
     deal: "Guided beer flight for MeetupReykjavik tasting events at a group rate",
     upcomingEventSlugs: ["craft-beer-tasting-vesturgata"],
     gallery: [
-      "linear-gradient(135deg, rgba(180,140,40,0.4), rgba(30,27,46,0.35)), url('/place-images/reykjavik/generated/skuli-craft.svg')",
+      "linear-gradient(135deg, rgba(180,140,40,0.2), rgba(30,27,46,0.15)), url('/place-images/reykjavik/generated/skuli-craft-bar.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(180,140,40,0.4), rgba(30,27,46,0.35)), url('/place-images/reykjavik/generated/skuli-craft.svg')",
+    art: "linear-gradient(135deg, rgba(180,140,40,0.2), rgba(30,27,46,0.15)), url('/place-images/reykjavik/generated/skuli-craft-bar.svg')",
   },
   {
     slug: "slippbarinn",
@@ -1420,7 +1374,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Award-winning cocktail bar inside the Marina hotel. Sleek, social, and versatile.",
     description: [
       "Slippbarinn is one of the best cocktail bars in Iceland. The space is large enough for events, the drinks are creative, and the atmosphere is upscale-casual.",
-      "Works for networking nights, launch parties, and premium social formats. Weekend brunch also draws a good crowd.",
+      "Works for networking nights, launch parties, and premium social formats. Weekend brunch also draws a good crowd."
     ],
     address: "Mýrargata 2, 101 Reykjavik",
     amenities: ["Cocktail menu", "DJ nights", "Weekend brunch", "Event space"],
@@ -1431,14 +1385,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "16:00-23:30" },
       { day: "Fri", open: "15:00-01:00", highlighted: true },
       { day: "Sat", open: "11:00-01:00" },
-      { day: "Sun", open: "11:00-22:00" },
+      { day: "Sun", open: "11:00-22:00" }
     ],
     deal: "Signature cocktail on the house for MeetupReykjavik networking events of 15+",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(79,70,229,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/slippbarinn.svg')",
+      "linear-gradient(135deg, rgba(79,70,229,0.2), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/slippbarinn.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(79,70,229,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/slippbarinn.svg')",
+    art: "linear-gradient(135deg, rgba(79,70,229,0.2), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/slippbarinn.svg')",
   },
   {
     slug: "forrettabarinn",
@@ -1450,7 +1404,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Small-plates bar with a creative menu. Excellent for intimate food meetups.",
     description: [
       "Forréttabarinn is all about sharing plates. The menu is inventive, the portions are designed for groups, and the atmosphere is warm without being stuffy.",
-      "Great for foodie meetups, double dates, and tasting-format events where the food is the conversation starter.",
+      "Great for foodie meetups, double dates, and tasting-format events where the food is the conversation starter."
     ],
     address: "Nýlendugata 14, 101 Reykjavik",
     amenities: ["Sharing plates", "Creative menu", "Full bar", "Intimate space"],
@@ -1461,14 +1415,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:00-23:00" },
       { day: "Fri", open: "17:00-01:00", highlighted: true },
       { day: "Sat", open: "17:00-01:00" },
-      { day: "Sun", open: "Closed" },
+      { day: "Sun", open: "Closed" }
     ],
     deal: "Chef's selection tasting menu at group rate for MeetupReykjavik food events",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(200,80,60,0.45), rgba(245,240,232,0.3)), url('/place-images/reykjavik/generated/forrettabarinn.svg')",
+      "linear-gradient(135deg, rgba(200,80,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/forrettabarinn.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(200,80,60,0.45), rgba(245,240,232,0.3)), url('/place-images/reykjavik/generated/forrettabarinn.svg')",
+    art: "linear-gradient(135deg, rgba(200,80,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/forrettabarinn.svg')",
   },
   {
     slug: "rok",
@@ -1480,7 +1434,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Creative Icelandic small plates in a moody downtown space. Great for curated dinners.",
     description: [
       "ROK focuses on fresh, seasonal Icelandic ingredients served as small plates. The space is dark, moody, and intimate — it feels like a secret.",
-      "Perfect for smaller curated dinner events, foodie groups, and anyone who wants quality over quantity.",
+      "Perfect for smaller curated dinner events, foodie groups, and anyone who wants quality over quantity."
     ],
     address: "Frakkastígur 26a, 101 Reykjavik",
     amenities: ["Seasonal menu", "Intimate space", "Natural wines", "Reservations"],
@@ -1491,14 +1445,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "11:30-23:00" },
       { day: "Fri", open: "11:30-01:00", highlighted: true },
       { day: "Sat", open: "11:30-01:00" },
-      { day: "Sun", open: "11:30-22:00" },
+      { day: "Sun", open: "11:30-22:00" }
     ],
     deal: "Seasonal tasting board for MeetupReykjavik dinner groups of 6+",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(50,50,50,0.5), rgba(124,154,130,0.3)), url('/place-images/reykjavik/generated/rok.svg')",
+      "linear-gradient(135deg, rgba(50,50,50,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/rok.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(50,50,50,0.5), rgba(124,154,130,0.3)), url('/place-images/reykjavik/generated/rok.svg')",
+    art: "linear-gradient(135deg, rgba(50,50,50,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/rok.svg')",
   },
   {
     slug: "the-laundromat-cafe",
@@ -1510,7 +1464,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Family-friendly café with a playful interior. Great for daytime community events.",
     description: [
       "The Laundromat Café is spacious, colorful, and welcoming. It has a kids' corner, a large upstairs area, and a menu that works all day.",
-      "Ideal for parent meetups, community brunches, and daytime social events that need accessible, comfortable space.",
+      "Ideal for parent meetups, community brunches, and daytime social events that need accessible, comfortable space."
     ],
     address: "Austurstræti 9, 101 Reykjavik",
     amenities: ["Kids corner", "Large upstairs", "All-day menu", "Central location"],
@@ -1521,14 +1475,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "08:00-23:00" },
       { day: "Fri", open: "08:00-01:00" },
       { day: "Sat", open: "09:00-01:00", highlighted: true },
-      { day: "Sun", open: "09:00-23:00" },
+      { day: "Sun", open: "09:00-23:00" }
     ],
     deal: "Free coffee refills for MeetupReykjavik community brunch events",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(100,160,200,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/the-laundromat-cafe.svg')",
+      "linear-gradient(135deg, rgba(100,160,200,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/the-laundromat-cafe.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(100,160,200,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/the-laundromat-cafe.svg')",
+    art: "linear-gradient(135deg, rgba(100,160,200,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/the-laundromat-cafe.svg')",
   },
   {
     slug: "bergsson-mathus",
@@ -1540,7 +1494,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Clean, modern brunch spot with Scandinavian design. Ideal for professional morning meetups.",
     description: [
       "Bergsson is bright, minimal, and calm. The food is healthy, the coffee is strong, and the space attracts a professional crowd.",
-      "Perfect for morning networking breakfasts, startup coffee meetups, and professional development sessions.",
+      "Perfect for morning networking breakfasts, startup coffee meetups, and professional development sessions."
     ],
     address: "Templarasund 3, 101 Reykjavik",
     amenities: ["Brunch menu", "Fresh bakery", "Clean design", "Morning hours"],
@@ -1551,14 +1505,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "07:00-21:00" },
       { day: "Fri", open: "07:00-21:00" },
       { day: "Sat", open: "08:00-21:00", highlighted: true },
-      { day: "Sun", open: "08:00-21:00" },
+      { day: "Sun", open: "08:00-21:00" }
     ],
     deal: "Group breakfast platter for MeetupReykjavik morning sessions",
     upcomingEventSlugs: ["startup-pitch-night"],
     gallery: [
-      "linear-gradient(135deg, rgba(245,240,232,0.5), rgba(124,154,130,0.3)), url('/place-images/reykjavik/generated/bergsson-mathus.svg')",
+      "linear-gradient(135deg, rgba(245,240,232,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/bergsson-mathus.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(245,240,232,0.5), rgba(124,154,130,0.3)), url('/place-images/reykjavik/generated/bergsson-mathus.svg')",
+    art: "linear-gradient(135deg, rgba(245,240,232,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/bergsson-mathus.svg')",
   },
   {
     slug: "sushi-social",
@@ -1570,7 +1524,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Japanese-Icelandic fusion with a social dining concept. Built for group experiences.",
     description: [
       "Sushi Social mixes South American and Japanese flavors with Icelandic ingredients. The format is built around sharing — omakase platters and group-style ordering.",
-      "Ideal for foodie events, celebration dinners, and groups that want an experience, not just a meal.",
+      "Ideal for foodie events, celebration dinners, and groups that want an experience, not just a meal."
     ],
     address: "Þingholtsstræti 5, 101 Reykjavik",
     amenities: ["Omakase option", "Cocktail menu", "Group dining", "Reservations"],
@@ -1581,14 +1535,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:30-23:00" },
       { day: "Fri", open: "17:30-01:00", highlighted: true },
       { day: "Sat", open: "17:30-01:00" },
-      { day: "Sun", open: "17:30-22:00" },
+      { day: "Sun", open: "17:30-22:00" }
     ],
     deal: "Group omakase menu at a fixed rate for MeetupReykjavik dining events",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(30,27,46,0.45), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/sushi-social.svg')",
+      "linear-gradient(135deg, rgba(30,27,46,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/sushi-social.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(30,27,46,0.45), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/sushi-social.svg')",
+    art: "linear-gradient(135deg, rgba(30,27,46,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/sushi-social.svg')",
   },
   {
     slug: "sumac",
@@ -1600,7 +1554,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Middle Eastern-inspired grill with bold flavors. Lively and shareable.",
     description: [
       "Sumac brings Middle Eastern flavors to downtown Reykjavik. The menu is designed for sharing, and the portions are generous.",
-      "Works well for foodie meetups, cultural dining events, and groups that want bold, flavorful food at reasonable prices.",
+      "Works well for foodie meetups, cultural dining events, and groups that want bold, flavorful food at reasonable prices."
     ],
     address: "Laugavegur 18, 101 Reykjavik",
     amenities: ["Sharing format", "Grill menu", "Full bar", "Laugavegur location"],
@@ -1611,14 +1565,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "17:00-22:30" },
       { day: "Fri", open: "17:00-23:30", highlighted: true },
       { day: "Sat", open: "12:00-23:30" },
-      { day: "Sun", open: "17:00-22:00" },
+      { day: "Sun", open: "17:00-22:00" }
     ],
     deal: "Mezze platter on the house for MeetupReykjavik groups of 10+",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(200,140,60,0.45), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/sumac.svg')",
+      "linear-gradient(135deg, rgba(200,140,60,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/sumac.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(200,140,60,0.45), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/sumac.svg')",
+    art: "linear-gradient(135deg, rgba(200,140,60,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/sumac.svg')",
   },
   {
     slug: "glo-reykjavik",
@@ -1630,7 +1584,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Healthy, organic, and vegetarian-friendly. The wellness crowd's go-to lunch spot.",
     description: [
       "Gló is where Reykjavik's health-conscious crowd eats. The menu is organic, seasonal, and mostly plant-based. The space is bright and clean.",
-      "Great for wellness meetups, yoga group lunches, and anyone running events where dietary flexibility matters.",
+      "Great for wellness meetups, yoga group lunches, and anyone running events where dietary flexibility matters."
     ],
     address: "Laugavegur 20b, 101 Reykjavik",
     amenities: ["Organic menu", "Vegan options", "Bright space", "Lunchtime focus"],
@@ -1641,14 +1595,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "11:00-21:00" },
       { day: "Fri", open: "11:00-21:00" },
       { day: "Sat", open: "11:30-21:00", highlighted: true },
-      { day: "Sun", open: "11:30-21:00" },
+      { day: "Sun", open: "11:30-21:00" }
     ],
     deal: "10% group discount for MeetupReykjavik wellness community lunches",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(124,154,130,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/glo-reykjavik.svg')",
+      "linear-gradient(135deg, rgba(124,154,130,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/glo-reykjavik.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(124,154,130,0.45), rgba(245,240,232,0.35)), url('/place-images/reykjavik/generated/glo-reykjavik.svg')",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/glo-reykjavik.svg')",
   },
   {
     slug: "shalimar",
@@ -1660,7 +1614,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Authentic Pakistani and Indian food. A downtown budget-friendly gem for group dinners.",
     description: [
       "Shalimar serves generous portions of South Asian comfort food at prices that make group dinners easy to organize. The food is honest and the service is fast.",
-      "Works well for casual community dinners, student meetups, and groups that want good food without a big bill.",
+      "Works well for casual community dinners, student meetups, and groups that want good food without a big bill."
     ],
     address: "Austurstræti 4, 101 Reykjavik",
     amenities: ["Budget-friendly", "Generous portions", "Central location", "Fast service"],
@@ -1671,14 +1625,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "11:30-22:00" },
       { day: "Fri", open: "11:30-23:00", highlighted: true },
       { day: "Sat", open: "12:00-23:00" },
-      { day: "Sun", open: "12:00-22:00" },
+      { day: "Sun", open: "12:00-22:00" }
     ],
     deal: "Group dinner discount for MeetupReykjavik community meals of 6+",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(200,140,30,0.45), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/shalimar.svg')",
+      "linear-gradient(135deg, rgba(200,140,30,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/shalimar.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(200,140,30,0.45), rgba(232,97,77,0.3)), url('/place-images/reykjavik/generated/shalimar.svg')",
+    art: "linear-gradient(135deg, rgba(200,140,30,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/shalimar.svg')",
   },
   {
     slug: "esja-trailhead",
@@ -1690,7 +1644,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "The starting point for Reykjavik's most popular hike, with outdoor meeting space and parking for group adventures.",
     description: [
       "Esja Trailhead serves as the natural gathering point for the hiking community. The basecamp area has covered shelter, restrooms, and enough flat ground to brief a group of thirty before heading up.",
-      "Groups regularly use this as a meetup point for Saturday morning hikes. The mountain itself offers routes for all fitness levels, from the easy 'Steinn' path to the challenging summit.",
+      "Groups regularly use this as a meetup point for Saturday morning hikes. The mountain itself offers routes for all fitness levels, from the easy 'Steinn' path to the challenging summit."
     ],
     address: "Esjurætur, 270 Mosfellsbaer",
     amenities: ["Free parking", "Restrooms", "Trail markers", "Shelter area"],
@@ -1701,14 +1655,14 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "Open 24h" },
       { day: "Fri", open: "Open 24h" },
       { day: "Sat", open: "Open 24h", highlighted: true },
-      { day: "Sun", open: "Open 24h", highlighted: true },
+      { day: "Sun", open: "Open 24h", highlighted: true }
     ],
     deal: "Free group photos for MeetupReykjavik hiking events",
     upcomingEventSlugs: ["saturday-hike-mt-esja"],
     gallery: [
-      "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(45,95,58,0.4)), url('/place-images/reykjavik/generated/esja.svg')",
+      "linear-gradient(135deg, rgba(124,154,130,0.2), rgba(45,95,58,0.4)), url('/place-images/reykjavik/generated/esja.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(124,154,130,0.5), rgba(45,95,58,0.4)), url('/place-images/reykjavik/generated/esja.svg')",
+    art: "linear-gradient(135deg, rgba(124,154,130,0.2), rgba(45,95,58,0.4)), url('/place-images/reykjavik/generated/esja.svg')",
     latitude: 64.2017,
     longitude: -21.8167,
   },
@@ -1722,7 +1676,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "Reykjavik's beloved live music venue and bar, perfect for social events with character and a great sound system.",
     description: [
       "Gaukurinn is a cornerstone of Reykjavik's live music scene. The venue hosts everything from jazz sessions to punk shows, and its relaxed atmosphere makes it ideal for social meetups that benefit from a cultural backdrop.",
-      "The space divides naturally into a stage area and a bar section, which means events can blend live performance with social mixing without forcing either one.",
+      "The space divides naturally into a stage area and a bar section, which means events can blend live performance with social mixing without forcing either one."
     ],
     address: "Tryggvagata 22, 101 Reykjavik",
     amenities: ["PA system", "Stage lighting", "Full bar", "Outdoor smoking area"],
@@ -1733,18 +1687,17 @@ export const publicVenues: PublicVenue[] = [
       { day: "Thu", open: "16:00-01:00", highlighted: true },
       { day: "Fri", open: "16:00-04:30", highlighted: true },
       { day: "Sat", open: "16:00-04:30", highlighted: true },
-      { day: "Sun", open: "16:00-01:00" },
+      { day: "Sun", open: "16:00-01:00" }
     ],
     deal: "Happy hour extended to 20:00 for MeetupReykjavik events",
     upcomingEventSlugs: ["harbor-jazz-social"],
     gallery: [
-      "linear-gradient(135deg, rgba(91,33,182,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/gamli-gaukurinn.svg')",
-      "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(91,33,182,0.3)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
+      "linear-gradient(135deg, rgba(91,33,182,0.2), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/gaukurinn.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(91,33,182,0.45), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/gamli-gaukurinn.svg')",
+    art: "linear-gradient(135deg, rgba(91,33,182,0.2), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/gaukurinn.svg')",
     latitude: 64.1488,
     longitude: -21.9408,
-  },
+  }
 ] as const;
 
 export const blogPosts: BlogPost[] = [
@@ -1755,7 +1708,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 10, 2026",
     excerpt: "A closer look at why local discovery should feel warmer, calmer, and more venue-aware than the generic event feed.",
     readTime: "6 min read",
-    hero: "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+    hero: "/place-images/reykjavik/venues/kex-hostel.jpg",
     sections: [
       {
         heading: "The problem with generic event products",
@@ -1768,7 +1721,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "What MeetupReykjavik is trying to do differently",
         body: "The ambition is not to become a noisy marketplace. It is to build an editorial, trustworthy, city-specific layer for people, groups, and venues that actually belong together.",
-      },
+      }
     ],
   },
   {
@@ -1778,7 +1731,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 8, 2026",
     excerpt: "The best social formats reduce friction on arrival, use host structure well, and make the first five minutes feel safe.",
     readTime: "4 min read",
-    hero: "linear-gradient(135deg, rgba(245,240,232,0.55), rgba(79,70,229,0.45)), url('/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg')",
+    hero: "/place-images/reykjavik/venues/stofan-cafe.jpg",
     sections: [
       {
         heading: "Arrival is the product",
@@ -1787,7 +1740,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Structured social beats unstructured crowds",
         body: "Light prompts, timed intros, and easy group formats help people settle faster. This matters even more in a city where many attendees are new to the country.",
-      },
+      }
     ],
   },
   {
@@ -1797,7 +1750,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 4, 2026",
     excerpt: "Strong venues do more than host events. They shape the trust, pace, and repeatability of the community itself.",
     readTime: "5 min read",
-    hero: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(42,38,56,0.55)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
+    hero: "/place-images/reykjavik/venues/lebowski-bar.jpg",
     sections: [
       {
         heading: "The venue is part of the format",
@@ -1806,7 +1759,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Partnerships can benefit everyone",
         body: "When venues get better visibility and organizers get better tooling, members get a better night out. The best marketplace products align those incentives instead of forcing them apart.",
-      },
+      }
     ],
   },
   {
@@ -1816,7 +1769,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 2, 2026",
     excerpt: "A walkthrough of the dashboard tools that help organizers publish, manage, and grow recurring community events.",
     readTime: "7 min read",
-    hero: "linear-gradient(135deg, rgba(79,70,229,0.55), rgba(30,27,46,0.45)), url('/place-images/reykjavik/ufa-40055fa7.jpg')",
+    hero: "/place-images/reykjavik/venues/grandi-hub.jpg",
     sections: [
       {
         heading: "Why organizers need more than a form",
@@ -1833,7 +1786,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Venue coordination built in",
         body: "Rather than managing venue logistics over email, the dashboard lets organizers submit booking requests directly to partner venues. Availability, capacity, and deal terms are visible upfront, which reduces back-and-forth and avoids last-minute surprises.",
-      },
+      }
     ],
   },
   {
@@ -1843,7 +1796,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 3, 2026",
     excerpt: "A spotlight on five venues across the city that show how different spaces shape different kinds of community events.",
     readTime: "5 min read",
-    hero: "linear-gradient(135deg, rgba(232,97,77,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/dill-0aeca160.jpg')",
+    hero: "/place-images/reykjavik/venues/hlemmur-square.jpg",
     sections: [
       {
         heading: "Mokka Kaffi for intimate conversation",
@@ -1864,16 +1817,16 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Snaps for dinner that becomes a party",
         body: "A neighborhood bistro with communal tables and a kitchen that handles group dinners with ease. The set menu removes decision fatigue and the wine pairing turns an ordinary Friday into something worth remembering.",
-      },
+      }
     ],
-  },
+  }
 ] as const;
 
 export const aboutStats = [
   { label: "Members", value: "2,847" },
   { label: "Groups", value: "156" },
   { label: "Venue partners", value: "34" },
-  { label: "Weekly events", value: "89" },
+  { label: "Weekly events", value: "89" }
 ] as const;
 
 export const aboutTeam = [
@@ -1891,7 +1844,7 @@ export const aboutTeam = [
     name: "Venue partners",
     role: "City network",
     note: "Providing the rooms, deals, and operational backbone for better local events.",
-  },
+  }
 ] as const;
 
 export const userTiers = [
@@ -1912,7 +1865,7 @@ export const userTiers = [
     price: "5,250 ISK / mo",
     description: "Advanced tools for power members, community regulars, and people who want the strongest event signal.",
     features: ["Everything in Plus", "Advanced filters", "Early access features"],
-  },
+  }
 ] as const;
 
 export const organizerTiers = [
@@ -1924,7 +1877,7 @@ export const organizerTiers = [
       "Up to 3 active public events",
       `Public ticketing from ${minimumTicketPriceIsk} ISK`,
       `${ticketCommissionRate}% ticket commission`,
-      "Basic event analytics",
+      "Basic event analytics"
     ],
   },
   {
@@ -1935,7 +1888,7 @@ export const organizerTiers = [
       "Unlimited recurring events",
       "Approval and waitlist controls",
       "Venue request workflows",
-      "Audience and revenue reporting",
+      "Audience and revenue reporting"
     ],
   },
   {
@@ -1946,9 +1899,9 @@ export const organizerTiers = [
       "Priority support and launch reviews",
       "Featured placement eligibility",
       "Sponsor and partner inventory",
-      "Advanced audience segmentation",
+      "Advanced audience segmentation"
     ],
-  },
+  }
 ] as const;
 
 export const venueTiers = [
@@ -1966,7 +1919,7 @@ export const venueTiers = [
       "Booking inbox and responses",
       "Availability planning",
       "Partner deal management",
-      "Organizer-fit insights",
+      "Organizer-fit insights"
     ],
   },
   {
@@ -1977,9 +1930,9 @@ export const venueTiers = [
       "Featured placement",
       "Premium analytics and trend views",
       "Priority venue matching",
-      "Sponsored inventory support",
+      "Sponsored inventory support"
     ],
-  },
+  }
 ] as const;
 
 export const pricingFaq = [
@@ -1998,11 +1951,11 @@ export const pricingFaq = [
   {
     question: "How are tickets and commission handled?",
     answer: `Paid ticketing is designed around a ${ticketCommissionRate}% platform commission, later wired to PayPal. That keeps the platform earning on successful events, not only on subscriptions.`,
-  },
+  }
 ] as const;
 
 export const publicCategoryOptions = [
-  ...homepageCategories.map((category) => category.name.split(" & ")[0]),
+  ...homepageCategories.map((category) => category.name.split(" & ")[0])
 ] as const;
 
 export function getEventBySlug(slug: string) {
