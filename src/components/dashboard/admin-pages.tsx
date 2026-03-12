@@ -42,7 +42,7 @@ import {
   AdminCommsStudio,
   AdminContentControlCenter,
 } from "@/components/dashboard/operations-panels";
-import { adminPortalData } from "@/lib/dashboard-data";
+import { getAdminPortalData } from "@/lib/dashboard-fetchers";
 import type { ComponentProps } from "react";
 
 function adminLinks(activeHref: Route) {
@@ -128,7 +128,8 @@ function statusTone(status: string) {
   return "indigo" as const;
 }
 
-export function AdminOverviewScreen() {
+export async function AdminOverviewScreen() {
+  const adminPortalData = await getAdminPortalData();
   return (
     <AdminShell
       eyebrow="Super admin"
@@ -269,7 +270,8 @@ export function AdminOverviewScreen() {
   );
 }
 
-export function AdminUsersScreen() {
+export async function AdminUsersScreen() {
+  const adminPortalData = await getAdminPortalData();
   const flaggedUsers = adminPortalData.users.filter((user) =>
     user.status.toLowerCase().includes("flag"),
   ).length;
@@ -564,7 +566,8 @@ export function AdminUsersScreen() {
   );
 }
 
-export function AdminGroupsScreen() {
+export async function AdminGroupsScreen() {
+  const adminPortalData = await getAdminPortalData();
   const featureCandidates = adminPortalData.groups.queue.filter((group) =>
     group.status.toLowerCase().includes("feature"),
   ).length;
@@ -711,7 +714,8 @@ export function AdminGroupsScreen() {
   );
 }
 
-export function AdminEventsScreen() {
+export async function AdminEventsScreen() {
+  const adminPortalData = await getAdminPortalData();
   return (
     <AdminShell
       eyebrow="Admin events"
@@ -862,7 +866,8 @@ export function AdminEventsScreen() {
   );
 }
 
-export function AdminVenuesScreen() {
+export async function AdminVenuesScreen() {
+  const adminPortalData = await getAdminPortalData();
   const followUpLoad = adminPortalData.venues.applications.filter((application) =>
     ["waitlist", "request info"].some((state) =>
       application.status.toLowerCase().includes(state),
@@ -1033,7 +1038,8 @@ export function AdminVenuesScreen() {
   );
 }
 
-export function AdminRevenueScreen() {
+export async function AdminRevenueScreen() {
+  const adminPortalData = await getAdminPortalData();
   const topSource = adminPortalData.revenue.sources[0];
   const pendingPayouts = adminPortalData.revenue.transactions.filter((transaction) =>
     transaction.status.toLowerCase().includes("pending"),
@@ -1218,7 +1224,8 @@ export function AdminRevenueScreen() {
   );
 }
 
-export function AdminAnalyticsScreen() {
+export async function AdminAnalyticsScreen() {
+  const adminPortalData = await getAdminPortalData();
   const chartLeader = adminPortalData.analyticsDeck
     .slice()
     .sort(
@@ -1389,7 +1396,8 @@ export function AdminAnalyticsScreen() {
   );
 }
 
-export function AdminContentScreen() {
+export async function AdminContentScreen() {
+  const adminPortalData = await getAdminPortalData();
   const refreshNeeded = adminPortalData.content.sections.filter((section) =>
     section.status.toLowerCase().includes("refresh"),
   ).length;
@@ -1545,7 +1553,8 @@ export function AdminContentScreen() {
   );
 }
 
-export function AdminModerationScreen() {
+export async function AdminModerationScreen() {
+  const adminPortalData = await getAdminPortalData();
   const openReports = adminPortalData.moderation.reports.filter((report) =>
     report.status.toLowerCase().includes("open") ||
     report.status.toLowerCase().includes("investigating") ||
@@ -1704,7 +1713,8 @@ export function AdminModerationScreen() {
   );
 }
 
-export function AdminCommsScreen() {
+export async function AdminCommsScreen() {
+  const adminPortalData = await getAdminPortalData();
   const topSend = adminPortalData.comms.history.find((entry) =>
     entry.result.toLowerCase().includes("open rate"),
   );
@@ -1861,7 +1871,8 @@ export function AdminCommsScreen() {
   );
 }
 
-export function AdminSettingsScreen() {
+export async function AdminSettingsScreen() {
+  const adminPortalData = await getAdminPortalData();
   return (
     <AdminShell
       eyebrow="Admin settings"

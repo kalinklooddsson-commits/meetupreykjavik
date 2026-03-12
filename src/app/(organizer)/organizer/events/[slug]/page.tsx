@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { OrganizerEventDetailScreen } from "@/components/dashboard/organizer-pages";
-import { getManagedOrganizerEvent } from "@/lib/dashboard-data";
+import { getManagedOrganizerEvent } from "@/lib/dashboard-fetchers";
 
 export default async function OrganizerEventDetailPage({
   params,

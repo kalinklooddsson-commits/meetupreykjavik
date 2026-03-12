@@ -11,13 +11,13 @@ interface GetVenuesOptions {
 
 export async function getVenues(options: GetVenuesOptions = {}) {
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return [];
+  if (!supabase) return { data: [], count: 0 };
 
   const { type, limit = 20 } = options;
 
   let query = supabase
     .from("venues")
-    .select("*")
+    .select("*", { count: "exact" })
     .eq("status", "active")
     .order("avg_rating", { ascending: false })
     .limit(limit);
@@ -26,14 +26,14 @@ export async function getVenues(options: GetVenuesOptions = {}) {
     query = query.eq("type", type);
   }
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
 
   if (error) {
     console.error("Failed to fetch venues:", error);
-    return [];
+    return { data: [], count: 0 };
   }
 
-  return data ?? [];
+  return { data: data ?? [], count: count ?? 0 };
 }
 
 export async function getVenueBySlug(slug: string) {

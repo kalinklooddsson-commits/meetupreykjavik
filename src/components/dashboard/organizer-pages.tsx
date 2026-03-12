@@ -25,8 +25,8 @@ import {
 } from "@/components/dashboard/primitives";
 import {
   getManagedOrganizerEvent,
-  organizerPortalData,
-} from "@/lib/dashboard-data";
+  getOrganizerPortalData,
+} from "@/lib/dashboard-fetchers";
 import {
   OrganizerAttendeeControlCenter,
   OrganizerVenueRequestStudio,
@@ -90,7 +90,8 @@ function OrganizerShell(props: ComponentProps<typeof PortalShell>) {
   return <PortalShell roleMode="organizer" {...props} />;
 }
 
-export function OrganizerMessagesScreen() {
+export async function OrganizerMessagesScreen() {
+  const organizerPortalData = await getOrganizerPortalData();
   return (
     <OrganizerShell
       eyebrow="Organizer messages"
@@ -154,7 +155,8 @@ export function OrganizerMessagesScreen() {
   );
 }
 
-export function OrganizerNotificationsScreen() {
+export async function OrganizerNotificationsScreen() {
+  const organizerPortalData = await getOrganizerPortalData();
   return (
     <OrganizerShell
       eyebrow="Organizer notifications"
@@ -199,7 +201,8 @@ export function OrganizerNotificationsScreen() {
   );
 }
 
-export function OrganizerOverviewScreen() {
+export async function OrganizerOverviewScreen() {
+  const organizerPortalData = await getOrganizerPortalData();
   return (
     <OrganizerShell
       eyebrow="Organizer dashboard"
@@ -322,7 +325,8 @@ export function OrganizerOverviewScreen() {
   );
 }
 
-export function OrganizerGroupsScreen() {
+export async function OrganizerGroupsScreen() {
+  const organizerPortalData = await getOrganizerPortalData();
   const approvalGroups = organizerPortalData.groups.filter((group) =>
     group.joinMode.toLowerCase().includes("approval"),
   ).length;
@@ -484,7 +488,8 @@ export function OrganizerGroupsScreen() {
   );
 }
 
-export function OrganizerEventsScreen() {
+export async function OrganizerEventsScreen() {
+  const organizerPortalData = await getOrganizerPortalData();
   const totalWaitlist = organizerPortalData.events.reduce((sum, event) => sum + event.waitlist, 0);
   const manualApprovalEvents = organizerPortalData.events.filter((event) =>
     event.approvalMode.toLowerCase().includes("manual"),
@@ -619,7 +624,8 @@ export function OrganizerEventsScreen() {
   );
 }
 
-export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
+export async function OrganizerEventDetailScreen({ slug }: { slug: string }) {
+  const organizerPortalData = await getOrganizerPortalData();
   const event = getManagedOrganizerEvent(slug);
 
   if (!event) {
@@ -833,7 +839,8 @@ export function OrganizerEventDetailScreen({ slug }: { slug: string }) {
   );
 }
 
-export function OrganizerVenuesScreen() {
+export async function OrganizerVenuesScreen() {
+  const organizerPortalData = await getOrganizerPortalData();
   const acceptedVenueThreads = organizerPortalData.bookingPipeline.filter((item) =>
     item.status.toLowerCase().includes("accepted"),
   ).length;

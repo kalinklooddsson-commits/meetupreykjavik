@@ -21,7 +21,7 @@ import {
   ToneBadge,
   TrendChart,
 } from "@/components/dashboard/primitives";
-import { venuePortalData } from "@/lib/dashboard-data";
+import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import {
   VenueAvailabilityStudio,
   VenueBookingCommandCenter,
@@ -124,7 +124,8 @@ function VenueShell(props: ComponentProps<typeof PortalShell>) {
   return <PortalShell roleMode="venue" {...props} />;
 }
 
-export function VenueMessagesScreen() {
+export async function VenueMessagesScreen() {
+  const venuePortalData = await getVenuePortalData();
   return (
     <VenueShell
       eyebrow="Venue messages"
@@ -188,7 +189,8 @@ export function VenueMessagesScreen() {
   );
 }
 
-export function VenueNotificationsScreen() {
+export async function VenueNotificationsScreen() {
+  const venuePortalData = await getVenuePortalData();
   return (
     <VenueShell
       eyebrow="Venue notifications"
@@ -233,7 +235,8 @@ export function VenueNotificationsScreen() {
   );
 }
 
-export function VenueOnboardingScreen() {
+export async function VenueOnboardingScreen() {
+  const venuePortalData = await getVenuePortalData();
   return (
     <VenueShell
       eyebrow="Venue partner onboarding"
@@ -284,7 +287,8 @@ export function VenueOnboardingScreen() {
   );
 }
 
-export function VenueDashboardScreen() {
+export async function VenueDashboardScreen() {
+  const venuePortalData = await getVenuePortalData();
   return (
     <VenueShell
       eyebrow="Venue dashboard"
@@ -349,7 +353,8 @@ export function VenueDashboardScreen() {
   );
 }
 
-export function VenueEventsScreen() {
+export async function VenueEventsScreen() {
+  const venuePortalData = await getVenuePortalData();
   const replyNeededEvents = venuePortalData.upcomingEvents.filter((item) =>
     item.status.toLowerCase().includes("counter"),
   ).length;
@@ -463,7 +468,8 @@ export function VenueEventsScreen() {
   );
 }
 
-export function VenueBookingsScreen() {
+export async function VenueBookingsScreen() {
+  const venuePortalData = await getVenuePortalData();
   const urgentReplies = venuePortalData.bookings.incoming.filter((booking) =>
     booking.status.toLowerCase().includes("pending") ||
     booking.status.toLowerCase().includes("counter"),
@@ -629,7 +635,8 @@ export function VenueBookingsScreen() {
   );
 }
 
-export function VenueAvailabilityScreen() {
+export async function VenueAvailabilityScreen() {
+  const venuePortalData = await getVenuePortalData();
   const blockedDates = venuePortalData.availability.exceptions.length;
   const openDays = venuePortalData.availability.weeklyGrid.filter((day) =>
     day.blocks.some((block) => block.toLowerCase().includes("open")),
@@ -770,7 +777,8 @@ export function VenueAvailabilityScreen() {
   );
 }
 
-export function VenueDealsScreen() {
+export async function VenueDealsScreen() {
+  const venuePortalData = await getVenuePortalData();
   const activeDeals = venuePortalData.deals.filter((deal) =>
     deal.status.toLowerCase().includes("active"),
   ).length;
@@ -897,7 +905,8 @@ export function VenueDealsScreen() {
   );
 }
 
-export function VenueAnalyticsScreen() {
+export async function VenueAnalyticsScreen() {
+  const venuePortalData = await getVenuePortalData();
   const profileViews = venuePortalData.analytics.funnel.find((item) => item.label === "Profile views")?.value ?? 0;
   const bookingInquiries =
     venuePortalData.analytics.funnel.find((item) => item.label === "Booking inquiries")?.value ?? 0;
@@ -1028,7 +1037,8 @@ export function VenueAnalyticsScreen() {
   );
 }
 
-export function VenueProfileScreen() {
+export async function VenueProfileScreen() {
+  const venuePortalData = await getVenuePortalData();
   const totalProfileSections = venuePortalData.profileSections.length;
   const totalAmenities = venuePortalData.venue.amenities.length;
   const highlightedHours = venuePortalData.venue.hours.filter((hour) => hour.highlighted).length;

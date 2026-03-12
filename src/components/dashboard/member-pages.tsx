@@ -24,7 +24,7 @@ import {
   Surface,
   ToneBadge,
 } from "@/components/dashboard/primitives";
-import { memberPortalData, memberProfile } from "@/lib/dashboard-data";
+import { getMemberPortalData, getMemberProfile } from "@/lib/dashboard-fetchers";
 import { MemberSettingsStudio } from "@/components/dashboard/operations-panels";
 import type { ComponentProps } from "react";
 
@@ -87,7 +87,9 @@ function MemberShell(props: ComponentProps<typeof PortalShell>) {
   return <PortalShell roleMode="member" {...props} />;
 }
 
-export function MemberOverviewScreen() {
+export async function MemberOverviewScreen() {
+  const memberProfile = await getMemberProfile();
+  const memberPortalData = await getMemberPortalData();
   const links = memberLinks(memberProfile.slug, "overview");
 
   return (
@@ -218,7 +220,9 @@ export function MemberOverviewScreen() {
   );
 }
 
-export function MemberMessagesScreen() {
+export async function MemberMessagesScreen() {
+  const memberProfile = await getMemberProfile();
+  const memberPortalData = await getMemberPortalData();
   const links = memberLinks(memberProfile.slug, "messages");
 
   return (
@@ -286,7 +290,9 @@ export function MemberMessagesScreen() {
   );
 }
 
-export function MemberNotificationsScreen() {
+export async function MemberNotificationsScreen() {
+  const memberProfile = await getMemberProfile();
+  const memberPortalData = await getMemberPortalData();
   const links = memberLinks(memberProfile.slug, "notifications");
 
   return (
@@ -342,7 +348,9 @@ export function MemberNotificationsScreen() {
   );
 }
 
-export function MemberProfileScreen({ slug }: { slug: string }) {
+export async function MemberProfileScreen({ slug }: { slug: string }) {
+  const memberProfile = await getMemberProfile();
+  const memberPortalData = await getMemberPortalData();
   const profile =
     slug === memberProfile.slug
       ? memberProfile
@@ -640,7 +648,9 @@ export function MemberProfileScreen({ slug }: { slug: string }) {
   );
 }
 
-export function MemberSettingsScreen() {
+export async function MemberSettingsScreen() {
+  const memberProfile = await getMemberProfile();
+  const memberPortalData = await getMemberPortalData();
   return (
     <MemberShell
       eyebrow="Client settings"
@@ -710,7 +720,9 @@ export function MemberSettingsScreen() {
   );
 }
 
-export function MemberCalendarScreen() {
+export async function MemberCalendarScreen() {
+  const memberProfile = await getMemberProfile();
+  const memberPortalData = await getMemberPortalData();
   return (
     <MemberShell
       eyebrow="Client calendar"

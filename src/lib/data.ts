@@ -38,7 +38,7 @@ export async function fetchGroupBySlug(slug: string) {
 
 export async function fetchVenues(options?: { limit?: number }) {
   if (!hasSupabaseEnv()) return publicVenues.slice(0, options?.limit);
-  const venues = await db.getVenues(options);
+  const { data: venues } = await db.getVenues(options);
   return venues.length > 0 ? venues : publicVenues.slice(0, options?.limit);
 }
 

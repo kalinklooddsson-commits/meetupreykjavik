@@ -820,11 +820,11 @@ async function handleLiveDataRequest(
       // ── Venues CRUD ──
       case "GET /api/venues": {
         const url = request.nextUrl;
-        const data = await getVenues({
+        const result = await getVenues({
           type: url.searchParams.get("type") ?? undefined,
           limit: Number(url.searchParams.get("limit") ?? 20),
         });
-        return successResponse(data);
+        return successResponse(result.data);
       }
       case "GET /api/venues/[slug]": {
         const data = await getVenueBySlug(match.params.slug);
