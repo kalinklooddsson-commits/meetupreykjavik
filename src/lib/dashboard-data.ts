@@ -1741,6 +1741,43 @@ export const adminPortalData = {
   ],
 };
 
+/* ── New mock data for dashboard rebuild ─────────────────────── */
+
+export const memberTransactions = [
+  { key: "tx-1", type: "ticket", description: "Singles Night 25–35 — General", amount: "3 500 ISK", status: "completed", date: "2026-02-28", eventSlug: "singles-night-25-35" },
+  { key: "tx-2", type: "ticket", description: "Wine Tasting — VIP", amount: "8 900 ISK", status: "completed", date: "2026-02-15", eventSlug: "wine-tasting-volcanic-terroir" },
+  { key: "tx-3", type: "subscription", description: "Plus membership — monthly", amount: "1 990 ISK", status: "completed", date: "2026-03-01" },
+  { key: "tx-4", type: "refund", description: "Saturday Hike — cancelled", amount: "-2 500 ISK", status: "pending", date: "2026-03-05", eventSlug: "saturday-hike-mt-esja" },
+  { key: "tx-5", type: "ticket", description: "React Workshop — Early Bird", amount: "4 500 ISK", status: "completed", date: "2026-01-20", eventSlug: "react-server-components-workshop" },
+] as const;
+
+export const venueReviews = [
+  { key: "vr-1", reviewer: "Anna Sigurdsson", rating: 5, text: "Amazing atmosphere and perfect for our group event.", date: "2026-03-02", eventName: "Singles Night 25–35", venueResponse: "Thank you, Anna! We loved hosting your group." },
+  { key: "vr-2", reviewer: "Jón Árnason", rating: 4, text: "Great space, sound system could be better for larger groups.", date: "2026-02-20", eventName: "React Workshop" },
+  { key: "vr-3", reviewer: "Helga Björnsdóttir", rating: 5, text: "The staff were incredibly accommodating for our wine event.", date: "2026-02-14", eventName: "Wine Tasting", venueResponse: "Glad you enjoyed it, Helga!" },
+  { key: "vr-4", reviewer: "Sigurdur Ólafsson", rating: 3, text: "Decent venue but parking was tricky and the entrance was hard to find.", date: "2026-01-30", eventName: "Saturday Hike Meetup" },
+  { key: "vr-5", reviewer: "María Jónsdóttir", rating: 4, text: "Cozy and warm. Perfect for our small creative gathering.", date: "2026-01-15", eventName: "Creative Workshop" },
+] as const;
+
+export const adminBookings = [
+  { key: "ab-1", organizer: "Anna Sigurdsson", venue: "Kex Hostel", date: "2026-03-20", time: "18:00–22:00", attendance: "40", status: "pending", message: "Looking for a cozy space for our singles mixer." },
+  { key: "ab-2", organizer: "Baldvin Oddsson", venue: "Loft Hostel", date: "2026-03-25", time: "14:00–18:00", attendance: "25", status: "accepted" },
+  { key: "ab-3", organizer: "Jón Árnason", venue: "Iðnó", date: "2026-04-01", time: "19:00–23:00", attendance: "80", status: "counter_offered", message: "Can we also use the upstairs room?" },
+  { key: "ab-4", organizer: "Helga Björnsdóttir", venue: "Kex Hostel", date: "2026-03-15", time: "10:00–14:00", attendance: "15", status: "completed" },
+  { key: "ab-5", organizer: "María Jónsdóttir", venue: "Hlemmur Mathöll", date: "2026-03-28", time: "17:00–21:00", attendance: "50", status: "declined", message: "Food hall event for expat community" },
+] as const;
+
+export const adminAuditLog = [
+  { key: "au-1", admin: "Baldvin Oddsson", action: "venue_approved", targetType: "venue" as const, targetId: "kex-hostel", details: "status: pending → active", timestamp: "2026-03-12T14:30:00Z" },
+  { key: "au-2", admin: "Baldvin Oddsson", action: "user_role_changed", targetType: "user" as const, targetId: "jon-arnason", details: "role: user → organizer", timestamp: "2026-03-12T12:15:00Z" },
+  { key: "au-3", admin: "Baldvin Oddsson", action: "event_featured", targetType: "event" as const, targetId: "singles-night-25-35", details: "is_featured: false → true", timestamp: "2026-03-11T18:00:00Z" },
+  { key: "au-4", admin: "Baldvin Oddsson", action: "group_approved", targetType: "group" as const, targetId: "reykjavik-hikers", details: "status: pending → active", timestamp: "2026-03-11T10:30:00Z" },
+  { key: "au-5", admin: "Baldvin Oddsson", action: "user_suspended", targetType: "user" as const, targetId: "spam-account-1", details: "reason: spam reports (3)", timestamp: "2026-03-10T09:00:00Z" },
+  { key: "au-6", admin: "Baldvin Oddsson", action: "setting_changed", targetType: "setting" as const, targetId: "commission_rate", details: "value: 3% → 5%", timestamp: "2026-03-09T16:45:00Z" },
+  { key: "au-7", admin: "Baldvin Oddsson", action: "venue_rejected", targetType: "venue" as const, targetId: "unknown-bar", details: "reason: incomplete application", timestamp: "2026-03-08T11:20:00Z" },
+  { key: "au-8", admin: "Baldvin Oddsson", action: "refund_issued", targetType: "transaction" as const, targetId: "tx-4", details: "amount: 2,500 ISK — event cancelled", timestamp: "2026-03-05T14:00:00Z" },
+] as const;
+
 export const dashboardReferenceData = {
   publicEvents,
   publicVenues,
