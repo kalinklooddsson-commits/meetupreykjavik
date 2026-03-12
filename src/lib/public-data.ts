@@ -64,6 +64,8 @@ export type PublicVenue = {
   upcomingEventSlugs: string[];
   gallery: string[];
   art: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export type BlogPost = {
@@ -807,6 +809,8 @@ export const publicVenues: PublicVenue[] = [
       "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(30,27,46,0.4)), url('/place-images/reykjavik/hof-i-deccf755.jpg')",
     ],
     art: "linear-gradient(135deg, rgba(30,27,46,0.5), rgba(232,97,77,0.4)), url('/place-images/reykjavik/generated/lebowski-bar.svg')",
+    latitude: 64.1475,
+    longitude: -21.9256,
   },
   {
     slug: "kex-hostel",
@@ -839,6 +843,8 @@ export const publicVenues: PublicVenue[] = [
       "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(245,240,232,0.35)), url('/place-images/reykjavik/o-inn-aca1fd38.JPG')",
     ],
     art: "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.4)), url('/place-images/reykjavik/generated/kex-hostel.svg')",
+    latitude: 64.1499,
+    longitude: -21.9319,
   },
   {
     slug: "grandi-hub",
@@ -871,6 +877,8 @@ export const publicVenues: PublicVenue[] = [
       "linear-gradient(135deg, rgba(232,97,77,0.4), rgba(55,48,163,0.4)), url('/place-images/reykjavik/listasafn-einars-jonssonar-e07f8c3b.JPG')",
     ],
     art: "linear-gradient(135deg, rgba(55,48,163,0.5), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/grandi101.svg')",
+    latitude: 64.1562,
+    longitude: -21.9558,
   },
   {
     slug: "bryggjuhusid",
@@ -935,6 +943,8 @@ export const publicVenues: PublicVenue[] = [
       "linear-gradient(135deg, rgba(79,70,229,0.4), rgba(160,190,170,0.35)), url('/place-images/reykjavik/reykjavik-871-2-78434189.jpg')",
     ],
     art: "linear-gradient(135deg, rgba(160,190,170,0.5), rgba(245,240,232,0.4)), url('/place-images/reykjavik/generated/loft-hostel.svg')",
+    latitude: 64.1471,
+    longitude: -21.9331,
   },
   {
     slug: "micro-bar",
@@ -999,6 +1009,8 @@ export const publicVenues: PublicVenue[] = [
       "linear-gradient(135deg, rgba(245,240,232,0.4), rgba(79,70,229,0.35)), url('/place-images/reykjavik/arb-jarsafn-c71d7348.jpg')",
     ],
     art: "linear-gradient(135deg, rgba(79,70,229,0.55), rgba(30,27,46,0.45)), url('/place-images/reykjavik/generated/hlemmur-square.svg')",
+    latitude: 64.1443,
+    longitude: -21.9148,
   },
   {
     slug: "cafe-rosenberg",

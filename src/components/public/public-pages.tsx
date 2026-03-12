@@ -46,6 +46,7 @@ import {
   type SourcedPlace,
 } from "@/lib/reykjavik-source-data";
 import { cn } from "@/lib/utils";
+import { VenueMap } from "@/components/maps/venue-map";
 
 /* ── Formatters ────────────────────────────────────────── */
 
@@ -123,11 +124,11 @@ function categoryTone(category: string) {
   return "coral" as const;
 }
 
-function categoryBadgeClass(tone: (typeof categories)[number]["tone"]) {
-  if (tone === "sage") return "bg-[rgba(124,154,130,0.12)] text-[var(--brand-sage)]";
-  if (tone === "indigo") return "bg-[var(--brand-indigo-soft)] text-[var(--brand-indigo)]";
-  if (tone === "sand") return "bg-[var(--brand-sand)] text-[var(--brand-text)]";
-  return "bg-[var(--brand-coral-soft)] text-[var(--brand-coral-dark)]";
+function categoryBadgeStyle(tone: (typeof categories)[number]["tone"]): React.CSSProperties {
+  if (tone === "sage") return { backgroundColor: "rgba(124,154,130,0.12)", color: "#7C9A82" };
+  if (tone === "indigo") return { backgroundColor: "#c7d2fe", color: "#3730a3" };
+  if (tone === "sand") return { backgroundColor: "#f5f0e8", color: "#2a2638" };
+  return { backgroundColor: "#fde8e4", color: "#d4503d" };
 }
 
 function groupArchetype(group: PublicGroup) {
@@ -1862,6 +1863,17 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                 })}
               </div>
             </Section>
+
+            {venue.latitude && venue.longitude ? (
+              <Section title="Location">
+                <VenueMap
+                  latitude={venue.latitude}
+                  longitude={venue.longitude}
+                  name={venue.name}
+                  address={venue.address}
+                />
+              </Section>
+            ) : null}
           </div>
 
           <div className="space-y-6">
@@ -2007,6 +2019,17 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
                 </div>
               ) : null}
             </Section>
+
+            {place.latitude && place.longitude ? (
+              <Section title="Location">
+                <VenueMap
+                  latitude={place.latitude}
+                  longitude={place.longitude}
+                  name={place.name}
+                  address={place.address || "Reykjavik"}
+                />
+              </Section>
+            ) : null}
 
             <Section title="Venue read">
               <div className="grid gap-4 md:grid-cols-3">
@@ -3003,10 +3026,8 @@ export function CategoriesIndexScreen() {
             >
               <div className="flex items-start justify-between">
                 <span
-                  className={cn(
-                    "inline-flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold",
-                    categoryBadgeClass(item.category.tone),
-                  )}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold"
+                  style={categoryBadgeStyle(item.category.tone)}
                 >
                   {item.category.letter}
                 </span>

@@ -21,6 +21,8 @@ export type SourcedPlace = {
   website?: string;
   summary: string;
   image?: SourcedPlaceImage;
+  latitude?: number;
+  longitude?: number;
 };
 
 export type ReykjavikSourceReport = {
