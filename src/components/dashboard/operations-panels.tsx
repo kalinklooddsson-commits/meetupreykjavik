@@ -1444,18 +1444,50 @@ export function MemberSettingsStudio({
     });
   }
 
-  function saveSection() {
+  async function saveSection() {
     if (!selected) {
       return;
     }
 
-    startTransition(() => {
-      writeSessionDraft(
-        `meetupreykjavik-member-settings-${selected.key}`,
-        selected.items,
-      );
-      setMessage(`${selected.title} saved locally. No live account settings were changed.`);
-    });
+    // Always save locally first
+    writeSessionDraft(
+      `meetupreykjavik-member-settings-${selected.key}`,
+      selected.items,
+    );
+
+    // Attempt to persist profile fields to the server
+    if (selected.key === "profile") {
+      const fieldMap: Record<string, string> = {};
+      for (const item of selected.items) {
+        const key = item.label.toLowerCase().replace(/\s+/g, "_");
+        fieldMap[key] = item.value;
+      }
+      try {
+        // Get current user ID from auth endpoint
+        const authRes = await fetch("/api/auth/me");
+        const authData = await authRes.json();
+        const userId = authData?.data?.id;
+        if (userId) {
+          const res = await fetch(`/api/users/${userId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              display_name: fieldMap["display_name"] ?? fieldMap["name"],
+              bio: fieldMap["bio"],
+              city: fieldMap["city"] ?? fieldMap["home_base"],
+            }),
+          });
+          if (res.ok) {
+            setMessage(`${selected.title} saved to your account.`);
+            return;
+          }
+        }
+      } catch {
+        // Server unreachable — fall through to local-only message
+      }
+    }
+
+    setMessage(`${selected.title} saved locally. Sign in with Supabase to persist to your account.`);
   }
 
   return (

@@ -3,6 +3,7 @@
 import { startTransition, useMemo, useState } from "react";
 import { CheckCheck, Flag, ImagePlus, Sparkles, UsersRound } from "lucide-react";
 import { categories } from "@/lib/home-data";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 import { writeSessionDraft } from "@/lib/storage/session-drafts";
 import { cn } from "@/lib/utils";
@@ -123,7 +124,7 @@ export function OrganizerGroupForm({
 
   const readiness = [
     Boolean(form.name.trim()),
-    Boolean(form.description.trim().length >= 80),
+    Boolean(form.description.replace(/<[^>]*>/g, "").trim().length >= 80),
     tags.length >= 2,
     form.accepted,
   ];
@@ -268,21 +269,18 @@ export function OrganizerGroupForm({
               </div>
             </div>
 
-            <label className="mt-5 block text-sm font-semibold text-brand-text">
+            <div className="mt-5 block text-sm font-semibold text-brand-text">
               Group description
-              <textarea
-                id="group-description"
-                name="description"
-                value={form.description}
-                onChange={(event) => updateField("description", event.target.value)}
-                rows={7}
+              <RichTextEditor
+                content={form.description}
+                onChange={(html) => updateField("description", html)}
                 placeholder="Describe the format, who the group is for, what a first-timer should expect, and why this group belongs in Reykjavik."
-                className={`${fieldClassName} leading-7`}
+                className="mt-2"
               />
               <span className="mt-2 block text-xs font-medium text-brand-text-light">
                 Aim for 80-240 words so the moderation team can understand the concept and the tone quickly.
               </span>
-            </label>
+            </div>
           </section>
 
           <section className={sectionClassName}>
@@ -442,9 +440,17 @@ export function OrganizerGroupForm({
                 <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-brand-text">
                   {form.name || "Your group name"}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
-                  {form.description || "Your group description will appear here as you write it."}
-                </p>
+                {/* Safe: user's own Tiptap editor output previewed back to them (StarterKit restricts to safe HTML subset) */}
+                {form.description.replace(/<[^>]*>/g, "").trim() ? (
+                  <div
+                    className="prose prose-sm mt-3 max-w-none text-brand-text-muted"
+                    dangerouslySetInnerHTML={{ __html: form.description }}
+                  />
+                ) : (
+                  <p className="mt-3 text-sm leading-7 text-brand-text-muted">
+                    Your group description will appear here as you write it.
+                  </p>
+                )}
                 <div className="mt-4 flex flex-wrap gap-2">
                   {tags.length > 0 ? (
                     tags.map((tag) => (
