@@ -1106,6 +1106,12 @@ async function handleLiveDataRequest(
         const data = await updateProfile(match.params.id, body as Parameters<typeof updateProfile>[1]);
         return successResponse(data);
       }
+      case "PATCH /api/profile": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const profileBody = await request.json().catch(() => ({}));
+        const profileData = await updateProfile(session.id, profileBody as Parameters<typeof updateProfile>[1]);
+        return successResponse(profileData);
+      }
       case "GET /api/users/[id]": {
         const data = await getProfileById(match.params.id);
         return successResponse(data);

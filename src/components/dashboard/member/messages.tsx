@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { MessageSquare, Lock } from "lucide-react";
+import { MessageActions } from "./message-actions";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -23,7 +24,7 @@ function memberLinks(activeKey: string) {
     { key: "groups", label: "Groups", href: "/dashboard/groups" as Route },
     { key: "messages", label: "Messages", href: "/dashboard/messages" as Route },
     { key: "transactions", label: "Payments", href: "/dashboard/transactions" as Route },
-    { key: "profile", label: "Profile", href: "/profile/baldvin" as Route },
+    { key: "profile", label: "Profile", href: "/settings" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
@@ -105,7 +106,7 @@ export async function MemberMessagesScreen() {
         description="Your recent messages sorted by activity."
       >
         <DashboardTable
-          columns={["From", "Subject", "Channel", "Status", "When"]}
+          columns={["From", "Subject", "Channel", "Status", "Action"]}
           rows={data.messages.map((m) => ({
             key: m.key,
             cells: [
@@ -126,7 +127,7 @@ export async function MemberMessagesScreen() {
               <ToneBadge key="status" tone={statusTone(m.status)}>
                 {m.status}
               </ToneBadge>,
-              <span key="meta" className="text-sm text-brand-text-muted">{m.meta}</span>,
+              <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
             ],
           }))}
           caption="Your messages"
