@@ -47,7 +47,11 @@
     "brandTop": "Meetup",
     "brandBottom": "Reykjavik",
     "search": "Search",
-    "searchPlaceholder": "Search events, groups, venues..."
+    "searchPlaceholder": "Search events, groups, venues...",
+    "recentSearches": "Recent searches",
+    "noRecentSearches": "No recent searches",
+    "browse": "Browse",
+    "popularCategories": "Popular categories"
   },
   "footer": {
     "description": "Discover events. Meet people. Support local venues. Free to join, built for Reykjavik.",

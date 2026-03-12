@@ -27,6 +27,12 @@ type SiteHeaderClientProps = {
   closeLabel: string;
   searchLabel: string;
   searchPlaceholder: string;
+  searchOverlayLabels?: {
+    recentSearches: string;
+    noRecentSearches: string;
+    browse: string;
+    popularCategories: string;
+  };
   labels: {
     admin: string;
     venuePortal: string;
@@ -358,10 +364,17 @@ function SearchOverlay({
   open,
   onClose,
   placeholder,
+  overlayLabels,
 }: {
   open: boolean;
   placeholder: string;
   onClose: () => void;
+  overlayLabels?: {
+    recentSearches: string;
+    noRecentSearches: string;
+    browse: string;
+    popularCategories: string;
+  };
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -440,17 +453,17 @@ function SearchOverlay({
           {/* Recent searches placeholder */}
           <div className="mt-4 border-t border-gray-100 pt-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-              Recent searches
+              {overlayLabels?.recentSearches ?? "Recent searches"}
             </p>
             <p className="mt-2 text-sm text-gray-400">
-              No recent searches
+              {overlayLabels?.noRecentSearches ?? "No recent searches"}
             </p>
           </div>
 
           {/* Quick links */}
           <div className="mt-3 border-t border-gray-100 pt-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-              Browse
+              {overlayLabels?.browse ?? "Browse"}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
               {[
@@ -476,7 +489,7 @@ function SearchOverlay({
           {/* Popular categories */}
           <div className="mt-3 border-t border-gray-100 pt-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-              Popular categories
+              {overlayLabels?.popularCategories ?? "Popular categories"}
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
               {["Music", "Tech", "Art", "Outdoors", "Food"].map((tag) => (
@@ -513,6 +526,7 @@ export function SiteHeaderClient({
   closeLabel,
   searchLabel,
   searchPlaceholder,
+  searchOverlayLabels,
   labels,
 }: SiteHeaderClientProps) {
   const pathname = usePathname();
@@ -645,6 +659,7 @@ export function SiteHeaderClient({
         open={searchOpen}
         onClose={closeSearch}
         placeholder={searchPlaceholder}
+        overlayLabels={searchOverlayLabels}
       />
     </>
   );

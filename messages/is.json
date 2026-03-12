@@ -47,7 +47,11 @@
     "brandTop": "Meetup",
     "brandBottom": "Reykjavík",
     "search": "Leita",
-    "searchPlaceholder": "Leita að viðburðum, hópum, stöðum..."
+    "searchPlaceholder": "Leita að viðburðum, hópum, stöðum...",
+    "recentSearches": "Nýlegar leitir",
+    "noRecentSearches": "Engar nýlegar leitir",
+    "browse": "Skoða",
+    "popularCategories": "Vinsælir flokkar"
   },
   "footer": {
     "description": "Finndu viðburði, hittu fólk og studdu við staðina. Ókeypis að ganga í, byggt fyrir Reykjavík.",

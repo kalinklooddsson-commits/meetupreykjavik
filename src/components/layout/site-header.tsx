@@ -57,6 +57,12 @@ export async function SiteHeader() {
           closeLabel={tNav("close")}
           searchLabel={tHeader("search")}
           searchPlaceholder={tHeader("searchPlaceholder")}
+          searchOverlayLabels={{
+            recentSearches: tHeader("recentSearches"),
+            noRecentSearches: tHeader("noRecentSearches"),
+            browse: tHeader("browse"),
+            popularCategories: tHeader("popularCategories"),
+          }}
           labels={{
             admin: tCta("admin"),
             venuePortal: tCta("venuePortal"),
