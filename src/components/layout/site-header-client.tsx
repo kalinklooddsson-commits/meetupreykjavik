@@ -398,35 +398,77 @@ function SearchOverlay({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 pt-20 sm:pt-32">
-      <div className="mx-4 w-full max-w-lg rounded-2xl border border-brand-border bg-white p-4 shadow-2xl">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const q = inputRef.current?.value.trim();
-            if (q) {
-              router.push(`/events?q=${encodeURIComponent(q)}` as Route);
-              onClose();
-            }
-          }}
-        >
-          <div className="flex items-center gap-3">
-            <Search className="h-5 w-5 shrink-0 text-gray-400" />
-            <input
-              ref={inputRef}
-              type="search"
-              placeholder={placeholder}
-              className="flex-1 bg-transparent text-base text-gray-900 outline-none placeholder:text-gray-400"
-            />
-            <button
-              type="button"
-              onClick={onClose}
-              className="shrink-0 rounded-lg border border-gray-200 px-2 py-1 text-xs text-gray-500"
-            >
-              Esc
-            </button>
+    <div
+      className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 pt-20 sm:pt-32"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-brand-border bg-white shadow-2xl">
+        {/* Top accent border */}
+        <div className="h-0.5 bg-gradient-to-r from-brand-indigo via-brand-coral to-brand-indigo" />
+
+        <div className="p-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const q = inputRef.current?.value.trim();
+              if (q) {
+                router.push(`/events?q=${encodeURIComponent(q)}` as Route);
+                onClose();
+              }
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <Search className="h-5 w-5 shrink-0 text-gray-400" />
+              <input
+                ref={inputRef}
+                type="search"
+                placeholder={placeholder}
+                className="flex-1 bg-transparent text-base text-gray-900 outline-none placeholder:text-gray-400"
+              />
+              <button
+                type="button"
+                onClick={onClose}
+                className="shrink-0 rounded-lg border border-gray-200 px-2 py-1 text-xs text-gray-500"
+              >
+                Esc
+              </button>
+            </div>
+          </form>
+
+          {/* Recent searches placeholder */}
+          <div className="mt-4 border-t border-gray-100 pt-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              Recent searches
+            </p>
+            <p className="mt-2 text-sm text-gray-400">
+              No recent searches
+            </p>
           </div>
-        </form>
+
+          {/* Popular section */}
+          <div className="mt-3 border-t border-gray-100 pt-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              Popular
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {["Music", "Tech", "Art", "Outdoors", "Food"].map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => {
+                    router.push(`/events?q=${encodeURIComponent(tag)}` as Route);
+                    onClose();
+                  }}
+                  className="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600 transition hover:border-brand-indigo hover:text-brand-indigo"
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -492,13 +534,16 @@ export function SiteHeaderClient({
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium transition",
+                  "group relative inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium transition",
                   active
-                    ? "bg-brand-indigo text-white"
+                    ? "bg-brand-indigo text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]"
                     : "text-brand-text-muted hover:bg-brand-indigo/6 hover:text-brand-text",
                 )}
               >
                 {item.label}
+                {!active && (
+                  <span className="absolute bottom-1 left-3 right-3 h-px origin-left scale-x-0 bg-brand-indigo transition-transform duration-200 group-hover:scale-x-100" />
+                )}
               </Link>
             );
           })}
@@ -596,27 +641,33 @@ export function SiteHeaderMobileNav({
 
   return (
     <div className="section-shell pb-2 lg:hidden">
-      <nav className="flex gap-2 overflow-x-auto">
-        {allItems.map((item) => {
-          const active = isActivePath(activePath, item.href);
+      <div className="relative">
+        {/* Left fade */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-[var(--brand-sand-light)] to-transparent" />
+        {/* Right fade */}
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-[var(--brand-sand-light)] to-transparent" />
+        <nav className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
+          {allItems.map((item) => {
+            const active = isActivePath(activePath, item.href);
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition",
-                active
-                  ? "border-brand-indigo bg-brand-indigo text-white"
-                  : "border-brand-border bg-white text-brand-text-muted",
-              )}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition",
+                  active
+                    ? "border-brand-indigo bg-brand-indigo text-white"
+                    : "border-brand-border bg-white text-brand-text-muted",
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { Compass } from "lucide-react";
+import { Compass, Instagram, Facebook, Twitter } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 export async function SiteFooter() {
@@ -58,6 +58,27 @@ export async function SiteFooter() {
           <p className="max-w-sm text-sm leading-7 text-white/60">
             {tFooter("description")}
           </p>
+
+          {/* Newsletter signup */}
+          <div className="mt-5">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">
+              {tFooter("newsletter")}
+            </p>
+            <form className="mt-2 flex gap-2">
+              <input
+                type="email"
+                placeholder={tFooter("newsletterPlaceholder")}
+                className="min-w-0 flex-1 rounded-full border border-white/15 bg-white/8 px-4 py-2.5 text-sm text-white placeholder:text-white/40 outline-none transition focus:border-white/30 focus:bg-white/12"
+              />
+              <button
+                type="button"
+                className="shrink-0 rounded-full bg-brand-coral px-5 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(232,97,77,0.3)]"
+              >
+                {tFooter("newsletterButton")}
+              </button>
+            </form>
+          </div>
+
           <Link
             href="/signup"
             className="mt-6 inline-flex min-h-11 items-center rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
@@ -85,8 +106,43 @@ export async function SiteFooter() {
           </div>
         ))}
       </div>
-      <div className="section-shell mt-10 border-t border-white/10 pt-6 text-sm text-white/45">
-        &copy; {new Date().getFullYear()} MeetupReykjavik. {tFooter("copyright")}
+      {/* Social links & copyright */}
+      <div className="section-shell mt-10 flex flex-col items-center gap-4 border-t border-white/10 pt-6 sm:flex-row sm:justify-between">
+        <p className="text-sm text-white/45">
+          &copy; {new Date().getFullYear()} MeetupReykjavik. {tFooter("copyright")}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="mr-2 text-xs font-bold uppercase tracking-[0.18em] text-white/35">
+            {tFooter("followUs")}
+          </span>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/60 transition hover:bg-white/[0.15] hover:text-white/90"
+          >
+            <Instagram className="h-4 w-4" />
+          </a>
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/60 transition hover:bg-white/[0.15] hover:text-white/90"
+          >
+            <Facebook className="h-4 w-4" />
+          </a>
+          <a
+            href="https://x.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X (Twitter)"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/60 transition hover:bg-white/[0.15] hover:text-white/90"
+          >
+            <Twitter className="h-4 w-4" />
+          </a>
+        </div>
       </div>
     </footer>
   );

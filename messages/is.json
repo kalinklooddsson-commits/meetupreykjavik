@@ -58,7 +58,11 @@
     "forVenues": "Fyrir staði",
     "terms": "Skilmálar",
     "contact": "Hafa samband",
-    "copyright": "Byggt í Reykjavík, Íslandi."
+    "copyright": "Byggt í Reykjavík, Íslandi.",
+    "newsletter": "Fylgstu með",
+    "newsletterPlaceholder": "netfang@postur.is",
+    "newsletterButton": "Gerast áskrifandi",
+    "followUs": "Fylgdu okkur"
   },
   "home": {
     "hero": {

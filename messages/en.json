@@ -58,7 +58,11 @@
     "forVenues": "For Venues",
     "terms": "Terms",
     "contact": "Contact",
-    "copyright": "Built in Reykjavik, Iceland."
+    "copyright": "Built in Reykjavik, Iceland.",
+    "newsletter": "Stay in the loop",
+    "newsletterPlaceholder": "your@email.com",
+    "newsletterButton": "Subscribe",
+    "followUs": "Follow us"
   },
   "home": {
     "hero": {
