@@ -578,7 +578,8 @@ export function HomePage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="rounded-full bg-white px-8 py-4 text-sm font-bold text-brand-indigo-light shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              className="rounded-full bg-white px-8 py-4 text-sm font-bold shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              style={{ color: "var(--color-brand-indigo-light)" }}
             >
               {tCta("signupFreeLong")}
             </Link>
