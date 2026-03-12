@@ -171,7 +171,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
             <Users className="h-3.5 w-3.5 text-gray-400" />
             {event.attendees} {t("going")}
           </span>
-          <span className="rounded-full bg-brand-coral px-4 py-2 text-xs font-bold text-white shadow-sm">
+          <span className="rounded-full bg-brand-coral px-4 py-2 text-xs font-bold !text-white shadow-sm">
             {tCta("rsvp")}
           </span>
         </div>
@@ -355,7 +355,7 @@ export function HomePage() {
             {tHero("badge")}
           </span>
 
-          <h1 className="font-editorial mx-auto mt-8 max-w-4xl text-5xl leading-[0.94] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+          <h1 className="font-editorial mx-auto mt-8 max-w-4xl text-5xl leading-[1.1] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
             {tHero("titleLead")}
             <br />
             <span className="text-brand-coral">
@@ -371,7 +371,7 @@ export function HomePage() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/events"
-              className="rounded-full bg-brand-coral px-8 py-4 text-sm font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              className="rounded-full bg-brand-coral px-8 py-4 text-sm font-bold !text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
             >
               {tCta("exploreEvents")}
             </Link>
@@ -458,7 +458,7 @@ export function HomePage() {
             {communityAvatars.map((avatar, i) => (
               <div
                 key={i}
-                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-xs font-bold text-white shadow-sm ${avatar.bg}`}
+                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-xs font-bold !text-white shadow-sm ${avatar.bg}`}
               >
                 {avatar.initial}
               </div>

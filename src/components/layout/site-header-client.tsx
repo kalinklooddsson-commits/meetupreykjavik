@@ -133,7 +133,7 @@ function MoreDropdown({
         className={cn(
           "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[0.8125rem] font-semibold tracking-[-0.01em] transition-all duration-200",
           hasActive
-            ? "bg-brand-indigo text-white shadow-sm"
+            ? "bg-brand-indigo !text-white shadow-sm"
             : "text-gray-800 hover:bg-gray-100 hover:text-gray-900",
         )}
       >
@@ -280,7 +280,7 @@ function MobileDrawer({
                     className={cn(
                       "block rounded-xl px-4 py-3 text-[0.9375rem] font-semibold transition",
                       active
-                        ? "bg-brand-indigo text-white"
+                        ? "bg-brand-indigo !text-white"
                         : "text-gray-800 hover:bg-gray-50",
                     )}
                   >
@@ -307,7 +307,7 @@ function MobileDrawer({
                     className={cn(
                       "block rounded-xl px-4 py-3 text-[0.9375rem] font-medium transition",
                       active
-                        ? "bg-brand-indigo text-white"
+                        ? "bg-brand-indigo !text-white"
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                     )}
                   >
@@ -601,7 +601,7 @@ export function SiteHeaderClient({
                 className={cn(
                   "group relative inline-flex items-center rounded-lg px-4 py-2 text-[0.8125rem] font-semibold tracking-[-0.01em] transition-all duration-200",
                   active
-                    ? "bg-brand-indigo text-white shadow-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]"
+                    ? "bg-brand-indigo !text-white shadow-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]"
                     : "text-gray-800 hover:bg-gray-100 hover:text-gray-900",
                 )}
               >
@@ -753,7 +753,7 @@ export function SiteHeaderMobileNav({
                 className={cn(
                   "shrink-0 rounded-full px-3.5 py-1.5 text-[0.8125rem] font-semibold transition",
                   active
-                    ? "bg-brand-indigo text-white shadow-sm"
+                    ? "bg-brand-indigo !text-white shadow-sm"
                     : "bg-white text-gray-600 shadow-sm ring-1 ring-gray-200 hover:ring-brand-indigo/30 hover:text-gray-900",
                 )}
               >

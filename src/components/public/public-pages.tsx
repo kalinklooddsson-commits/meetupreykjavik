@@ -446,7 +446,7 @@ function PageHeader({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
                 >
                   {action.label}
                   <ArrowRight className="h-4 w-4" />
@@ -519,7 +519,7 @@ function DetailHero({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
                 >
                   {action.label}
                   <ArrowRight className="h-4 w-4" />
@@ -528,7 +528,7 @@ function DetailHero({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/20"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold !text-white transition hover:bg-white/20"
                 >
                   {action.label}
                 </Link>
@@ -588,7 +588,7 @@ function EventCard({ event }: { event: PublicEvent }) {
       : null;
 
   return (
-    <article className="group overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+    <Link href={eventHref(event.slug)} className="group block overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       {/* ── Image area ── */}
       <div className="relative h-48 overflow-hidden bg-gray-200">
         {imageUrl ? (
@@ -740,16 +740,15 @@ function EventCard({ event }: { event: PublicEvent }) {
 
         {/* CTA */}
         <div className="mt-5 flex items-center justify-end">
-          <Link
-            href={eventHref(event.slug)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition group-hover:opacity-90"
           >
             {tCta("viewEvent")}
             <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -766,7 +765,7 @@ function GroupCard({
   const isHot = group.activity > 80;
 
   return (
-    <article className="group overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+    <Link href={groupHref(group.slug)} className="group block overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       {/* Banner image with overlay badge */}
       <div className="relative h-40 overflow-hidden bg-gray-200">
         {imageUrl ? (
@@ -848,16 +847,15 @@ function GroupCard({
           <div className="text-sm text-gray-500">
             {upcomingTitle ? tCards("nextEvent", { title: upcomingTitle }) : tCards("noUpcoming")}
           </div>
-          <Link
-            href={groupHref(group.slug)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition group-hover:opacity-90"
           >
             {tCta("viewGroup")}
             <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -872,7 +870,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
   const emptyStars = 5 - fullStars;
 
   return (
-    <article className="group overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+    <Link href={venueHref(venue.slug)} className="group block overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       {/* ── Image section ── */}
       <div className="relative h-44 overflow-hidden bg-gray-200">
         {imageUrl ? (
@@ -902,7 +900,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         {/* Member deal badge – top right */}
         {venue.deal ? (
           <div className="absolute right-3 top-3">
-            <span className="rounded-full bg-brand-coral px-2.5 py-1 text-xs font-bold text-white">
+            <span className="rounded-full bg-brand-coral px-2.5 py-1 text-xs font-bold !text-white">
               {tCards("memberDeal")}
             </span>
           </div>
@@ -978,17 +976,16 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
                 <span className="text-gray-400">{tCards("openForBookings")}</span>
               )}
             </div>
-            <Link
-              href={venueHref(venue.slug)}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+            <span
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition group-hover:opacity-90"
             >
               {tCta("viewVenue")}
               <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            </span>
           </div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -1098,7 +1095,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
         ) : null}
         <Link
           href={venueHref(place.slug)}
-          className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+          className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition hover:opacity-90"
         >
           {tCta("viewVenue")}
           <ArrowRight className="h-3.5 w-3.5" />
@@ -1125,7 +1122,7 @@ function FilterBar({
           className={cn(
             "rounded-full px-4 py-2 text-sm font-medium transition cursor-pointer",
             i === activeIndex
-              ? "bg-brand-indigo text-white"
+              ? "bg-brand-indigo !text-white"
               : "bg-gray-100 text-gray-600 hover:bg-gray-200",
           )}
         >
@@ -1162,7 +1159,7 @@ function TimeFilterBar({
             className={cn(
               "rounded-full px-4 py-2 text-sm font-medium transition",
               isActive
-                ? "bg-brand-indigo text-white"
+                ? "bg-brand-indigo !text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200",
             )}
           >
@@ -1428,7 +1425,7 @@ export function EventsIndexScreen({
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href={eventHref(featured.slug)}
-                className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
               >
                 {t("featured.reserveSpot")}
                 <ArrowRight className="h-4 w-4" />
@@ -1457,7 +1454,7 @@ export function EventsIndexScreen({
               className={cn(
                 "rounded-full px-4 py-1.5 text-xs font-semibold transition",
                 !activeCategory
-                  ? "bg-brand-indigo text-white"
+                  ? "bg-brand-indigo !text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200",
               )}
             >
@@ -1476,7 +1473,7 @@ export function EventsIndexScreen({
                   className={cn(
                     "rounded-full px-4 py-1.5 text-xs font-semibold transition",
                     isActive
-                      ? "bg-brand-indigo text-white"
+                      ? "bg-brand-indigo !text-white"
                       : usedCategories.includes(cat)
                         ? "bg-brand-indigo/10 text-brand-indigo ring-1 ring-brand-indigo/20 hover:bg-brand-indigo/20"
                         : "bg-gray-100 text-gray-500 cursor-default",
@@ -1776,7 +1773,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
               </div>
               <Link
                 href="/signup"
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
               >
                 {t("actions.reserveSeat")}
                 <ArrowRight className="h-4 w-4" />
@@ -2059,7 +2056,7 @@ export function GroupsIndexScreen({
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                 !activeCategory
-                  ? "bg-brand-indigo text-white"
+                  ? "bg-brand-indigo !text-white"
                   : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
               )}
             >
@@ -2075,7 +2072,7 @@ export function GroupsIndexScreen({
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                     isActive
-                      ? "bg-brand-indigo text-white"
+                      ? "bg-brand-indigo !text-white"
                       : "border border-brand-border-light bg-white text-gray-700 shadow-[0_1px_2px_rgba(42,38,56,0.04)] hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
                   )}
                 >
@@ -2108,7 +2105,7 @@ export function GroupsIndexScreen({
                 <Zap className="h-9 w-9 text-white" />
               </div>
               <div className="mt-4 sm:mt-0">
-                <h3 className="text-xl font-bold text-white">{t("startGroup.title")}</h3>
+                <h3 className="text-xl font-bold !text-white">{t("startGroup.title")}</h3>
                 <p className="mt-2 max-w-lg text-sm text-white/80">
                   {t("startGroup.description")}
                 </p>
@@ -2350,7 +2347,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
               </div>
               <Link
                 href="/signup"
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
               >
                 {t("actions.joinThisGroup")}
                 <ArrowRight className="h-4 w-4" />
@@ -2499,7 +2496,7 @@ export function VenuesIndexScreen({
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                 !activeType && !activeArea
-                  ? "bg-brand-indigo text-white"
+                  ? "bg-brand-indigo !text-white"
                   : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30",
               )}
             >
@@ -2519,7 +2516,7 @@ export function VenuesIndexScreen({
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                     isActive
-                      ? "bg-brand-indigo text-white"
+                      ? "bg-brand-indigo !text-white"
                       : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30",
                   )}
                 >
@@ -2546,7 +2543,7 @@ export function VenuesIndexScreen({
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                     isActive
-                      ? "bg-brand-coral text-white"
+                      ? "bg-brand-coral !text-white"
                       : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-coral/30",
                   )}
                 >
@@ -2926,7 +2923,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/venue/onboarding"
-              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
             >
               {t("claimVenue")}
               <ArrowRight className="h-4 w-4" />
@@ -2934,7 +2931,7 @@ export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
             {place.website ? (
               <a
                 href={place.website}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/20"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold !text-white transition hover:bg-white/20"
                 rel="noreferrer"
                 target="_blank"
               >
@@ -3109,7 +3106,7 @@ export function BlogIndexScreen() {
               <div className="mt-4 text-sm text-gray-500">{featured.publishedAt}</div>
               <Link
                 href={blogHref(featured.slug)}
-                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90"
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
               >
                 {t("readArticle")}
                 <ArrowRight className="h-4 w-4" />
@@ -3343,7 +3340,7 @@ export function AboutScreen() {
           <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t("team.title")}</h2>
           <div className="grid gap-8 md:grid-cols-3">
             {aboutTeam.map((member, i) => {
-              const colors = ["bg-brand-indigo text-white", "bg-brand-coral text-white", "bg-brand-sage text-white"];
+              const colors = ["bg-brand-indigo !text-white", "bg-brand-coral !text-white", "bg-brand-sage text-white"];
               return (
                 <div key={member.name} className="rounded-2xl border border-gray-200 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                   <div className={cn("mx-auto flex h-20 w-20 items-center justify-center rounded-full text-2xl font-bold", colors[i % colors.length])}>
@@ -3566,7 +3563,7 @@ export function PricingScreen() {
       {/* Feature comparison */}
       <section className="overflow-hidden border-t border-gray-200 bg-brand-basalt">
         <div className="section-shell py-12">
-          <h2 className="mb-2 text-center text-2xl font-bold text-white">{t("comparison.title")}</h2>
+          <h2 className="mb-2 text-center text-2xl font-bold !text-white">{t("comparison.title")}</h2>
           <p className="mb-8 text-center text-sm text-gray-400">{t("comparison.description")}</p>
           <div className="mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.memberPlans")}</h3>
@@ -3839,7 +3836,7 @@ export function ContactScreen() {
             <div className="space-y-3">
               {expectations.map((item, i) => (
                 <div key={i} className="flex items-start gap-3 rounded-xl bg-white p-4">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-indigo text-xs font-bold text-white">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-indigo text-xs font-bold !text-white">
                     {i + 1}
                   </div>
                   <p className="text-sm leading-relaxed text-gray-700">{item}</p>
@@ -4140,7 +4137,7 @@ export function FaqScreen() {
           <p className="mx-auto mt-3 max-w-lg text-sm text-gray-600">{t("cta.description")}</p>
           <Link
             href="/contact"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-indigo px-8 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-indigo px-8 py-3.5 text-sm font-semibold !text-white transition hover:opacity-90"
           >
             {t("hero.contactUs")}
             <ArrowRight className="h-4 w-4" />
@@ -4213,7 +4210,7 @@ export function ForOrganizersScreen() {
           <div className="mx-auto grid max-w-3xl gap-8 md:grid-cols-3">
             {steps.map((step) => (
               <div key={step.num} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-coral text-lg font-bold text-white">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-coral text-lg font-bold !text-white">
                   {step.num}
                 </div>
                 <h3 className="mt-5 text-lg font-bold text-gray-900">{step.title}</h3>
@@ -4390,7 +4387,7 @@ export function ForVenuesScreen() {
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step) => (
               <div key={step.num} className="relative">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-sage text-lg font-bold text-white">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-sage text-lg font-bold !text-white">
                   {step.num}
                 </div>
                 <h3 className="mt-5 text-lg font-bold text-gray-900">{step.title}</h3>
