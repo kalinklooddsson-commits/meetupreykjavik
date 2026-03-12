@@ -9,6 +9,7 @@ export type MockSession = {
   slug: string;
   accountType: AccountType;
   locale: Locale;
+  premiumTier?: string | null;
 };
 
 export type MockAccount = MockSession & {
@@ -23,6 +24,7 @@ export const mockAccounts: MockAccount[] = [
     slug: "kari-sigurdsson",
     accountType: "user",
     locale: "en",
+    premiumTier: null, // Free tier member
     password: MOCK_PASSWORD_HINT,
   },
   {
@@ -32,6 +34,7 @@ export const mockAccounts: MockAccount[] = [
     slug: "bjorn-olafsson",
     accountType: "organizer",
     locale: "en",
+    premiumTier: "pro", // Organizer Pro tier for testing
     password: MOCK_PASSWORD_HINT,
   },
   {
@@ -41,6 +44,7 @@ export const mockAccounts: MockAccount[] = [
     slug: "lebowski-bar",
     accountType: "venue",
     locale: "en",
+    premiumTier: "partner", // Venue Partner tier for testing
     password: MOCK_PASSWORD_HINT,
   },
   {
@@ -50,6 +54,7 @@ export const mockAccounts: MockAccount[] = [
     slug: "super-admin",
     accountType: "admin",
     locale: "en",
+    premiumTier: null, // Admin gets everything regardless
     password: MOCK_PASSWORD_HINT,
   },
 ];

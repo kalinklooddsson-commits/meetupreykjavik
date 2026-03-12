@@ -1163,8 +1163,35 @@ async function handleLiveDataRequest(
         });
       }
 
-      default:
+      default: {
+        // ── Admin Featured Placement Toggle ──
+        // PATCH /api/admin/events/:slug/featured
+        if (
+          key.startsWith("PATCH /api/admin/events/") &&
+          key.endsWith("/featured") &&
+          session?.accountType === "admin"
+        ) {
+          const supabase = await createSupabaseServerClient();
+          if (!supabase) return null;
+          const slug = match.params?.slug ?? key.split("/")[4];
+          const body = await request.json();
+          const isFeatured = Boolean(body.is_featured);
+          const { data, error } = await supabase
+            .from("events")
+            .update({ is_featured: isFeatured })
+            .eq("slug", slug)
+            .select()
+            .single();
+          if (error)
+            return validationErrorResponse({
+              formErrors: [error.message],
+              fieldErrors: {},
+            });
+          return successResponse(data);
+        }
+
         return null; // Fall through to scaffold
+      }
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : "Database operation failed";
