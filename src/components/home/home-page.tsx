@@ -316,16 +316,16 @@ export function HomePage() {
     },
   ];
 
-  /* Placeholder avatar colors for social proof strip */
-  const avatarColors = [
-    "bg-brand-coral",
-    "bg-brand-indigo",
-    "bg-brand-sage",
-    "bg-[#E8A87C]",
-    "bg-[#7C9A82]",
-    "bg-[#6366F1]",
-    "bg-brand-coral-dark",
-    "bg-[#9F7AEA]",
+  /* Community member avatars — colors + initials */
+  const communityAvatars = [
+    { initial: "S", bg: "bg-brand-coral" },
+    { initial: "K", bg: "bg-brand-indigo" },
+    { initial: "E", bg: "bg-brand-sage" },
+    { initial: "H", bg: "bg-[#E8A87C]" },
+    { initial: "M", bg: "bg-[#7C9A82]" },
+    { initial: "J", bg: "bg-[#6366F1]" },
+    { initial: "Þ", bg: "bg-brand-coral-dark" },
+    { initial: "A", bg: "bg-[#9F7AEA]" },
   ];
 
   return (
@@ -453,12 +453,12 @@ export function HomePage() {
         <div className="section-shell flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-center sm:gap-8">
           {/* Overlapping avatar circles */}
           <div className="flex -space-x-3">
-            {["S","K","E","H","M","J","Þ","A"].map((initial, i) => (
+            {communityAvatars.map((avatar, i) => (
               <div
                 key={i}
-                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-xs font-bold text-white shadow-sm ${avatarColors[i]}`}
+                className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-xs font-bold text-white shadow-sm ${avatar.bg}`}
               >
-                {initial}
+                {avatar.initial}
               </div>
             ))}
           </div>

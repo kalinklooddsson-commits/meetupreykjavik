@@ -17,6 +17,7 @@ import {
   HandHeart,
   Heart,
   Lightbulb,
+  Mail,
   MapPin,
   MessageSquare,
   Search,
@@ -620,8 +621,11 @@ function EventCard({ event }: { event: PublicEvent }) {
               {tCards("free")}
             </span>
           ) : null}
-          {event.ageLabel !== "All ages" ? (
-            <span className="rounded-full bg-black/40 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+          {event.ageLabel ? (
+            <span className={cn(
+              "rounded-full px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm",
+              event.ageLabel === "All ages" ? "bg-emerald-500/80" : "bg-black/40",
+            )}>
               {event.ageLabel}
             </span>
           ) : null}
@@ -705,30 +709,30 @@ function EventCard({ event }: { event: PublicEvent }) {
           </span>
         </div>
 
-        {/* Capacity bar */}
-        {fill > 50 ? (
-          <div className="mt-3">
-            <div className="flex items-center justify-between text-xs text-gray-500">
-              <span>
-                {event.attendees}/{event.capacity} {tCards("spots")}
-              </span>
-              {fill >= 95 ? (
-                <span className="font-semibold text-red-600">{tCards("waitlist")}</span>
-              ) : fill > 75 ? (
-                <span className="font-semibold text-brand-coral">{tCards("fillingFast")}</span>
-              ) : null}
-            </div>
-            <div className="mt-1 h-1.5 rounded-full bg-gray-100">
-              <div
-                className={cn(
-                  "h-1.5 rounded-full transition-all",
-                  fill >= 95 ? "bg-red-500" : fill > 75 ? "bg-brand-coral" : "bg-brand-indigo",
-                )}
-                style={{ width: `${Math.min(fill, 100)}%` }}
-              />
-            </div>
+        {/* Capacity bar — always shown */}
+        <div className="mt-3">
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <span>
+              {event.attendees}/{event.capacity} {tCards("spots")}
+            </span>
+            {fill >= 95 ? (
+              <span className="font-semibold text-red-600">{tCards("waitlist")}</span>
+            ) : fill > 75 ? (
+              <span className="font-semibold text-brand-coral">{tCards("fillingFast")}</span>
+            ) : (
+              <span className="text-gray-400">{fill}%</span>
+            )}
           </div>
-        ) : null}
+          <div className="mt-1 h-1.5 rounded-full bg-gray-100">
+            <div
+              className={cn(
+                "h-1.5 rounded-full transition-all",
+                fill >= 95 ? "bg-red-500" : fill > 75 ? "bg-brand-coral" : fill > 50 ? "bg-brand-indigo" : "bg-emerald-400",
+              )}
+              style={{ width: `${Math.max(Math.min(fill, 100), 3)}%` }}
+            />
+          </div>
+        </div>
 
         {/* CTA */}
         <div className="mt-5 flex items-center justify-end">
@@ -810,7 +814,7 @@ function GroupCard({
         <h2 className="text-lg font-bold leading-snug text-gray-900">{group.name}</h2>
         <p className="mt-1.5 line-clamp-2 text-sm text-gray-600">{group.summary}</p>
 
-        {/* Tags (first 3) */}
+        {/* Tags (first 3 + overflow) */}
         {(group.tags ?? []).length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {(group.tags ?? []).slice(0, 3).map((tag) => (
@@ -821,6 +825,11 @@ function GroupCard({
                 {tag}
               </span>
             ))}
+            {(group.tags ?? []).length > 3 && (
+              <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-500">
+                +{(group.tags ?? []).length - 3}
+              </span>
+            )}
           </div>
         )}
 
@@ -936,6 +945,11 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
                 {amenity}
               </span>
             ))}
+            {(venue.amenities ?? []).length > 4 && (
+              <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-500">
+                +{(venue.amenities ?? []).length - 4}
+              </span>
+            )}
           </div>
         ) : null}
 
@@ -1639,6 +1653,11 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                     );
                   })}
                 </div>
+                {event.gallery.length > 4 && (
+                  <p className="mt-3 text-center text-sm font-medium text-brand-indigo">
+                    {t("viewAllPhotos", { count: event.gallery.length })}
+                  </p>
+                )}
               </div>
             ) : null}
 
@@ -2690,6 +2709,11 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                     );
                   })}
                 </div>
+                {venue.gallery.length > 4 && (
+                  <p className="mt-3 text-center text-sm font-medium text-brand-indigo">
+                    {t("viewAllPhotos", { count: venue.gallery.length })}
+                  </p>
+                )}
               </div>
             ) : null}
 
@@ -3743,10 +3767,16 @@ export function TermsScreen() {
 export function ContactScreen() {
   const t = useTranslations("contactPage");
   const channels = [
-    { title: t("channels.general.title"), detail: "support@meetupreykjavik.is", note: t("channels.general.note") },
-    { title: t("channels.organizer.title"), detail: "organizers@meetupreykjavik.is", note: t("channels.organizer.note") },
-    { title: t("channels.venue.title"), detail: "venues@meetupreykjavik.is", note: t("channels.venue.note") },
-    { title: t("channels.trust.title"), detail: "trust@meetupreykjavik.is", note: t("channels.trust.note") },
+    { title: t("channels.general.title"), detail: "support@meetupreykjavik.is", note: t("channels.general.note"), icon: Mail },
+    { title: t("channels.organizer.title"), detail: "organizers@meetupreykjavik.is", note: t("channels.organizer.note"), icon: UsersRound },
+    { title: t("channels.venue.title"), detail: "venues@meetupreykjavik.is", note: t("channels.venue.note"), icon: MapPin },
+    { title: t("channels.trust.title"), detail: "trust@meetupreykjavik.is", note: t("channels.trust.note"), icon: Shield },
+  ];
+
+  const expectations = [
+    t("expectations.one"),
+    t("expectations.two"),
+    t("expectations.three"),
   ];
 
   return (
@@ -3757,20 +3787,48 @@ export function ContactScreen() {
         description={t("hero.description")}
       />
 
-      <section className="section-shell py-8">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="space-y-6">
-            <Section title={t("channelsTitle")}>
-              <div className="space-y-4">
-                {channels.map((channel) => (
-                  <div key={channel.title}>
-                    <div className="font-medium text-gray-900">{channel.title}</div>
-                    <a href={`mailto:${channel.detail}`} className="mt-1 block text-sm font-medium text-brand-indigo transition-colors hover:text-brand-indigo-light">{channel.detail}</a>
-                    <p className="mt-1 text-sm text-gray-600">{channel.note}</p>
+      {/* Channel cards */}
+      <section className="section-shell py-10">
+        <h2 className="mb-6 text-xl font-bold text-gray-900">{t("channelsTitle")}</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {channels.map((channel) => {
+            const Icon = channel.icon;
+            return (
+              <div key={channel.title} className="rounded-2xl border border-gray-200 bg-white p-6 transition hover:shadow-md">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-indigo/8">
+                    <Icon className="h-5 w-5 text-brand-indigo" />
                   </div>
-                ))}
+                  <div>
+                    <div className="font-semibold text-gray-900">{channel.title}</div>
+                    <a href={`mailto:${channel.detail}`} className="mt-1 block text-sm font-medium text-brand-indigo transition-colors hover:text-brand-indigo-light">
+                      {channel.detail}
+                    </a>
+                    <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{channel.note}</p>
+                  </div>
+                </div>
               </div>
-            </Section>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Response times + Form */}
+      <section className="border-t border-gray-200 bg-brand-sand-light">
+        <div className="section-shell grid gap-10 py-12 lg:grid-cols-2">
+          <div>
+            <h2 className="mb-2 text-xl font-bold text-gray-900">{t("expectationsTitle")}</h2>
+            <p className="mb-6 text-sm text-gray-600">{t("expectationsDescription")}</p>
+            <div className="space-y-3">
+              {expectations.map((item, i) => (
+                <div key={i} className="flex items-start gap-3 rounded-xl bg-white p-4">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-indigo text-xs font-bold text-white">
+                    {i + 1}
+                  </div>
+                  <p className="text-sm leading-relaxed text-gray-700">{item}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <ContactForm />
@@ -4149,20 +4207,28 @@ export function ForOrganizersScreen() {
         </div>
       </section>
 
-      {/* Testimonial placeholder */}
+      {/* Testimonials */}
       <section className="border-t border-gray-200 bg-white">
         <div className="section-shell py-16">
-          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-brand-sand-light p-10 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-coral-soft">
-              <Heart className="h-6 w-6 text-brand-coral" />
-            </div>
-            <blockquote className="mt-6 font-editorial text-xl italic leading-relaxed text-gray-900">
-              {t("testimonial.quote")}
-            </blockquote>
-            <div className="mt-6">
-              <div className="font-semibold text-gray-900">{t("testimonial.name")}</div>
-              <div className="text-sm text-gray-500">{t("testimonial.role")}</div>
-            </div>
+          <h2 className="mb-10 text-center text-2xl font-bold tracking-tight text-gray-900">{t("testimonial.heading")}</h2>
+          <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+            {[
+              { quote: t("testimonial.quote"), name: t("testimonial.name"), role: t("testimonial.role") },
+              { quote: t("testimonial2.quote"), name: t("testimonial2.name"), role: t("testimonial2.role") },
+            ].map((item) => (
+              <div key={item.name} className="rounded-2xl border border-gray-200 bg-brand-sand-light p-8">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-coral-soft">
+                  <Heart className="h-5 w-5 text-brand-coral" />
+                </div>
+                <blockquote className="mt-5 font-editorial text-lg italic leading-relaxed text-gray-900">
+                  &ldquo;{item.quote}&rdquo;
+                </blockquote>
+                <div className="mt-5">
+                  <div className="font-semibold text-gray-900">{item.name}</div>
+                  <div className="text-sm text-gray-500">{item.role}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -4370,20 +4436,28 @@ export function ForVenuesScreen() {
         </div>
       </section>
 
-      {/* Testimonial placeholder */}
+      {/* Testimonials */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-16">
-          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 bg-white p-10 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(124,154,130,0.12)]">
-              <Star className="h-6 w-6 text-brand-sage" />
-            </div>
-            <blockquote className="mt-6 font-editorial text-xl italic leading-relaxed text-gray-900">
-              {t("testimonial.quote")}
-            </blockquote>
-            <div className="mt-6">
-              <div className="font-semibold text-gray-900">{t("testimonial.name")}</div>
-              <div className="text-sm text-gray-500">{t("testimonial.role")}</div>
-            </div>
+          <h2 className="mb-10 text-center text-2xl font-bold tracking-tight text-gray-900">{t("testimonial.heading")}</h2>
+          <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+            {[
+              { quote: t("testimonial.quote"), name: t("testimonial.name"), role: t("testimonial.role") },
+              { quote: t("testimonial2.quote"), name: t("testimonial2.name"), role: t("testimonial2.role") },
+            ].map((item) => (
+              <div key={item.name} className="rounded-2xl border border-gray-200 bg-white p-8">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(124,154,130,0.12)]">
+                  <Star className="h-5 w-5 text-brand-sage" />
+                </div>
+                <blockquote className="mt-5 font-editorial text-lg italic leading-relaxed text-gray-900">
+                  &ldquo;{item.quote}&rdquo;
+                </blockquote>
+                <div className="mt-5">
+                  <div className="font-semibold text-gray-900">{item.name}</div>
+                  <div className="text-sm text-gray-500">{item.role}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

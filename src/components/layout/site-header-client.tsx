@@ -31,7 +31,15 @@ type SiteHeaderClientProps = {
     recentSearches: string;
     noRecentSearches: string;
     browse: string;
+    browseEvents: string;
+    browseGroups: string;
+    browseVenues: string;
     popularCategories: string;
+    catMusic: string;
+    catTech: string;
+    catArt: string;
+    catOutdoors: string;
+    catFood: string;
   };
   labels: {
     admin: string;
@@ -373,7 +381,15 @@ function SearchOverlay({
     recentSearches: string;
     noRecentSearches: string;
     browse: string;
+    browseEvents: string;
+    browseGroups: string;
+    browseVenues: string;
     popularCategories: string;
+    catMusic: string;
+    catTech: string;
+    catArt: string;
+    catOutdoors: string;
+    catFood: string;
   };
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -467,12 +483,12 @@ function SearchOverlay({
             </p>
             <div className="mt-2.5 flex flex-wrap gap-2">
               {[
-                { label: "Events", href: "/events" },
-                { label: "Groups", href: "/groups" },
-                { label: "Venues", href: "/venues" },
+                { label: overlayLabels?.browseEvents ?? "Events", href: "/events" },
+                { label: overlayLabels?.browseGroups ?? "Groups", href: "/groups" },
+                { label: overlayLabels?.browseVenues ?? "Venues", href: "/venues" },
               ].map((link) => (
                 <button
-                  key={link.label}
+                  key={link.href}
                   type="button"
                   onClick={() => {
                     router.push(link.href as Route);
@@ -492,17 +508,23 @@ function SearchOverlay({
               {overlayLabels?.popularCategories ?? "Popular categories"}
             </p>
             <div className="mt-2.5 flex flex-wrap gap-2">
-              {["Music", "Tech", "Art", "Outdoors", "Food"].map((tag) => (
+              {[
+                { label: overlayLabels?.catMusic ?? "Music", slug: "music" },
+                { label: overlayLabels?.catTech ?? "Tech", slug: "tech" },
+                { label: overlayLabels?.catArt ?? "Art", slug: "art" },
+                { label: overlayLabels?.catOutdoors ?? "Outdoors", slug: "outdoors" },
+                { label: overlayLabels?.catFood ?? "Food", slug: "food" },
+              ].map((tag) => (
                 <button
-                  key={tag}
+                  key={tag.slug}
                   type="button"
                   onClick={() => {
-                    router.push(`/events?category=${encodeURIComponent(tag.toLowerCase())}` as Route);
+                    router.push(`/events?category=${encodeURIComponent(tag.slug)}` as Route);
                     onClose();
                   }}
                   className="rounded-full border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
                 >
-                  {tag}
+                  {tag.label}
                 </button>
               ))}
             </div>

@@ -61,7 +61,15 @@ export async function SiteHeader() {
             recentSearches: tHeader("recentSearches"),
             noRecentSearches: tHeader("noRecentSearches"),
             browse: tHeader("browse"),
+            browseEvents: tHeader("browseEvents"),
+            browseGroups: tHeader("browseGroups"),
+            browseVenues: tHeader("browseVenues"),
             popularCategories: tHeader("popularCategories"),
+            catMusic: tHeader("catMusic"),
+            catTech: tHeader("catTech"),
+            catArt: tHeader("catArt"),
+            catOutdoors: tHeader("catOutdoors"),
+            catFood: tHeader("catFood"),
           }}
           labels={{
             admin: tCta("admin"),

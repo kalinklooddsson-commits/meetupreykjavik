@@ -105,7 +105,15 @@
     "recentSearches": "Recent searches",
     "noRecentSearches": "No recent searches",
     "browse": "Browse",
-    "popularCategories": "Popular categories"
+    "browseEvents": "Events",
+    "browseGroups": "Groups",
+    "browseVenues": "Venues",
+    "popularCategories": "Popular categories",
+    "catMusic": "Music",
+    "catTech": "Tech",
+    "catArt": "Art",
+    "catOutdoors": "Outdoors",
+    "catFood": "Food"
   },
   "footer": {
     "description": "Discover events. Meet people. Support local venues. Free to join, built for Reykjavik.",
@@ -919,9 +927,15 @@
       }
     },
     "testimonial": {
+      "heading": "What organizers say",
       "quote": "MeetupReykjavik gave our book club the structure we needed — recurring events, a real venue, and members who actually show up.",
       "name": "Sara Magnusdottir",
       "role": "Organizer, Reykjavik Book Club"
+    },
+    "testimonial2": {
+      "quote": "We went from 10 to 80 members in three months. The venue matching alone saved us hours of work every week.",
+      "name": "Helga Jonsdottir",
+      "role": "Organizer, Reykjavik Tech Meetup"
     },
     "pricing": {
       "heading": "Organizer plans",
@@ -995,9 +1009,15 @@
       }
     },
     "testimonial": {
+      "heading": "What venues say",
       "quote": "Since joining MeetupReykjavik, we host three times as many community events and our weekday bookings have doubled.",
       "name": "Kristjan Olafsson",
       "role": "Manager, Loft Hostel"
+    },
+    "testimonial2": {
+      "quote": "The booking flow is seamless. Organizers find us, we confirm availability, done. No back-and-forth emails.",
+      "name": "Anna Bjornsdottir",
+      "role": "Owner, Kaffi Vinyl"
     },
     "pricing": {
       "heading": "Venue plans",
@@ -1093,6 +1113,7 @@
       "aboutThisEvent": "About this event",
       "whyThisFormatWorks": "Why this format works",
       "gallery": "Gallery",
+      "viewAllPhotos": "View all {count} photos",
       "comments": "Comments",
       "reviews": "Reviews",
       "details": "Details",
@@ -1166,6 +1187,7 @@
       "amenities": "Amenities",
       "bestFitFormats": "Best-fit formats",
       "gallery": "Gallery",
+      "viewAllPhotos": "View all {count} photos",
       "location": "Location",
       "info": "Info",
       "hours": "Hours",

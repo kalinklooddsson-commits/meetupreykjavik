@@ -105,7 +105,15 @@
     "recentSearches": "Nýlegar leitir",
     "noRecentSearches": "Engar nýlegar leitir",
     "browse": "Skoða",
-    "popularCategories": "Vinsælir flokkar"
+    "browseEvents": "Viðburðir",
+    "browseGroups": "Hópar",
+    "browseVenues": "Staðir",
+    "popularCategories": "Vinsælir flokkar",
+    "catMusic": "Tónlist",
+    "catTech": "Tækni",
+    "catArt": "List",
+    "catOutdoors": "Útivist",
+    "catFood": "Matur"
   },
   "footer": {
     "description": "Finndu viðburði, hittu fólk og studdu við staðina. Ókeypis að ganga í, byggt fyrir Reykjavík.",
@@ -919,9 +927,15 @@
       }
     },
     "testimonial": {
+      "heading": "Hvað skipuleggjendur segja",
       "quote": "MeetupReykjavik gaf bókmenntaklúbbnum okkar þá uppbyggingu sem við þurftum — endurtekna viðburði, raunverulegan stað og meðlimi sem mæta í raun.",
       "name": "Sara Magnúsdóttir",
       "role": "Skipuleggjandi, Bókmenntaklúbbur Reykjavíkur"
+    },
+    "testimonial2": {
+      "quote": "Við fórum úr 10 í 80 meðlimi á þremur mánuðum. Staðasamsvörunin ein og sér sparaði okkur klukkutíma á viku.",
+      "name": "Helga Jónsdóttir",
+      "role": "Skipuleggjandi, Reykjavík Tech Meetup"
     },
     "pricing": {
       "heading": "Áskriftarleiðir skipuleggjenda",
@@ -995,9 +1009,15 @@
       }
     },
     "testimonial": {
+      "heading": "Hvað staðir segja",
       "quote": "Síðan við gengum í MeetupReykjavik hýsum við þrisvar sinnum fleiri samfélagsviðburði og bókanir á virkum dögum hafa tvöfaldast.",
       "name": "Kristján Ólafsson",
       "role": "Stjórnandi, Loft Hostel"
+    },
+    "testimonial2": {
+      "quote": "Bókunarferlið er slétt. Skipuleggjendur finna okkur, við staðfestum framboð, búið. Engin tölvupóstaskipti fram og til baka.",
+      "name": "Anna Björnsdóttir",
+      "role": "Eigandi, Kaffi Vinyl"
     },
     "pricing": {
       "heading": "Áskriftarleiðir staða",
@@ -1093,6 +1113,7 @@
       "aboutThisEvent": "Um þennan viðburð",
       "whyThisFormatWorks": "Af hverju þetta snið virkar",
       "gallery": "Myndasafn",
+      "viewAllPhotos": "Sjá allar {count} myndir",
       "comments": "Athugasemdir",
       "reviews": "Umsagnir",
       "details": "Upplýsingar",
@@ -1166,6 +1187,7 @@
       "amenities": "Aðstaða",
       "bestFitFormats": "Best passandi snið",
       "gallery": "Myndasafn",
+      "viewAllPhotos": "Sjá allar {count} myndir",
       "location": "Staðsetning",
       "info": "Upplýsingar",
       "hours": "Opnunartímar",
