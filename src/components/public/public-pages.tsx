@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { Route } from "next";
 import { useTranslations } from "next-intl";
 import { RsvpButton } from "@/components/public/rsvp-button";
+import { ShareButton } from "@/components/ui/share-button";
 import {
   ArrowRight,
   BadgeCheck,
@@ -1414,7 +1415,12 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
           { href: `/events/${event.slug}#rsvp` as Route, label: t("actions.rsvp"), primary: true },
           ...(group ? [{ href: groupHref(group.slug), label: t("actions.viewGroup") }] : []),
         ]}
-        rsvpSlot={<RsvpButton eventSlug={event.slug} />}
+        rsvpSlot={
+          <div className="flex items-center gap-3">
+            <RsvpButton eventSlug={event.slug} />
+            <ShareButton title={event.title} text={event.summary} />
+          </div>
+        }
       />
 
       <section className="section-shell py-10 lg:py-14">
@@ -1925,6 +1931,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
         actions={[
           { href: "/signup", label: t("actions.joinThisGroup"), primary: true },
         ]}
+        rsvpSlot={<ShareButton title={group.name} text={group.summary} />}
       >
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           <div>
@@ -2339,6 +2346,7 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
         actions={[
           { href: "/venue/onboarding", label: t("actions.partnerWithUs"), primary: true },
         ]}
+        rsvpSlot={<ShareButton title={venue.name} text={venue.summary} />}
       >
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           <div>

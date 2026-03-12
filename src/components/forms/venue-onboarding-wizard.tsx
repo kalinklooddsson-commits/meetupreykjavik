@@ -14,6 +14,8 @@ import {
   Sparkles,
   UtensilsCrossed,
 } from "lucide-react";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { venueTiers } from "@/lib/public-data";
 import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 import { writeSessionDraft } from "@/lib/storage/session-drafts";
@@ -89,7 +91,7 @@ function stepIsReady(stepIndex: number, form: ReturnType<typeof createInitialFor
     case 2:
       return Boolean(form.address.trim() && form.capacityStanding > 0);
     case 3:
-      return Boolean(form.summary.trim() && form.description.trim().length >= 100);
+      return Boolean(form.summary.trim() && form.description.replace(/<[^>]*>/g, "").trim().length >= 100);
     case 4:
       return Boolean(form.galleryNotes.trim() && form.heroDirection.trim());
     case 5:
@@ -404,15 +406,15 @@ export function VenueOnboardingWizard({
                   className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
-              <label className="mt-5 block text-sm font-semibold text-brand-text">
+              <div className="mt-5 block text-sm font-semibold text-brand-text">
                 Full description
-                <textarea
-                  value={form.description}
-                  onChange={(event) => updateField("description", event.target.value)}
-                  rows={7}
-                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
+                <RichTextEditor
+                  content={form.description}
+                  onChange={(html) => updateField("description", html)}
+                  placeholder="Describe your venue — atmosphere, layout, what makes it great for events…"
+                  className="mt-2"
                 />
-              </label>
+              </div>
               <label className="mt-5 block text-sm font-semibold text-brand-text">
                 Amenities
                 <input
@@ -436,15 +438,17 @@ export function VenueOnboardingWizard({
                   className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                 />
               </label>
-              <label className="mt-5 block text-sm font-semibold text-brand-text">
-                Hero art direction
-                <textarea
+              <div className="mt-5 block text-sm font-semibold text-brand-text">
+                Hero photo
+                <ImageUpload
                   value={form.heroDirection}
-                  onChange={(event) => updateField("heroDirection", event.target.value)}
-                  rows={4}
-                  className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
+                  onChange={(url) => updateField("heroDirection", url)}
+                  label="Drop venue hero image here"
+                  hint="PNG, JPG or WebP up to 5 MB"
+                  aspectHint="16:9 recommended"
+                  className="mt-2"
                 />
-              </label>
+              </div>
             </section>
           ) : null}
 
