@@ -49,16 +49,20 @@ export async function POST(request: NextRequest) {
 
     const { name, email, topic, message } = parsed.data;
 
-    // Send via Resend if configured, otherwise log
-    if (hasResendEnv()) {
-      await sendEmail({
-        to: "hello@meetupreykjavik.com",
-        subject: `[Contact] ${topic} — from ${name}`,
-        html: `<p><strong>From:</strong> ${name} (${email})</p><p><strong>Topic:</strong> ${topic}</p><hr/><p>${message.replace(/\n/g, "<br/>")}</p>`,
-      });
-    } else {
-      console.log("[Contact Form]", { name, email, topic, messageLength: message.length });
+    // Send via Resend if configured
+    if (!hasResendEnv()) {
+      return NextResponse.json(
+        { ok: false, error: "Email service is not configured. Please try again later." },
+        { status: 503 },
+      );
     }
+
+    const contactEmail = process.env.CONTACT_EMAIL ?? "hello@meetupreykjavik.com";
+    await sendEmail({
+      to: contactEmail,
+      subject: `[Contact] ${topic} — from ${name}`,
+      html: `<p><strong>From:</strong> ${name} (${email})</p><p><strong>Topic:</strong> ${topic}</p><hr/><p>${message.replace(/\n/g, "<br/>")}</p>`,
+    });
 
     return NextResponse.json({
       ok: true,

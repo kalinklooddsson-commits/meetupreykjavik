@@ -171,8 +171,7 @@ export async function verifyWebhookSignature(
   body: string,
 ): Promise<boolean> {
   if (!env.PAYPAL_WEBHOOK_ID) {
-    console.warn("PAYPAL_WEBHOOK_ID is not set; skipping signature verification");
-    return false;
+    throw new Error("PAYPAL_WEBHOOK_ID is not configured. Cannot verify webhook signatures.");
   }
 
   const accessToken = await getAccessToken();
