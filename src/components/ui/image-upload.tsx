@@ -12,6 +12,8 @@ interface ImageUploadProps {
   maxSizeMb?: number;
   aspectHint?: string;
   className?: string;
+  /** Storage folder: "events", "venues", "profiles", "groups" */
+  folder?: string;
 }
 
 export function ImageUpload({
@@ -23,6 +25,7 @@ export function ImageUpload({
   maxSizeMb = 5,
   aspectHint,
   className = "",
+  folder = "uploads",
 }: ImageUploadProps) {
   const [preview, setPreview] = useState(value ?? "");
   const [dragOver, setDragOver] = useState(false);
@@ -46,23 +49,39 @@ export function ImageUpload({
 
       setUploading(true);
 
-      // Create local preview immediately
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target?.result as string;
-        setPreview(dataUrl);
-        setUploading(false);
-        // In production, you'd upload to Supabase Storage here
-        // and call onChange with the public URL. For now, pass the data URL.
-        onChange?.(dataUrl);
-      };
-      reader.onerror = () => {
-        setError("Failed to read file.");
-        setUploading(false);
-      };
-      reader.readAsDataURL(file);
+      // Show instant local preview while uploading
+      const localUrl = URL.createObjectURL(file);
+      setPreview(localUrl);
+
+      // Upload to Supabase Storage via API
+      const form = new FormData();
+      form.append("file", file);
+      if (folder) form.append("folder", folder);
+
+      fetch("/api/upload", { method: "POST", body: form })
+        .then(async (res) => {
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(
+              (data as { error?: string }).error ?? "Upload failed",
+            );
+          }
+          return res.json() as Promise<{ url: string }>;
+        })
+        .then(({ url }) => {
+          setPreview(url);
+          onChange?.(url);
+        })
+        .catch((err: Error) => {
+          // Fall back to local data URL so the user doesn't lose their image
+          setError(err.message + " — using local preview.");
+          onChange?.(localUrl);
+        })
+        .finally(() => {
+          setUploading(false);
+        });
     },
-    [maxSizeMb, onChange],
+    [maxSizeMb, onChange, folder],
   );
 
   const handleDrop = useCallback(
