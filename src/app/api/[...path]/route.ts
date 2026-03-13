@@ -1160,10 +1160,38 @@ async function handleLiveDataRequest(
       case "PATCH /api/profile": {
         if (!session) return forbiddenResponse("Authentication required.");
         const profileBody = await request.json().catch(() => ({})) as Record<string, unknown>;
-        // Venue profile editor sends { sections: [...] } — no matching DB column,
-        // so acknowledge without DB write
+        // Venue profile editor sends { sections: [...] } — map to venue columns
         if ("sections" in profileBody) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            const sections = profileBody.sections as Array<{ id: string; fields: Array<{ id: string; value: unknown }> }>;
+            const venueUpdates: Record<string, unknown> = {};
+            const fieldMap: Record<string, string> = { name: "name", description: "description", address: "address", phone: "phone", email: "email", website: "website" };
+            for (const section of sections) {
+              for (const field of section.fields) {
+                if (fieldMap[field.id]) venueUpdates[fieldMap[field.id]] = field.value;
+              }
+            }
+            if (Object.keys(venueUpdates).length > 0) {
+              await supabase.from("venues").update(venueUpdates).eq("owner_id", session.id);
+            }
+          }
           return successResponse({ ok: true, sections: profileBody.sections });
+        }
+        // Member settings: locale, notifications, privacy, billing
+        if (profileBody.section && typeof profileBody.section === "string") {
+          const section = profileBody.section as string;
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            if (section === "locale" && profileBody.locale) {
+              await supabase.from("profiles").update({ locale: profileBody.locale }).eq("id", session.id);
+            } else if (["notifications", "privacy", "billing"].includes(section)) {
+              await (supabase as unknown as { from: (t: string) => { upsert: (d: unknown, o: unknown) => Promise<unknown> } })
+                .from("platform_settings")
+                .upsert({ key: `user_settings:${session.id}:${section}`, value: profileBody, updated_at: new Date().toISOString() }, { onConflict: "key" });
+            }
+          }
+          return successResponse({ ok: true, ...profileBody });
         }
         try {
           const profileData = await updateProfile(session.id, profileBody as Parameters<typeof updateProfile>[1]);

@@ -3,16 +3,17 @@ import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/email/resend";
 import { weeklyDigestEmail } from "@/lib/email/templates";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
  * Vercel Cron: runs Monday at 9am UTC.
- * Sends a weekly digest of upcoming events to opted-in users.
+ * Sends a weekly digest of upcoming events to verified users.
  */
 export async function POST(request: Request) {
-  const cronSecret = process.env.CRON_SECRET;
+  const cronSecret = env.CRON_SECRET;
   if (!cronSecret) {
     return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 503 });
   }
@@ -50,11 +51,11 @@ export async function POST(request: Request) {
     });
   }
 
-  // Fetch users opted-in to digest (weekly_digest preference)
+  // Send digest to all verified users (digest_opt_in column not yet in schema)
   const { data: users } = await supabase
     .from("profiles")
     .select("id, email, display_name, locale")
-    .eq("digest_opt_in", true);
+    .eq("is_verified", true);
 
   let sent = 0;
 

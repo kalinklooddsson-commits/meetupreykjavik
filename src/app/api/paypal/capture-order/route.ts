@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentAppSession } from "@/lib/auth/session";
 import { hasPayPalEnv, captureOrder } from "@/lib/payments/paypal";
 import { createTransaction } from "@/lib/db/transactions";
+import { createRsvp } from "@/lib/db/rsvps";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email/resend";
+import { rsvpConfirmationEmail } from "@/lib/email/templates";
 
 export async function POST(request: NextRequest) {
   if (!hasPayPalEnv()) {
@@ -63,6 +67,54 @@ export async function POST(request: NextRequest) {
       payment_id: capture?.id ?? orderId,
       status: captureData.status,
     });
+
+    // Create RSVP for the purchased ticket
+    if (customData.eventSlug) {
+      try {
+        const supabase = await createSupabaseServerClient();
+        if (supabase) {
+          const { data: event } = await supabase
+            .from("events")
+            .select("id")
+            .eq("slug", customData.eventSlug)
+            .single();
+          if (event) {
+            // Find the ticket tier if specified
+            let ticketTierId: string | undefined;
+            if (customData.tierName) {
+              const { data: tier } = await supabase
+                .from("ticket_tiers")
+                .select("id")
+                .eq("event_id", event.id)
+                .eq("name", customData.tierName)
+                .single();
+              ticketTierId = tier?.id;
+            }
+            await createRsvp(event.id, session.id, ticketTierId);
+          }
+        }
+      } catch (rsvpErr) {
+        // Log but don't fail the capture — payment was already taken
+        console.error("[PayPal] RSVP creation after capture failed:", rsvpErr);
+      }
+    }
+
+    // Send ticket confirmation email (best-effort)
+    try {
+      const sessionEmail = (session as unknown as { email?: string }).email;
+      if (sessionEmail) {
+        const { subject, html } = rsvpConfirmationEmail(
+          (session as unknown as { displayName?: string }).displayName ?? sessionEmail,
+          customData.tierName ?? "Event ticket",
+          new Date().toLocaleDateString("en-US"),
+          "",
+          customData.eventSlug ?? "event",
+        );
+        await sendEmail({ to: sessionEmail, subject, html });
+      }
+    } catch {
+      // Email is best-effort — don't fail the capture response
+    }
 
     return NextResponse.json({
       status: captureData.status,

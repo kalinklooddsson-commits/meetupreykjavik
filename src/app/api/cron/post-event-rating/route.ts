@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/email/resend";
 import { postEventRatingEmail } from "@/lib/email/templates";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export const dynamic = "force-dynamic";
  * Sends rating requests to attendees of events that ended ~24 hours ago.
  */
 export async function POST(request: Request) {
-  const cronSecret = process.env.CRON_SECRET;
+  const cronSecret = env.CRON_SECRET;
   if (!cronSecret) {
     return NextResponse.json({ error: "CRON_SECRET not configured" }, { status: 503 });
   }
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
       .from("rsvps")
       .select("*, profiles(*)")
       .eq("event_id", event.id)
-      .eq("status", "confirmed");
+      .eq("status", "going");
 
     for (const rsvp of rsvps ?? []) {
       const profile = rsvp.profiles;
