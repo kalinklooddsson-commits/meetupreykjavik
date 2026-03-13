@@ -67,11 +67,11 @@ export const apiSpecRoutes: ApiSpecRoute[] = [
 
   { category: "venues", method: "GET", pattern: "/api/venues", description: "List venues with filters.", implementation: "mock" },
   { category: "venues", method: "POST", pattern: "/api/venues", description: "Create a venue application.", implementation: "scaffold" },
+  { category: "venues", method: "PATCH", pattern: "/api/venues/availability", description: "Update venue availability (owner, session-inferred).", implementation: "scaffold" },
   { category: "venues", method: "GET", pattern: "/api/venues/[slug]", description: "Get full venue detail.", implementation: "mock" },
   { category: "venues", method: "PATCH", pattern: "/api/venues/[slug]", description: "Update a venue.", implementation: "scaffold" },
   { category: "venues", method: "GET", pattern: "/api/venues/[slug]/availability", description: "Get venue availability.", implementation: "scaffold" },
   { category: "venues", method: "POST", pattern: "/api/venues/[slug]/availability", description: "Set venue availability.", implementation: "scaffold" },
-  { category: "venues", method: "PATCH", pattern: "/api/venues/availability", description: "Update venue availability (owner, session-inferred).", implementation: "scaffold" },
   { category: "venues", method: "GET", pattern: "/api/venues/[slug]/deals", description: "List active deals.", implementation: "scaffold" },
   { category: "venues", method: "POST", pattern: "/api/venues/[slug]/deals", description: "Create a deal.", implementation: "scaffold" },
   { category: "venues", method: "POST", pattern: "/api/venues/deals", description: "Create a deal (owner, session-inferred).", implementation: "scaffold" },
