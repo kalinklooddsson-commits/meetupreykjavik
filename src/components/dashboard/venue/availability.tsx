@@ -7,6 +7,7 @@ import {
 } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { venueHasFeature } from "@/lib/entitlements";
+import { VenueAvailabilityStudio } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -67,35 +68,13 @@ export async function VenueAvailabilityScreen() {
       links={venueLinks("availability")}
       roleMode="venue"
     >
-      {/* ── Weekly grid ──────────────────────────────────── */}
+      {/* ── Weekly grid (interactive) ──────────────────── */}
       <Surface
         eyebrow="Schedule"
         title="Weekly availability grid"
-        description="Your available time blocks for each day of the week."
+        description="Your available time blocks for each day of the week. Click a day to add or remove slots."
       >
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data.availability.weeklyGrid.map((day) => (
-            <article
-              key={day.day}
-              className="rounded-lg border border-brand-border-light bg-white p-4"
-            >
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-brand-indigo" />
-                <h3 className="text-sm font-semibold text-brand-text">{day.day}</h3>
-              </div>
-              <div className="mt-3 space-y-1.5">
-                {day.blocks.map((block) => (
-                  <div
-                    key={block}
-                    className="rounded-md bg-brand-sand-light px-2.5 py-1.5 text-xs font-medium text-brand-text"
-                  >
-                    {block}
-                  </div>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
+        <VenueAvailabilityStudio weeklyGrid={data.availability.weeklyGrid} />
       </Surface>
 
       {/* ── Recurring schedule ────────────────────────────── */}

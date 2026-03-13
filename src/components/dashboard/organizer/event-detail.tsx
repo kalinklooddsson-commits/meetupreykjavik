@@ -4,7 +4,6 @@ import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
   StatCard,
-  DashboardTable,
   ActivityFeed,
   ToneBadge,
   KeyValueList,
@@ -12,6 +11,7 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getManagedOrganizerEvent } from "@/lib/dashboard-fetchers";
+import { OrganizerAttendeeControlCenter } from "./panels";
 import {
   Users,
   Clock,
@@ -159,44 +159,13 @@ export async function OrganizerEventDetailScreen({ slug }: { slug: string }) {
           </div>
         )}
 
-        {/* Attendees table */}
+        {/* Attendees — interactive control center */}
         <Surface
           eyebrow="Attendees"
           title="Attendee list"
           description={`${event.attendees.length} attendees registered for this event.`}
         >
-          <DashboardTable
-            columns={["Name", "Status", "Ticket", "Checked in", "Note"]}
-            rows={event.attendees.map((a) => ({
-              key: a.name,
-              cells: [
-                <div key="name" className="flex items-center gap-2">
-                  <AvatarStamp name={a.name} size="sm" />
-                  <span className="font-medium">{a.name}</span>
-                </div>,
-                <ToneBadge key="status" tone={statusTone(a.status)}>
-                  {a.status}
-                </ToneBadge>,
-                <ToneBadge key="ticket" tone={statusTone(a.ticket)}>
-                  {a.ticket}
-                </ToneBadge>,
-                <span
-                  key="checkin"
-                  className={
-                    String(a.checkedIn) === "Yes"
-                      ? "font-medium text-brand-sage"
-                      : "text-brand-text-muted"
-                  }
-                >
-                  {String(a.checkedIn) === "Yes" ? "Checked in" : "Not yet"}
-                </span>,
-                <span key="note" className="text-brand-text-muted">
-                  {a.note}
-                </span>,
-              ],
-            }))}
-            caption="Event attendees"
-          />
+          <OrganizerAttendeeControlCenter attendees={event.attendees} />
         </Surface>
 
         {/* Timeline + Co-organizers side by side */}

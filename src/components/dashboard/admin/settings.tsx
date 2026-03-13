@@ -25,6 +25,11 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getAdminPortalData } from "@/lib/dashboard-fetchers";
+import {
+  AdminSettingsControlCenter,
+  AdminModerationConsole,
+  AdminCommsStudio,
+} from "./panels";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -70,23 +75,8 @@ export async function AdminSettingsScreen() {
       variant="admin"
       roleMode="admin"
     >
-      {/* ── Settings sections ──────────────────────────────── */}
-      {settings.map((section) => (
-        <Surface
-          key={section.key}
-          eyebrow="Configuration"
-          title={section.title}
-          description={`Current ${section.title.toLowerCase()} configuration values.`}
-        >
-          <KeyValueList
-            items={section.items.map((item, i) => ({
-              key: `${section.key}-${i}`,
-              label: item.label,
-              value: item.value,
-            }))}
-          />
-        </Surface>
-      ))}
+      {/* ── Settings sections (editable) ────────────────── */}
+      <AdminSettingsControlCenter settings={settings} />
 
       {/* ── Incident console ───────────────────────────────── */}
       <Surface
@@ -267,26 +257,13 @@ export async function AdminModerationScreen() {
         />
       </Surface>
 
-      {/* ── Banned users ───────────────────────────────────── */}
+      {/* ── Banned users (interactive) ─────────────────────── */}
       <Surface
         eyebrow="Enforcement"
         title="Banned accounts"
-        description="Users currently suspended or permanently banned from the platform."
+        description="Users currently suspended or permanently banned. Unban accounts as needed."
       >
-        <DashboardTable
-          columns={["Name", "Reason", "Appeal status"]}
-          rows={moderation.banned.map((b) => ({
-            key: b.key,
-            cells: [
-              <span key="name" className="font-medium">{b.name}</span>,
-              <ToneBadge key="reason" tone="coral">{b.reason}</ToneBadge>,
-              <ToneBadge key="appeal" tone={b.appeal === "Pending" ? "sand" : "neutral"}>
-                {b.appeal}
-              </ToneBadge>,
-            ],
-          }))}
-          caption="Banned accounts"
-        />
+        <AdminModerationConsole items={moderation.banned} />
       </Surface>
 
       {/* ── Audit log preview ──────────────────────────────── */}
@@ -326,65 +303,8 @@ export async function AdminCommsScreen() {
       variant="admin"
       roleMode="admin"
     >
-      {/* ── Draft preview ──────────────────────────────────── */}
-      <Surface
-        eyebrow="Current draft"
-        title={comms.draft.subject}
-        description="Preview of the next scheduled email communication."
-      >
-        <div className="rounded-lg border border-brand-border-light bg-brand-sand-light p-4">
-          <KeyValueList
-            items={[
-              { key: "template", label: "Template", value: comms.draft.templateKey },
-              { key: "subject", label: "Subject line", value: comms.draft.subject },
-              { key: "preheader", label: "Preheader", value: comms.draft.preheader },
-              { key: "headline", label: "Headline", value: comms.draft.headline },
-              { key: "cta", label: "CTA label", value: comms.draft.ctaLabel },
-              { key: "footer", label: "Footer", value: comms.draft.footer },
-            ]}
-          />
-          <div className="mt-3">
-            <div className="text-xs font-medium uppercase tracking-wider text-brand-text-light">Preview</div>
-            <p className="mt-1 text-sm leading-relaxed text-brand-text-muted">
-              {comms.draft.preview}
-            </p>
-          </div>
-        </div>
-      </Surface>
-
-      {/* ── Audiences ──────────────────────────────────────── */}
-      <Surface
-        eyebrow="Targeting"
-        title="Audience segments"
-        description="Available audience segments for campaign targeting."
-      >
-        <div className="flex flex-wrap gap-2">
-          {comms.audiences.map((audience) => (
-            <ToneBadge key={audience} tone="indigo">{audience}</ToneBadge>
-          ))}
-        </div>
-      </Surface>
-
-      {/* ── History ────────────────────────────────────────── */}
-      <Surface
-        eyebrow="History"
-        title="Communication history"
-        description="Recent email campaigns and their performance."
-      >
-        <DashboardTable
-          columns={["Campaign", "Audience", "Sent", "Result"]}
-          rows={comms.history.map((h) => ({
-            key: h.key,
-            cells: [
-              <span key="title" className="font-medium">{h.title}</span>,
-              <ToneBadge key="aud" tone="neutral">{h.audience}</ToneBadge>,
-              <span key="sent" className="text-brand-text-muted">{h.sent}</span>,
-              <ToneBadge key="result" tone="sage">{h.result}</ToneBadge>,
-            ],
-          }))}
-          caption="Email campaign history"
-        />
-      </Surface>
+      {/* ── Communications studio (interactive) ─────────── */}
+      <AdminCommsStudio comms={comms} />
     </PortalShell>
   );
 }
