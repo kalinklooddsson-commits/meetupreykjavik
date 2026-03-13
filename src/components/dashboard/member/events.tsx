@@ -12,6 +12,8 @@ import { getMemberPortalData } from "@/lib/dashboard-fetchers";
 import { EventsFilterBar } from "./events-filter-bar";
 import { RsvpButton } from "@/components/public/rsvp-button";
 
+/* Re-export the statusTone for recommendations table below */
+
 /* ── Shared helpers ──────────────────────────────────────────── */
 
 function memberLinks(activeKey: string) {
@@ -47,8 +49,12 @@ export async function MemberCalendarScreen() {
       links={memberLinks("events")}
       roleMode="member"
     >
-      {/* ── Filter bar (client component) ───────────────────── */}
-      <EventsFilterBar />
+      {/* ── Filter bar + filterable table (client component) ── */}
+      <EventsFilterBar events={data.upcomingEvents.map((e) => ({
+        event: { slug: e.event.slug, title: e.event.title, venueName: e.event.venueName },
+        status: e.status,
+        seat: e.seat,
+      }))} />
 
       {/* ── Calendar view ───────────────────────────────────── */}
       <Surface
@@ -60,38 +66,6 @@ export async function MemberCalendarScreen() {
           monthLabel="March 2026"
           weekdays={weekdays}
           days={data.calendarDays}
-        />
-      </Surface>
-
-      {/* ── Upcoming events table ───────────────────────────── */}
-      <Surface
-        eyebrow="Upcoming"
-        title="Your RSVPs"
-        description="Confirmed seats, waitlist positions, and event notes."
-        actionLabel="Browse more events"
-        actionHref={"/events" as Route}
-      >
-        <DashboardTable
-          columns={["Event", "Venue", "Status", "Seat / Position", "Action"]}
-          rows={data.upcomingEvents.map((e) => ({
-            key: e.event.slug,
-            cells: [
-              <Link
-                key="title"
-                href={`/events/${e.event.slug}` as Route}
-                className="font-medium text-brand-indigo hover:underline"
-              >
-                {e.event.title}
-              </Link>,
-              e.event.venueName,
-              <ToneBadge key="status" tone={statusTone(e.status)}>
-                {e.status}
-              </ToneBadge>,
-              e.seat,
-              <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
-            ],
-          }))}
-          caption="Upcoming RSVPs"
         />
       </Surface>
 
