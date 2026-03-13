@@ -16,6 +16,13 @@ import {
   type PublicVenue,
 } from "@/lib/public-data";
 
+/** Returns the photo if it's a real unique image, otherwise null. */
+function realPhoto(url: unknown): string | null {
+  if (typeof url !== "string" || !url) return null;
+  if (url.includes("hallgrimskirkja")) return null;
+  return url;
+}
+
 // ── Mappers: DB rows with joins → public presentation types ──
 
 function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
@@ -76,7 +83,7 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     hostContact: (row.host_contact as string) ?? mockEvent?.hostContact ?? "",
     shareLabel: "Share this event",
     art:
-      (row.featured_photo_url as string) ??
+      realPhoto(row.featured_photo_url) ??
       mockEvent?.art ??
       createSceneCoverDataUrl(row.title as string, (category?.name_en as string) ?? "Event"),
     gallery: (Array.isArray(row.gallery_photos) && (row.gallery_photos as string[]).length > 0)
@@ -120,7 +127,7 @@ function mapDbGroupToPublic(
     description: isGenericDesc && mockFallback ? mockFallback.description : (dbDesc ? [dbDesc] : []),
     organizer: (organizer?.display_name as string) ?? mockFallback?.organizer ?? "",
     banner:
-      (row.banner_url as string) ??
+      realPhoto(row.banner_url) ??
       mockFallback?.banner ??
       createSceneCoverDataUrl(row.name as string, "Group"),
     tags: Array.isArray(row.tags) ? (row.tags as string[]) : mockFallback?.tags ?? [],
@@ -184,7 +191,7 @@ function mapDbVenueToPublic(
       ? (row.photos as string[])
       : mockVenue?.gallery ?? [],
     art:
-      (row.hero_photo_url as string) ??
+      realPhoto(row.hero_photo_url) ??
       mockVenue?.art ??
       createSceneCoverDataUrl(row.name as string, "Venue"),
     latitude: (row.latitude as number) ?? mockVenue?.latitude ?? undefined,

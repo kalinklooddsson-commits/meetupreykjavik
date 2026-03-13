@@ -29,20 +29,35 @@ export type HomePageData = {
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-/** Cycle through Reykjavik landmark photos so cards aren't all identical. */
+/** Generic placeholder image — if the DB has this, treat it as "no photo". */
+const GENERIC_PLACEHOLDER = "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
+
+/** Cycle through Reykjavik landmark photos so cards aren't all identical.
+ *  hallgrimskirkja is excluded — it's the hero background and generic placeholder. */
 const PLACE_PHOTOS = [
-  "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
   "/place-images/reykjavik/hof-i-deccf755.jpg",
   "/place-images/reykjavik/reykjavik-871-2-78434189.jpg",
   "/place-images/reykjavik/dill-0aeca160.jpg",
   "/place-images/reykjavik/hafnarborg-1be7b43b.jpg",
   "/place-images/reykjavik/arb-jarsafn-c71d7348.jpg",
+  "/place-images/reykjavik/venues/kex-hostel.jpg",
+  "/place-images/reykjavik/venues/lebowski-bar.jpg",
+  "/place-images/reykjavik/venues/grandi-hub.jpg",
+  "/place-images/reykjavik/venues/stofan-cafe.jpg",
+  "/place-images/reykjavik/venues/mokka.jpg",
 ];
 
 function pickPhoto(slug: string, photos: readonly string[]): string {
   let hash = 0;
   for (let i = 0; i < slug.length; i++) hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
   return photos[hash % photos.length];
+}
+
+/** Returns the photo if it's a real unique image, otherwise null. */
+function realPhoto(url: string | null | undefined): string | null {
+  if (!url) return null;
+  if (url.includes("hallgrimskirkja")) return null;
+  return url;
 }
 
 /** Venue-specific photos from the public directory. */
@@ -214,7 +229,7 @@ async function fetchEvents(
         venueSlug: venueRow?.slug ?? "",
         attendees: row.rsvp_count ?? 0,
         deal: undefined,
-        photo: row.featured_photo_url ?? pickPhoto(row.slug, PLACE_PHOTOS),
+        photo: realPhoto(row.featured_photo_url) ?? pickPhoto(row.slug, PLACE_PHOTOS),
       };
     });
   } catch {
@@ -256,7 +271,7 @@ async function fetchGroups(
         description: isGenericDescription(row.description)
           ? (fallbackGroups.find((g) => g.slug === row.slug)?.description ?? row.description ?? "")
           : (row.description ?? ""),
-        photo: row.banner_url ?? pickPhoto(row.slug, PLACE_PHOTOS),
+        photo: realPhoto(row.banner_url) ?? pickPhoto(row.slug, PLACE_PHOTOS),
       };
     });
   } catch {
@@ -296,7 +311,7 @@ async function fetchVenues(
       rating: Number(row.avg_rating) || 0,
       events: row.events_hosted ?? 0,
       deal: undefined,
-      photo: row.hero_photo_url ?? VENUE_PHOTOS[row.slug] ?? pickPhoto(row.slug, PLACE_PHOTOS),
+      photo: realPhoto(row.hero_photo_url) ?? VENUE_PHOTOS[row.slug] ?? pickPhoto(row.slug, PLACE_PHOTOS),
     }));
   } catch {
     return [...fallbackVenues];
