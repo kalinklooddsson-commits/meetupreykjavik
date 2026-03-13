@@ -19,42 +19,42 @@ export type MockAccount = MockSession & {
 export const mockAccounts: MockAccount[] = [
   {
     id: "mock-user",
-    email: "user@meetupreykjavik.is",
-    displayName: "Kari Sigurdsson",
-    slug: "kari-sigurdsson",
+    email: "anna@example.com",
+    displayName: "Anna Jonsdottir",
+    slug: "anna-jonsdottir",
     accountType: "user",
     locale: "en",
-    premiumTier: null, // Free tier member
+    premiumTier: null,
     password: MOCK_PASSWORD_HINT,
   },
   {
     id: "mock-organizer",
-    email: "organizer@meetupreykjavik.is",
-    displayName: "Bjorn Olafsson",
-    slug: "bjorn-olafsson",
+    email: "kari@meetupreykjavik.is",
+    displayName: "Kari Sigurdsson",
+    slug: "kari-sigurdsson",
     accountType: "organizer",
     locale: "en",
-    premiumTier: "pro", // Organizer Pro tier for testing
+    premiumTier: "pro",
     password: MOCK_PASSWORD_HINT,
   },
   {
     id: "mock-venue",
-    email: "venue@meetupreykjavik.is",
+    email: "lebowski@meetupreykjavik.is",
     displayName: "Lebowski Bar",
     slug: "lebowski-bar",
     accountType: "venue",
     locale: "en",
-    premiumTier: "partner", // Venue Partner tier for testing
+    premiumTier: "partner",
     password: MOCK_PASSWORD_HINT,
   },
   {
     id: "mock-admin",
     email: "admin@meetupreykjavik.is",
-    displayName: "Super Admin",
-    slug: "super-admin",
+    displayName: "Platform Admin",
+    slug: "platform-admin",
     accountType: "admin",
     locale: "en",
-    premiumTier: null, // Admin gets everything regardless
+    premiumTier: null,
     password: MOCK_PASSWORD_HINT,
   },
 ];
