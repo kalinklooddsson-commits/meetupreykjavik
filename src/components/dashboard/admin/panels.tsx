@@ -5,7 +5,6 @@ import {
   Search,
   Shield,
   ShieldCheck,
-  ShieldAlert,
   UserCog,
   Crown,
   Ban,
@@ -18,10 +17,8 @@ import {
   Star,
   AlertTriangle,
   ArrowUpCircle,
-  DollarSign,
   Download,
   Calendar,
-  Megaphone,
   Trash2,
   Plus,
   Save,
@@ -31,11 +28,7 @@ import {
   X,
   RotateCcw,
   MapPin,
-  MessageSquare,
-  Gavel,
   FileText,
-  Settings,
-  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/toast";
