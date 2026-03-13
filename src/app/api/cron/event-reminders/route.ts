@@ -55,7 +55,7 @@ export async function POST(request: Request) {
         .from("rsvps")
         .select("*, profiles(*)")
         .eq("event_id", event.id)
-        .eq("status", "confirmed");
+        .eq("status", "going");
 
       for (const rsvp of rsvps ?? []) {
         const profile = rsvp.profiles;
@@ -99,7 +99,7 @@ export async function POST(request: Request) {
         .from("rsvps")
         .select("*, profiles(*)")
         .eq("event_id", event.id)
-        .eq("status", "confirmed");
+        .eq("status", "going");
 
       for (const rsvp of rsvps ?? []) {
         const profile = rsvp.profiles;

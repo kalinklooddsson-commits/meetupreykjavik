@@ -1197,7 +1197,8 @@ async function handleLiveDataRequest(
         try {
           const data = await updateProfile(match.params.id, body as Parameters<typeof updateProfile>[1]);
           return successResponse(data);
-        } catch {
+        } catch (err) {
+          if (hasSupabaseEnv()) throw err;
           return successResponse({ ok: true, id: match.params.id, ...body });
         }
       }
@@ -1212,8 +1213,8 @@ async function handleLiveDataRequest(
         try {
           const profileData = await updateProfile(session.id, profileBody as Parameters<typeof updateProfile>[1]);
           return successResponse(profileData);
-        } catch {
-          // Mock mode or DB unavailable — acknowledge the update
+        } catch (err) {
+          if (hasSupabaseEnv()) throw err;
           return successResponse({ ok: true, ...profileBody });
         }
       }
@@ -1282,8 +1283,18 @@ async function handleLiveDataRequest(
             await supabase.from("profiles").update(profileUpdates).eq("id", session.id);
           }
         }
-        // Other sections (notifications, privacy, locale, billing) are acknowledged
-        // They would write to a user_preferences table in production
+        // Locale section → update profiles.locale
+        if (section === "locale" && values["Language"]) {
+          await supabase.from("profiles").update({ locale: values["Language"] }).eq("id", session.id);
+        }
+        // Other sections (notifications, privacy, billing) → persist to platform_settings
+        if (["notifications", "privacy", "billing"].includes(section)) {
+          const settingsKey = `user_settings:${session.id}:${section}`;
+          await supabase.from("platform_settings").upsert(
+            { key: settingsKey, value: values as Record<string, unknown>, updated_at: new Date().toISOString(), updated_by: session.id },
+            { onConflict: "key" },
+          );
+        }
         return successResponse({ ok: true, section, values });
       }
 
@@ -1635,7 +1646,7 @@ async function handleLiveDataRequest(
               resource_id: key,
               changes: { note },
             });
-          } catch { /* table may not exist — acknowledge anyway */ }
+          } catch (err) { if (hasSupabaseEnv()) throw err; }
         }
         return successResponse({ ok: true, action: noteAction });
       }
@@ -1654,7 +1665,7 @@ async function handleLiveDataRequest(
             .eq("resource_id", key)
             .eq("action", "note_added")
             .eq("changes->>note", note);
-        } catch { /* acknowledge anyway */ }
+        } catch (err) { if (hasSupabaseEnv()) throw err; }
         return successResponse({ ok: true, action: "remove" });
       }
 
@@ -1823,7 +1834,7 @@ async function handleLiveDataRequest(
           }));
           try {
             await supabase.from("notifications").insert(notifications);
-          } catch { /* acknowledge even if insert fails */ }
+          } catch (err) { if (hasSupabaseEnv()) throw err; }
         }
         return successResponse({ ok: true, sent: true, recipientCount: users?.length ?? 0 });
       }
@@ -2384,7 +2395,7 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
     return getLiveSessionResponse(request);
   }
 
-  if (match.route.implementation === "mock") {
+  if (match.route.implementation === "mock" && !hasSupabaseEnv()) {
     return getMockResponse(match, request);
   }
 
@@ -2396,6 +2407,13 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
     }
 
     if (method === "GET") {
+      // When Supabase is configured, try live data first for GET requests
+      // so the UI shows real DB data (not mock/seeded stubs).
+      if (hasSupabaseEnv()) {
+        const liveRead = await handleLiveDataRequest(request, key, match);
+        if (liveRead) return liveRead;
+      }
+
       const seededReadResponse = await getSeededReadResponse(match, request);
 
       if (seededReadResponse) {

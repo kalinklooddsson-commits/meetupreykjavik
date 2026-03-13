@@ -50,11 +50,12 @@ export async function POST(request: Request) {
     });
   }
 
-  // Fetch users opted-in to digest (weekly_digest preference)
+  // Send digest to all users with verified emails
+  // (digest_opt_in column doesn't exist yet — send to all for now)
   const { data: users } = await supabase
     .from("profiles")
     .select("id, email, display_name, locale")
-    .eq("digest_opt_in", true);
+    .not("email", "is", null);
 
   let sent = 0;
 

@@ -65,9 +65,9 @@ function formatHomeDay(isoDate: string): { day: string; date: string } {
 const e1 = formatHomeDay("2026-03-15T20:00:00Z");
 const e2 = formatHomeDay("2026-03-21T09:00:00Z"); // changed to Sat 21 Mar so name matches "Saturday Hike"
 const e3 = formatHomeDay("2026-03-19T18:30:00Z");
-const e4 = formatHomeDay("2026-03-20T18:00:00Z");
+const e4 = formatHomeDay("2026-04-02T19:00:00Z"); // matches public-data.ts date (Thu 2 Apr)
 const e5 = formatHomeDay("2026-03-28T20:30:00Z"); // changed to Sat 28 Mar to match /events listing
-const e6 = formatHomeDay("2026-03-25T17:30:00Z");
+const e6 = formatHomeDay("2026-03-19T17:30:00Z"); // matches public-data.ts date (Thu 19 Mar)
 
 export const events: HomeEvent[] = [
   {
@@ -95,7 +95,7 @@ export const events: HomeEvent[] = [
     venue: "Esja Trailhead",
     venueSlug: "esja-trailhead",
     attendees: 27,
-    photo: "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
+    photo: "/place-images/reykjavik/generated/esja.svg",
   },
   {
     id: 3,
@@ -115,7 +115,7 @@ export const events: HomeEvent[] = [
     id: 4,
     slug: "startup-pitch-night",
     title: "Startup Pitch Night",
-    tag: "Food",
+    tag: "Tech",
     day: e4.day,
     date: e4.date,
     time: "18:00",
@@ -133,10 +133,10 @@ export const events: HomeEvent[] = [
     day: e5.day,
     date: e5.date,
     time: "20:30",
-    venue: "Kex Hostel",
-    venueSlug: "kex-hostel",
+    venue: "Gaukurinn",
+    venueSlug: "gaukurinn",
     attendees: 52,
-    photo: "/place-images/reykjavik/venues/kex-hostel.jpg",
+    photo: "/place-images/reykjavik/generated/gaukurinn.svg",
   },
   {
     id: 6,

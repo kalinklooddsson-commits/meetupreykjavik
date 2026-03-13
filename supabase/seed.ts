@@ -444,6 +444,17 @@ async function seed() {
   /* ── 5. Groups ─────────────────────────────────────────────── */
   console.log("\nCreating groups...");
 
+  const groupDescriptions: Record<string, string> = {
+    "nightlife-reykjavik": "The city's largest social group for people who want to get out in the evening. We run hosted mixers, bar crawls, singles nights, and late-night socials across Reykjavik's best downtown venues. All events include a host, conversation starters, and a welcoming atmosphere for newcomers.",
+    "reykjavik-hikers": "Weekend hikes and outdoor adventures around Reykjavik and the wider southwest. We organize group hikes to Mt. Esja, Reykjadalur hot springs, Glymur waterfall, and seasonal glacier walks. All fitness levels welcome — we match pace groups on every trip.",
+    "tech-community-rvk": "Reykjavik's hub for developers, designers, founders, and tech-curious professionals. We host workshops, hackathons, pitch nights, and study groups covering everything from React to machine learning. Bring a laptop, meet collaborators, learn something new.",
+    "creative-reykjavik": "A community for musicians, visual artists, writers, and anyone drawn to creative work. We run open mic nights, gallery visits, collaborative jam sessions, and creative writing meetups. The goal is connection through shared creative practice.",
+    "reykjavik-foodies": "For people who love discovering Reykjavik's food scene together. We organize wine tastings, restaurant crawls, home cooking sessions, and seasonal food festivals. Every event is social first — the food is the conversation starter.",
+    "expats-in-iceland": "The largest expat community in Iceland. Whether you just moved or have been here for years, this group helps you meet people, navigate local life, and build a social circle. We run welcome socials, cultural exchanges, and practical workshops.",
+    "language-exchange-rvk": "Practice Icelandic, English, or any language in a relaxed social setting. Our Thursday exchanges pair native speakers with learners over coffee or beer. No textbooks, no pressure — just conversation and connection.",
+    "wellness-reykjavik": "Morning yoga, group runs, meditation sessions, and wellness workshops in Reykjavik. We believe physical and mental wellbeing are social activities. Join us for community fitness events that are inclusive, encouraging, and never competitive.",
+  };
+
   const groupData = [
     { slug: "nightlife-reykjavik", name: "Nightlife Reykjavik", catSlug: "nightlife-social", organizer: "kari", members: 389 },
     { slug: "reykjavik-hikers", name: "Reykjavik Hikers", catSlug: "outdoors-hiking", organizer: "helga", members: 284 },
@@ -463,7 +474,7 @@ async function seed() {
 
     const payload = {
       name: g.name,
-      description: `${g.name} — community group in Reykjavik`,
+      description: groupDescriptions[g.slug] ?? `${g.name} — community group in Reykjavik`,
       category_id: catIds[g.catSlug],
       organizer_id: userIds[g.organizer],
       member_count: g.members,
@@ -515,6 +526,21 @@ async function seed() {
     Sports: catIds["sports-fitness"],
     Expat: catIds["expat-community"],
     Language: catIds["language-exchange"],
+  };
+
+  const eventDescriptions: Record<string, string> = {
+    "singles-night-25-35": "A warm, hosted social night with easy intros, small-group prompts, and a venue perk on arrival. Hosts open with simple conversation prompts, table rotations stay light, and the pace is relaxed enough for newcomers. The venue supports the night with a member deal and a dedicated arrival area.",
+    "saturday-hike-mt-esja": "A guided group hike up Mt. Esja with pace groups for all fitness levels. We meet at the trailhead, warm up together, and split into groups. The summit group does the full ascent; the social group takes the scenic loop. Hot drinks and snacks at the top. Carpooling available from downtown.",
+    "react-server-components-workshop": "A hands-on technical workshop covering React Server Components, streaming, and the Next.js App Router. Bring a laptop — we'll build a real feature together. Suitable for intermediate React developers. Coffee and wifi provided by the venue.",
+    "wine-tasting-volcanic-terroir": "An intimate seated tasting exploring volcanic-region wines from Iceland, the Canary Islands, Sicily, and Santorini. Our sommelier guide walks through each pour with tasting notes and food pairing suggestions. Light bites included in the ticket price.",
+    "speed-friending-newcomers": "A structured social event designed to help newcomers meet people quickly. Short conversation rounds with guided prompts, followed by a casual mixer. No pressure, no awkwardness — just a fast way to expand your circle in Reykjavik.",
+    "harbor-jazz-social": "Live jazz by local musicians in a harbor-side venue. Arrive early for the best seats. The band plays two sets with a social break in between. Member deal on drinks. Casual dress, good vibes, and a chance to meet fellow music lovers.",
+    "craft-beer-tasting-vesturgata": "A guided tasting of 6 Icelandic craft beers at Micro Bar, led by a knowledgeable beer enthusiast. Learn about the local brewing scene, taste seasonal releases, and compare styles. Snack plate included. Limited to 45 to keep it intimate.",
+    "morning-yoga-flow": "A gentle morning yoga flow suitable for all levels. We meet at the venue, lay out mats, and move through 60 minutes of breathwork and movement. Mats provided if you don't have one. Stay for tea and conversation after class.",
+    "startup-pitch-night": "Five early-stage founders pitch their ideas to a friendly audience of developers, designers, and investors. Each pitch is 5 minutes followed by 3 minutes of Q&A. Network over drinks after the pitches. Great for finding collaborators or just learning what's being built in Reykjavik.",
+    "poetry-open-mic": "An open mic night for poets, spoken word artists, and anyone who wants to share something they've written. Sign up at the door for a 5-minute slot. Supportive crowd, candlelit atmosphere, and a drink deal for performers.",
+    "language-exchange-thursday": "A free weekly language exchange where native speakers pair up with learners. Icelandic, English, Spanish, French, and more. No registration needed — just show up, grab a coffee, and start talking. Beginners very welcome.",
+    "friday-dinner-social": "A seated dinner social at Snaps Bistro with a set 3-course menu. Tables of 6 are mixed so you meet new people. Wine pairing available. A great way to end the week with good food, good conversation, and new connections.",
   };
 
   const eventData = [
@@ -601,7 +627,7 @@ async function seed() {
 
     const payload = {
       title: e.title,
-      description: `${e.title} event in Reykjavik`,
+      description: eventDescriptions[e.slug] ?? `${e.title} event in Reykjavik`,
       group_id: groupIds[e.group] ?? null,
       host_id: userIds[e.host],
       venue_id: venueId,

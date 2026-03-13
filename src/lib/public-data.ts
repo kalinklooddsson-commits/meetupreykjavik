@@ -154,8 +154,9 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder plus weather update at 07:00",
     hostContact: "Helga Arnadottir via organizer notes",
     shareLabel: "Share with your hiking pair or ride-share thread",
-    art: "linear-gradient(135deg, rgba(45,80,22,0.2), rgba(120,160,80,0.15)), url('/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg')",
+    art: "linear-gradient(135deg, rgba(45,80,22,0.2), rgba(120,160,80,0.15)), url('/place-images/reykjavik/generated/esja.svg')",
     gallery: [
+      "url('/place-images/reykjavik/generated/esja.svg')"
     ],
     comments: [
       { author: "Brynjar", text: "Great host notes in advance. Easy to join solo.", postedAt: "5 hours ago" },
@@ -594,7 +595,7 @@ export const publicGroups: PublicGroup[] = [
       "It is exactly the kind of durable local group the platform should spotlight: easy to understand, high trust, and strongly tied to place."
     ],
     organizer: "Helga Arnadottir",
-    banner: "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
+    banner: "/place-images/reykjavik/generated/esja.svg",
     tags: ["Hikes", "Day trips", "Coffee after"],
     upcomingEventSlugs: ["saturday-hike-mt-esja"],
     pastEvents: ["Sunset walk at Grotta", "Hot spring day trip", "Midweek valley loop"],
@@ -875,8 +876,9 @@ export const publicVenues: PublicVenue[] = [
     deal: "Hosted tasting add-on menu for venue premium partners",
     upcomingEventSlugs: ["wine-tasting-volcanic-terroir"],
     gallery: [
+      "url('/place-images/reykjavik/generated/kitchen-and-wine-restaurant.svg')"
     ],
-    art: "linear-gradient(135deg, rgba(30,30,60,0.2), rgba(80,40,20,0.15)), url('/place-images/reykjavik/generated/bryggjan-brugghus.svg')",
+    art: "linear-gradient(135deg, rgba(30,30,60,0.2), rgba(80,40,20,0.15)), url('/place-images/reykjavik/generated/kitchen-and-wine-restaurant.svg')",
   },
   {
     slug: "loft-hostel",

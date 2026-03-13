@@ -1,11 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-import { env, hasSupabaseEnv } from "@/lib/env";
+import { env, hasLiveSupabaseAuth, hasSupabaseEnv } from "@/lib/env";
+import { createSupabaseAdminClient } from "./admin";
 
 export async function createSupabaseServerClient() {
   if (!hasSupabaseEnv()) {
     return null;
+  }
+
+  // When using mock auth (not Supabase auth), use the admin client
+  // which bypasses RLS — there's no Supabase session in cookies.
+  if (!hasLiveSupabaseAuth()) {
+    return createSupabaseAdminClient();
   }
 
   const cookieStore = await cookies();

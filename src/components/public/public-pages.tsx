@@ -343,9 +343,12 @@ function blogSignals(posts: BlogPost[], t: (key: string, values?: Record<string,
   ];
 }
 
-/** Extract image URL from gradient+url art strings */
+/** Extract image URL from gradient+url art strings or plain URLs */
 function extractImageUrl(art: string | undefined | null): string | null {
   if (!art) return null;
+  // Plain URL (Supabase storage, external images)
+  if (art.startsWith("http://") || art.startsWith("https://") || art.startsWith("/")) return art;
+  // CSS url() syntax inside gradients
   const match = art.match(/url\(['"]?([^'")\s]+)['"]?\)/);
   return match ? match[1] : null;
 }
