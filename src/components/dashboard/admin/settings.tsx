@@ -12,6 +12,8 @@ import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getAdminPortalData } from "@/lib/dashboard-fetchers";
 import {
   AdminSettingsControlCenter,
+  AdminContentControlCenter,
+  AdminModerationOperationsDesk,
   AdminModerationConsole,
   AdminCommsStudio,
 } from "./panels";
@@ -142,66 +144,7 @@ export async function AdminContentScreen() {
       variant="admin"
       roleMode="admin"
     >
-      {/* ── Content sections ───────────────────────────────── */}
-      <Surface
-        eyebrow="Homepage"
-        title="Content sections"
-        description="Current status of homepage content blocks. Update sections before the weekly digest cycle."
-      >
-        <DashboardTable
-          columns={["Section", "Status", "Note"]}
-          rows={content.sections.map((s) => ({
-            key: s.key,
-            cells: [
-              <span key="title" className="font-medium">{s.title}</span>,
-              <ToneBadge key="status" tone={statusTone(s.status)}>{s.status}</ToneBadge>,
-              <span key="note" className="text-xs text-brand-text-muted">{s.note}</span>,
-            ],
-          }))}
-          caption="Homepage content sections"
-        />
-      </Surface>
-
-      {/* ── Categories ─────────────────────────────────────── */}
-      <Surface
-        eyebrow="Taxonomy"
-        title="Event categories"
-        description="Category directory with event counts and visual tone assignments."
-      >
-        <div className="flex flex-wrap gap-2">
-          {content.categories.map((cat) => (
-            <div
-              key={cat.key}
-              className="flex items-center gap-2 rounded-lg border border-brand-border-light bg-white px-3 py-2"
-            >
-              <ToneBadge tone={(cat.tone as DashboardTone) ?? "neutral"}>{cat.name}</ToneBadge>
-              <span className="tabular-nums text-sm font-medium text-brand-text-muted">
-                {cat.count} events
-              </span>
-            </div>
-          ))}
-        </div>
-      </Surface>
-
-      {/* ── Blog queue ─────────────────────────────────────── */}
-      <Surface
-        eyebrow="Editorial"
-        title="Blog queue"
-        description="Posts in the editorial pipeline awaiting review or publication."
-      >
-        <DashboardTable
-          columns={["Title", "Category", "Status"]}
-          rows={content.blogQueue.map((post) => ({
-            key: post.key,
-            cells: [
-              <span key="title" className="font-medium">{post.title}</span>,
-              <ToneBadge key="cat" tone="neutral">{post.category}</ToneBadge>,
-              <ToneBadge key="status" tone={statusTone(post.status)}>{post.status}</ToneBadge>,
-            ],
-          }))}
-          caption="Blog post queue"
-        />
-      </Surface>
+      <AdminContentControlCenter content={content} />
     </PortalShell>
   );
 }
@@ -221,26 +164,8 @@ export async function AdminModerationScreen() {
       variant="admin"
       roleMode="admin"
     >
-      {/* ── Reports ────────────────────────────────────────── */}
-      <Surface
-        eyebrow="Reports"
-        title="Active reports"
-        description={`${moderation.reports.length} open reports requiring review. Prioritize high-severity items first.`}
-      >
-        <DashboardTable
-          columns={["Subject", "Priority", "Status", "Note"]}
-          rows={moderation.reports.map((r) => ({
-            key: r.key,
-            cells: [
-              <span key="sub" className="font-medium">{r.subject}</span>,
-              <ToneBadge key="pri" tone={severityTone(r.priority)}>{r.priority}</ToneBadge>,
-              <ToneBadge key="status" tone={statusTone(r.status)}>{r.status}</ToneBadge>,
-              <span key="note" className="text-xs text-brand-text-muted">{r.note}</span>,
-            ],
-          }))}
-          caption="Moderation reports"
-        />
-      </Surface>
+      {/* ── Reports (interactive) ────────────────────────────── */}
+      <AdminModerationOperationsDesk reports={moderation.reports} />
 
       {/* ── Banned users (interactive) ─────────────────────── */}
       <Surface

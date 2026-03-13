@@ -1316,10 +1316,11 @@ async function handleLiveDataRequest(
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
         const body = await request.json();
+        const { sectionKey, items } = body as { sectionKey: string; items: { label: string; value: string }[] };
+        if (!sectionKey) return validationErrorResponse("sectionKey is required");
         const { data, error } = await supabase
-          .from("admin_settings")
-          .update(body)
-          .eq("id", body.id ?? "default")
+          .from("platform_settings")
+          .upsert({ key: sectionKey, value: items }, { onConflict: "key" })
           .select()
           .single();
         if (error) throw error;
