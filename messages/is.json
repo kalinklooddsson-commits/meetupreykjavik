@@ -51,6 +51,7 @@
     "going": "mæta",
     "fillingFast": "Fyllist hratt",
     "hot": "Vinsælt",
+    "member": "meðlimur",
     "members": "meðlimir",
     "organizedBy": "Skipulagt af",
     "nextEvent": "Næst: {title}",
@@ -235,6 +236,8 @@
     },
     "social": {
       "headline": "Vertu með 2.800+ meðlimum sem uppgötva Reykjavík",
+      "headlineDynamic": "Vertu með {count}+ meðlimum sem uppgötva Reykjavík",
+      "meetup": "hitting",
       "meetups": "hittingar"
     }
   },

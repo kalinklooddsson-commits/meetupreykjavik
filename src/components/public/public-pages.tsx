@@ -1715,10 +1715,10 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                   { key: "date", label: t("labels.date"), value: formatEventDate(event.startsAt) },
                   { key: "time", label: t("labels.time"), value: formatEventTimeRange(event.startsAt, event.endsAt) },
                   { key: "venue", label: t("labels.venue"), value: event.venueName },
-                  { key: "group", label: t("labels.group"), value: event.groupName },
+                  ...(event.groupName ? [{ key: "group", label: t("labels.group"), value: event.groupName }] : []),
                   { key: "price", label: t("labels.ticket"), value: event.priceLabel },
                   { key: "age", label: t("labels.age"), value: event.ageLabel },
-                ]}
+                ].filter((item) => item.value)}
               />
               <div className="mt-4 rounded-lg bg-gray-50 p-4">
                 <AttendeeCount eventSlug={event.slug} serverCount={event.attendees} capacity={event.capacity} />
@@ -2790,43 +2790,47 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
             </div>
 
             {/* Hours card */}
-            <div className="paper-panel rounded-2xl p-5">
-              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
-                {t("sections.hours")}
-              </h3>
-              <div className="space-y-2.5">
-                {venue.hours.map((item) => (
-                  <div key={item.day} className="flex items-center justify-between text-sm">
-                    <span className={cn("text-gray-700", item.highlighted && "font-semibold")}>
-                      {item.day}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      {item.highlighted ? (
-                        <span className="rounded-full bg-brand-coral-soft px-2 py-0.5 text-xs font-medium text-brand-coral">
-                          {t("labels.peak")}
-                        </span>
-                      ) : null}
-                      <span className="text-gray-500">{item.open}</span>
+            {(venue.hours ?? []).length > 0 ? (
+              <div className="paper-panel rounded-2xl p-5">
+                <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                  {t("sections.hours")}
+                </h3>
+                <div className="space-y-2.5">
+                  {venue.hours.map((item) => (
+                    <div key={item.day} className="flex items-center justify-between text-sm">
+                      <span className={cn("text-gray-700", item.highlighted && "font-semibold")}>
+                        {item.day}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        {item.highlighted ? (
+                          <span className="rounded-full bg-brand-coral-soft px-2 py-0.5 text-xs font-medium text-brand-coral">
+                            {t("labels.peak")}
+                          </span>
+                        ) : null}
+                        <span className="text-gray-500">{item.open}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
 
             {/* Amenities card */}
-            <div className="paper-panel rounded-2xl p-5">
-              <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
-                {t("sections.amenities")}
-              </h3>
-              <div className="grid grid-cols-1 gap-2.5">
-                {(venue.amenities ?? []).map((amenity) => (
-                  <div key={amenity} className="flex items-center gap-2.5 text-sm text-gray-700">
-                    <BadgeCheck className="h-4 w-4 shrink-0 text-brand-sage" />
-                    {amenity}
-                  </div>
-                ))}
+            {(venue.amenities ?? []).length > 0 ? (
+              <div className="paper-panel rounded-2xl p-5">
+                <h3 className="font-editorial mb-4 text-lg tracking-tight text-gray-900">
+                  {t("sections.amenities")}
+                </h3>
+                <div className="grid grid-cols-1 gap-2.5">
+                  {venue.amenities.map((amenity) => (
+                    <div key={amenity} className="flex items-center gap-2.5 text-sm text-gray-700">
+                      <BadgeCheck className="h-4 w-4 shrink-0 text-brand-sage" />
+                      {amenity}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </section>

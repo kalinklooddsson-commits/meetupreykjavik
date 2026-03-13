@@ -14,11 +14,14 @@ import {
 
 export type HeroStat = { value: string; label: string };
 
+export type CategoryCount = { name: string; count: number };
+
 export type HomePageData = {
   heroStats: readonly HeroStat[];
   events: HomeEvent[];
   groups: HomeGroup[];
   venues: HomeVenue[];
+  categoryCounts: CategoryCount[];
 };
 
 /* ------------------------------------------------------------------ */
@@ -245,6 +248,35 @@ async function fetchVenues(
   }
 }
 
+async function fetchCategoryCounts(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+): Promise<CategoryCount[]> {
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from("events")
+      .select("category_id, categories ( name_en )")
+      .eq("status", "published");
+
+    if (error || !data) return [];
+
+    const counts: Record<string, number> = {};
+    for (const row of data) {
+      const catRaw = row.categories as { name_en: string } | { name_en: string }[] | null;
+      const cat = Array.isArray(catRaw) ? catRaw[0] : catRaw;
+      const name = cat?.name_en ?? "Other";
+      counts[name] = (counts[name] ?? 0) + 1;
+    }
+
+    return Object.entries(counts)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+  } catch {
+    return [];
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Main fetcher                                                       */
 /* ------------------------------------------------------------------ */
@@ -256,17 +288,19 @@ export async function fetchHomePageData(): Promise<HomePageData> {
       events: [...fallbackEvents],
       groups: [...fallbackGroups],
       venues: [...fallbackVenues],
+      categoryCounts: [],
     };
   }
 
   const supabase = await createSupabaseServerClient();
 
-  const [heroStats, events, groups, venues] = await Promise.all([
+  const [heroStats, events, groups, venues, categoryCounts] = await Promise.all([
     fetchHeroStats(supabase),
     fetchEvents(supabase),
     fetchGroups(supabase),
     fetchVenues(supabase),
+    fetchCategoryCounts(supabase),
   ]);
 
-  return { heroStats, events, groups, venues };
+  return { heroStats, events, groups, venues, categoryCounts };
 }

@@ -7,12 +7,13 @@
  */
 
 import { hasSupabaseEnv } from "@/lib/env";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth/guards";
 import { getUserRsvps } from "@/lib/db/rsvps";
 import { getUserNotifications } from "@/lib/db/notifications";
 import { getUserConversations } from "@/lib/db/messages";
 import { getProfileById } from "@/lib/db/profiles";
-import { getEvents } from "@/lib/db/events";
+import { getEvents, getEventsByHost } from "@/lib/db/events";
 import { getUserTransactions, getPlatformRevenue } from "@/lib/db/transactions";
 import { getVenueBookings } from "@/lib/db/bookings";
 import { getVenues } from "@/lib/db/venues";
@@ -217,14 +218,10 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
   }
 
   try {
-    const [eventsResult, transactions] = await Promise.all([
-      getEvents({ limit: 50 }),
+    const [managedEvents, transactions] = await Promise.all([
+      getEventsByHost(session.id, { limit: 50 }),
       getUserTransactions(session.id),
     ]);
-
-    const managedEvents = eventsResult.data.filter(
-      (e: Record<string, unknown>) => e.host_id === session.id,
-    );
 
     if (managedEvents.length === 0) {
       return mockOrganizerPortalData;
@@ -236,6 +233,42 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       0,
     );
 
+    const totalRsvps = managedEvents.reduce(
+      (sum: number, e: Record<string, unknown>) =>
+        sum + ((e.rsvp_count as number) ?? 0),
+      0,
+    );
+
+    const nextEvents = managedEvents.slice(0, 10).map((e: Record<string, unknown>) => {
+      const venue = e.venues as Record<string, unknown> | null;
+      const group = e.groups as Record<string, unknown> | null;
+      const startsAt = new Date(e.starts_at as string);
+      const dateLabel = startsAt.toLocaleDateString("en-GB", {
+        weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+        hour12: false, timeZone: "Atlantic/Reykjavik",
+      });
+      return {
+        slug: e.slug as string,
+        title: e.title as string,
+        groupName: (group?.name as string) ?? "",
+        dateLabel,
+        venueName: (venue?.name as string) ?? (e.venue_name as string) ?? "TBA",
+        status: ((e.status as string) ?? "draft").replace(/^\w/, (c: string) => c.toUpperCase()),
+        approvalMode: (e.rsvp_mode as string) ?? "open",
+        rsvps: (e.rsvp_count as number) ?? 0,
+        capacity: (e.attendee_limit as number) ?? 50,
+        waitlist: 0,
+        ticketsSold: 0,
+        revenue: "0 ISK",
+        checkIns: `0 / ${(e.rsvp_count as number) ?? 0}`,
+        notes: "",
+        timeline: [] as { time: string; label: string }[],
+        attendees: [] as { name: string; status: string; ticket: string; checkedIn: string; note: string }[],
+        coOrganizers: [] as string[],
+        commentsSummary: "",
+      };
+    });
+
     return {
       ...mockOrganizerPortalData,
       metrics: [
@@ -245,7 +278,12 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
           delta: `${managedEvents.length} published`,
           detail: "Events you manage that are currently live.",
         },
-        mockOrganizerPortalData.metrics[1],
+        {
+          label: "Total RSVPs",
+          value: String(totalRsvps),
+          delta: totalRsvps > 0 ? "Across all events" : "None yet",
+          detail: "Total confirmed RSVPs for your events.",
+        },
         mockOrganizerPortalData.metrics[2],
         {
           label: "Revenue",
@@ -254,14 +292,54 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
           detail: "Total ticket and membership revenue.",
         },
       ],
-    } as OrganizerPortalData;
+      nextEvents,
+    } as unknown as OrganizerPortalData;
   } catch (error) {
     console.error("Failed to fetch organizer dashboard data:", error);
     return mockOrganizerPortalData;
   }
 }
 
-export { mockGetManagedOrganizerEvent as getManagedOrganizerEvent };
+export async function getManagedOrganizerEvent(slug: string) {
+  if (!hasSupabaseEnv()) return mockGetManagedOrganizerEvent(slug);
+
+  try {
+    const { getEventBySlug } = await import("@/lib/db/events");
+    const row = await getEventBySlug(slug);
+    if (!row) return mockGetManagedOrganizerEvent(slug);
+
+    const venue = (row as Record<string, unknown>).venues as Record<string, unknown> | null;
+    const group = (row as Record<string, unknown>).groups as Record<string, unknown> | null;
+    const startsAt = new Date(row.starts_at);
+    const dateLabel = startsAt.toLocaleDateString("en-GB", {
+      weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+      hour12: false, timeZone: "Atlantic/Reykjavik",
+    });
+
+    return {
+      slug: row.slug,
+      title: row.title,
+      groupName: (group?.name as string) ?? "",
+      dateLabel,
+      venueName: (venue?.name as string) ?? row.venue_name ?? "TBA",
+      status: (row.status ?? "draft").replace(/^\w/, (c: string) => c.toUpperCase()),
+      approvalMode: row.rsvp_mode ?? "open",
+      rsvps: row.rsvp_count ?? 0,
+      capacity: row.attendee_limit ?? 50,
+      waitlist: 0,
+      ticketsSold: 0,
+      revenue: "0 ISK",
+      checkIns: `0 / ${row.rsvp_count ?? 0}`,
+      notes: row.description ?? "",
+      timeline: [] as { time: string; label: string }[],
+      attendees: [] as { name: string; status: string; ticket: string; checkedIn: string; note: string }[],
+      coOrganizers: [] as string[],
+      commentsSummary: "",
+    };
+  } catch {
+    return mockGetManagedOrganizerEvent(slug);
+  }
+}
 
 // ────────────────────────────────────────────
 // Venue dashboard
@@ -288,6 +366,21 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
 
     const bookings = await getVenueBookings(ownedVenue.id as string);
 
+    const pendingCount = bookings.filter((b: Record<string, unknown>) => b.status === "pending").length;
+
+    const venueBookingsList = bookings.slice(0, 10).map((b: Record<string, unknown>) => {
+      const organizer = b.profiles as Record<string, unknown> | null;
+      return {
+        key: b.id as string,
+        organizer: (organizer?.display_name as string) ?? "Unknown",
+        event: (b.event_title as string) ?? "Booking request",
+        date: (b.requested_date as string) ?? "",
+        attendance: String((b.expected_attendance as number) ?? 0),
+        message: (b.message as string) ?? "",
+        status: (b.status as string) ?? "pending",
+      };
+    });
+
     return {
       ...mockVenuePortalData,
       metrics: [
@@ -299,9 +392,15 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
         },
         mockVenuePortalData.metrics[1],
         mockVenuePortalData.metrics[2],
-        mockVenuePortalData.metrics[3],
+        {
+          label: "Pending bookings",
+          value: String(pendingCount),
+          delta: pendingCount > 0 ? "Needs response" : "All clear",
+          detail: "Booking requests awaiting your response.",
+        },
       ],
-    } as VenuePortalData;
+      bookings: venueBookingsList,
+    } as unknown as VenuePortalData;
   } catch (error) {
     console.error("Failed to fetch venue dashboard data:", error);
     return mockVenuePortalData;
@@ -320,15 +419,27 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
   }
 
   try {
-    const [eventsResult, venuesResult, revenue] = await Promise.all([
+    const supabase = await createSupabaseServerClient();
+    const profileCountPromise = supabase
+      ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0)
+      : Promise.resolve(0);
+
+    const [eventsResult, venuesResult, revenue, profileCount] = await Promise.all([
       getEvents({ limit: 50 }),
       getVenues({ limit: 50 }),
       getPlatformRevenue(),
+      profileCountPromise,
     ]);
 
     return {
       ...mockAdminPortalData,
       metrics: [
+        {
+          label: "Users",
+          value: String(profileCount),
+          delta: "Registered",
+          detail: "Total registered members on the platform.",
+        },
         {
           label: "Total events",
           value: String(eventsResult.count),
@@ -347,7 +458,12 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
           delta: "All time",
           detail: "Total platform revenue.",
         },
-        mockAdminPortalData.metrics[3],
+        mockAdminPortalData.metrics[4] ?? {
+          label: "System health",
+          value: "Operational",
+          delta: "All checks passing",
+          detail: "Platform systems are running normally.",
+        },
       ],
     } as AdminPortalData;
   } catch (error) {

@@ -51,6 +51,7 @@
     "going": "going",
     "fillingFast": "Filling fast",
     "hot": "Hot",
+    "member": "member",
     "members": "members",
     "organizedBy": "Organized by",
     "nextEvent": "Next: {title}",
@@ -235,6 +236,8 @@
     },
     "social": {
       "headline": "Join 2,800+ members discovering Reykjavik",
+      "headlineDynamic": "Join {count}+ members discovering Reykjavik",
+      "meetup": "meetup",
       "meetups": "meetups"
     }
   },

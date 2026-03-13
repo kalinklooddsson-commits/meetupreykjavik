@@ -21,6 +21,11 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
   const venue = row.venues as Record<string, unknown> | null;
   const host = row.profiles as Record<string, unknown> | null;
   const category = row.categories as Record<string, unknown> | null;
+  const group = row.groups as Record<string, unknown> | null;
+
+  const isFree = row.is_free !== false;
+  const ageRaw = row.age_restriction as string | null;
+  const ageLabel = !ageRaw || ageRaw === "none" ? "All ages" : ageRaw;
 
   return {
     slug: row.slug as string,
@@ -32,17 +37,17 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     endsAt: (row.ends_at as string) ?? (row.starts_at as string),
     venueName: (venue?.name as string) ?? (row.venue_name as string) ?? "",
     venueSlug: (venue?.slug as string) ?? "",
-    groupName: "",
-    groupSlug: "",
+    groupName: (group?.name as string) ?? "",
+    groupSlug: (group?.slug as string) ?? "",
     hostName: (host?.display_name as string) ?? "",
     area: (venue?.city as string) ?? "Reykjavik",
     summary: ((row.description as string) ?? "").slice(0, 200),
     description: row.description ? [(row.description as string)] : [],
     attendees: (row.rsvp_count as number) ?? 0,
     capacity: (row.attendee_limit as number) ?? 50,
-    priceLabel: row.is_free === true ? "Free" : "Paid",
-    ageLabel: (row.age_restriction as string) ?? "All ages",
-    isFree: (row.is_free as boolean) ?? true,
+    priceLabel: isFree ? "Free" : "Paid",
+    ageLabel,
+    isFree,
     visibilityLabel: (row.visibility_mode as string) ?? "public",
     approvalLabel: (row.rsvp_mode as string) ?? "open",
     reminderLabel: (row.reminder_policy as string) ?? "24h before",

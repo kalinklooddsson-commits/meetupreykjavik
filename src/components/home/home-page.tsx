@@ -18,7 +18,7 @@ import {
 
 import type { HomeEvent, HomeGroup, HomeVenue } from "@/lib/home-data";
 import { categories, steps } from "@/lib/home-data";
-import type { HeroStat } from "@/lib/home-fetchers";
+import type { HeroStat, CategoryCount } from "@/lib/home-fetchers";
 
 /* ------------------------------------------------------------------ */
 /*  Color maps                                                         */
@@ -212,7 +212,7 @@ function GroupCard({ group }: { group: HomeGroup }) {
         </p>
         <div className="mt-3 flex items-center justify-between border-t border-brand-border-light pt-3">
           <span className="text-sm font-semibold text-brand-text">
-            {group.members} {tCards("members")}
+            {group.members} {group.members === 1 ? tCards("member") : tCards("members")}
           </span>
           <span className="text-sm font-bold text-brand-indigo">
             {tCta("viewGroup")}
@@ -285,11 +285,13 @@ export function HomePage({
   events,
   groups,
   venues,
+  categoryCounts = [],
 }: {
   heroStats: readonly HeroStat[];
   events: HomeEvent[];
   groups: HomeGroup[];
   venues: HomeVenue[];
+  categoryCounts?: CategoryCount[];
 }) {
   const tHero = useTranslations("home.hero");
   const tSections = useTranslations("home.sections");
@@ -473,7 +475,7 @@ export function HomePage({
             ))}
           </div>
           <p className="text-base font-semibold tracking-tight text-brand-text sm:text-lg">
-            {tSocial("headline")}
+            {tSocial("headlineDynamic", { count: localizedHeroStats[0]?.value ?? heroStats[0]?.value ?? "2,800+" })}
           </p>
         </div>
       </section>
@@ -489,28 +491,34 @@ export function HomePage({
             center
           />
           <div className="reveal-group grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={
-                  `/categories/${slugify(category.name)}` as import("next").Route
-                }
-                className={`group relative overflow-hidden rounded-2xl border ${toneBorder[category.tone]} bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-card`}
-              >
-                <span
-                  className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-black ${toneMap[category.tone]}`}
+            {categories.map((category) => {
+              const dbCount = categoryCounts.find(
+                (c) => category.name.toLowerCase().includes(c.name.toLowerCase().split(" ")[0]),
+              )?.count;
+              const count = dbCount ?? category.count;
+              return (
+                <Link
+                  key={category.name}
+                  href={
+                    `/categories/${slugify(category.name)}` as import("next").Route
+                  }
+                  className={`group relative overflow-hidden rounded-2xl border ${toneBorder[category.tone]} bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-card`}
                 >
-                  {category.letter}
-                </span>
-                <h3 className="mt-3 text-sm font-bold tracking-tight text-brand-text">
-                  {category.name}
-                </h3>
-                <p className="mt-1 text-xs font-medium text-gray-600">
-                  {category.count} {tSocial("meetups")}
-                </p>
-                <ArrowRight className="mt-3 h-3.5 w-3.5 text-gray-400 transition-colors group-hover:text-brand-indigo" />
-              </Link>
-            ))}
+                  <span
+                    className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-black ${toneMap[category.tone]}`}
+                  >
+                    {category.letter}
+                  </span>
+                  <h3 className="mt-3 text-sm font-bold tracking-tight text-brand-text">
+                    {category.name}
+                  </h3>
+                  <p className="mt-1 text-xs font-medium text-gray-600">
+                    {count} {count === 1 ? tSocial("meetup") : tSocial("meetups")}
+                  </p>
+                  <ArrowRight className="mt-3 h-3.5 w-3.5 text-gray-400 transition-colors group-hover:text-brand-indigo" />
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

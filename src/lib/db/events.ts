@@ -10,7 +10,8 @@ const EVENT_SELECT_WITH_JOINS = `
   *,
   venues (*),
   profiles:host_id (*),
-  categories (*)
+  categories (*),
+  groups:group_id ( id, slug, name )
 ` as const;
 
 interface GetEventsOptions {

@@ -10,6 +10,7 @@ export default async function PublicHomePage() {
       events={data.events}
       groups={data.groups}
       venues={data.venues}
+      categoryCounts={data.categoryCounts}
     />
   );
 }
