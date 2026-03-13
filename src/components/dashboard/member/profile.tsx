@@ -21,6 +21,7 @@ import {
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getMemberProfile, getMemberPortalData } from "@/lib/dashboard-fetchers";
 import { shouldShowPremiumBadge } from "@/lib/features/member-features";
+import { SettingsForm } from "./settings-form";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -288,24 +289,11 @@ export async function MemberSettingsScreen() {
       roleMode="member"
       breadcrumbs={["Dashboard", "Settings"]}
     >
-      {data.settingsSections.map((section) => (
-        <Surface
-          key={section.key}
-          eyebrow="Settings"
-          title={section.title}
-          description={section.description}
-          actionLabel={section.key === "profile" ? "Edit profile" : undefined}
-          actionHref={section.key === "profile" ? ("/settings" as Route) : undefined}
-        >
-          <KeyValueList
-            items={section.items.map((item) => ({
-              key: item.label,
-              label: item.label,
-              value: item.value,
-            }))}
-          />
-        </Surface>
-      ))}
+      <SettingsForm
+        sections={data.settingsSections}
+        userName={profile.name}
+        userEmail={profile.email ?? ""}
+      />
     </PortalShell>
   );
 }

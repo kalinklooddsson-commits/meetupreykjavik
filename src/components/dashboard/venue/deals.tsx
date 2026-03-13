@@ -9,6 +9,7 @@ import {
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { venueHasFeature } from "@/lib/entitlements";
+import { VenueDealStudio } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -127,25 +128,13 @@ export async function VenueDealsScreen() {
         </Surface>
       )}
 
-      {/* ── Create deal CTA ──────────────────────────────── */}
+      {/* ── Create & manage deals (interactive) ────────── */}
       <Surface
-        eyebrow="New deal"
-        title="Create a new deal"
-        description="Set up welcome perks, group discounts, or special promotions for events at your venue."
+        eyebrow="Manage"
+        title="Deal studio"
+        description="Create new deals and manage existing ones."
       >
-        <div className="flex items-center gap-4 rounded-lg border border-dashed border-brand-border bg-brand-sand-light p-5">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[rgba(55,48,163,0.08)]">
-            <Plus className="h-5 w-5 text-brand-indigo" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-brand-text">
-              Add a new deal to attract organizers and delight attendees.
-            </p>
-            <p className="mt-0.5 text-sm text-brand-text-muted">
-              Choose from free items, percentage discounts, or fixed price bundles.
-            </p>
-          </div>
-        </div>
+        <VenueDealStudio deals={data.deals} />
       </Surface>
     </PortalShell>
   );

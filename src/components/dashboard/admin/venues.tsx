@@ -13,6 +13,7 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getAdminPortalData } from "@/lib/dashboard-fetchers";
+import { AdminVenueApprovalConsole, AdminVenueOperationsDesk } from "./panels";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -52,23 +53,13 @@ export async function AdminVenuesScreen() {
       variant="admin"
       roleMode="admin"
     >
-      {/* ── Pending applications ───────────────────────────── */}
+      {/* ── Pending applications (interactive) ────────────── */}
       <Surface
         eyebrow="Applications"
         title="Pending venue applications"
-        description={`${venues.applications.length} application${venues.applications.length === 1 ? "" : "s"} awaiting review. Approve or request additional information.`}
+        description={`${venues.applications.length} application${venues.applications.length === 1 ? "" : "s"} awaiting review. Approve or reject applications.`}
       >
-        <div className="grid gap-3 lg:grid-cols-3">
-          {venues.applications.map((app) => (
-            <StreamCard
-              key={app.key}
-              eyebrow={app.type}
-              title={app.name}
-              description={app.note}
-              badge={<ToneBadge tone={statusTone(app.status)}>{app.status}</ToneBadge>}
-            />
-          ))}
-        </div>
+        <AdminVenueApprovalConsole applications={venues.applications} />
       </Surface>
 
       {/* ── Venue matching notes ───────────────────────────── */}
@@ -87,32 +78,13 @@ export async function AdminVenuesScreen() {
         </ul>
       </Surface>
 
-      {/* ── Active venues table ────────────────────────────── */}
+      {/* ── Active venues table (interactive) ────────────── */}
       <Surface
         eyebrow="Partner network"
         title="Active venues"
         description={`${venues.active.length} verified venues currently in the partner network.`}
       >
-        <DashboardTable
-          columns={["Venue", "Area", "Type", "Rating", "Deal / Note"]}
-          rows={venues.active.map((v) => ({
-            key: v.key,
-            cells: [
-              <span key="name" className="font-medium">{v.name}</span>,
-              <span key="area" className="flex items-center gap-1 text-brand-text-muted">
-                <MapPin className="h-3 w-3" />
-                {v.area}
-              </span>,
-              <ToneBadge key="type" tone="neutral">{v.type}</ToneBadge>,
-              <span key="rating" className="flex items-center gap-1 font-medium">
-                <Star className="h-3 w-3 text-amber-500" />
-                {v.rating}
-              </span>,
-              <span key="note" className="text-xs text-brand-text-muted">{v.note || "—"}</span>,
-            ],
-          }))}
-          caption="Active venue partners"
-        />
+        <AdminVenueOperationsDesk venues={venues.active} />
       </Surface>
     </PortalShell>
   );

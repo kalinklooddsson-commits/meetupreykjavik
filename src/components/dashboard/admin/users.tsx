@@ -18,6 +18,7 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getAdminPortalData } from "@/lib/dashboard-fetchers";
+import { AdminUserCommandCenter } from "./panels";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -63,33 +64,13 @@ export async function AdminUsersScreen() {
       variant="admin"
       roleMode="admin"
     >
-      {/* ── Users table ────────────────────────────────────── */}
+      {/* ── Users table (interactive) ────────────────────── */}
       <Surface
         eyebrow="All accounts"
         title="Platform users"
-        description={`${users.length} accounts shown. Filter by type, status, or activity to find specific users.`}
+        description={`${users.length} accounts shown. Search, filter by role, and take admin actions.`}
       >
-        <DashboardTable
-          columns={["User", "Email", "Type", "Status", "Joined", "Last active", "Groups", "Events", "Tier"]}
-          rows={users.map((u) => ({
-            key: u.key,
-            cells: [
-              <div key="name" className="flex items-center gap-2">
-                <AvatarStamp name={u.name} size="sm" />
-                <span className="font-medium">{u.name}</span>
-              </div>,
-              <span key="email" className="text-brand-text-muted">{u.email}</span>,
-              <ToneBadge key="type" tone={typeTone(u.type)}>{u.type}</ToneBadge>,
-              <ToneBadge key="status" tone={statusTone(u.status)}>{u.status}</ToneBadge>,
-              u.joined,
-              u.lastActive,
-              u.groups,
-              u.events,
-              <ToneBadge key="rev" tone={u.revenue === "Free" ? "neutral" : "indigo"}>{u.revenue}</ToneBadge>,
-            ],
-          }))}
-          caption="Platform user accounts"
-        />
+        <AdminUserCommandCenter users={users} />
       </Surface>
 
       {/* ── Selected user profile ──────────────────────────── */}

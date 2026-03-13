@@ -2,11 +2,11 @@ import type { Route } from "next";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
-  KeyValueList,
   ToneBadge,
 } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { resolveVenueTier } from "@/lib/entitlements";
+import { VenueProfileSectionEditor } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -53,25 +53,8 @@ export async function VenueProfileScreen() {
         </div>
       </Surface>
 
-      {/* ── Profile sections ─────────────────────────────── */}
-      {data.profileSections.map((section) => (
-        <Surface
-          key={section.key}
-          eyebrow="Profile"
-          title={section.title}
-          description={`Your ${section.title.toLowerCase()} as shown on your public venue page.`}
-          actionLabel=""
-          actionHref={"/venue/profile" as Route}
-        >
-          <KeyValueList
-            items={section.items.map((item, i) => ({
-              key: `${section.key}-${i}`,
-              label: item.label,
-              value: item.value,
-            }))}
-          />
-        </Surface>
-      ))}
+      {/* ── Profile sections (editable) ──────────────────── */}
+      <VenueProfileSectionEditor sections={data.profileSections} />
     </PortalShell>
   );
 }

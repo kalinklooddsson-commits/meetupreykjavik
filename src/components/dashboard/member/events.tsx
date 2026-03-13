@@ -72,7 +72,7 @@ export async function MemberCalendarScreen() {
         actionHref={"/events" as Route}
       >
         <DashboardTable
-          columns={["Event", "Venue", "Status", "Seat", "Note"]}
+          columns={["Event", "Venue", "Status", "Seat / Position", "Action"]}
           rows={data.upcomingEvents.map((e) => ({
             key: e.event.slug,
             cells: [
@@ -88,7 +88,7 @@ export async function MemberCalendarScreen() {
                 {e.status}
               </ToneBadge>,
               e.seat,
-              <span key="note" className="text-brand-text-muted">{e.note}</span>,
+              <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
             ],
           }))}
           caption="Upcoming RSVPs"

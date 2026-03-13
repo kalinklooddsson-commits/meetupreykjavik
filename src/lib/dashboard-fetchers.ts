@@ -47,7 +47,7 @@ export async function getMemberProfile(): Promise<MemberProfile> {
       .join("")
       .slice(0, 2)
       .toUpperCase();
-    return { ...mockMemberProfile, name, initials, slug: session.slug ?? mockMemberProfile.slug };
+    return { ...mockMemberProfile, name, initials, slug: session.slug ?? mockMemberProfile.slug, email: session.email ?? mockMemberProfile.email };
   }
 
   const profile = await getProfileById(session.id);

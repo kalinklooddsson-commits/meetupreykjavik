@@ -75,6 +75,7 @@ export function getDashboardAvatar(name: string) {
 export const memberProfile = {
   slug: "kari-sigurdsson",
   name: "Kari Sigurdsson",
+  email: "kari@meetupreykjavik.is",
   initials: "KS",
   tier: "Plus member",
   city: "Reykjavik",
