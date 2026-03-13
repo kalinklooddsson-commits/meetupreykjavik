@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -339,6 +341,7 @@ export function HomePage() {
           <Image
             src="/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg"
             alt=""
+            role="presentation"
             fill
             className="object-cover opacity-20"
             sizes="100vw"

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import type { Route } from "next";
@@ -54,11 +56,7 @@ import {
   userTiers,
   venueTiers,
 } from "@/lib/public-data";
-import {
-  getFeaturedSourcedPlaces,
-  getSourcedPlaces,
-  type SourcedPlace,
-} from "@/lib/reykjavik-source-data";
+import type { SourcedPlace } from "@/lib/reykjavik-source-data";
 import { cn } from "@/lib/utils";
 import { VenueMap } from "@/components/maps/venue-map";
 
@@ -325,16 +323,6 @@ function sourcedPlaceSignals(place: SourcedPlace, t: (key: string) => string) {
   ];
 }
 
-function relatedSourcedPlaces(place: SourcedPlace) {
-  return getSourcedPlaces()
-    .filter(
-      (item) =>
-        item.slug !== place.slug &&
-        (item.area === place.area || item.laneKey === place.laneKey),
-    )
-    .slice(0, 4);
-}
-
 function blogSignals(posts: BlogPost[], t: (key: string, values?: Record<string, string | number>) => string) {
   return [
     {
@@ -495,6 +483,7 @@ function DetailHero({
           <Image
             fill
             alt=""
+            role="presentation"
             className="object-cover opacity-40"
             sizes="100vw"
             src={imageUrl}
@@ -1198,6 +1187,7 @@ function IndexHero({
       <Image
         fill
         alt=""
+        role="presentation"
         className="object-cover opacity-30"
         sizes="100vw"
         src={imageSrc}
@@ -2323,15 +2313,17 @@ export function VenuesIndexScreen({
   searchQuery,
   activeType,
   activeArea,
+  featuredSourcedPlaces = [],
 }: {
   venues?: PublicVenue[];
   searchQuery?: string;
   activeType?: string;
   activeArea?: string;
+  featuredSourcedPlaces?: SourcedPlace[];
 } = {}) {
   const t = useTranslations("venuesPage");
   const tCards = useTranslations("cards");
-  const sourcedPlaces = getFeaturedSourcedPlaces(6);
+  const sourcedPlaces = featuredSourcedPlaces;
   const avgRating = venues.length > 0 ? (venues.reduce((sum, v) => sum + (v.rating ?? 0), 0) / venues.length).toFixed(1) : "0.0";
   const totalCapacity = venues.reduce((sum, v) => sum + (v.capacity ?? 0), 0);
   const neighborhoods = areaHighlights(venues).slice(0, 4);
@@ -2842,14 +2834,13 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
   );
 }
 
-export function SourcedVenueDetailScreen({ place }: { place: SourcedPlace }) {
+export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place: SourcedPlace; relatedPlaces?: SourcedPlace[] }) {
   const tNav = useTranslations("nav");
   const t = useTranslations("sourcedVenueDetail");
   const tSignals = useTranslations("signals");
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
   const signals = sourcedPlaceSignals(place, tSignals);
-  const relatedPlaces = relatedSourcedPlaces(place);
 
   return (
     <>
@@ -3024,7 +3015,7 @@ export function BlogIndexScreen() {
       {/* Hero with latest eyebrow */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-brand-basalt">
         <div className="absolute inset-0 opacity-20">
-          <Image fill alt="" className="object-cover" sizes="100vw" src="/place-images/reykjavik/arb-jarsafn-c71d7348.jpg" />
+          <Image fill alt="" role="presentation" className="object-cover" sizes="100vw" src="/place-images/reykjavik/arb-jarsafn-c71d7348.jpg" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/90" />
         <div className="section-shell relative z-10 py-16 text-white sm:py-24">
@@ -3109,7 +3100,7 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
       <section className="relative overflow-hidden border-b border-gray-200 bg-gray-900">
         {imageUrl ? (
           <>
-            <Image fill alt="" className="object-cover opacity-40" sizes="100vw" src={imageUrl} unoptimized={imageUrl.startsWith("https://")} />
+            <Image fill alt="" role="presentation" className="object-cover opacity-40" sizes="100vw" src={imageUrl} unoptimized={imageUrl.startsWith("https://")} />
             <div className="absolute inset-0 bg-gradient-to-b from-gray-900/30 to-gray-900/80" />
           </>
         ) : (
@@ -3219,7 +3210,7 @@ export function AboutScreen() {
       {/* Large hero banner with brand gradient */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
         <div className="absolute inset-0 opacity-20">
-          <Image fill alt="" className="object-cover" sizes="100vw" src="/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg" />
+          <Image fill alt="" role="presentation" className="object-cover" sizes="100vw" src="/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-brand-indigo/40 to-[#312e81]/80" />
         <div className="section-shell relative z-10 py-20 text-center text-white sm:py-28 md:py-36">
