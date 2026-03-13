@@ -122,7 +122,7 @@ export function VenueEventForm({
     return {
       title: form.title,
       description: form.description,
-      status: "published",
+      status: "pending_review",
       group_slug: null,
       category_id: null,
       event_type: form.eventType,
@@ -178,7 +178,7 @@ export function VenueEventForm({
     }
 
     setSubmitting(true);
-    setMessage(isEdit ? "Saving changes..." : "Publishing event...");
+    setMessage(isEdit ? "Saving changes..." : "Submitting for review...");
     setMessageType("success");
 
     try {
@@ -192,12 +192,16 @@ export function VenueEventForm({
       const result = await response.json();
 
       if (result.ok) {
-        const createdSlug = result.data?.slug;
-        if (createdSlug) {
-          window.location.href = `/events/${createdSlug}`;
-          return;
+        if (isEdit) {
+          const createdSlug = result.data?.slug;
+          if (createdSlug) {
+            window.location.href = `/events/${createdSlug}`;
+            return;
+          }
+          setMessage("Changes saved successfully!");
+        } else {
+          setMessage("Event submitted for review! The platform admin will approve it shortly.");
         }
-        setMessage("Event published successfully!");
         setMessageType("success");
       } else {
         setMessage(
@@ -627,7 +631,7 @@ export function VenueEventForm({
           ) : (
             <Send className="h-4 w-4" />
           )}
-          {isEdit ? "Save changes" : "Publish event"}
+          {isEdit ? "Save changes" : "Submit for review"}
         </button>
       </div>
     </div>

@@ -840,6 +840,12 @@ export const venuePortalData = {
       status: "Counter sent",
       note: "Need final headcount and staffing level before approval.",
     },
+    {
+      event: { slug: "friday-jazz-night", title: "Friday Jazz Night" },
+      organizer: "Lebowski Bar",
+      status: "Pending review",
+      note: "Submitted by venue — awaiting admin approval.",
+    },
   ],
   messages: [
     {
@@ -1368,6 +1374,7 @@ export const adminPortalData = {
       { key: newcomersNight.slug, title: newcomersNight.title, status: "Approved", category: newcomersNight.category, venue: newcomersNight.venueName, date: "20 Mar", action: "Monitor waitlist" },
       { key: wineTasting.slug, title: wineTasting.title, status: "Paid", category: wineTasting.category, venue: wineTasting.venueName, date: "19 Mar", action: "Check payout" },
       { key: singlesNight.slug, title: singlesNight.title, status: "Approval mode", category: singlesNight.category, venue: singlesNight.venueName, date: "15 Mar", action: "Review attendee ratio" },
+      { key: "friday-jazz-night", title: "Friday Jazz Night", status: "Pending Review", category: "Nightlife & Social", venue: "Lebowski Bar", date: "22 Mar", action: "Venue-submitted — needs approval" },
     ],
     calendar: [
       { day: "15", label: singlesNight.title },

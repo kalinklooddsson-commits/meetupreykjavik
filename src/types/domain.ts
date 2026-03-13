@@ -91,7 +91,9 @@ export type EventType = (typeof eventTypes)[number];
 
 export const eventStatuses = [
   "draft",
+  "pending_review",
   "published",
+  "rejected",
   "cancelled",
   "completed",
 ] as const;

@@ -765,17 +765,27 @@ export function AdminEventOperationsDesk({
             e.date,
             <ToneBadge key="s" tone={toneForStatus(e.status)}>{e.status}</ToneBadge>,
             <div key="a" className="flex gap-1.5">
-              {e.status !== "Published" && (
+              {e.status === "Pending Review" && (
+                <>
+                  <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Published")}>
+                    <CheckCircle2 className="h-3.5 w-3.5 text-brand-sage" /> Approve
+                  </button>
+                  <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Rejected")}>
+                    <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Decline
+                  </button>
+                </>
+              )}
+              {e.status !== "Published" && e.status !== "Pending Review" && (
                 <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Published")}>
                   <Send className="h-3.5 w-3.5 text-brand-sage" /> Publish
                 </button>
               )}
-              {e.status !== "Featured" && (
+              {e.status !== "Featured" && e.status !== "Pending Review" && (
                 <button type="button" className={btnGhost} onClick={() => updateEvent(e.key, "Featured")}>
                   <Star className="h-3.5 w-3.5 text-brand-coral" /> Feature
                 </button>
               )}
-              {e.status !== "Cancelled" && (
+              {e.status !== "Cancelled" && e.status !== "Rejected" && (
                 <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Cancelled")}>
                   <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Cancel
                 </button>
