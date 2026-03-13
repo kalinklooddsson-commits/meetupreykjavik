@@ -1114,7 +1114,7 @@ async function handleLiveDataRequest(
         if (match.params.id !== session.id && session.accountType !== "admin") {
           return forbiddenResponse("You can only edit your own profile.");
         }
-        const body = await parseValidatedBody(request, key);
+        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         try {
           const data = await updateProfile(match.params.id, body as Parameters<typeof updateProfile>[1]);
           return successResponse(data);
