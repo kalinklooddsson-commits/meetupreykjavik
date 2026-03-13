@@ -1359,7 +1359,7 @@ export const adminPortalData = {
       { key: techGroup.slug, name: techGroup.name, members: techGroup.members, status: "Active", health: "Excellent", action: "Feature" },
       { key: expatsGroup.slug, name: expatsGroup.name, members: expatsGroup.members, status: "Featured", health: "Excellent", action: "Monitor" },
       { key: creativeGroup.slug, name: creativeGroup.name, members: creativeGroup.members, status: "Active", health: "Needs cadence", action: "Prompt organizer" },
-      { key: hikersGroup.slug, name: hikersGroup.name, members: hikersGroup.members, status: "Active", health: "Healthy", action: "Archive none" },
+      { key: hikersGroup.slug, name: hikersGroup.name, members: hikersGroup.members, status: "Active", health: "Healthy", action: "Archive" },
     ],
   },
   events: {
