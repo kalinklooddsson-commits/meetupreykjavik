@@ -481,7 +481,7 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
   async function removeNote(idx: number) {
     try {
       await fetch("/api/admin/notes", {
-        method: "POST",
+        method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: dossier.name, action: "remove", note: notes[idx] }),
       });

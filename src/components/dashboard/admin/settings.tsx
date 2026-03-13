@@ -1,19 +1,4 @@
 import type { Route } from "next";
-import {
-  Settings,
-  AlertTriangle,
-  Inbox,
-  Users,
-  FileText,
-  Tag,
-  PenSquare,
-  Shield,
-  Ban,
-  ClipboardList,
-  Mail,
-  Send,
-  Eye,
-} from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
