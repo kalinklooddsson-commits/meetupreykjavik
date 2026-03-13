@@ -112,11 +112,17 @@ function mapDbGroupToPublic(
   const slug = row.slug as string;
   const mockFallback = getMockGroup(slug);
   const dbDesc = (row.description as string) ?? "";
-  const isGenericDesc = !dbDesc || /community group in/i.test(dbDesc) || dbDesc.length < 30;
+  const groupName = (row.name as string) ?? "";
+  const isGenericDesc =
+    !dbDesc ||
+    dbDesc.length < 30 ||
+    /community group in/i.test(dbDesc) ||
+    /— community group/i.test(dbDesc) ||
+    dbDesc.toLowerCase().startsWith(groupName.toLowerCase());
 
   return {
     slug,
-    name: row.name as string,
+    name: groupName,
     category:
       ((row.categories as Record<string, unknown> | null)?.name_en as string) ??
       mockFallback?.category ??
@@ -289,14 +295,20 @@ function computeGroupActivity(
   memberCount: number,
   upcomingEventCount: number,
 ): number {
-  // Groups with events and members are more active
-  // Base: 30 for existing, +30 for having events, +up to 40 scaled by events/members
   if (memberCount === 0 && upcomingEventCount === 0) return 0;
-  let score = 30; // base for existing
-  if (upcomingEventCount > 0) score += 30;
-  // Scale remaining 40 points: more events per 10 members = higher
-  const density = memberCount > 0 ? (upcomingEventCount / Math.max(memberCount / 10, 1)) : 0;
-  score += Math.min(40, Math.round(density * 20));
+  // Base 20 for existing groups
+  let score = 20;
+  // +15 per upcoming event (capped at 45 for 3+ events)
+  score += Math.min(45, upcomingEventCount * 15);
+  // Member scale: larger communities get a boost (log scale)
+  if (memberCount > 0) {
+    score += Math.min(20, Math.round(Math.log2(memberCount) * 2.5));
+  }
+  // Event density bonus: events per 100 members
+  if (memberCount > 0 && upcomingEventCount > 0) {
+    const density = (upcomingEventCount / memberCount) * 100;
+    score += Math.min(15, Math.round(density * 5));
+  }
   return Math.min(100, score);
 }
 

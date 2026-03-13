@@ -347,10 +347,19 @@ function blogSignals(posts: BlogPost[], t: (key: string, values?: Record<string,
 function extractImageUrl(art: string | undefined | null): string | null {
   if (!art) return null;
   // Plain URL (Supabase storage, external images)
-  if (art.startsWith("http://") || art.startsWith("https://") || art.startsWith("/")) return art;
+  if (art.startsWith("http://") || art.startsWith("https://") || art.startsWith("/")) {
+    // Reject malformed Wikipedia thumbnail URLs (contain nested paths like .jpg/1200px-)
+    if (/\.\w{3,4}\/\d+px-/i.test(art)) return null;
+    return art;
+  }
   // CSS url() syntax inside gradients
   const match = art.match(/url\(['"]?([^'")\s]+)['"]?\)/);
-  return match ? match[1] : null;
+  if (match) {
+    const url = match[1];
+    if (/\.\w{3,4}\/\d+px-/i.test(url)) return null;
+    return url;
+  }
+  return null;
 }
 
 /* ── Category directory ────────────────────────────────── */
@@ -1976,7 +1985,7 @@ export function GroupsIndexScreen({
                   </div>
 
                   <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">{group.name}</div>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{group.description || groupArchetype(group)}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{group.summary || groupArchetype(group)}</p>
 
                   {/* Activity bar */}
                   <div className="mt-4">

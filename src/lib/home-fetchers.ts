@@ -97,9 +97,14 @@ function titleCase(s: string): string {
 }
 
 /** Detect generic placeholder descriptions like "X — community group in Reykjavik". */
-function isGenericDescription(desc?: string | null): boolean {
+function isGenericDescription(desc?: string | null, name?: string | null): boolean {
   if (!desc) return true;
-  return /community group in/i.test(desc) || desc.length < 20;
+  if (desc.length < 20) return true;
+  if (/community group in/i.test(desc)) return true;
+  if (/— community group/i.test(desc)) return true;
+  // Description that just repeats the name
+  if (name && desc.toLowerCase().startsWith(name.toLowerCase())) return true;
+  return false;
 }
 
 /** Extract a short area label from address + city, avoiding "Reykjavik, Reykjavik". */
@@ -161,12 +166,16 @@ async function fetchHeroStats(
       .gte("starts_at", now.toISOString())
       .lte("starts_at", endOfWeek.toISOString());
 
-    // Count venue partners (only those that have hosted at least one event)
-    const { count: venueCount } = await supabase
-      .from("venues")
-      .select("*", { count: "exact", head: true })
-      .eq("status", "active")
-      .gt("events_hosted", 0);
+    // Count venue partners: only venues actually referenced by platform events
+    const { data: venueIds } = await supabase
+      .from("events")
+      .select("venue_id")
+      .eq("status", "published")
+      .not("venue_id", "is", null);
+    const uniqueVenueIds = new Set(
+      (venueIds as { venue_id: string }[] ?? []).map((r) => r.venue_id).filter(Boolean),
+    );
+    const venueCount = uniqueVenueIds.size;
 
     return [
       { value: formatNumber(profileCount ?? 0), label: "Members" },
@@ -268,7 +277,7 @@ async function fetchGroups(
         name: row.name,
         category: categoryTag(categoryRow?.name_en),
         members: row.member_count ?? 0,
-        description: isGenericDescription(row.description)
+        description: isGenericDescription(row.description, row.name)
           ? (fallbackGroups.find((g) => g.slug === row.slug)?.description ?? row.description ?? "")
           : (row.description ?? ""),
         photo: realPhoto(row.banner_url) ?? pickPhoto(row.slug, PLACE_PHOTOS),
