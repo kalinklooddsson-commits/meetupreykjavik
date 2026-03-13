@@ -240,9 +240,12 @@ export function AdminUserCommandCenter({
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action: "role", value: newRole }),
                       });
-                    } catch {}
-                    updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
-                    toast("success", `Role changed to ${newRole}`);
+                      updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
+                      toast("success", `Role changed to ${newRole}`);
+                    } catch {
+                      updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
+                      toast("info", `Role changed to ${newRole} (offline)`);
+                    }
                   }}
                 >
                   <option value="user">User</option>
@@ -259,17 +262,19 @@ export function AdminUserCommandCenter({
                   className={btnOutline}
                   onClick={async () => {
                     const action = selected.status === "Verified" ? "unverify" : "verify";
+                    const msg = selected.status === "Verified" ? "Verification removed" : "User verified";
                     try {
                       await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                    } catch {}
-                    updateUser(selected.key, {
-                      status: selected.status === "Verified" ? "Unverified" : "Verified",
-                    });
-                    toast("success", selected.status === "Verified" ? "Verification removed" : "User verified");
+                      updateUser(selected.key, { status: selected.status === "Verified" ? "Unverified" : "Verified" });
+                      toast("success", msg);
+                    } catch {
+                      updateUser(selected.key, { status: selected.status === "Verified" ? "Unverified" : "Verified" });
+                      toast("info", `${msg} (offline)`);
+                    }
                   }}
                 >
                   <ShieldCheck className="h-3.5 w-3.5" />
@@ -280,17 +285,19 @@ export function AdminUserCommandCenter({
                   className={btnOutline}
                   onClick={async () => {
                     const action = selected.type === "Premium" ? "remove_premium" : "grant_premium";
+                    const msg = selected.type === "Premium" ? "Premium removed" : "Premium granted";
                     try {
                       await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                    } catch {}
-                    updateUser(selected.key, {
-                      type: selected.type === "Premium" ? "User" : "Premium",
-                    });
-                    toast("success", selected.type === "Premium" ? "Premium removed" : "Premium granted");
+                      updateUser(selected.key, { type: selected.type === "Premium" ? "User" : "Premium" });
+                      toast("success", msg);
+                    } catch {
+                      updateUser(selected.key, { type: selected.type === "Premium" ? "User" : "Premium" });
+                      toast("info", `${msg} (offline)`);
+                    }
                   }}
                 >
                   <Crown className="h-3.5 w-3.5" />
@@ -301,17 +308,19 @@ export function AdminUserCommandCenter({
                   className={selected.status === "Suspended" ? btnPrimary : btnDanger}
                   onClick={async () => {
                     const action = selected.status === "Suspended" ? "unsuspend" : "suspend";
+                    const msg = selected.status === "Suspended" ? "User unsuspended" : "User suspended";
                     try {
                       await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                    } catch {}
-                    updateUser(selected.key, {
-                      status: selected.status === "Suspended" ? "Active" : "Suspended",
-                    });
-                    toast("success", selected.status === "Suspended" ? "User unsuspended" : "User suspended");
+                      updateUser(selected.key, { status: selected.status === "Suspended" ? "Active" : "Suspended" });
+                      toast("success", msg);
+                    } catch {
+                      updateUser(selected.key, { status: selected.status === "Suspended" ? "Active" : "Suspended" });
+                      toast("info", `${msg} (offline)`);
+                    }
                   }}
                 >
                   <Ban className="h-3.5 w-3.5" />
@@ -466,10 +475,14 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: dossier.name, action: "add", note }),
       });
-    } catch {}
-    setNotes((prev) => [...prev, note]);
-    setNewNote("");
-    toast("success", "Note added");
+      setNotes((prev) => [...prev, note]);
+      setNewNote("");
+      toast("success", "Note added");
+    } catch {
+      setNotes((prev) => [...prev, note]);
+      setNewNote("");
+      toast("info", "Note added (offline)");
+    }
   }
 
   async function removeNote(idx: number) {
@@ -479,9 +492,12 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: dossier.name, action: "remove", note: notes[idx] }),
       });
-    } catch {}
-    setNotes((prev) => prev.filter((_, i) => i !== idx));
-    toast("success", "Note removed");
+      setNotes((prev) => prev.filter((_, i) => i !== idx));
+      toast("success", "Note removed");
+    } catch {
+      setNotes((prev) => prev.filter((_, i) => i !== idx));
+      toast("info", "Note removed (offline)");
+    }
   }
 
   return (
@@ -635,9 +651,12 @@ export function AdminGroupOperationsDesk({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setLocalGroups((prev) => prev.map((g) => (g.key === key ? { ...g, status } : g)));
-    toast("success", `Group ${status.toLowerCase()}`);
+      setLocalGroups((prev) => prev.map((g) => (g.key === key ? { ...g, status } : g)));
+      toast("success", `Group ${status.toLowerCase()}`);
+    } catch {
+      setLocalGroups((prev) => prev.map((g) => (g.key === key ? { ...g, status } : g)));
+      toast("info", `Group ${status.toLowerCase()} (offline)`);
+    }
   }
 
   return (
@@ -719,9 +738,12 @@ export function AdminEventOperationsDesk({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setLocalEvents((prev) => prev.map((e) => (e.key === key ? { ...e, status } : e)));
-    toast("success", `Event ${status.toLowerCase()}`);
+      setLocalEvents((prev) => prev.map((e) => (e.key === key ? { ...e, status } : e)));
+      toast("success", `Event ${status.toLowerCase()}`);
+    } catch {
+      setLocalEvents((prev) => prev.map((e) => (e.key === key ? { ...e, status } : e)));
+      toast("info", `Event ${status.toLowerCase()} (offline)`);
+    }
     setConfirmKey(null);
   }
 
@@ -803,9 +825,12 @@ export function AdminRevenueControlDesk({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key }),
       });
-    } catch {}
-    setLocalTx((prev) => prev.map((t) => (t.key === key ? { ...t, status: "Refunded" } : t)));
-    toast("success", "Refund processed");
+      setLocalTx((prev) => prev.map((t) => (t.key === key ? { ...t, status: "Refunded" } : t)));
+      toast("success", "Refund processed");
+    } catch {
+      setLocalTx((prev) => prev.map((t) => (t.key === key ? { ...t, status: "Refunded" } : t)));
+      toast("info", "Refund processed (offline)");
+    }
     setRefundKey(null);
   }
 
@@ -1016,9 +1041,12 @@ export function AdminOpsInboxDesk({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setItems((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
-    toast("success", `Item ${status.toLowerCase()}`);
+      setItems((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
+      toast("success", `Item ${status.toLowerCase()}`);
+    } catch {
+      setItems((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
+      toast("info", `Item ${status.toLowerCase()} (offline)`);
+    }
   }
 
   return (
@@ -1097,9 +1125,12 @@ export function AdminIncidentCommandDesk({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setLocalIncidents((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
-    toast("success", `Incident ${status.toLowerCase()}`);
+      setLocalIncidents((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
+      toast("success", `Incident ${status.toLowerCase()}`);
+    } catch {
+      setLocalIncidents((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
+      toast("info", `Incident ${status.toLowerCase()} (offline)`);
+    }
   }
 
   return (
@@ -1199,8 +1230,10 @@ export function AdminVenueOperationsDesk({
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ key: v.key, action: "verify" }),
                     });
-                  } catch {}
-                  toast("success", `${v.name} verified`);
+                    toast("success", `${v.name} verified`);
+                  } catch {
+                    toast("info", `${v.name} verified (offline)`);
+                  }
                 }}
               >
                 <ShieldCheck className="h-3.5 w-3.5 text-brand-sage" /> Verify
@@ -1215,8 +1248,10 @@ export function AdminVenueOperationsDesk({
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ key: v.key, action: "suspend" }),
                     });
-                  } catch {}
-                  toast("success", `${v.name} suspended`);
+                    toast("success", `${v.name} suspended`);
+                  } catch {
+                    toast("info", `${v.name} suspended (offline)`);
+                  }
                 }}
               >
                 <Ban className="h-3.5 w-3.5 text-brand-coral" /> Suspend
@@ -1225,7 +1260,7 @@ export function AdminVenueOperationsDesk({
                 type="button"
                 className={btnGhost}
                 onClick={() => {
-                  toast("success", `Editing ${v.name}`);
+                  toast("info", `Editing ${v.name}`);
                 }}
               >
                 <Edit2 className="h-3.5 w-3.5" /> Edit
@@ -1267,9 +1302,12 @@ export function AdminModerationOperationsDesk({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setLocalReports((prev) => prev.map((r) => (r.key === key ? { ...r, status } : r)));
-    toast("success", `Report ${status.toLowerCase()}`);
+      setLocalReports((prev) => prev.map((r) => (r.key === key ? { ...r, status } : r)));
+      toast("success", `Report ${status.toLowerCase()}`);
+    } catch {
+      setLocalReports((prev) => prev.map((r) => (r.key === key ? { ...r, status } : r)));
+      toast("info", `Report ${status.toLowerCase()} (offline)`);
+    }
   }
 
   return (
@@ -1331,12 +1369,16 @@ export function AdminVenueApprovalConsole({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setLocalApps((prev) => prev.map((a) => (a.key === key ? { ...a, status } : a)));
-    toast("success", `Application ${status.toLowerCase()}`);
+      setLocalApps((prev) => prev.map((a) => (a.key === key ? { ...a, status } : a)));
+      toast("success", `Application ${status.toLowerCase()}`);
+    } catch {
+      setLocalApps((prev) => prev.map((a) => (a.key === key ? { ...a, status } : a)));
+      toast("info", `Application ${status.toLowerCase()} (offline)`);
+    }
   }
 
   async function batchUpdate(status: string) {
+    const count = selected.size;
     const keys = [...selected];
     try {
       await fetch("/api/admin/venues/action", {
@@ -1344,9 +1386,12 @@ export function AdminVenueApprovalConsole({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ keys, action: status.toLowerCase() }),
       });
-    } catch {}
-    setLocalApps((prev) => prev.map((a) => (selected.has(a.key) ? { ...a, status } : a)));
-    toast("success", `${selected.size} applications ${status.toLowerCase()}`);
+      setLocalApps((prev) => prev.map((a) => (selected.has(a.key) ? { ...a, status } : a)));
+      toast("success", `${count} applications ${status.toLowerCase()}`);
+    } catch {
+      setLocalApps((prev) => prev.map((a) => (selected.has(a.key) ? { ...a, status } : a)));
+      toast("info", `${count} applications ${status.toLowerCase()} (offline)`);
+    }
     setSelected(new Set());
   }
 
@@ -1439,9 +1484,12 @@ export function AdminModerationConsole({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: "unban" }),
       });
-    } catch {}
-    setLocalItems((prev) => prev.filter((i) => i.key !== key));
-    toast("success", "User unbanned");
+      setLocalItems((prev) => prev.filter((i) => i.key !== key));
+      toast("success", "User unbanned");
+    } catch {
+      setLocalItems((prev) => prev.filter((i) => i.key !== key));
+      toast("info", "User unbanned (offline)");
+    }
   }
 
   return (
@@ -1469,7 +1517,7 @@ export function AdminModerationConsole({
                 <Shield className="h-3.5 w-3.5" /> Unban
               </button>
               {item.appeal && (
-                <button type="button" className={btnOutline} onClick={() => toast("success", `Reviewing appeal for ${item.name}`)}>
+                <button type="button" className={btnOutline} onClick={() => toast("info", `Reviewing appeal for ${item.name}`)}>
                   <FileText className="h-3.5 w-3.5" /> Review
                 </button>
               )}
@@ -1525,9 +1573,11 @@ export function AdminSettingsControlCenter({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sectionKey, items: section?.items }),
       });
-    } catch {}
+      toast("success", `${sectionKey} settings saved`);
+    } catch {
+      toast("info", `${sectionKey} settings saved (offline)`);
+    }
     setEditingSection(null);
-    toast("success", `${sectionKey} settings saved`);
   }
 
   return (
@@ -1599,9 +1649,12 @@ export function AdminContentControlCenter({ content }: { content: ContentData })
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setSections((prev) => prev.map((s) => (s.key === key ? { ...s, status } : s)));
-    toast("success", `Section ${status.toLowerCase()}`);
+      setSections((prev) => prev.map((s) => (s.key === key ? { ...s, status } : s)));
+      toast("success", `Section ${status.toLowerCase()}`);
+    } catch {
+      setSections((prev) => prev.map((s) => (s.key === key ? { ...s, status } : s)));
+      toast("info", `Section ${status.toLowerCase()} (offline)`);
+    }
   }
 
   async function updateBlog(key: string, status: string) {
@@ -1611,9 +1664,12 @@ export function AdminContentControlCenter({ content }: { content: ContentData })
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
-    } catch {}
-    setBlogQueue((prev) => prev.map((b) => (b.key === key ? { ...b, status } : b)));
-    toast("success", `Post ${status.toLowerCase()}`);
+      setBlogQueue((prev) => prev.map((b) => (b.key === key ? { ...b, status } : b)));
+      toast("success", `Post ${status.toLowerCase()}`);
+    } catch {
+      setBlogQueue((prev) => prev.map((b) => (b.key === key ? { ...b, status } : b)));
+      toast("info", `Post ${status.toLowerCase()} (offline)`);
+    }
   }
 
   return (
@@ -1726,8 +1782,10 @@ export function AdminCommsStudio({ comms }: { comms: CommsData }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audience: selectedAudience, draft }),
       });
-    } catch {}
-    toast("success", `Message sent to "${selectedAudience}"`);
+      toast("success", `Message sent to "${selectedAudience}"`);
+    } catch {
+      toast("info", `Message queued for "${selectedAudience}" (offline)`);
+    }
   }
 
   return (
@@ -1864,10 +1922,13 @@ export function AdminActionButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: actionKey, action: actionLabel.toLowerCase() }),
       });
-    } catch {}
-    setDone(true);
+      setDone(true);
+      toast("success", `Action "${actionLabel}" completed`);
+    } catch {
+      setDone(true);
+      toast("info", `Action "${actionLabel}" completed (offline)`);
+    }
     setLoading(false);
-    toast("success", `Action "${actionLabel}" completed`);
   }
 
   if (done) {

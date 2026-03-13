@@ -51,11 +51,11 @@ export function VenueBookingCommandCenter({
       if (result.ok) {
         toast("success", `Booking ${action} successfully`);
       } else {
-        toast("success", `Booking ${action} (local)`);
+        toast("info", `Booking ${action} (local only)`);
       }
     } catch {
       setDecisions((prev) => ({ ...prev, [key]: action }));
-      toast("success", `Booking ${action} successfully`);
+      toast("info", `Booking ${action} (offline)`);
     } finally {
       setLoading(null);
     }
@@ -300,10 +300,10 @@ export function VenueAvailabilityStudio({
               if (result.ok) {
                 toast("success", "Schedule saved successfully");
               } else {
-                toast("success", "Schedule saved (local)");
+                toast("info", "Schedule saved locally");
               }
             } catch {
-              toast("success", "Schedule saved successfully");
+              toast("info", "Schedule saved (offline)");
             } finally {
               setSaving(false);
             }
@@ -457,12 +457,12 @@ export function VenueDealStudio({
                   if (result.ok) {
                     toast("success", "Deal created successfully");
                   } else {
-                    toast("success", "Deal created (local)");
+                    toast("info", "Deal saved locally");
                   }
                   setShowForm(false);
                   setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                 } catch {
-                  toast("success", "Deal created successfully");
+                  toast("info", "Deal saved (offline)");
                   setShowForm(false);
                   setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                 } finally {
@@ -608,10 +608,10 @@ export function VenueProfileSectionEditor({
               if (result.ok) {
                 toast("success", "Profile saved successfully");
               } else {
-                toast("success", "Profile saved (local)");
+                toast("info", "Profile saved locally");
               }
             } catch {
-              toast("success", "Profile saved successfully");
+              toast("info", "Profile saved (offline)");
             } finally {
               setSaving(false);
             }

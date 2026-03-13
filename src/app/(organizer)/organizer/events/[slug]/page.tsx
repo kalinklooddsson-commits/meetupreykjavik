@@ -9,7 +9,8 @@ export default async function OrganizerEventDetailPage({
 }) {
   const { slug } = await params;
 
-  if (!getManagedOrganizerEvent(slug)) {
+  const event = getManagedOrganizerEvent(slug);
+  if (!event) {
     notFound();
   }
 

@@ -22,7 +22,7 @@ export function LeaveGroupButton({ groupSlug, groupName }: { groupSlug: string; 
         toast("success", `Left ${groupName}`);
       } catch {
         setState("left");
-        toast("success", `Left ${groupName}`);
+        toast("info", `Left ${groupName} (offline)`);
       }
     }
   }

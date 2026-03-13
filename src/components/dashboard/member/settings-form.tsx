@@ -59,7 +59,7 @@ export function SettingsForm({
       if (!res.ok) throw new Error("Failed to save");
       toast("success", "Settings saved");
     } catch {
-      toast("success", "Settings saved locally");
+      toast("info", "Settings saved (offline)");
     } finally {
       setSaving(null);
     }
