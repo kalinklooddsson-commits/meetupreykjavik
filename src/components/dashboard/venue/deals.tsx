@@ -1,5 +1,5 @@
 import type { Route } from "next";
-import { Tag, Plus } from "lucide-react";
+import { Tag } from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -79,7 +79,6 @@ export async function VenueDealsScreen() {
       description="Manage perks and promotions for members and organizers."
       links={venueLinks("deals")}
       roleMode="venue"
-      primaryAction={{ href: "/venue/deals" as Route, label: "Create deal" }}
     >
       {/* ── Active deals ─────────────────────────────────── */}
       <Surface
