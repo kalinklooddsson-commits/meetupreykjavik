@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { fetchVenues } from "@/lib/data";
 import { VenuesIndexScreen } from "@/components/public/public-pages";
+import { getFeaturedSourcedPlaces } from "@/lib/reykjavik-source-data";
 
 export const metadata: Metadata = {
   title: "Venues",
@@ -60,6 +61,7 @@ export default async function VenuesPage({
       searchQuery={q}
       activeType={type}
       activeArea={area}
+      featuredSourcedPlaces={getFeaturedSourcedPlaces(6)}
     />
   );
 }

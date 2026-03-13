@@ -6,7 +6,7 @@ import {
 } from "@/components/public/public-pages";
 import { VenueJsonLd } from "@/components/public/json-ld";
 import { fetchVenueBySlug } from "@/lib/data";
-import { getSourcedPlaceBySlug } from "@/lib/reykjavik-source-data";
+import { getSourcedPlaceBySlug, getSourcedPlaces } from "@/lib/reykjavik-source-data";
 
 export async function generateMetadata({
   params,
@@ -107,5 +107,13 @@ export default async function VenueDetailPage({
     );
   }
 
-  return <SourcedVenueDetailScreen place={sourcedPlace!} />;
+  const relatedPlaces = getSourcedPlaces()
+    .filter(
+      (item) =>
+        item.slug !== sourcedPlace!.slug &&
+        (item.area === sourcedPlace!.area || item.laneKey === sourcedPlace!.laneKey),
+    )
+    .slice(0, 4);
+
+  return <SourcedVenueDetailScreen place={sourcedPlace!} relatedPlaces={relatedPlaces} />;
 }
