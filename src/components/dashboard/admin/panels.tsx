@@ -1867,7 +1867,7 @@ export function AdminCommsStudio({ comms }: { comms: CommsData }) {
               <h3 className="text-lg font-bold text-brand-text">{draft.headline}</h3>
               <p className="text-sm text-brand-text-muted leading-relaxed">{draft.preview}</p>
               <div className="pt-2">
-                <span className={btnPrimary}>{draft.ctaLabel}</span>
+                <button type="button" className={btnPrimary}>{draft.ctaLabel}</button>
               </div>
               <hr className="border-brand-border-light" />
               <div className="text-xs text-brand-text-light">{draft.footer}</div>

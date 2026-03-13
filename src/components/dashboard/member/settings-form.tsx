@@ -52,7 +52,7 @@ export function SettingsForm({
     setSaving(sectionKey);
     try {
       const res = await fetch("/api/member/settings", {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ section: sectionKey, values: values[sectionKey] }),
       });
