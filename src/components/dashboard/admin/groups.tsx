@@ -1,8 +1,5 @@
 import type { Route } from "next";
-import {
-  Users,
-  HeartPulse,
-} from "lucide-react";
+import { Users } from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
