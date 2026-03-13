@@ -1,13 +1,7 @@
-import Link from "next/link";
 import type { Route } from "next";
 import {
   Inbox,
-  CheckCircle2,
-  XCircle,
-  ArrowLeftRight,
   Users,
-  CalendarDays,
-  MessageSquare,
   ShieldCheck,
 } from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
@@ -20,6 +14,7 @@ import {
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { venueHasFeature } from "@/lib/entitlements";
+import { VenueBookingCommandCenter } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -101,68 +96,7 @@ export async function VenueBookingsScreen() {
           title="Pending booking requests"
           description="These booking requests need your response."
         >
-          <div className="space-y-4">
-            {pendingBookings.map((b) => (
-              <article
-                key={b.key}
-                className="rounded-xl border border-brand-border-light bg-white p-5"
-              >
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex items-start gap-3">
-                    <AvatarStamp name={b.organizer} size="md" />
-                    <div>
-                      <div className="text-base font-semibold text-brand-text">
-                        {b.event}
-                      </div>
-                      <div className="mt-0.5 text-sm text-brand-text-muted">
-                        by {b.organizer}
-                      </div>
-                    </div>
-                  </div>
-                  <ToneBadge tone={statusTone(b.status)}>{b.status}</ToneBadge>
-                </div>
-
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                  <div className="flex items-center gap-2 text-sm text-brand-text">
-                    <CalendarDays className="h-4 w-4 text-brand-text-muted" />
-                    {b.date}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-brand-text">
-                    <Users className="h-4 w-4 text-brand-text-muted" />
-                    {b.attendance}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-brand-text">
-                    <MessageSquare className="h-4 w-4 text-brand-text-muted" />
-                    <span className="line-clamp-1">{b.message}</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2 border-t border-brand-border-light pt-4">
-                  <Link
-                    href={"/venue/bookings" as Route}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-indigo-dark"
-                  >
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    Accept
-                  </Link>
-                  <Link
-                    href={"/venue/bookings" as Route}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-medium text-brand-text transition hover:border-brand-coral hover:text-brand-coral"
-                  >
-                    <XCircle className="h-3.5 w-3.5" />
-                    Decline
-                  </Link>
-                  <Link
-                    href={"/venue/bookings" as Route}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-medium text-brand-text transition hover:border-brand-indigo hover:text-brand-indigo"
-                  >
-                    <ArrowLeftRight className="h-3.5 w-3.5" />
-                    Counter
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
+          <VenueBookingCommandCenter bookings={pendingBookings} />
         </Surface>
       )}
 

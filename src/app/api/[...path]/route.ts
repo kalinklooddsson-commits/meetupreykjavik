@@ -444,7 +444,8 @@ async function handleMockAuthRequest(request: NextRequest, key: string) {
       return withMockSessionCookie(response, session);
     }
 
-    case "POST /api/auth/logout": {
+    case "POST /api/auth/logout":
+    case "GET /api/auth/logout": {
       return clearMockSessionCookie(
         successResponse({
           user: null,
@@ -571,7 +572,8 @@ async function handleLiveAuthRequest(request: NextRequest, key: string) {
       );
     }
 
-    case "POST /api/auth/logout": {
+    case "POST /api/auth/logout":
+    case "GET /api/auth/logout": {
       const { error } = await routeClient.supabase.auth.signOut();
 
       if (error) {
@@ -1169,6 +1171,642 @@ async function handleLiveDataRequest(
         });
       }
 
+      // ── Admin analytics ──
+      case "GET /api/admin/analytics/[type]": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const analyticsType = match.params.type;
+        switch (analyticsType) {
+          case "users": {
+            const { data } = await supabase
+              .from("profiles")
+              .select("created_at")
+              .order("created_at", { ascending: true });
+            const grouped: Record<string, number> = {};
+            for (const row of data ?? []) {
+              const day = row.created_at?.slice(0, 10) ?? "unknown";
+              grouped[day] = (grouped[day] ?? 0) + 1;
+            }
+            return successResponse({ type: "users", data: grouped });
+          }
+          case "events": {
+            const { data } = await supabase
+              .from("events")
+              .select("created_at")
+              .order("created_at", { ascending: true });
+            const grouped: Record<string, number> = {};
+            for (const row of data ?? []) {
+              const day = row.created_at?.slice(0, 10) ?? "unknown";
+              grouped[day] = (grouped[day] ?? 0) + 1;
+            }
+            return successResponse({ type: "events", data: grouped });
+          }
+          case "revenue": {
+            const { data } = await supabase
+              .from("transactions")
+              .select("created_at, amount_isk")
+              .eq("status", "completed")
+              .order("created_at", { ascending: true });
+            const grouped: Record<string, number> = {};
+            for (const row of data ?? []) {
+              const day = (row as { created_at: string }).created_at?.slice(0, 10) ?? "unknown";
+              grouped[day] = (grouped[day] ?? 0) + ((row as { amount_isk: number }).amount_isk ?? 0);
+            }
+            return successResponse({ type: "revenue", data: grouped });
+          }
+          default:
+            return successResponse({ type: analyticsType, data: {} });
+        }
+      }
+
+      // ── Admin transactions ──
+      case "GET /api/admin/transactions": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const url = request.nextUrl;
+        const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 50) || 50, 1), 200);
+        const offset = Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0);
+        const { data, error } = await supabase
+          .from("transactions")
+          .select("*, profiles:user_id (*)")
+          .order("created_at", { ascending: false })
+          .range(offset, offset + limit - 1);
+        if (error) throw error;
+        return successResponse(data ?? []);
+      }
+
+      // ── Admin group approval ──
+      case "PATCH /api/admin/groups/[id]/approve": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const status = body.status === "rejected" ? "rejected" : "active";
+        const { data, error } = await supabase
+          .from("groups")
+          .update({ status })
+          .eq("id", match.params.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+
+      // ── Admin venue approval ──
+      case "PATCH /api/admin/venues/[id]/approve": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const status = body.status === "rejected" ? "rejected" : "active";
+        const { data, error } = await supabase
+          .from("venues")
+          .update({ status })
+          .eq("id", match.params.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+
+      // ── Admin moderation queue ──
+      case "GET /api/admin/moderation": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const [pendingGroups, pendingVenues] = await Promise.all([
+          supabase.from("groups").select("*").eq("status", "pending").order("created_at", { ascending: false }),
+          supabase.from("venues").select("*").eq("status", "pending").order("created_at", { ascending: false }),
+        ]);
+        return successResponse({
+          pendingGroups: pendingGroups.data ?? [],
+          pendingVenues: pendingVenues.data ?? [],
+        });
+      }
+
+      // ── Admin announcements ──
+      case "POST /api/admin/announcements": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const title = (body.title as string) ?? "Announcement";
+        const detail = (body.message as string) ?? (body.detail as string) ?? "";
+        // Get all user IDs
+        const { data: users } = await supabase.from("profiles").select("id");
+        if (users && users.length > 0) {
+          const notifications = users.map((u) => ({
+            user_id: u.id,
+            title,
+            detail,
+            channel: "announcement",
+            status: "unread" as const,
+          }));
+          const { error } = await supabase.from("notifications").insert(notifications);
+          if (error) throw error;
+        }
+        return successResponse({ sent: true, recipientCount: users?.length ?? 0 }, { status: 201 });
+      }
+
+      // ── Admin settings update ──
+      case "PATCH /api/admin/settings": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { data, error } = await supabase
+          .from("admin_settings")
+          .update(body)
+          .eq("id", body.id ?? "default")
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+
+      // ── Admin audit log ──
+      case "GET /api/admin/audit-log": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const url = request.nextUrl;
+        const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 50) || 50, 1), 200);
+        const offset = Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0);
+        const { data, error } = await supabase
+          .from("audit_log")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .range(offset, offset + limit - 1);
+        if (error) throw error;
+        return successResponse(data ?? []);
+      }
+
+      // ── Admin CSV export ──
+      case "GET /api/admin/export/[type]": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const exportType = match.params.type;
+        const tableMap: Record<string, string> = {
+          events: "events",
+          users: "profiles",
+          venues: "venues",
+          groups: "groups",
+        };
+        const table = tableMap[exportType];
+        if (!table) return validationMessage(`Invalid export type: ${exportType}`);
+        const { data, error } = await supabase.from(table).select("*").limit(10000);
+        if (error) throw error;
+        const rows = data ?? [];
+        if (rows.length === 0) {
+          return new NextResponse("", {
+            status: 200,
+            headers: {
+              "Content-Type": "text/csv",
+              "Content-Disposition": `attachment; filename="${exportType}.csv"`,
+            },
+          });
+        }
+        const headers = Object.keys(rows[0] as Record<string, unknown>);
+        const csvLines = [
+          headers.join(","),
+          ...rows.map((row) =>
+            headers
+              .map((h) => {
+                const val = (row as Record<string, unknown>)[h];
+                const str = val === null || val === undefined ? "" : String(val);
+                return str.includes(",") || str.includes('"') || str.includes("\n")
+                  ? `"${str.replace(/"/g, '""')}"`
+                  : str;
+              })
+              .join(","),
+          ),
+        ];
+        return new NextResponse(csvLines.join("\n"), {
+          status: 200,
+          headers: {
+            "Content-Type": "text/csv",
+            "Content-Disposition": `attachment; filename="${exportType}.csv"`,
+          },
+        });
+      }
+
+      // ── Users list ──
+      case "GET /api/users": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const url = request.nextUrl;
+        const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 50) || 50, 1), 200);
+        const offset = Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0);
+        let query = supabase
+          .from("profiles")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .range(offset, offset + limit - 1);
+        const statusFilter = url.searchParams.get("status");
+        if (statusFilter) query = query.eq("status", statusFilter);
+        const typeFilter = url.searchParams.get("account_type");
+        if (typeFilter) query = query.eq("account_type", typeFilter);
+        const search = url.searchParams.get("q");
+        if (search) query = query.ilike("display_name", `%${search}%`);
+        const { data, error } = await query;
+        if (error) throw error;
+        return successResponse(data ?? []);
+      }
+
+      // ── Delete user (admin) ──
+      case "DELETE /api/users/[id]": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const { error } = await supabase
+          .from("profiles")
+          .delete()
+          .eq("id", match.params.id);
+        if (error) throw error;
+        return successResponse({ deleted: true });
+      }
+
+      // ── Change user account type (admin) ──
+      case "PATCH /api/users/[id]/type": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        if (!body.account_type) return validationMessage("account_type is required.", "account_type");
+        const { data, error } = await supabase
+          .from("profiles")
+          .update({ account_type: body.account_type })
+          .eq("id", match.params.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+
+      // ── Change user status (admin) ──
+      case "PATCH /api/users/[id]/status": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        if (!body.status) return validationMessage("status is required.", "status");
+        const { data, error } = await supabase
+          .from("profiles")
+          .update({ status: body.status })
+          .eq("id", match.params.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+
+      // ── RSVP management ──
+      case "PATCH /api/events/[slug]/rsvp/[userId]/approve": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        if (event.host_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the event host can approve RSVPs.");
+        }
+        const { data, error } = await supabase
+          .from("rsvps")
+          .update({ status: "confirmed" })
+          .eq("event_id", event.id)
+          .eq("user_id", match.params.userId)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+      case "PATCH /api/events/[slug]/rsvp/[userId]/reject": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        if (event.host_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the event host can reject RSVPs.");
+        }
+        const { data, error } = await supabase
+          .from("rsvps")
+          .update({ status: "rejected" })
+          .eq("event_id", event.id)
+          .eq("user_id", match.params.userId)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+      case "DELETE /api/events/[slug]/rsvp/[userId]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        if (event.host_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the event host can remove attendees.");
+        }
+        const { error } = await supabase
+          .from("rsvps")
+          .delete()
+          .eq("event_id", event.id)
+          .eq("user_id", match.params.userId);
+        if (error) throw error;
+        return successResponse({ removed: true });
+      }
+      case "POST /api/events/[slug]/rsvp/override": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        const body = await request.json();
+        const { data, error } = await supabase
+          .from("rsvps")
+          .upsert({
+            event_id: event.id,
+            user_id: body.userId as string,
+            status: (body.status as string) ?? "confirmed",
+          }, { onConflict: "event_id,user_id" })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+
+      // ── Group management ──
+      case "PATCH /api/groups/[slug]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const group = await getGroupBySlug(match.params.slug);
+        if (!group) return validationMessage("Group not found.");
+        if (group.organizer_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the group organizer can update this group.");
+        }
+        const body = await parseValidatedBody(request, key);
+        const { data, error } = await supabase
+          .from("groups")
+          .update(body as Record<string, unknown>)
+          .eq("id", group.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+      case "DELETE /api/groups/[slug]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const group = await getGroupBySlug(match.params.slug);
+        if (!group) return validationMessage("Group not found.");
+        if (group.organizer_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the group organizer can delete this group.");
+        }
+        const { error } = await supabase
+          .from("groups")
+          .delete()
+          .eq("id", group.id);
+        if (error) throw error;
+        return successResponse({ deleted: true });
+      }
+      case "PATCH /api/groups/[slug]/members/[userId]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const group = await getGroupBySlug(match.params.slug);
+        if (!group) return validationMessage("Group not found.");
+        if (group.organizer_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the group organizer can change member roles.");
+        }
+        const body = await request.json();
+        const { data, error } = await supabase
+          .from("group_members")
+          .update({ role: body.role as string })
+          .eq("group_id", group.id)
+          .eq("user_id", match.params.userId)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+      case "POST /api/groups/[slug]/block/[userId]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const group = await getGroupBySlug(match.params.slug);
+        if (!group) return validationMessage("Group not found.");
+        if (group.organizer_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the group organizer can block users.");
+        }
+        // Remove membership and add to blocked
+        await supabase
+          .from("group_members")
+          .delete()
+          .eq("group_id", group.id)
+          .eq("user_id", match.params.userId);
+        const { data, error } = await supabase
+          .from("blocked_users")
+          .insert({
+            blocked_by: session.id,
+            blocked_user_id: match.params.userId,
+            scope: "group",
+            scope_id: group.id,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+
+      // ── Deal management ──
+      case "PATCH /api/deals/[id]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        // Verify ownership
+        const { data: deal } = await supabase
+          .from("venue_deals")
+          .select("*, venues:venue_id (owner_id)")
+          .eq("id", match.params.id)
+          .single();
+        if (!deal) return validationMessage("Deal not found.");
+        const venueOwner = (deal.venues as unknown as { owner_id: string })?.owner_id;
+        if (venueOwner !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the venue owner can update deals.");
+        }
+        const body = await parseValidatedBody(request, key);
+        const { data, error } = await supabase
+          .from("venue_deals")
+          .update(body as Record<string, unknown>)
+          .eq("id", match.params.id)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+      case "DELETE /api/deals/[id]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const { data: deal } = await supabase
+          .from("venue_deals")
+          .select("*, venues:venue_id (owner_id)")
+          .eq("id", match.params.id)
+          .single();
+        if (!deal) return validationMessage("Deal not found.");
+        const venueOwner = (deal.venues as unknown as { owner_id: string })?.owner_id;
+        if (venueOwner !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the venue owner can delete deals.");
+        }
+        const { error } = await supabase
+          .from("venue_deals")
+          .delete()
+          .eq("id", match.params.id);
+        if (error) throw error;
+        return successResponse({ deleted: true });
+      }
+
+      // ── Event invitations ──
+      case "POST /api/events/[slug]/invite": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        if (event.host_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the event host can send invitations.");
+        }
+        const body = await request.json();
+        const userIds = body.userIds as string[];
+        if (!Array.isArray(userIds) || userIds.length === 0) {
+          return validationMessage("userIds array is required.", "userIds");
+        }
+        const notifications = userIds.map((uid) => ({
+          user_id: uid,
+          title: `You're invited to ${event.title ?? "an event"}`,
+          detail: body.message ?? `You've been invited to attend an upcoming event.`,
+          channel: "invite",
+          status: "unread" as const,
+        }));
+        const { error } = await supabase.from("notifications").insert(notifications);
+        if (error) throw error;
+        return successResponse({ invited: userIds.length }, { status: 201 });
+      }
+
+      // ── Event check-in ──
+      case "POST /api/events/[slug]/checkin/[userId]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const event = await getEventBySlug(match.params.slug);
+        if (!event) return validationMessage("Event not found.");
+        if (event.host_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the event host can check in attendees.");
+        }
+        const { data, error } = await supabase
+          .from("rsvps")
+          .update({ status: "checked_in", checked_in_at: new Date().toISOString() })
+          .eq("event_id", event.id)
+          .eq("user_id", match.params.userId)
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data);
+      }
+
+      // ── Messages thread detail ──
+      case "GET /api/messages/[threadId]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const { data, error } = await supabase
+          .from("messages")
+          .select("*, profiles:sender_id (*)")
+          .eq("thread_id", match.params.threadId)
+          .order("created_at", { ascending: true });
+        if (error) throw error;
+        return successResponse(data ?? []);
+      }
+
+      // ── User blocking ──
+      case "POST /api/users/[id]/block": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { data, error } = await supabase
+          .from("blocked_users")
+          .insert({
+            blocked_by: session.id,
+            blocked_user_id: match.params.id,
+            scope: (body.scope as string) ?? "platform",
+            scope_id: (body.scopeId as string) ?? null,
+            reason: (body.reason as string) ?? null,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+      case "DELETE /api/users/[id]/block": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const { error } = await supabase
+          .from("blocked_users")
+          .delete()
+          .eq("blocked_by", session.id)
+          .eq("blocked_user_id", match.params.id);
+        if (error) throw error;
+        return successResponse({ unblocked: true });
+      }
+
+      // ── Admin blocked users list ──
+      case "GET /api/admin/blocked": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const { data, error } = await supabase
+          .from("blocked_users")
+          .select("*, blocker:blocked_by (*), blocked:blocked_user_id (*)")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return successResponse(data ?? []);
+      }
+
+      // ── Venue user blocking ──
+      case "POST /api/venues/[slug]/block/[userId]": {
+        if (!session) return forbiddenResponse("Authentication required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const venue = await getVenueBySlug(match.params.slug);
+        if (!venue) return validationMessage("Venue not found.");
+        if (venue.owner_id !== session.id && session.accountType !== "admin") {
+          return forbiddenResponse("Only the venue owner can block users.");
+        }
+        const body = await request.json().catch(() => ({}));
+        const { data, error } = await supabase
+          .from("blocked_users")
+          .insert({
+            blocked_by: session.id,
+            blocked_user_id: match.params.userId,
+            scope: "venue",
+            scope_id: venue.id,
+            reason: (body as Record<string, string>).reason ?? null,
+          })
+          .select()
+          .single();
+        if (error) throw error;
+        return successResponse(data, { status: 201 });
+      }
+
       default: {
         // ── Admin Featured Placement Toggle ──
         // PATCH /api/admin/events/:slug/featured
@@ -1290,7 +1928,12 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
       });
     }
 
-    throw error;
+    console.error(`[API] Unhandled error in ${key}:`, error);
+    const message = error instanceof Error ? error.message : "An unexpected error occurred.";
+    return validationErrorResponse({
+      formErrors: [message],
+      fieldErrors: {},
+    });
   }
 }
 

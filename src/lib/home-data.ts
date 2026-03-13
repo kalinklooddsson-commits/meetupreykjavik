@@ -53,14 +53,30 @@ export const categories = [
   { name: "Professional", count: 10, letter: "P", tone: "indigo" },
 ] as const;
 
+/* Compute day-of-week from an ISO date so we never hardcode wrong days */
+function formatHomeDay(isoDate: string): { day: string; date: string } {
+  const d = new Date(isoDate);
+  const weekday = d.toLocaleDateString("en-GB", { weekday: "short", timeZone: "Atlantic/Reykjavik" });
+  const dayNum = d.toLocaleDateString("en-GB", { day: "numeric", timeZone: "Atlantic/Reykjavik" });
+  const month = d.toLocaleDateString("en-GB", { month: "short", timeZone: "Atlantic/Reykjavik" });
+  return { day: `${weekday} ${dayNum} ${month}`, date: dayNum };
+}
+
+const e1 = formatHomeDay("2026-03-15T20:00:00Z");
+const e2 = formatHomeDay("2026-03-21T09:00:00Z"); // changed to Sat 21 Mar so name matches "Saturday Hike"
+const e3 = formatHomeDay("2026-03-19T18:30:00Z");
+const e4 = formatHomeDay("2026-03-20T18:00:00Z");
+const e5 = formatHomeDay("2026-03-28T20:30:00Z"); // changed to Sat 28 Mar to match /events listing
+const e6 = formatHomeDay("2026-03-25T17:30:00Z");
+
 export const events: HomeEvent[] = [
   {
     id: 1,
     slug: "singles-night-25-35",
     title: "Singles Night - Ages 25-35",
     tag: "Social",
-    day: "Thu 15 Mar",
-    date: "15",
+    day: e1.day,
+    date: e1.date,
     time: "20:00",
     venue: "Lebowski Bar",
     venueSlug: "lebowski-bar",
@@ -73,8 +89,8 @@ export const events: HomeEvent[] = [
     slug: "saturday-hike-mt-esja",
     title: "Saturday Hike to Mt. Esja",
     tag: "Outdoors",
-    day: "Sat 16 Mar",
-    date: "16",
+    day: e2.day,
+    date: e2.date,
     time: "09:00",
     venue: "Esja Trailhead",
     venueSlug: "esja-trailhead",
@@ -86,8 +102,8 @@ export const events: HomeEvent[] = [
     slug: "react-server-components-workshop",
     title: "React Server Components Workshop",
     tag: "Tech",
-    day: "Tue 19 Mar",
-    date: "19",
+    day: e3.day,
+    date: e3.date,
     time: "18:30",
     venue: "Grandi Hub",
     venueSlug: "grandi-hub",
@@ -97,13 +113,13 @@ export const events: HomeEvent[] = [
   },
   {
     id: 4,
-    slug: "reykjavik-street-food-crawl",
-    title: "Reykjavik Street Food Crawl",
+    slug: "startup-pitch-night",
+    title: "Startup Pitch Night",
     tag: "Food",
-    day: "Fri 20 Mar",
-    date: "20",
+    day: e4.day,
+    date: e4.date,
     time: "18:00",
-    venue: "Hlemmur Mathöll",
+    venue: "Hlemmur Square",
     venueSlug: "hlemmur-square",
     attendees: 35,
     deal: "10% off tastings",
@@ -111,11 +127,11 @@ export const events: HomeEvent[] = [
   },
   {
     id: 5,
-    slug: "live-jazz-and-sketch-night",
-    title: "Live Jazz & Sketch Night",
+    slug: "harbor-jazz-social",
+    title: "Harbor Jazz Social",
     tag: "Music",
-    day: "Sat 22 Mar",
-    date: "22",
+    day: e5.day,
+    date: e5.date,
     time: "20:30",
     venue: "Kex Hostel",
     venueSlug: "kex-hostel",
@@ -124,19 +140,19 @@ export const events: HomeEvent[] = [
   },
   {
     id: 6,
-    slug: "icelandic-for-beginners-meetup",
-    title: "Icelandic for Beginners Meetup",
+    slug: "language-exchange-thursday",
+    title: "Language Exchange Thursday",
     tag: "Language",
-    day: "Wed 25 Mar",
-    date: "25",
+    day: e6.day,
+    date: e6.date,
     time: "17:30",
-    venue: "Stofan Café",
-    venueSlug: "stofan-cafe",
+    venue: "Mokka Kaffi",
+    venueSlug: "mokka",
     attendees: 29,
     deal: "Free coffee",
-    photo: "/place-images/reykjavik/venues/stofan-cafe.jpg",
+    photo: "/place-images/reykjavik/venues/mokka.jpg",
   },
-] as const;
+];
 
 export const groups: HomeGroup[] = [
   {

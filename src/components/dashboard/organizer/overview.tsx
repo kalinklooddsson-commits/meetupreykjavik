@@ -96,7 +96,7 @@ export async function OrganizerOverviewScreen() {
       description="Manage your events, groups, venues, and attendees from one place."
       links={organizerLinks("overview")}
       roleMode="organizer"
-      primaryAction={{ href: "/organizer/events/new" as Route, label: "Create event" }}
+      primaryAction={{ href: "/events/new" as Route, label: "Create event" }}
       signalCards={data.metrics.map((m) => ({
         label: m.label,
         value: m.value,

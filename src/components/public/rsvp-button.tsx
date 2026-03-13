@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { Check, Loader2, Calendar } from "lucide-react";
+import { Check, Loader2, Calendar, Ticket } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 
 /* ── localStorage helpers for mock-mode RSVP persistence ────── */
 
 const STORAGE_KEY = "meetupreykjavik-rsvps";
+const RSVP_CHANGED_EVENT = "rsvp-changed";
 
 function getStoredRsvps(): Set<string> {
   if (typeof window === "undefined") return new Set();
@@ -23,12 +24,55 @@ function saveRsvp(slug: string) {
   const rsvps = getStoredRsvps();
   rsvps.add(slug);
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...rsvps]));
+  window.dispatchEvent(new CustomEvent(RSVP_CHANGED_EVENT, { detail: { slug, action: "add" } }));
 }
 
 function removeRsvp(slug: string) {
   const rsvps = getStoredRsvps();
   rsvps.delete(slug);
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...rsvps]));
+  window.dispatchEvent(new CustomEvent(RSVP_CHANGED_EVENT, { detail: { slug, action: "remove" } }));
+}
+
+/* ── Reactive attendee count ────────────────────────────────── */
+
+export function AttendeeCount({ eventSlug, serverCount, capacity }: { eventSlug: string; serverCount: number; capacity: number }) {
+  const [count, setCount] = useState(serverCount);
+
+  useEffect(() => {
+    // Check if already RSVP'd on mount
+    if (getStoredRsvps().has(eventSlug)) {
+      setCount(serverCount + 1);
+    }
+  }, [eventSlug, serverCount]);
+
+  useEffect(() => {
+    function onRsvpChanged(e: Event) {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.slug === eventSlug) {
+        setCount((prev) => detail.action === "add" ? prev + 1 : Math.max(prev - 1, 0));
+      }
+    }
+    window.addEventListener(RSVP_CHANGED_EVENT, onRsvpChanged);
+    return () => window.removeEventListener(RSVP_CHANGED_EVENT, onRsvpChanged);
+  }, [eventSlug]);
+
+  const percent = capacity ? Math.min(Math.round((count / capacity) * 100), 100) : 0;
+
+  return (
+    <>
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-gray-600">Capacity</span>
+        <span className="font-medium text-gray-900">{count}/{capacity}</span>
+      </div>
+      <div className="mt-2 h-1.5 rounded-full bg-gray-200">
+        <div
+          className="h-1.5 rounded-full bg-brand-indigo transition-all duration-300"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </>
+  );
 }
 
 /* ── Component ──────────────────────────────────────────────── */
@@ -36,20 +80,41 @@ function removeRsvp(slug: string) {
 interface RsvpButtonProps {
   eventSlug: string;
   className?: string;
+  ticketType?: string;
 }
 
-export function RsvpButton({ eventSlug, className = "" }: RsvpButtonProps) {
+export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButtonProps) {
   const t = useTranslations("common");
   const { toast } = useToast();
   const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
   const [message, setMessage] = useState("");
 
+  const syncFromStorage = useCallback(() => {
+    const isGoing = getStoredRsvps().has(eventSlug);
+    setState((prev) => {
+      if (prev === "loading") return prev;
+      return isGoing ? "going" : "idle";
+    });
+  }, [eventSlug]);
+
   // Hydrate from localStorage on mount
   useEffect(() => {
-    if (getStoredRsvps().has(eventSlug)) {
-      setState("going");
+    syncFromStorage();
+  }, [syncFromStorage]);
+
+  // Listen for cross-instance RSVP changes
+  useEffect(() => {
+    function onRsvpChanged(e: Event) {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.slug === eventSlug) {
+        setState(detail.action === "add" ? "going" : "idle");
+      }
     }
+    window.addEventListener(RSVP_CHANGED_EVENT, onRsvpChanged);
+    return () => window.removeEventListener(RSVP_CHANGED_EVENT, onRsvpChanged);
   }, [eventSlug]);
+
+  const isPaid = ticketType && /paid|ticket/i.test(ticketType);
 
   async function handleRsvp() {
     if (state === "loading") return;
@@ -68,14 +133,12 @@ export function RsvpButton({ eventSlug, className = "" }: RsvpButtonProps) {
           setMessage("");
           toast("info", "RSVP cancelled");
         } else {
-          // Fallback: allow cancel in mock mode even if API returns 501
           removeRsvp(eventSlug);
           setState("idle");
           setMessage("");
           toast("info", "RSVP cancelled");
         }
       } catch {
-        // Offline fallback
         removeRsvp(eventSlug);
         setState("idle");
         setMessage("");
@@ -103,14 +166,12 @@ export function RsvpButton({ eventSlug, className = "" }: RsvpButtonProps) {
         setMessage("Sign in to RSVP");
         toast("error", "Sign in to RSVP");
       } else {
-        // Fallback: succeed locally in mock mode (API returns 501 scaffold)
         saveRsvp(eventSlug);
         setState("going");
         setMessage("");
         toast("success", t("youreGoing") ?? "You're going! See you there.");
       }
     } catch {
-      // Offline fallback — still persist locally
       saveRsvp(eventSlug);
       setState("going");
       setMessage("");
@@ -144,8 +205,10 @@ export function RsvpButton({ eventSlug, className = "" }: RsvpButtonProps) {
           </>
         ) : (
           <>
-            <Calendar className="h-4 w-4" />
-            {t("attendEvent") ?? "Attend this event"}
+            {isPaid ? <Ticket className="h-4 w-4" /> : <Calendar className="h-4 w-4" />}
+            {isPaid
+              ? (t("getTickets") ?? "Get tickets")
+              : (t("attendEvent") ?? "Attend this event")}
           </>
         )}
       </button>

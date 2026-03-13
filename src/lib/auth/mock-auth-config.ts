@@ -59,12 +59,38 @@ export const mockAccounts: MockAccount[] = [
   },
 ];
 
-export const demoAuthAccounts = mockAccounts.map((account) => ({
-  email: account.email,
-  displayName: account.displayName,
-  accountType: account.accountType,
-  passwordHint: account.password,
-}));
+/**
+ * Demo accounts shown on the login page.
+ *
+ * When ENABLE_SUPABASE_AUTH=true, these use real Supabase credentials.
+ * When mock-mode is active, they use the mock accounts above.
+ */
+export const demoAuthAccounts = [
+  {
+    email: "anna@example.com",
+    displayName: "Anna Jonsdottir",
+    accountType: "user" as AccountType,
+    passwordHint: "Member123!",
+  },
+  {
+    email: "kari@meetupreykjavik.is",
+    displayName: "Kari Sigurdsson",
+    accountType: "organizer" as AccountType,
+    passwordHint: "Organizer123!",
+  },
+  {
+    email: "lebowski@meetupreykjavik.is",
+    displayName: "Lebowski Bar",
+    accountType: "venue" as AccountType,
+    passwordHint: "Venue123!",
+  },
+  {
+    email: "admin@meetupreykjavik.is",
+    displayName: "Platform Admin",
+    accountType: "admin" as AccountType,
+    passwordHint: "Admin123!",
+  },
+];
 
 export function portalPathForRole(accountType: AccountType) {
   switch (accountType) {

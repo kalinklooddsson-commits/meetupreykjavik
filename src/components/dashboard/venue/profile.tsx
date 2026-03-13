@@ -60,7 +60,7 @@ export async function VenueProfileScreen() {
           eyebrow="Profile"
           title={section.title}
           description={`Your ${section.title.toLowerCase()} as shown on your public venue page.`}
-          actionLabel="Edit"
+          actionLabel=""
           actionHref={"/venue/profile" as Route}
         >
           <KeyValueList

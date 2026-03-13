@@ -12,6 +12,7 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getAdminPortalData } from "@/lib/dashboard-fetchers";
+import { AdminActionButton } from "./panels";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -94,7 +95,7 @@ export async function AdminGroupsScreen() {
               </span>,
               <ToneBadge key="status" tone={statusTone(g.status)}>{g.status}</ToneBadge>,
               <ToneBadge key="health" tone={healthTone(g.health)}>{g.health}</ToneBadge>,
-              <span key="action" className="text-sm font-medium text-brand-indigo">{g.action}</span>,
+              <AdminActionButton key="action" actionKey={g.key} actionLabel={g.action} endpoint="/api/admin/groups/action" />,
             ],
           }))}
           caption="Platform groups"

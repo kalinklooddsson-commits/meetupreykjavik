@@ -1838,3 +1838,55 @@ export function AdminCommsStudio({ comms }: { comms: CommsData }) {
     </div>
   );
 }
+
+/* ═══════════════════════════════════════════════════
+   Generic action button for admin tables
+   ═══════════════════════════════════════════════════ */
+
+export function AdminActionButton({
+  actionKey,
+  actionLabel,
+  endpoint,
+}: {
+  actionKey: string;
+  actionLabel: string;
+  endpoint: string;
+}) {
+  const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  async function handleClick() {
+    setLoading(true);
+    try {
+      await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: actionKey, action: actionLabel.toLowerCase() }),
+      });
+    } catch {}
+    setDone(true);
+    setLoading(false);
+    toast("success", `Action "${actionLabel}" completed`);
+  }
+
+  if (done) {
+    return (
+      <span className="text-xs text-brand-text-muted">
+        <Check className="mr-1 inline h-3 w-3" />
+        Done
+      </span>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={loading}
+      onClick={handleClick}
+      className="text-sm font-medium text-brand-indigo transition hover:text-brand-indigo-dark hover:underline disabled:opacity-50"
+    >
+      {loading ? "..." : actionLabel}
+    </button>
+  );
+}

@@ -151,7 +151,7 @@ export function PortalShell({
         </aside>
 
         <main className="space-y-6">
-          <div className="portal-mobile-jumps lg:hidden">
+          <div className="portal-mobile-jumps hidden">
             <div className="portal-mobile-jumps-header">
               <span className="portal-mobile-jumps-label">{currentRoleMeta.glyph}</span>
               <span className="portal-mobile-jumps-label">{links.length} routes</span>
