@@ -971,7 +971,7 @@ select:focus-visible,
   background: var(--brand-indigo);
 }
 
-.portal-mobile-jumps {
+.portal-mobile-jumps:not([hidden]):not(.hidden) {
   display: grid;
   gap: 0.5rem;
 }
