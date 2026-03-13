@@ -17,6 +17,7 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getAdminPortalData } from "@/lib/dashboard-fetchers";
+import { AdminEventOperationsDesk } from "./panels";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -65,21 +66,7 @@ export async function AdminEventsScreen() {
         title="Event directory"
         description={`${events.table.length} events across all categories. Review status, venues, and admin actions.`}
       >
-        <DashboardTable
-          columns={["Event", "Status", "Category", "Venue", "Date", "Action"]}
-          rows={events.table.map((e) => ({
-            key: e.key,
-            cells: [
-              <span key="title" className="font-medium">{e.title}</span>,
-              <ToneBadge key="status" tone={statusTone(e.status)}>{e.status}</ToneBadge>,
-              <ToneBadge key="cat" tone="neutral">{e.category}</ToneBadge>,
-              e.venue,
-              e.date,
-              <span key="action" className="text-sm font-medium text-brand-indigo">{e.action}</span>,
-            ],
-          }))}
-          caption="Platform events"
-        />
+        <AdminEventOperationsDesk events={events.table} />
       </Surface>
 
       {/* ── Calendar view ──────────────────────────────────── */}

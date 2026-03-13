@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Route } from "next";
 import { useTranslations } from "next-intl";
-import { RsvpButton } from "@/components/public/rsvp-button";
+import { RsvpButton, AttendeeCount } from "@/components/public/rsvp-button";
 import { ShareButton } from "@/components/ui/share-button";
 import {
   ArrowRight,
@@ -32,6 +32,7 @@ import {
   Zap,
 } from "lucide-react";
 import { ContactForm } from "@/components/public/contact-form";
+import { FaqSearchableContent } from "@/components/public/faq-search";
 import { KeyValueList, ToneBadge } from "@/components/dashboard/primitives";
 import { categories } from "@/lib/home-data";
 import {
@@ -639,11 +640,9 @@ function EventCard({ event }: { event: PublicEvent }) {
       {/* ── Body ── */}
       <div className="p-5">
         {/* Title */}
-        <Link href={eventHref(event.slug)} className="block">
-          <h2 className="text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-brand-indigo">
-            {event.title}
-          </h2>
-        </Link>
+        <h2 className="text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-brand-indigo">
+          {event.title}
+        </h2>
 
         {/* Category + price row */}
         <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -1105,34 +1104,6 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
   );
 }
 
-function FilterBar({
-  items,
-  activeIndex = 0,
-}: {
-  items: readonly string[];
-  activeIndex?: number;
-}) {
-  return (
-    <div className="flex flex-wrap gap-2" role="group" aria-label="Filter options">
-      {items.map((item, i) => (
-        <button
-          key={item}
-          type="button"
-          aria-pressed={i === activeIndex}
-          className={cn(
-            "rounded-full px-4 py-2 text-sm font-medium transition cursor-pointer",
-            i === activeIndex
-              ? "bg-brand-indigo !text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200",
-          )}
-        >
-          {item}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 function TimeFilterBar({
   items,
   activeValue,
@@ -1363,12 +1334,12 @@ export function EventsIndexScreen({
                 {events.length} result{events.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}&rdquo;
               </span>
             </div>
-            <a
-              href="/events"
+            <Link
+              href={"/events" as Route}
               className="ml-auto text-sm font-medium text-brand-indigo hover:underline"
             >
               Clear search
-            </a>
+            </Link>
           </div>
         </section>
       )}
@@ -1594,7 +1565,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
         ]}
         rsvpSlot={
           <div className="flex items-center gap-3">
-            <RsvpButton eventSlug={event.slug} />
+            <RsvpButton eventSlug={event.slug} ticketType={event.isFree ? "free" : "paid"} />
             <ShareButton title={event.title} text={event.summary} />
           </div>
         }
@@ -1760,19 +1731,10 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                 ]}
               />
               <div className="mt-4 rounded-lg bg-gray-50 p-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">{t("labels.capacity")}</span>
-                  <span className="font-medium text-gray-900">{event.attendees}/{event.capacity}</span>
-                </div>
-                <div className="mt-2 h-1.5 rounded-full bg-gray-200">
-                  <div
-                    className="h-1.5 rounded-full bg-brand-indigo"
-                    style={{ width: `${occupancyPercent(event.attendees, event.capacity)}%` }}
-                  />
-                </div>
+                <AttendeeCount eventSlug={event.slug} serverCount={event.attendees} capacity={event.capacity} />
               </div>
               <div className="mt-5">
-                <RsvpButton eventSlug={event.slug} className="w-full justify-center" />
+                <RsvpButton eventSlug={event.slug} className="w-full justify-center" ticketType={event.isFree ? "free" : "paid"} />
               </div>
             </div>
 
@@ -1988,9 +1950,9 @@ export function GroupsIndexScreen({
               <span className="font-semibold text-brand-text">
                 {groups.length} result{groups.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}&rdquo;
               </span>
-              <a href="/groups" className="ml-auto text-sm font-medium text-brand-indigo hover:underline">
+              <Link href={"/groups" as Route} className="ml-auto text-sm font-medium text-brand-indigo hover:underline">
                 Clear search
-              </a>
+              </Link>
             </div>
           )}
 
@@ -2478,9 +2440,9 @@ export function VenuesIndexScreen({
               <span className="font-semibold text-brand-text">
                 {venues.length} result{venues.length !== 1 ? "s" : ""} for &ldquo;{searchQuery}&rdquo;
               </span>
-              <a href="/venues" className="ml-auto text-sm font-medium text-brand-indigo hover:underline">
+              <Link href={"/venues" as Route} className="ml-auto text-sm font-medium text-brand-indigo hover:underline">
                 Clear search
-              </a>
+              </Link>
             </div>
           )}
 
@@ -4081,48 +4043,13 @@ export function FaqScreen() {
         ]}
       />
 
-      {/* Search placeholder */}
+      {/* Searchable FAQ content (client component with filtering) */}
       <section className="bg-white">
-        <div className="section-shell py-8">
-          <div className="mx-auto max-w-xl">
-            <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-brand-sand-light px-5 py-4 transition-colors focus-within:border-brand-indigo/30 focus-within:bg-white">
-              <Search className="h-5 w-5 text-gray-400" />
-              <input
-                type="search"
-                placeholder={t("searchPlaceholder")}
-                className="flex-1 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 outline-none"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ categories with accordion */}
-      <section className="bg-white">
-        <div className="section-shell pb-14">
-          <div className="mx-auto max-w-3xl space-y-10">
-            {faqSections.map((section) => (
-              <div key={section.title}>
-                <h2 className="mb-5 text-xl font-bold text-gray-900">{section.title}</h2>
-                <div className="space-y-3">
-                  {section.items.map((item) => (
-                    <details
-                      key={item.question}
-                      className="group rounded-2xl border border-gray-200 bg-white transition-all hover:border-gray-300 [&[open]]:shadow-md [&[open]]:border-brand-indigo/20"
-                    >
-                      <summary className="flex cursor-pointer items-center justify-between px-6 py-5 text-left font-semibold text-gray-900 transition hover:text-brand-indigo [&::-webkit-details-marker]:hidden">
-                        <span>{item.question}</span>
-                        <ArrowRight className="h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200 group-open:rotate-90" />
-                      </summary>
-                      <div className="px-6 pb-5">
-                        <p className="text-sm leading-relaxed text-gray-600">{item.answer}</p>
-                      </div>
-                    </details>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="section-shell py-8 space-y-10 pb-14">
+          <FaqSearchableContent
+            sections={faqSections}
+            searchPlaceholder={t("searchPlaceholder")}
+          />
         </div>
       </section>
 

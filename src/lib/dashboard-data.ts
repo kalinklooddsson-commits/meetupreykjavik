@@ -1221,7 +1221,7 @@ export const adminPortalData = {
       key: "u1",
       name: "Kari Sigurdsson",
       email: "kari@meetupreykjavik.is",
-      type: "User",
+      type: "Organizer",
       status: "Active",
       joined: "Jan 2024",
       lastActive: "8 min ago",

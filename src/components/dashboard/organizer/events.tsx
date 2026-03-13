@@ -47,7 +47,7 @@ export async function OrganizerEventsScreen() {
       primaryAction={
         atLimit
           ? undefined
-          : { href: "/organizer/events/new" as Route, label: "Create event" }
+          : { href: "/events/new" as Route, label: "Create event" }
       }
     >
       <div className="space-y-6">

@@ -62,7 +62,7 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={cn("font-sans", geist.variable)}
     >
-      <body className={`${dmSans.variable} ${fraunces.variable} antialiased`}>
+      <body className={`${dmSans.variable} ${fraunces.variable} antialiased overflow-x-hidden`}>
         <NextIntlClientProvider>
           <ToastProvider>
             {children}

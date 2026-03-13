@@ -34,8 +34,20 @@ type MemberProfile = typeof mockMemberProfile;
 export async function getMemberProfile(): Promise<MemberProfile> {
   const session = await getUser();
 
-  if (!session || !hasSupabaseEnv()) {
+  if (!session) {
     return mockMemberProfile;
+  }
+
+  if (!hasSupabaseEnv()) {
+    // Use session identity to personalise mock data
+    const name = session.displayName ?? mockMemberProfile.name;
+    const initials = name
+      .split(" ")
+      .map((w: string) => w[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+    return { ...mockMemberProfile, name, initials, slug: session.slug ?? mockMemberProfile.slug };
   }
 
   const profile = await getProfileById(session.id);

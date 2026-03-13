@@ -444,7 +444,8 @@ async function handleMockAuthRequest(request: NextRequest, key: string) {
       return withMockSessionCookie(response, session);
     }
 
-    case "POST /api/auth/logout": {
+    case "POST /api/auth/logout":
+    case "GET /api/auth/logout": {
       return clearMockSessionCookie(
         successResponse({
           user: null,
@@ -571,7 +572,8 @@ async function handleLiveAuthRequest(request: NextRequest, key: string) {
       );
     }
 
-    case "POST /api/auth/logout": {
+    case "POST /api/auth/logout":
+    case "GET /api/auth/logout": {
       const { error } = await routeClient.supabase.auth.signOut();
 
       if (error) {

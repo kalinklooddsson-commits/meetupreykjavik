@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { MessageSquare, Lock } from "lucide-react";
-import { MessageActions } from "./message-actions";
+import { MessageActions, MessageStatusBadge } from "./message-actions";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -124,9 +124,7 @@ export async function MemberMessagesScreen() {
                 </div>
               </div>,
               <ToneBadge key="channel" tone="neutral">{m.channel}</ToneBadge>,
-              <ToneBadge key="status" tone={statusTone(m.status)}>
-                {m.status}
-              </ToneBadge>,
+              <MessageStatusBadge key="status" messageKey={m.key} serverStatus={m.status} />,
               <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
             ],
           }))}
