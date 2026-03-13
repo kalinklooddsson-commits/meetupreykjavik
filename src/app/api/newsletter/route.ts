@@ -8,6 +8,8 @@ import {
   rateLimitKeyFromRequest,
   CONTACT_RATE_LIMIT,
 } from "@/lib/security/rate-limit";
+import { hasSupabaseEnv } from "@/lib/env";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const newsletterSchema = z.object({
   email: z.string().email().max(200),
@@ -43,9 +45,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production this would add to a mailing list (e.g. Resend audience).
-    // For now, acknowledge the subscription.
-    console.log(`[Newsletter] New subscriber: ${parsed.data.email}`);
+    const { email } = parsed.data;
+
+    // Persist to database when available
+    if (hasSupabaseEnv()) {
+      const admin = createSupabaseAdminClient();
+      if (admin) {
+        // Read current subscribers list from platform_settings
+        // Use type assertion to bypass generated types for JSONB column
+        const { data: existing } = await (admin as unknown as { from: (t: string) => { select: (c: string) => { eq: (k: string, v: string) => { single: () => Promise<{ data: { value: Record<string, unknown> } | null }> } } } })
+          .from("platform_settings")
+          .select("value")
+          .eq("key", "newsletter_subscribers")
+          .single();
+
+        const existingValue = existing?.value ?? {};
+        const subscribers: string[] = Array.isArray(existingValue.emails)
+          ? (existingValue.emails as string[])
+          : [];
+
+        if (!subscribers.includes(email)) {
+          subscribers.push(email);
+          await (admin as unknown as { from: (t: string) => { upsert: (d: unknown, o: unknown) => Promise<unknown> } })
+            .from("platform_settings")
+            .upsert(
+              {
+                key: "newsletter_subscribers",
+                value: { emails: subscribers, count: subscribers.length },
+                updated_at: new Date().toISOString(),
+              },
+              { onConflict: "key" },
+            );
+        }
+      }
+    }
+
+    console.log(`[Newsletter] New subscriber: ${email}`);
 
     return NextResponse.json({
       ok: true,

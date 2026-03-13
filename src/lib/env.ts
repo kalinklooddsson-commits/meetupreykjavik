@@ -11,6 +11,7 @@ export const env = {
   PAYPAL_CLIENT_SECRET: process.env.PAYPAL_CLIENT_SECRET ?? "",
   PAYPAL_WEBHOOK_ID: process.env.PAYPAL_WEBHOOK_ID ?? "",
   PLAUSIBLE_DOMAIN: process.env.PLAUSIBLE_DOMAIN ?? "meetupreykjavik.com",
+  CRON_SECRET: process.env.CRON_SECRET ?? "",
 } as const;
 
 export function hasSupabaseEnv() {

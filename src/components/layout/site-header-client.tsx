@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import type { Route } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Menu, Search, X } from "lucide-react";
+import { CalendarDays, ChevronDown, MapPin, Menu, Search, Users, X } from "lucide-react";
 
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
@@ -368,6 +368,12 @@ function MobileDrawer({
 /*  Search overlay                                                            */
 /* -------------------------------------------------------------------------- */
 
+type SearchResult = {
+  events: { slug: string; title: string; venue: string | null }[];
+  groups: { slug: string; name: string; memberCount: number }[];
+  venues: { slug: string; name: string; type: string }[];
+};
+
 function SearchOverlay({
   open,
   onClose,
@@ -394,10 +400,16 @@ function SearchOverlay({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchResult | null>(null);
+  const [searching, setSearching] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     if (open) {
       inputRef.current?.focus();
+      setQuery("");
+      setResults(null);
     }
   }, [open]);
 
@@ -424,7 +436,34 @@ function SearchOverlay({
     return () => document.removeEventListener("keydown", handleGlobalKey);
   }, [open]);
 
+  // Live search with debounce
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (query.trim().length < 2) {
+      setResults(null);
+      return;
+    }
+    setSearching(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}&limit=5`);
+        if (res.ok) {
+          setResults(await res.json());
+        }
+      } catch {
+        // silently fail
+      } finally {
+        setSearching(false);
+      }
+    }, 250);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [query]);
+
   if (!open) return null;
+
+  const hasResults = results && (results.events.length > 0 || results.groups.length > 0 || results.venues.length > 0);
 
   return (
     <div
@@ -457,6 +496,8 @@ function SearchOverlay({
                 ref={inputRef}
                 type="search"
                 placeholder={placeholder}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
                 className="flex-1 bg-transparent text-base text-gray-900 outline-none placeholder:text-gray-400"
               />
               <button
@@ -469,15 +510,70 @@ function SearchOverlay({
             </div>
           </form>
 
-          {/* Recent searches placeholder */}
-          <div className="mt-5 border-t border-gray-100 pt-4">
-            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
-              {overlayLabels?.recentSearches ?? "Recent searches"}
-            </p>
-            <p className="mt-2 text-sm text-gray-500">
-              {overlayLabels?.noRecentSearches ?? "No recent searches"}
-            </p>
-          </div>
+          {/* Live search results */}
+          {searching && (
+            <div className="mt-5 border-t border-gray-100 pt-4">
+              <p className="text-sm text-gray-500">Searching...</p>
+            </div>
+          )}
+
+          {hasResults && !searching && (
+            <div className="mt-5 max-h-72 overflow-y-auto border-t border-gray-100 pt-4">
+              {results.events.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">Events</p>
+                  {results.events.map((e) => (
+                    <button key={e.slug} type="button" onClick={() => { router.push(`/events/${e.slug}` as Route); onClose(); }} className="mt-1.5 flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm text-gray-700 transition hover:bg-brand-indigo/5">
+                      <CalendarDays className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                      <span className="truncate font-medium">{e.title}</span>
+                      {e.venue && <span className="ml-auto shrink-0 text-xs text-gray-400">{e.venue}</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {results.groups.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">Groups</p>
+                  {results.groups.map((g) => (
+                    <button key={g.slug} type="button" onClick={() => { router.push(`/groups/${g.slug}` as Route); onClose(); }} className="mt-1.5 flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm text-gray-700 transition hover:bg-brand-indigo/5">
+                      <Users className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                      <span className="truncate font-medium">{g.name}</span>
+                      <span className="ml-auto shrink-0 text-xs text-gray-400">{g.memberCount} members</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {results.venues.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">Venues</p>
+                  {results.venues.map((v) => (
+                    <button key={v.slug} type="button" onClick={() => { router.push(`/venues/${v.slug}` as Route); onClose(); }} className="mt-1.5 flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm text-gray-700 transition hover:bg-brand-indigo/5">
+                      <MapPin className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                      <span className="truncate font-medium">{v.name}</span>
+                      <span className="ml-auto shrink-0 text-xs text-gray-400">{v.type}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {query.trim().length >= 2 && !searching && !hasResults && (
+            <div className="mt-5 border-t border-gray-100 pt-4">
+              <p className="text-sm text-gray-500">No results found for &quot;{query}&quot;</p>
+            </div>
+          )}
+
+          {query.trim().length < 2 && (
+            <div className="mt-5 border-t border-gray-100 pt-4">
+              <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
+                {overlayLabels?.recentSearches ?? "Recent searches"}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                {overlayLabels?.noRecentSearches ?? "Type to search events, groups, and venues"}
+              </p>
+            </div>
+          )}
 
           {/* Quick links */}
           <div className="mt-4 border-t border-gray-100 pt-4">

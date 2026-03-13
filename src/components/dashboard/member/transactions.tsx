@@ -11,8 +11,11 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getMemberProfile } from "@/lib/dashboard-fetchers";
-import { memberTransactions } from "@/lib/dashboard-data";
+import { memberTransactions as mockTransactions } from "@/lib/dashboard-data";
 import { resolveMemberTier } from "@/lib/entitlements";
+import { hasSupabaseEnv } from "@/lib/env";
+import { getUser } from "@/lib/auth/guards";
+import { getUserTransactions } from "@/lib/db/transactions";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -41,20 +44,58 @@ function typeTone(type: string): DashboardTone {
   return "neutral";
 }
 
+function formatAmount(amount: number): string {
+  const formatted = Math.abs(amount).toLocaleString("is-IS");
+  return amount < 0 ? `-${formatted} ISK` : `${formatted} ISK`;
+}
+
+interface TransactionRow {
+  key: string;
+  type: string;
+  description: string;
+  amount: string;
+  status: string;
+  date: string;
+  eventSlug?: string;
+}
+
 /* ── Screen ──────────────────────────────────────────────────── */
 
 export async function MemberTransactionsScreen() {
   const profile = await getMemberProfile();
   const tier = resolveMemberTier(profile.tier);
 
-  const completedTotal = memberTransactions
+  // Fetch real transactions from DB when available, fall back to mock
+  let transactions: TransactionRow[];
+
+  const session = await getUser();
+  if (session && hasSupabaseEnv()) {
+    const dbTransactions = await getUserTransactions(session.id);
+    if (dbTransactions.length > 0) {
+      transactions = dbTransactions.map((t) => ({
+        key: t.id,
+        type: t.type ?? "ticket",
+        description: t.description ?? "Transaction",
+        amount: formatAmount(t.amount_isk ?? 0),
+        status: t.status ?? "completed",
+        date: new Date(t.created_at).toLocaleDateString("en-CA"),
+        eventSlug: (t.metadata as Record<string, string> | null)?.event_slug,
+      }));
+    } else {
+      transactions = [...mockTransactions];
+    }
+  } else {
+    transactions = [...mockTransactions];
+  }
+
+  const completedTotal = transactions
     .filter((t) => t.status === "completed" && !t.amount.startsWith("-"))
     .reduce((sum, t) => {
-      const num = parseInt(t.amount.replace(/\s/g, "").replace("ISK", ""), 10);
+      const num = parseInt(t.amount.replace(/\s/g, "").replace("ISK", "").replace(/\./g, ""), 10);
       return sum + (isNaN(num) ? 0 : num);
     }, 0);
 
-  const subscriptionTx = memberTransactions.find((t) => t.type === "subscription");
+  const subscriptionTx = transactions.find((t) => t.type === "subscription");
 
   return (
     <PortalShell
@@ -68,7 +109,7 @@ export async function MemberTransactionsScreen() {
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard
           label="Total transactions"
-          value={String(memberTransactions.length)}
+          value={String(transactions.length)}
           detail="All ticket purchases, subscriptions, and refunds."
           icon={Receipt}
           tone="indigo"
@@ -122,7 +163,7 @@ export async function MemberTransactionsScreen() {
       >
         <DashboardTable
           columns={["Type", "Description", "Amount", "Status", "Date"]}
-          rows={memberTransactions.map((t) => ({
+          rows={transactions.map((t) => ({
             key: t.key,
             cells: [
               <div key="type" className="flex items-center gap-2">
@@ -136,7 +177,7 @@ export async function MemberTransactionsScreen() {
                 </ToneBadge>
               </div>,
               <div key="desc">
-                {"eventSlug" in t && t.eventSlug ? (
+                {t.eventSlug ? (
                   <Link
                     href={`/events/${t.eventSlug}` as Route}
                     className="font-medium text-brand-indigo hover:underline"

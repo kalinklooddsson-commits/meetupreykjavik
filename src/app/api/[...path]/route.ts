@@ -1020,7 +1020,8 @@ async function handleLiveDataRequest(
             status: "pending",
           } as Parameters<typeof createBooking>[0]);
           return successResponse(data, { status: 201 });
-        } catch {
+        } catch (err) {
+          if (hasSupabaseEnv()) throw err;
           return successResponse({ ok: true, ...body, organizer_id: session.id, status: "pending" }, { status: 201 });
         }
       }
@@ -1087,7 +1088,8 @@ async function handleLiveDataRequest(
             body.counterOffer as Parameters<typeof updateBookingStatus>[2],
           );
           return successResponse(data);
-        } catch {
+        } catch (err) {
+          if (hasSupabaseEnv()) throw err;
           return successResponse({ ok: true, id: match.params.id, ...body });
         }
       }
@@ -1118,23 +1120,45 @@ async function handleLiveDataRequest(
         try {
           const data = await updateProfile(match.params.id, body as Parameters<typeof updateProfile>[1]);
           return successResponse(data);
-        } catch {
+        } catch (err) {
+          if (hasSupabaseEnv()) throw err;
           return successResponse({ ok: true, id: match.params.id, ...body });
         }
       }
       case "PATCH /api/profile": {
         if (!session) return forbiddenResponse("Authentication required.");
         const profileBody = await request.json().catch(() => ({})) as Record<string, unknown>;
-        // Venue profile editor sends { sections: [...] } — no matching DB column,
-        // so acknowledge without DB write
+        // Venue profile editor sends { sections: [...] } — persist venue fields
         if ("sections" in profileBody) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase && session.accountType === "venue") {
+            const sections = profileBody.sections as Array<{ title: string; fields: Array<{ label: string; value: string }> }>;
+            const venueUpdates: Record<string, string> = {};
+            for (const sec of sections ?? []) {
+              for (const field of sec.fields ?? []) {
+                const key = field.label?.toLowerCase().replace(/\s+/g, "_");
+                if (key === "name") venueUpdates.name = field.value;
+                else if (key === "description") venueUpdates.description = field.value;
+                else if (key === "address") venueUpdates.address = field.value;
+                else if (key === "phone") venueUpdates.phone = field.value;
+                else if (key === "email") venueUpdates.email = field.value;
+                else if (key === "website") venueUpdates.website = field.value;
+              }
+            }
+            if (Object.keys(venueUpdates).length > 0) {
+              await supabase
+                .from("venues")
+                .update(venueUpdates)
+                .eq("owner_id", session.id);
+            }
+          }
           return successResponse({ ok: true, sections: profileBody.sections });
         }
         try {
           const profileData = await updateProfile(session.id, profileBody as Parameters<typeof updateProfile>[1]);
           return successResponse(profileData);
-        } catch {
-          // Mock mode or DB unavailable — acknowledge the update
+        } catch (err) {
+          if (hasSupabaseEnv()) throw err;
           return successResponse({ ok: true, ...profileBody });
         }
       }
@@ -1192,9 +1216,29 @@ async function handleLiveDataRequest(
           if (Object.keys(profileUpdates).length > 0) {
             await supabase.from("profiles").update(profileUpdates).eq("id", session.id);
           }
+        } else if (section === "locale" && values["Language"]) {
+          // Locale maps directly to profiles.locale column
+          await supabase
+            .from("profiles")
+            .update({ locale: values["Language"] })
+            .eq("id", session.id);
+        } else if (section === "notifications" || section === "privacy" || section === "billing") {
+          // Store user preferences in platform_settings as JSON
+          const prefKey = `user_settings:${session.id}`;
+          const { data: existing } = await (supabase as unknown as { from: (t: string) => { select: (c: string) => { eq: (k: string, v: string) => { single: () => Promise<{ data: { value: Record<string, unknown> } | null }> } } } })
+            .from("platform_settings")
+            .select("value")
+            .eq("key", prefKey)
+            .single();
+          const currentPrefs = (existing?.value ?? {}) as Record<string, unknown>;
+          const updatedPrefs = { ...currentPrefs, [section]: values };
+          await (supabase as unknown as { from: (t: string) => { upsert: (d: unknown, o: unknown) => Promise<unknown> } })
+            .from("platform_settings")
+            .upsert(
+              { key: prefKey, value: updatedPrefs, updated_at: new Date().toISOString() },
+              { onConflict: "key" },
+            );
         }
-        // Other sections (notifications, privacy, locale, billing) are acknowledged
-        // They would write to a user_preferences table in production
         return successResponse({ ok: true, section, values });
       }
 
@@ -1204,29 +1248,33 @@ async function handleLiveDataRequest(
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
         const body = await request.json();
-        const { attendeeName, action: attAction } = body as { attendeeName: string; action: string };
-        // Map UI actions to rsvps.status values (CHECK: going, not_going, waitlisted, cancelled)
+        const { attendeeName, action: attAction, rsvpId } = body as {
+          attendeeName: string;
+          action: string;
+          rsvpId?: string;
+        };
+        // Map UI actions to rsvps.status values
         const statusMap: Record<string, string> = {
           approve: "going",
           reject: "cancelled",
           waitlist: "waitlisted",
         };
-        if (attAction === "checkin") {
-          // Check-in updates checked_in_at + attended
-          const { data, error } = await supabase
+        if (attAction === "checkin" && rsvpId) {
+          await supabase
             .from("rsvps")
             .update({ checked_in_at: new Date().toISOString(), attended: "attended" })
-            .eq("user_id", session.id) // will match via join below in real usage
-            .select()
-            .maybeSingle();
-          // In mock mode, just acknowledge
+            .eq("id", rsvpId);
           return successResponse({ ok: true, action: attAction, attendeeName });
         }
         const newStatus = statusMap[attAction];
-        if (newStatus) {
-          // In real usage we'd look up RSVP by attendee name + event; for now acknowledge
+        if (newStatus && rsvpId) {
+          await supabase
+            .from("rsvps")
+            .update({ status: newStatus })
+            .eq("id", rsvpId);
           return successResponse({ ok: true, action: attAction, attendeeName, status: newStatus });
         }
+        // Fallback: no rsvpId provided (mock mode) — acknowledge without DB write
         return successResponse({ ok: true, action: attAction, attendeeName });
       }
 
@@ -1247,6 +1295,28 @@ async function handleLiveDataRequest(
         if (!ownedVenue) {
           // No venue in DB (mock mode) — acknowledge without DB write
           return successResponse({ ok: true, schedule });
+        }
+        // Clear existing availability and insert new schedule
+        await supabase
+          .from("venue_availability")
+          .delete()
+          .eq("venue_id", ownedVenue.id);
+        if (schedule && schedule.length > 0) {
+          const rows = schedule.flatMap((s: { day: string; blocks: string[] }) =>
+            s.blocks.map((block: string) => {
+              const [start, end] = block.split("-").map((t: string) => t.trim());
+              return {
+                venue_id: ownedVenue.id,
+                day_of_week: s.day.toLowerCase(),
+                start_time: start ?? "09:00",
+                end_time: end ?? "17:00",
+                is_available: true,
+              };
+            }),
+          );
+          if (rows.length > 0) {
+            await supabase.from("venue_availability").insert(rows);
+          }
         }
         return successResponse({ ok: true, venueId: ownedVenue.id, schedule });
       }
@@ -1517,7 +1587,7 @@ async function handleLiveDataRequest(
               resource_id: key,
               changes: { note },
             });
-          } catch { /* table may not exist — acknowledge anyway */ }
+          } catch (err) { if (hasSupabaseEnv()) console.error("[admin/notes] insert failed:", err); }
         }
         return successResponse({ ok: true, action: noteAction });
       }
@@ -1536,7 +1606,7 @@ async function handleLiveDataRequest(
             .eq("resource_id", key)
             .eq("action", "note_added")
             .eq("changes->>note", note);
-        } catch { /* acknowledge anyway */ }
+        } catch (err) { if (hasSupabaseEnv()) console.error("[admin/notes] delete failed:", err); }
         return successResponse({ ok: true, action: "remove" });
       }
 
@@ -1705,7 +1775,7 @@ async function handleLiveDataRequest(
           }));
           try {
             await supabase.from("notifications").insert(notifications);
-          } catch { /* acknowledge even if insert fails */ }
+          } catch (err) { if (hasSupabaseEnv()) console.error("[admin/comms] notification insert failed:", err); }
         }
         return successResponse({ ok: true, sent: true, recipientCount: users?.length ?? 0 });
       }
