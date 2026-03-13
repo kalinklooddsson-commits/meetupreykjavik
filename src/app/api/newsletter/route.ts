@@ -59,6 +59,10 @@ export async function POST(request: NextRequest) {
 
         if (error) {
           console.error("[Newsletter] DB insert failed:", error.message);
+          return NextResponse.json(
+            { ok: false, error: "Subscription failed. Please try again." },
+            { status: 500 },
+          );
         }
       }
     } else {

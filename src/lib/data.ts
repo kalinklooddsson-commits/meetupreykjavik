@@ -40,13 +40,13 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
   const ratings = (rawRatings as Record<string, unknown>[]).map((r) => ({
     author: (r.reviewer_name as string) ?? (r.display_name as string) ?? "Anonymous",
     rating: (r.rating as number) ?? 5,
-    text: (r.comment as string) ?? (r.text as string) ?? "",
+    text: (r.text as string) ?? "",
   }));
 
   const rawComments = Array.isArray(row.event_comments) ? row.event_comments : [];
   const comments = (rawComments as Record<string, unknown>[]).map((c) => ({
     author: (c.author_name as string) ?? (c.display_name as string) ?? "Anonymous",
-    text: (c.content as string) ?? (c.text as string) ?? "",
+    text: (c.text as string) ?? "",
     postedAt: (c.created_at as string) ?? new Date().toISOString(),
   }));
 
@@ -324,8 +324,8 @@ async function getEventBySlugWithRatings(slug: string) {
       profiles:host_id (*),
       categories (*),
       ticket_tiers (*),
-      event_ratings ( id, rating, comment, created_at, profiles:user_id ( display_name ) ),
-      event_comments ( id, content, created_at, profiles:user_id ( display_name ) )
+      event_ratings ( id, rating, text, created_at, profiles:user_id ( display_name ) ),
+      event_comments ( id, text, created_at, profiles:user_id ( display_name ) )
     `)
     .eq("slug", slug)
     .single();
@@ -446,7 +446,7 @@ export async function fetchGroupBySlug(slug: string) {
 export async function fetchVenues(options?: { limit?: number }) {
   if (hasSupabaseEnv()) {
     try {
-      const result = await getVenues({ limit: options?.limit ?? 20 });
+      const result = await getVenues({ limit: options?.limit ?? 100 });
       if (result.data.length > 0) {
         return result.data.map((row) =>
           mapDbVenueToPublic(row as unknown as Record<string, unknown>),

@@ -4,26 +4,41 @@ import { hasPayPalEnv, verifyWebhookSignature } from "@/lib/payments/paypal";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 /**
- * In-memory dedup for webhook retries (per serverless instance).
- * Keeps the last 500 transmission IDs and auto-expires after 10 minutes.
+ * Database-backed dedup for webhook retries.
+ * Uses Supabase `webhook_dedup` table with upsert + conflict detection.
+ * Falls back to in-memory map if DB is unavailable.
  */
-const processedTransmissions = new Map<string, number>();
-const DEDUP_MAX = 500;
-const DEDUP_TTL = 10 * 60 * 1000;
+const memoryFallback = new Map<string, number>();
 
-function isDuplicate(transmissionId: string): boolean {
+async function isDuplicate(transmissionId: string): Promise<boolean> {
   if (!transmissionId) return false;
 
-  // Cleanup expired entries periodically
-  if (processedTransmissions.size > DEDUP_MAX) {
-    const cutoff = Date.now() - DEDUP_TTL;
-    for (const [id, ts] of processedTransmissions) {
-      if (ts < cutoff) processedTransmissions.delete(id);
+  // Try database-backed dedup first (works across serverless instances)
+  try {
+    const supabase = await createSupabaseServerClient();
+    if (supabase) {
+      const { error } = await supabase
+        .from("webhook_dedup")
+        .insert({ transmission_id: transmissionId });
+
+      // If unique constraint violation → duplicate
+      if (error?.code === "23505") return true;
+      if (!error) return false;
     }
+  } catch {
+    // Fall through to in-memory fallback
   }
 
-  if (processedTransmissions.has(transmissionId)) return true;
-  processedTransmissions.set(transmissionId, Date.now());
+  // In-memory fallback (best-effort, single instance only)
+  if (memoryFallback.has(transmissionId)) return true;
+  memoryFallback.set(transmissionId, Date.now());
+  // Prune old entries
+  if (memoryFallback.size > 500) {
+    const cutoff = Date.now() - 10 * 60 * 1000;
+    for (const [id, ts] of memoryFallback) {
+      if (ts < cutoff) memoryFallback.delete(id);
+    }
+  }
   return false;
 }
 
@@ -68,7 +83,7 @@ export async function POST(request: NextRequest) {
 
   // Idempotency: skip if we already processed this transmission
   const transmissionId = headers["paypal-transmission-id"];
-  if (isDuplicate(transmissionId)) {
+  if (await isDuplicate(transmissionId)) {
     return NextResponse.json({ received: true, deduplicated: true });
   }
 
@@ -91,7 +106,6 @@ export async function POST(request: NextRequest) {
         if (captureId) {
           const supabase = await createSupabaseServerClient();
           if (supabase) {
-            // Mark the matching transaction as completed by PayPal capture ID
             await supabase
               .from("transactions")
               .update({ status: "completed" })
@@ -125,7 +139,6 @@ export async function POST(request: NextRequest) {
         if (subscriptionId && subscriberEmail) {
           const supabase = await createSupabaseServerClient();
           if (supabase) {
-            // Use custom_id from subscription to determine tier, fallback to "plus"
             const customId = event.resource?.custom_id as string | undefined;
             const tier = customId ?? "plus";
             await supabase

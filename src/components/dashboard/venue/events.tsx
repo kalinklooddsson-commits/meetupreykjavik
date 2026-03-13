@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, Plus } from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -46,6 +46,17 @@ export async function VenueEventsScreen() {
       links={venueLinks("events")}
       roleMode="venue"
     >
+      {/* Create event action */}
+      <div className="mb-6 flex justify-end">
+        <Link
+          href={"/venue/events/new" as Route}
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-indigo px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-indigo-light"
+        >
+          <Plus className="h-4 w-4" />
+          Create event
+        </Link>
+      </div>
+
       <Surface
         eyebrow="Schedule"
         title="Upcoming events"
@@ -87,10 +98,10 @@ export async function VenueEventsScreen() {
             <CalendarDays className="h-8 w-8 text-brand-text-muted" />
             <div>
               <p className="text-sm font-medium text-brand-text">
-                Events will appear here once organizers book your venue.
+                Create your own event or wait for organizers to book your venue.
               </p>
               <p className="mt-1 text-sm text-brand-text-muted">
-                Make sure your availability is up to date and your profile is complete to attract bookings.
+                Use the &ldquo;Create event&rdquo; button above to host an event at your venue.
               </p>
             </div>
           </div>

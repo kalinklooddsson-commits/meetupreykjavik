@@ -124,7 +124,7 @@ async function ensureSupabaseProfile(seed: SupabaseProfileSeed) {
 
   const { data: existing, error: existingError } = await admin
     .from("profiles")
-    .select("id, display_name, slug, email, locale, account_type")
+    .select("id, display_name, slug, email, locale, account_type, is_suspended")
     .eq("id", seed.id)
     .maybeSingle();
 
@@ -133,6 +133,10 @@ async function ensureSupabaseProfile(seed: SupabaseProfileSeed) {
   }
 
   if (existing) {
+    // Block suspended accounts from getting a session
+    if ((existing as Record<string, unknown>).is_suspended) {
+      return null;
+    }
     return existing satisfies ProfileRow;
   }
 

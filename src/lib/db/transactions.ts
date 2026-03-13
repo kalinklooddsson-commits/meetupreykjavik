@@ -19,10 +19,9 @@ export async function createTransaction(transaction: TransactionInsert) {
     finalTransaction.amount_isk &&
     !finalTransaction.commission_amount
   ) {
+    // ISK has no decimal places — round to nearest whole krona
     finalTransaction.commission_amount =
-      Math.round(
-        Number(finalTransaction.amount_isk) * TICKET_COMMISSION_RATE * 100,
-      ) / 100;
+      Math.round(Number(finalTransaction.amount_isk) * TICKET_COMMISSION_RATE);
   }
 
   const { data, error } = await supabase
@@ -65,13 +64,10 @@ export async function getPlatformRevenue(
   const supabase = await createSupabaseServerClient();
   if (!supabase) return { total_isk: 0 };
 
-  // Use Supabase's .sum() via an RPC call or count-only query to avoid
-  // loading all rows into memory. Since Supabase JS doesn't support
-  // aggregate functions directly, we use a minimal select with a limit
-  // and sum server-side via PostgREST count header trick.
+  // Only select the amount column with a reasonable batch limit
   let query = supabase
     .from("transactions")
-    .select("amount_isk", { count: "exact", head: false })
+    .select("amount_isk")
     .eq("status", "completed");
 
   if (period?.from) {
@@ -81,8 +77,7 @@ export async function getPlatformRevenue(
     query = query.lte("created_at", period.to);
   }
 
-  // Limit to 1000 rows max to prevent unbounded memory usage
-  const { data, error } = await query.limit(10000);
+  const { data, error } = await query.limit(1000);
 
   if (error) {
     console.error("Failed to fetch platform revenue:", error);

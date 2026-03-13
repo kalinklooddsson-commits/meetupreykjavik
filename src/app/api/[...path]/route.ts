@@ -685,7 +685,9 @@ async function handleLiveDataRequest(
           category: url.searchParams.get("category") ?? undefined,
           limit: Math.min(Math.max(Number(url.searchParams.get("limit") ?? 20) || 20, 1), 100),
           offset: Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0),
-          status: url.searchParams.get("status") ?? "published",
+          status: (["draft", "published", "cancelled"].includes(url.searchParams.get("status") ?? "")
+            ? url.searchParams.get("status")
+            : "published") as string,
         });
         return successResponse(result);
       }
@@ -696,6 +698,9 @@ async function handleLiveDataRequest(
       }
       case "POST /api/events": {
         if (!session) return forbiddenResponse("Authentication required.");
+        if (!["organizer", "venue", "admin"].includes(session.accountType ?? "")) {
+          return forbiddenResponse("Only organizers, venue owners, and admins can create events.");
+        }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const slug = `${String(body.title ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
         // Respect client-supplied status if valid, default to "published"
@@ -860,6 +865,9 @@ async function handleLiveDataRequest(
       }
       case "POST /api/groups": {
         if (!session) return forbiddenResponse("Authentication required.");
+        if (!["organizer", "admin"].includes(session.accountType ?? "")) {
+          return forbiddenResponse("Only organizers and admins can create groups.");
+        }
         const body = await parseValidatedBody(request, key);
         const slug = `${(body as Record<string, string>).name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
         const data = await createGroup({
@@ -921,6 +929,9 @@ async function handleLiveDataRequest(
       }
       case "POST /api/venues": {
         if (!session) return forbiddenResponse("Authentication required.");
+        if (!["venue", "admin"].includes(session.accountType ?? "")) {
+          return forbiddenResponse("Only venue owners and admins can create venues.");
+        }
         const body = await parseValidatedBody(request, key);
         const slug = `${(body as Record<string, string>).name?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
         const data = await createVenue({
@@ -933,6 +944,9 @@ async function handleLiveDataRequest(
       }
       case "PATCH /api/venues/[slug]": {
         if (!session) return forbiddenResponse("Authentication required.");
+        if (!["venue", "admin"].includes(session.accountType ?? "")) {
+          return forbiddenResponse("Only venue owners and admins can manage venues.");
+        }
         const venueToUpdate = await getVenueBySlug(match.params.slug);
         if (!venueToUpdate) return validationMessage("Venue not found.");
         if (venueToUpdate.owner_id !== session.id && session.accountType !== "admin") {
@@ -1156,6 +1170,7 @@ async function handleLiveDataRequest(
           .single();
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         if (!bookingToUpdate) {
+          if (hasSupabaseEnv()) return NextResponse.json({ ok: false, error: "Booking not found." }, { status: 404 });
           // Mock mode — acknowledge without DB write
           return successResponse({ ok: true, id: match.params.id, ...body });
         }
@@ -1173,15 +1188,17 @@ async function handleLiveDataRequest(
           body.counterOffer as Parameters<typeof updateBookingStatus>[2],
         );
         // Notify the other party about the booking status change
-        const notifyUserId =
-          session.id === bookingToUpdate.organizer_id ? venueOwner : bookingToUpdate.organizer_id;
+        const isOrganizerActing = session.id === bookingToUpdate.organizer_id;
+        const notifyUserId = isOrganizerActing ? venueOwner : bookingToUpdate.organizer_id;
         if (notifyUserId) {
           await createNotification({
             user_id: notifyUserId,
             type: "booking_response",
             title: `Booking ${body.status}`,
-            body: `Your booking request has been ${body.status}`,
-            link: session.id === bookingToUpdate.organizer_id ? `/venue/bookings` : `/organizer/bookings`,
+            body: isOrganizerActing
+              ? `A booking request has been ${body.status} by the organizer`
+              : `Your booking request has been ${body.status}`,
+            link: isOrganizerActing ? `/venue/dashboard` : `/organizer`,
           }).catch(() => {});
         }
         return successResponse(updatedBooking);
@@ -1320,36 +1337,28 @@ async function handleLiveDataRequest(
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
         const body = await request.json();
-        const { attendeeName, eventSlug, userId: targetUserId, action: attAction } = body as {
-          attendeeName: string; eventSlug?: string; userId?: string; action: string;
+        const { attendeeName, rsvpId, action: attAction } = body as {
+          attendeeName: string; rsvpId?: string; action: string;
         };
         const statusMap: Record<string, string> = {
           approve: "going",
-          reject: "cancelled",
+          reject: "rejected",
           waitlist: "waitlisted",
         };
 
-        // Resolve the RSVP — prefer userId, fall back to name lookup
-        let rsvpFilter: Record<string, string> = {};
-        if (targetUserId && eventSlug) {
-          // Look up event id from slug
-          const { data: evt } = await supabase.from("events").select("id").eq("slug", eventSlug).maybeSingle();
-          if (evt) rsvpFilter = { user_id: targetUserId, event_id: evt.id };
-        }
-
-        if (attAction === "checkin" && rsvpFilter.user_id) {
+        if (attAction === "checkin" && rsvpId) {
           await supabase
             .from("rsvps")
             .update({ checked_in_at: new Date().toISOString(), attended: "attended" })
-            .match(rsvpFilter);
+            .eq("id", rsvpId);
           return successResponse({ ok: true, action: attAction, attendeeName });
         }
         const newStatus = statusMap[attAction];
-        if (newStatus && rsvpFilter.user_id) {
+        if (newStatus && rsvpId) {
           await supabase
             .from("rsvps")
             .update({ status: newStatus })
-            .match(rsvpFilter);
+            .eq("id", rsvpId);
           return successResponse({ ok: true, action: attAction, attendeeName, status: newStatus });
         }
         return successResponse({ ok: true, action: attAction, attendeeName });
@@ -1630,8 +1639,8 @@ async function handleLiveDataRequest(
           case "role": updates.account_type = value; break;
           case "verify": updates.is_verified = true; break;
           case "unverify": updates.is_verified = false; break;
-          case "suspend": updates.is_verified = false; break; // flag account — schema lacks 'suspended' type
-          case "unsuspend": updates.is_verified = true; break;
+          case "suspend": updates.is_suspended = true; break;
+          case "unsuspend": updates.is_suspended = false; break;
           case "grant_premium": updates.is_premium = true; break;
           case "remove_premium": updates.is_premium = false; break;
           default: return validationMessage(`Unknown user action: ${action}`);
@@ -2475,6 +2484,12 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
     if (hasSupabaseEnv()) {
       const liveResult = await handleLiveDataRequest(request, key, match);
       if (liveResult) return liveResult;
+      // Supabase is configured but handler returned null (client init failed)
+      // Return error instead of silently falling back to mock data
+      return NextResponse.json(
+        { ok: false, error: "Service temporarily unavailable. Please try again." },
+        { status: 503 },
+      );
     }
 
     const validatedBody = await parseValidatedBody(request, key);

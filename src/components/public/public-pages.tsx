@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Route } from "next";
@@ -2093,11 +2094,12 @@ export function GroupsIndexScreen({
 }
 
 
-export function GroupDetailScreen({ group }: { group: PublicGroup }) {
+export function GroupDetailScreen({ group, events: eventsProp }: { group: PublicGroup; events?: PublicEvent[] }) {
   const t = useTranslations("groupDetailPage");
   const tNav = useTranslations("nav");
   const tSignals = useTranslations("signals");
-  const upcomingEvents = publicEvents.filter((event) =>
+  const allEvents = eventsProp ?? publicEvents;
+  const upcomingEvents = allEvents.filter((event) =>
     (group.upcomingEventSlugs ?? []).includes(event.slug),
   );
   const operatingSignals = groupOperatingSignals(group, upcomingEvents, tSignals);
@@ -2340,6 +2342,7 @@ export function VenuesIndexScreen({
   const t = useTranslations("venuesPage");
   const tCards = useTranslations("cards");
   const sourcedPlaces = featuredSourcedPlaces;
+  const [sourcedVisible, setSourcedVisible] = useState(12);
   const avgRating = venues.length > 0 ? (venues.reduce((sum, v) => sum + (v.rating ?? 0), 0) / venues.length).toFixed(1) : "0.0";
   const totalCapacity = venues.reduce((sum, v) => sum + (v.capacity ?? 0), 0);
   const neighborhoods = areaHighlights(venues).slice(0, 4);
@@ -2558,19 +2561,23 @@ export function VenuesIndexScreen({
                 <h2 className="text-2xl font-bold text-gray-900">{t("sourced.title")}</h2>
                 <p className="mt-1 text-sm text-gray-600">{t("sourced.description")}</p>
               </div>
-              <Link
-                href="/venues"
-                className="hidden items-center gap-1.5 text-sm font-medium text-brand-indigo sm:inline-flex"
-              >
-                {t("sourced.seeAll")}
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
+              <span className="text-sm text-gray-500">{sourcedPlaces.length} places</span>
             </div>
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {sourcedPlaces.map((place) => (
+              {sourcedPlaces.slice(0, sourcedVisible).map((place) => (
                 <SourcedPlaceCard key={place.slug} place={place} />
               ))}
             </div>
+            {sourcedVisible < sourcedPlaces.length && (
+              <div className="mt-8 text-center">
+                <button
+                  onClick={() => setSourcedVisible((v) => Math.min(v + 12, sourcedPlaces.length))}
+                  className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-brand-indigo/20 bg-white px-8 py-3 text-sm font-semibold text-brand-indigo shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  Show more ({sourcedPlaces.length - sourcedVisible} remaining)
+                </button>
+              </div>
+            )}
           </div>
         </section>
       ) : null}

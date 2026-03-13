@@ -28,32 +28,23 @@ export async function createRsvp(
   // Check event capacity before allowing RSVP
   const { data: event } = await supabase
     .from("events")
-    .select("capacity")
+    .select("attendee_limit")
     .eq("id", eventId)
     .single();
 
-  if (event?.capacity) {
+  let status: "going" | "waitlisted" = "going";
+
+  if (event?.attendee_limit) {
     const { count } = await supabase
       .from("rsvps")
       .select("id", { count: "exact", head: true })
       .eq("event_id", eventId)
       .eq("status", "going");
 
-    if (count !== null && count >= event.capacity) {
-      throw new Error("This event is full. You have been added to the waitlist.");
+    if (count !== null && count >= event.attendee_limit) {
+      status = "waitlisted";
     }
   }
-
-  const status =
-    event?.capacity &&
-    (await supabase
-      .from("rsvps")
-      .select("id", { count: "exact", head: true })
-      .eq("event_id", eventId)
-      .eq("status", "going")
-      .then(({ count: c }) => c !== null && c >= event.capacity))
-      ? "waitlisted"
-      : "going";
 
   const { data, error } = await supabase
     .from("rsvps")
@@ -79,7 +70,7 @@ export async function cancelRsvp(eventId: string, userId: string) {
     .update({ status: "cancelled" })
     .eq("event_id", eventId)
     .eq("user_id", userId)
-    .eq("status", "going")
+    .in("status", ["going", "waitlisted"])
     .select()
     .maybeSingle();
 

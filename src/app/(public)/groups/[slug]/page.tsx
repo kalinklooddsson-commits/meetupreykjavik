@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GroupDetailScreen } from "@/components/public/public-pages";
-import { fetchGroupBySlug } from "@/lib/data";
+import { fetchGroupBySlug, fetchEvents } from "@/lib/data";
 
 export async function generateMetadata({
   params,
@@ -51,11 +51,14 @@ export default async function GroupDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const group = await fetchGroupBySlug(slug);
+  const [group, events] = await Promise.all([
+    fetchGroupBySlug(slug),
+    fetchEvents(),
+  ]);
 
   if (!group) {
     notFound();
   }
 
-  return <GroupDetailScreen group={group} />;
+  return <GroupDetailScreen group={group} events={events} />;
 }
