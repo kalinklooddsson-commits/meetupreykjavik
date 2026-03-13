@@ -1771,13 +1771,9 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                   />
                 </div>
               </div>
-              <Link
-                href="/signup"
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
-              >
-                {t("actions.reserveSeat")}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              <div className="mt-5">
+                <RsvpButton eventSlug={event.slug} className="w-full justify-center" />
+              </div>
             </div>
 
             {/* Booking notes card */}
