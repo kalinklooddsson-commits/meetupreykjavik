@@ -82,9 +82,10 @@ interface RsvpButtonProps {
   eventSlug: string;
   className?: string;
   ticketType?: string;
+  priceLabel?: string;
 }
 
-export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButtonProps) {
+export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }: RsvpButtonProps) {
   const t = useTranslations("common");
   const { toast } = useToast();
   const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
@@ -139,7 +140,13 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
       return;
     }
 
-    // Create RSVP
+    // Paid events require payment — block free RSVP
+    if (isPaid) {
+      toast("info", t("ticketsPending"));
+      return;
+    }
+
+    // Create RSVP (free events only)
     setState("loading");
     try {
       const response = await fetch(`/api/events/${eventSlug}/rsvp`, {
@@ -192,7 +199,7 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
         ) : (
           <>
             {isPaid ? <Ticket className="h-4 w-4" /> : <Calendar className="h-4 w-4" />}
-            {isPaid ? t("getTickets") : t("attendEvent")}
+            {isPaid ? (priceLabel ? `${t("getTickets")} — ${priceLabel}` : t("getTickets")) : t("attendEvent")}
           </>
         )}
       </button>

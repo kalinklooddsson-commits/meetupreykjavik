@@ -738,6 +738,7 @@
     "cancelRsvp": "Cancel RSVP",
     "rsvpCancelled": "RSVP cancelled",
     "signInToRsvp": "Sign in to RSVP",
+    "ticketsPending": "Ticket sales coming soon — check back later!",
     "capacity": "Capacity",
     "messageSent": "Message sent! We'll be in touch.",
     "messageFailed": "Could not send message.",
