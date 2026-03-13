@@ -80,11 +80,11 @@ export function OrganizerAttendeeControlCenter({
       if (result.ok) {
         toast("success", `${name} — ${action === "checkin" ? "checked in" : action + "d"} successfully`);
       } else {
-        toast("success", `${name} — ${action === "checkin" ? "checked in" : action + "d"} (local)`);
+        toast("info", `${name} — ${action === "checkin" ? "checked in" : action + "d"} (local only)`);
       }
     } catch {
       applyLocal(name, action);
-      toast("success", `${name} — ${action === "checkin" ? "checked in" : action + "d"} successfully`);
+      toast("info", `${name} — ${action === "checkin" ? "checked in" : action + "d"} (offline)`);
     } finally {
       setLoading(null);
     }
@@ -297,11 +297,11 @@ export function OrganizerVenueRequestStudio({
       if (result.ok) {
         toast("success", "Booking request sent successfully");
       } else {
-        toast("success", "Booking request submitted");
+        toast("info", "Booking request saved locally");
       }
     } catch {
       setSubmitted(true);
-      toast("success", "Booking request submitted");
+      toast("info", "Booking request saved (offline)");
     } finally {
       setSending(false);
     }

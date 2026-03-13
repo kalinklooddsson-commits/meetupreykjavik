@@ -59,9 +59,9 @@ export function MemberSettingsStudio({
         toast("error", result.note || "Failed to save profile");
       }
     } catch {
-      // Fallback for mock mode — consider it a success
+      // Fallback for mock mode — apply locally but signal offline
       setSaved(true);
-      toast("success", "Profile updated successfully");
+      toast("info", "Profile saved (offline)");
       setTimeout(() => setSaved(false), 3000);
     } finally {
       setSaving(false);
