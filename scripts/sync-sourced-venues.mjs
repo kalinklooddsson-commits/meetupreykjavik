@@ -523,7 +523,7 @@ async function main() {
       legal_name: null,
       kennitala: null,
       type,
-      description: `${place.summary} Imported from the Reykjavik venue intake so the team can curate and activate real local supply from the admin dashboard.`,
+      description: place.summary,
       address: place.address || `${place.area}, Reykjavik`,
       city: "Reykjavik",
       latitude: place.lat,
