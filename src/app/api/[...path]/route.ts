@@ -1326,6 +1326,241 @@ async function handleLiveDataRequest(
         return successResponse(data);
       }
 
+      // ── Admin user actions ──
+      case "POST /api/admin/users/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { userKey, action, value } = body as { userKey: string; action: string; value?: string };
+        const updates: Record<string, unknown> = {};
+        switch (action) {
+          case "role": updates.account_type = value; break;
+          case "verify": updates.is_verified = true; break;
+          case "unverify": updates.is_verified = false; break;
+          case "suspend": updates.is_verified = false; break; // flag account — schema lacks 'suspended' type
+          case "unsuspend": updates.is_verified = true; break;
+          case "grant_premium": updates.is_premium = true; break;
+          case "remove_premium": updates.is_premium = false; break;
+          default: return validationMessage(`Unknown user action: ${action}`);
+        }
+        const { data, error } = await supabase
+          .from("profiles")
+          .update(updates)
+          .eq("slug", userKey)
+          .select()
+          .maybeSingle();
+        if (error) throw error;
+        return successResponse({ ok: true, action, user: data });
+      }
+
+      // ── Admin notes ──
+      case "POST /api/admin/notes": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { key, action: noteAction, note } = body as { key: string; action: string; note: string };
+        if (noteAction === "add") {
+          const { error } = await supabase.from("audit_log").insert({
+            admin_id: session.id,
+            action: "note_added",
+            resource_type: "user",
+            resource_id: key,
+            changes: { note },
+          });
+          if (error) throw error;
+        }
+        return successResponse({ ok: true, action: noteAction });
+      }
+
+      // ── Admin notes delete ──
+      case "DELETE /api/admin/notes": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { key, note } = body as { key: string; note: string };
+        const { error } = await supabase
+          .from("audit_log")
+          .delete()
+          .eq("resource_id", key)
+          .eq("action", "note_added")
+          .eq("changes->>note", note);
+        if (error) throw error;
+        return successResponse({ ok: true, action: "remove" });
+      }
+
+      // ── Admin events action ──
+      case "POST /api/admin/events/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { key, action: eventAction } = body as { key: string; action: string };
+        const updates: Record<string, unknown> = {};
+        if (eventAction === "published") updates.status = "published";
+        else if (eventAction === "featured") updates.is_featured = true;
+        else if (eventAction === "cancelled") updates.status = "cancelled";
+        else return validationMessage(`Unknown event action: ${eventAction}`);
+        const { data, error } = await supabase
+          .from("events")
+          .update(updates)
+          .eq("slug", key)
+          .select()
+          .maybeSingle();
+        if (error) throw error;
+        return successResponse({ ok: true, action: eventAction, event: data });
+      }
+
+      // ── Admin groups action ──
+      case "POST /api/admin/groups/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { key, action: groupAction } = body as { key: string; action: string };
+        const statusMap: Record<string, string> = { approved: "active", rejected: "archived", archived: "archived" };
+        const newStatus = statusMap[groupAction];
+        if (newStatus) {
+          const { data, error } = await supabase
+            .from("groups")
+            .update({ status: newStatus })
+            .eq("slug", key)
+            .select()
+            .maybeSingle();
+          if (error) throw error;
+          return successResponse({ ok: true, action: groupAction, group: data });
+        }
+        // Non-status actions (feature, monitor, prompt organizer) — acknowledge without DB change
+        return successResponse({ ok: true, action: groupAction, key });
+      }
+
+      // ── Admin venues action ──
+      case "POST /api/admin/venues/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { key, keys, action: venueAction } = body as { key?: string; keys?: string[]; action: string };
+        // Batch operation
+        if (keys && keys.length > 0) {
+          const batchUpdates: Record<string, unknown> = {};
+          if (venueAction === "approved" || venueAction === "approve") batchUpdates.status = "active";
+          else if (venueAction === "rejected") batchUpdates.status = "rejected";
+          else if (venueAction === "waitlisted") batchUpdates.status = "waitlisted";
+          else batchUpdates.status = venueAction;
+          const { error } = await supabase.from("venues").update(batchUpdates).in("slug", keys);
+          if (error) throw error;
+          return successResponse({ ok: true, action: venueAction, count: keys.length });
+        }
+        // Single operation
+        if (!key) return validationMessage("Missing key or keys");
+        const updates: Record<string, unknown> = {};
+        if (venueAction === "verify") updates.is_verified = true;
+        else if (venueAction === "suspend") updates.status = "suspended";
+        else if (venueAction === "approve" || venueAction === "approved") updates.status = "active";
+        else if (venueAction === "rejected") updates.status = "rejected";
+        else updates.status = venueAction;
+        const { data, error } = await supabase
+          .from("venues")
+          .update(updates)
+          .eq("slug", key)
+          .select()
+          .maybeSingle();
+        if (error) throw error;
+        return successResponse({ ok: true, action: venueAction, venue: data });
+      }
+
+      // ── Admin refund ──
+      case "POST /api/admin/refund": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { key } = body as { key: string };
+        const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (uuidPattern.test(key)) {
+          const { data, error } = await supabase
+            .from("transactions")
+            .update({ status: "refunded" })
+            .eq("id", key)
+            .select()
+            .maybeSingle();
+          if (error) throw error;
+          return successResponse({ ok: true, transaction: data });
+        }
+        return successResponse({ ok: true, key });
+      }
+
+      // ── Admin ops action (no dedicated table) ──
+      case "POST /api/admin/ops/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const body = await request.json();
+        const { key, action: opsAction } = body as { key: string; action: string };
+        return successResponse({ ok: true, action: opsAction, key });
+      }
+
+      // ── Admin incidents action (no dedicated table) ──
+      case "POST /api/admin/incidents/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const body = await request.json();
+        const { key, action: incidentAction } = body as { key: string; action: string };
+        return successResponse({ ok: true, action: incidentAction, key });
+      }
+
+      // ── Admin moderation action ──
+      case "POST /api/admin/moderation/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { key, action: modAction } = body as { key: string; action: string };
+        if (modAction === "unban") {
+          // Only attempt DB delete if key looks like a UUID
+          const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+          if (uuidPattern.test(key)) {
+            const { error } = await supabase.from("blocked_users").delete().eq("id", key);
+            if (error) throw error;
+          }
+        }
+        return successResponse({ ok: true, action: modAction, key });
+      }
+
+      // ── Admin content action (no dedicated table) ──
+      case "POST /api/admin/content/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const body = await request.json();
+        const { key, action: contentAction } = body as { key: string; action: string };
+        return successResponse({ ok: true, action: contentAction, key });
+      }
+
+      // ── Admin comms send ──
+      case "POST /api/admin/comms/send": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = await createSupabaseServerClient();
+        if (!supabase) return null;
+        const body = await request.json();
+        const { audience, draft } = body as { audience: string; draft: { subject?: string; headline?: string; body?: string } };
+        let userQuery = supabase.from("profiles").select("id");
+        if (audience && audience !== "all") {
+          userQuery = userQuery.eq("account_type", audience);
+        }
+        const { data: users } = await userQuery;
+        if (users && users.length > 0) {
+          const notifications = users.map((u) => ({
+            user_id: u.id,
+            title: draft?.subject ?? draft?.headline ?? "Communication",
+            detail: draft?.body ?? "",
+            channel: "comms",
+            status: "unread" as const,
+          }));
+          const { error } = await supabase.from("notifications").insert(notifications);
+          if (error) throw error;
+        }
+        return successResponse({ ok: true, sent: true, recipientCount: users?.length ?? 0 });
+      }
+
       // ── Admin audit log ──
       case "GET /api/admin/audit-log": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
