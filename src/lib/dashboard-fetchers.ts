@@ -57,9 +57,23 @@ export async function getMemberProfile(): Promise<MemberProfile> {
     return mockMemberProfile;
   }
 
+  // Build real profile stats from DB
+  const supabase = await createSupabaseServerClient();
+  let rsvpCount = 0;
+  let groupCount = 0;
+  if (supabase) {
+    const [rsvpResult, groupResult] = await Promise.all([
+      supabase.from("rsvps").select("id", { count: "exact", head: true }).eq("user_id", session.id).eq("status", "going"),
+      supabase.from("group_members").select("id", { count: "exact", head: true }).eq("user_id", session.id),
+    ]);
+    rsvpCount = rsvpResult.count ?? 0;
+    groupCount = groupResult.count ?? 0;
+  }
+
   return {
     slug: profile.slug,
     name: profile.display_name,
+    email: profile.email ?? "",
     initials: profile.display_name
       .split(" ")
       .map((w: string) => w[0])
@@ -78,16 +92,22 @@ export async function getMemberProfile(): Promise<MemberProfile> {
     languages: (profile.languages ?? ["English"]) as string[],
     interests: (profile.interests ?? []) as string[],
     badges: [] as string[],
-    stats: mockMemberProfile.stats,
-    highlights: mockMemberProfile.highlights,
-    recentAttendance: mockMemberProfile.recentAttendance,
-    venuePreferences: mockMemberProfile.venuePreferences,
-    privacySnapshot: mockMemberProfile.privacySnapshot,
-    formatAffinities: mockMemberProfile.formatAffinities,
-    communityStyle: mockMemberProfile.communityStyle,
-    relationshipTimeline: mockMemberProfile.relationshipTimeline,
-    organizerGuidance: mockMemberProfile.organizerGuidance,
-  } as MemberProfile;
+    stats: {
+      eventsAttended: rsvpCount,
+      groupsJoined: groupCount,
+      memberSinceYear: new Date(profile.created_at).getFullYear(),
+    },
+    highlights: [] as typeof mockMemberProfile.highlights,
+    recentAttendance: [] as typeof mockMemberProfile.recentAttendance,
+    venuePreferences: [] as typeof mockMemberProfile.venuePreferences,
+    privacySnapshot: { visibility: "Members only", showEmail: false, showLocation: true },
+    formatAffinities: [] as typeof mockMemberProfile.formatAffinities,
+    communityStyle: { label: "Explorer", detail: "You're still exploring — attend more events to build your profile." },
+    relationshipTimeline: [] as typeof mockMemberProfile.relationshipTimeline,
+    organizerGuidance: [
+      "Join events and groups to build your community presence.",
+    ],
+  } as unknown as MemberProfile;
 }
 
 function calculateProfileCompletion(profile: Record<string, unknown>) {
@@ -122,52 +142,72 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       getUserConversations(session.id),
     ]);
 
-    const upcomingEvents =
-      rsvps.length > 0
-        ? rsvps.slice(0, 5).map((rsvp: Record<string, unknown>) => {
-            const event = rsvp.events as Record<string, unknown> | null;
-            const venue = event?.venues as Record<string, string> | null;
-            return {
-              event: {
-                slug: String(event?.slug ?? ""),
-                title: String(event?.title ?? "Untitled"),
-                venueName: String(venue?.name ?? "TBD"),
-                area: "Reykjavik" as string,
-              },
-              status: rsvp.status === "going" ? "Confirmed" : "Waitlist",
-              note: "" as string,
-              seat: "" as string,
-            };
-          })
-        : mockMemberPortalData.upcomingEvents;
+    // Count groups from DB
+    let groupCount = 0;
+    const supabase = await createSupabaseServerClient();
+    if (supabase) {
+      const { count } = await supabase.from("group_members").select("id", { count: "exact", head: true }).eq("user_id", session.id);
+      groupCount = count ?? 0;
+    }
 
-    const inbox =
-      notifications.length > 0
-        ? notifications.slice(0, 5).map((n: Record<string, unknown>) => ({
-            key: n.id as string,
-            title: (n.title as string) ?? "Notification",
-            detail: (n.body as string) ?? "",
-            meta: formatRelativeTime(n.created_at as string),
-            tone: (n.is_read ? "sage" : "coral") as "sage" | "coral" | "indigo",
-          }))
-        : mockMemberPortalData.inbox;
+    const upcomingEvents = rsvps.slice(0, 5).map((rsvp: Record<string, unknown>) => {
+      const event = rsvp.events as Record<string, unknown> | null;
+      const venue = event?.venues as Record<string, string> | null;
+      return {
+        event: {
+          slug: String(event?.slug ?? ""),
+          title: String(event?.title ?? "Untitled"),
+          venueName: String(venue?.name ?? "TBD"),
+          area: "Reykjavik" as string,
+        },
+        status: rsvp.status === "going" ? "Confirmed" : "Waitlist",
+        note: "" as string,
+        seat: "" as string,
+      };
+    });
 
-    const messages =
-      conversations.length > 0
-        ? conversations.slice(0, 5).map((m: Record<string, unknown>) => {
-            const sender = m.profiles as Record<string, string> | null;
-            return {
-              key: m.id as string,
-              counterpart: sender?.display_name ?? "Unknown",
-              role: "Member",
-              subject: ((m.body as string) ?? "").slice(0, 60),
-              preview: (m.body as string) ?? "",
-              channel: "Direct message",
-              status: "Unread",
-              meta: formatRelativeTime(m.created_at as string),
-            };
-          })
-        : mockMemberPortalData.messages;
+    const inbox = notifications.slice(0, 5).map((n: Record<string, unknown>) => ({
+      key: n.id as string,
+      title: (n.title as string) ?? "Notification",
+      detail: (n.body as string) ?? "",
+      meta: formatRelativeTime(n.created_at as string),
+      tone: (n.is_read ? "sage" : "coral") as "sage" | "coral" | "indigo",
+    }));
+
+    const mappedMessages = conversations.slice(0, 5).map((m: Record<string, unknown>) => {
+      const sender = m.profiles as Record<string, string> | null;
+      return {
+        key: m.id as string,
+        counterpart: sender?.display_name ?? "Unknown",
+        role: "Member",
+        subject: ((m.body as string) ?? "").slice(0, 60),
+        preview: (m.body as string) ?? "",
+        channel: "Direct message",
+        status: "Unread",
+        meta: formatRelativeTime(m.created_at as string),
+      };
+    });
+
+    const mappedNotifications = notifications.slice(0, 5).map((n: Record<string, unknown>) => ({
+      key: n.id as string,
+      title: (n.title as string) ?? "Notification",
+      detail: (n.body as string) ?? "",
+      channel: (n.type as string) ?? "System",
+      status: n.is_read ? "Read" : "New",
+      meta: formatRelativeTime(n.created_at as string),
+      tone: (n.is_read ? "sage" : "indigo") as "sage" | "coral" | "indigo",
+    }));
+
+    // Compute real recommendations count from upcoming events the user hasn't RSVP'd to
+    let recommendationCount = 0;
+    if (supabase) {
+      const { count } = await supabase
+        .from("events")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "published")
+        .gte("starts_at", new Date().toISOString());
+      recommendationCount = Math.max(0, (count ?? 0) - rsvps.length);
+    }
 
     return {
       ...mockMemberPortalData,
@@ -178,25 +218,24 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
           delta: rsvps.length > 0 ? `${rsvps.length} active` : "None yet",
           detail: "Your confirmed event reservations.",
         },
-        mockMemberPortalData.metrics[1],
-        mockMemberPortalData.metrics[2],
+        {
+          label: "Groups joined",
+          value: String(groupCount),
+          delta: groupCount > 0 ? `${groupCount} active` : "None yet",
+          detail: "Groups you're a member of.",
+        },
+        {
+          label: "Recommendations",
+          value: String(recommendationCount),
+          delta: recommendationCount > 0 ? "Events you might like" : "Check back soon",
+          detail: "Upcoming events you haven't RSVP'd to.",
+        },
         mockMemberPortalData.metrics[3],
       ],
       upcomingEvents,
       inbox,
-      notifications:
-        notifications.length > 0
-          ? notifications.slice(0, 5).map((n: Record<string, unknown>) => ({
-              key: n.id as string,
-              title: (n.title as string) ?? "Notification",
-              detail: (n.body as string) ?? "",
-              channel: (n.type as string) ?? "System",
-              status: n.is_read ? "Read" : "New",
-              meta: formatRelativeTime(n.created_at as string),
-              tone: (n.is_read ? "sage" : "indigo") as "sage" | "coral" | "indigo",
-            }))
-          : mockMemberPortalData.notifications,
-      messages,
+      notifications: mappedNotifications,
+      messages: mappedMessages,
     } as MemberPortalData;
   } catch (error) {
     console.error("Failed to fetch member dashboard data:", error);
@@ -218,14 +257,37 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
   }
 
   try {
-    const [managedEvents, transactions] = await Promise.all([
+    const [managedEvents, transactions, rsvpTrendData] = await Promise.all([
       getEventsByHost(session.id, { limit: 50 }),
       getUserTransactions(session.id),
+      (async () => {
+        // Build RSVP trend from last 7 days
+        try {
+          const supabase = await createSupabaseServerClient();
+          if (!supabase) return null;
+          const eventIds = (await getEventsByHost(session.id, { limit: 100 })).map(
+            (e: Record<string, unknown>) => e.id as string,
+          );
+          if (eventIds.length === 0) return null;
+          const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+          const { data: recentRsvps } = await supabase
+            .from("rsvps")
+            .select("created_at")
+            .in("event_id", eventIds)
+            .gte("created_at", sevenDaysAgo);
+          if (!recentRsvps || recentRsvps.length === 0) return null;
+          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+          const counts = new Array(7).fill(0);
+          for (const r of recentRsvps) {
+            counts[new Date(r.created_at as string).getDay()]++;
+          }
+          // Start from Monday
+          return [1, 2, 3, 4, 5, 6, 0].map((d) => ({ label: days[d], value: counts[d] }));
+        } catch {
+          return null;
+        }
+      })(),
     ]);
-
-    if (managedEvents.length === 0) {
-      return mockOrganizerPortalData;
-    }
 
     const totalRevenue = transactions.reduce(
       (sum: number, t: Record<string, unknown>) =>
@@ -284,15 +346,23 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
           delta: totalRsvps > 0 ? "Across all events" : "None yet",
           detail: "Total confirmed RSVPs for your events.",
         },
-        mockOrganizerPortalData.metrics[2],
+        {
+          label: "Avg. fill rate",
+          value: managedEvents.length > 0
+            ? `${Math.round(managedEvents.reduce((sum: number, e: Record<string, unknown>) => sum + ((e.rsvp_count as number ?? 0) / Math.max(e.attendee_limit as number ?? 50, 1)) * 100, 0) / managedEvents.length)}%`
+            : "—",
+          delta: managedEvents.length > 0 ? "Across events" : "No events yet",
+          detail: "Average attendance vs. capacity.",
+        },
         {
           label: "Revenue",
           value: `${totalRevenue.toLocaleString()} ISK`,
-          delta: "All time",
+          delta: totalRevenue > 0 ? "All time" : "No revenue yet",
           detail: "Total ticket and membership revenue.",
         },
       ],
       nextEvents,
+      ...(rsvpTrendData ? { rsvpTrend: rsvpTrendData } : {}),
     } as unknown as OrganizerPortalData;
   } catch (error) {
     console.error("Failed to fetch organizer dashboard data:", error);
@@ -341,6 +411,59 @@ export async function getManagedOrganizerEvent(slug: string) {
   }
 }
 
+/**
+ * Fetch raw event data for the edit form wizard.
+ * Returns a partial form-shaped object or null if not found.
+ */
+export async function getEventFormData(slug: string) {
+  if (!hasSupabaseEnv()) return null;
+
+  try {
+    const { getEventBySlug } = await import("@/lib/db/events");
+    const row = await getEventBySlug(slug);
+    if (!row) return null;
+
+    const r = row as Record<string, unknown>;
+    const startsAt = r.starts_at ? new Date(r.starts_at as string) : null;
+    const endsAt = r.ends_at ? new Date(r.ends_at as string) : null;
+    const group = r.groups as Record<string, unknown> | null;
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const formatDate = (d: Date) =>
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const formatTime = (d: Date) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+    return {
+      title: (r.title as string) ?? "",
+      description: (r.description as string) ?? "",
+      groupSlug: (group?.slug as string) ?? (r.group_slug as string) ?? "",
+      eventType: (r.event_type as string) ?? "in_person",
+      locationMode: (r.event_type as string) === "online" ? "online" as const : "venue" as const,
+      startsOn: startsAt ? formatDate(startsAt) : "",
+      startTime: startsAt ? formatTime(startsAt) : "",
+      endTime: endsAt ? formatTime(endsAt) : "",
+      venueSlug: (r.venue_slug as string) ?? "",
+      venueAddress: (r.venue_address as string) ?? "",
+      onlineLink: (r.online_link as string) ?? "",
+      attendeeLimit: (r.attendee_limit as number) ?? 60,
+      guestLimit: (r.guest_limit as number) ?? 0,
+      rsvpMode: (r.rsvp_mode as string) ?? "open",
+      ageRestriction: (r.age_restriction as string) ?? "",
+      ageMin: r.age_min != null ? String(r.age_min) : "",
+      ageMax: r.age_max != null ? String(r.age_max) : "",
+      isFree: (r.is_free as boolean) ?? false,
+      commentsEnabled: (r.comments_enabled as boolean) ?? true,
+      recurring: !!(r.recurrence_rule as string),
+      recurrenceRule: (r.recurrence_rule as string) ?? "",
+      recurrenceEnds: (r.recurrence_end as string) ?? "",
+      featuredPhotoUrl: (r.featured_photo_url as string) ?? "",
+      tags: Array.isArray(r.tags) ? (r.tags as string[]).join(", ") : "",
+    };
+  } catch {
+    return null;
+  }
+}
+
 // ────────────────────────────────────────────
 // Venue dashboard
 // ────────────────────────────────────────────
@@ -381,8 +504,22 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       };
     });
 
+    // Count events at this venue and compute rating
+    const supabase = await createSupabaseServerClient();
+    let eventCount = 0;
+    let avgRating = 0;
+    if (supabase) {
+      const { count: evtCount } = await supabase.from("events").select("id", { count: "exact", head: true }).eq("venue_id", ownedVenue.id as string);
+      eventCount = evtCount ?? 0;
+      const { data: reviews } = await supabase.from("venue_reviews").select("rating").eq("venue_id", ownedVenue.id as string);
+      if (reviews && reviews.length > 0) {
+        avgRating = Math.round(reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length * 10) / 10;
+      }
+    }
+
     return {
       ...mockVenuePortalData,
+      venue: ownedVenue,
       metrics: [
         {
           label: "Active bookings",
@@ -390,8 +527,18 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           delta: bookings.length > 0 ? "This period" : "None yet",
           detail: "Current confirmed bookings for your venue.",
         },
-        mockVenuePortalData.metrics[1],
-        mockVenuePortalData.metrics[2],
+        {
+          label: "Events hosted",
+          value: String(eventCount),
+          delta: eventCount > 0 ? "At your venue" : "None yet",
+          detail: "Total events that have been held at your venue.",
+        },
+        {
+          label: "Rating",
+          value: avgRating > 0 ? `${avgRating} / 5` : "—",
+          delta: avgRating > 0 ? "Average from reviews" : "No reviews yet",
+          detail: "Your average venue rating from organizers.",
+        },
         {
           label: "Pending bookings",
           value: String(pendingCount),
@@ -424,11 +571,32 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0)
       : Promise.resolve(0);
 
-    const [eventsResult, venuesResult, revenue, profileCount] = await Promise.all([
+    const [eventsResult, venuesResult, revenue, profileCount, revenueTrend] = await Promise.all([
       getEvents({ limit: 50 }),
       getVenues({ limit: 50 }),
       getPlatformRevenue(),
       profileCountPromise,
+      (async () => {
+        // Revenue trend: transaction amounts by day for last 7 days
+        try {
+          if (!supabase) return null;
+          const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+          const { data: txns } = await supabase
+            .from("transactions")
+            .select("amount_isk, created_at")
+            .eq("status", "completed")
+            .gte("created_at", sevenDaysAgo);
+          if (!txns || txns.length === 0) return null;
+          const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+          const sums = new Array(7).fill(0);
+          for (const t of txns) {
+            sums[new Date(t.created_at as string).getDay()] += (t.amount_isk as number) ?? 0;
+          }
+          return [1, 2, 3, 4, 5, 6, 0].map((d) => ({ label: days[d], value: sums[d] }));
+        } catch {
+          return null;
+        }
+      })(),
     ]);
 
     return {
@@ -465,6 +633,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
           detail: "Platform systems are running normally.",
         },
       ],
+      ...(revenueTrend ? { revenueTrend } : {}),
     } as AdminPortalData;
   } catch (error) {
     console.error("Failed to fetch admin dashboard data:", error);

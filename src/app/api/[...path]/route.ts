@@ -1068,19 +1068,35 @@ async function handleLiveDataRequest(
       case "POST /api/bookings": {
         if (!session) return forbiddenResponse("Authentication required.");
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
-        const bookingData = await createBooking({
+
+        // Resolve venue slug to ID if needed
+        if (body.venueSlug && !body.venueId && !body.venue_id) {
+          const venueRow = await getVenueBySlug(body.venueSlug as string);
+          if (venueRow) {
+            body.venue_id = venueRow.id;
+          }
+        }
+
+        const bookingPayload = {
           ...body,
+          venue_id: (body.venue_id ?? body.venueId) as string,
           organizer_id: session.id,
-          status: "pending",
-        } as Parameters<typeof createBooking>[0]);
+          event_title: (body.eventTitle as string) ?? (body.event_title as string) ?? "",
+          requested_date: (body.requestedDate ?? body.requested_date) as string,
+          requested_start: (body.requestedStart ?? body.requested_start) as string ?? "18:00",
+          requested_end: (body.requestedEnd ?? body.requested_end) as string ?? "21:00",
+          status: "pending" as const,
+        };
+        const bookingData = await createBooking(bookingPayload as unknown as Parameters<typeof createBooking>[0]);
         // Notify venue owner about the new booking request
-        if (body.venueId || body.venue_id) {
+        const resolvedVenueId = (body.venueId ?? body.venue_id) as string | undefined;
+        if (resolvedVenueId) {
           const supabaseForVenue = await createSupabaseServerClient();
           if (supabaseForVenue) {
             const { data: venue } = await supabaseForVenue
               .from("venues")
               .select("owner_id, name")
-              .eq("id", (body.venueId ?? body.venue_id) as string)
+              .eq("id", resolvedVenueId)
               .single();
             if (venue?.owner_id && venue.owner_id !== session.id) {
               await createNotification({
@@ -2391,8 +2407,12 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
     return notFoundResponse(path, method);
   }
 
-  if (routeKey(match.route) === "GET /api/auth/me" && hasLiveSupabaseAuth()) {
-    return getLiveSessionResponse(request);
+  if (routeKey(match.route) === "GET /api/auth/me") {
+    if (hasLiveSupabaseAuth()) {
+      return getLiveSessionResponse(request);
+    }
+    // Mock auth mode — always return mock session regardless of Supabase env
+    return getMockResponse(match, request);
   }
 
   if (match.route.implementation === "mock" && !hasSupabaseEnv()) {
