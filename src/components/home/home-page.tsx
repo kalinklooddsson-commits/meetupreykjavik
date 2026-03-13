@@ -16,14 +16,9 @@ import {
   Zap,
 } from "lucide-react";
 
-import {
-  categories,
-  events,
-  groups,
-  heroStats,
-  steps,
-  venues,
-} from "@/lib/home-data";
+import type { HomeEvent, HomeGroup, HomeVenue } from "@/lib/home-data";
+import { categories, steps } from "@/lib/home-data";
+import type { HeroStat } from "@/lib/home-fetchers";
 
 /* ------------------------------------------------------------------ */
 /*  Color maps                                                         */
@@ -112,7 +107,7 @@ function SectionHeading({
 /*  Event card (inline)                                                */
 /* ------------------------------------------------------------------ */
 
-function EventCard({ event }: { event: (typeof events)[number] }) {
+function EventCard({ event }: { event: HomeEvent }) {
   const t = useTranslations("home.cards");
   const tCta = useTranslations("cta");
 
@@ -186,7 +181,7 @@ function EventCard({ event }: { event: (typeof events)[number] }) {
 /*  Group card (inline)                                                */
 /* ------------------------------------------------------------------ */
 
-function GroupCard({ group }: { group: (typeof groups)[number] }) {
+function GroupCard({ group }: { group: HomeGroup }) {
   const tCta = useTranslations("cta");
   const tCards = useTranslations("home.cards");
 
@@ -232,7 +227,7 @@ function GroupCard({ group }: { group: (typeof groups)[number] }) {
 /*  Venue card (inline)                                                */
 /* ------------------------------------------------------------------ */
 
-function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
+function VenueCard({ venue }: { venue: HomeVenue }) {
   const tHome = useTranslations("home.cards");
   const tCta = useTranslations("cta");
 
@@ -285,7 +280,17 @@ function VenueCard({ venue }: { venue: (typeof venues)[number] }) {
 /*  HOME PAGE                                                          */
 /* ================================================================== */
 
-export function HomePage() {
+export function HomePage({
+  heroStats,
+  events,
+  groups,
+  venues,
+}: {
+  heroStats: readonly HeroStat[];
+  events: HomeEvent[];
+  groups: HomeGroup[];
+  venues: HomeVenue[];
+}) {
   const tHero = useTranslations("home.hero");
   const tSections = useTranslations("home.sections");
   const tCta = useTranslations("cta");

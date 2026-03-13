@@ -65,7 +65,7 @@ import { createVenue, updateVenue, getVenues, getVenueBySlug } from "@/lib/db/ve
 import { createRsvp, cancelRsvp, getEventRsvps } from "@/lib/db/rsvps";
 import { createBooking, getVenueBookings, updateBookingStatus } from "@/lib/db/bookings";
 import { updateProfile, getProfileById } from "@/lib/db/profiles";
-import { getUserNotifications, markNotificationRead } from "@/lib/db/notifications";
+import { getUserNotifications, markNotificationRead, createNotification } from "@/lib/db/notifications";
 import { getUserConversations, sendMessage } from "@/lib/db/messages";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -716,6 +716,16 @@ async function handleLiveDataRequest(
         if (!event) return validationMessage("Event not found.");
         const body = (await parseValidatedBody(request, key)) as Record<string, string> | null;
         const data = await createRsvp(event.id, session.id, body?.ticketTierId);
+        // Notify event host about the new RSVP
+        if (event.host_id && event.host_id !== session.id) {
+          await createNotification({
+            user_id: event.host_id,
+            type: "rsvp_confirmed",
+            title: "New RSVP",
+            body: `${session.displayName} RSVP'd to ${event.title}`,
+            link: `/organizer/events`,
+          }).catch(() => {});
+        }
         return successResponse(data, { status: 201 });
       }
       case "DELETE /api/events/[slug]/rsvp": {
@@ -1013,16 +1023,32 @@ async function handleLiveDataRequest(
       case "POST /api/bookings": {
         if (!session) return forbiddenResponse("Authentication required.");
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
-        try {
-          const data = await createBooking({
-            ...body,
-            organizer_id: session.id,
-            status: "pending",
-          } as Parameters<typeof createBooking>[0]);
-          return successResponse(data, { status: 201 });
-        } catch {
-          return successResponse({ ok: true, ...body, organizer_id: session.id, status: "pending" }, { status: 201 });
+        const bookingData = await createBooking({
+          ...body,
+          organizer_id: session.id,
+          status: "pending",
+        } as Parameters<typeof createBooking>[0]);
+        // Notify venue owner about the new booking request
+        if (body.venueId || body.venue_id) {
+          const supabaseForVenue = await createSupabaseServerClient();
+          if (supabaseForVenue) {
+            const { data: venue } = await supabaseForVenue
+              .from("venues")
+              .select("owner_id, name")
+              .eq("id", (body.venueId ?? body.venue_id) as string)
+              .single();
+            if (venue?.owner_id && venue.owner_id !== session.id) {
+              await createNotification({
+                user_id: venue.owner_id,
+                type: "booking_request",
+                title: "New booking request",
+                body: `${session.displayName} requested a booking at ${venue.name}`,
+                link: `/venue/bookings`,
+              }).catch(() => {});
+            }
+          }
         }
+        return successResponse(bookingData, { status: 201 });
       }
       case "GET /api/bookings": {
         if (!session) return forbiddenResponse("Authentication required.");
@@ -1080,16 +1106,24 @@ async function handleLiveDataRequest(
         ) {
           return forbiddenResponse("You can only manage your own bookings.");
         }
-        try {
-          const data = await updateBookingStatus(
-            match.params.id,
-            body.status as import("@/types/domain").BookingStatus,
-            body.counterOffer as Parameters<typeof updateBookingStatus>[2],
-          );
-          return successResponse(data);
-        } catch {
-          return successResponse({ ok: true, id: match.params.id, ...body });
+        const updatedBooking = await updateBookingStatus(
+          match.params.id,
+          body.status as import("@/types/domain").BookingStatus,
+          body.counterOffer as Parameters<typeof updateBookingStatus>[2],
+        );
+        // Notify the other party about the booking status change
+        const notifyUserId =
+          session.id === bookingToUpdate.organizer_id ? venueOwner : bookingToUpdate.organizer_id;
+        if (notifyUserId) {
+          await createNotification({
+            user_id: notifyUserId,
+            type: "booking_response",
+            title: `Booking ${body.status}`,
+            body: `Your booking request has been ${body.status}`,
+            link: session.id === bookingToUpdate.organizer_id ? `/venue/bookings` : `/organizer/bookings`,
+          }).catch(() => {});
         }
+        return successResponse(updatedBooking);
       }
 
       // ── Onboarding ──
@@ -1166,14 +1200,24 @@ async function handleLiveDataRequest(
       }
       case "POST /api/messages": {
         if (!session) return forbiddenResponse("Authentication required.");
-        const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
-        const data = await sendMessage({
+        const msgBody = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const msgData = await sendMessage({
           sender_id: session.id,
-          receiver_id: body.receiverId as string,
-          subject: (body.subject as string) ?? "",
-          body: body.body as string,
+          receiver_id: msgBody.receiverId as string,
+          subject: (msgBody.subject as string) ?? "",
+          body: msgBody.body as string,
         });
-        return successResponse(data, { status: 201 });
+        // Notify recipient about new message
+        if (msgBody.receiverId && msgBody.receiverId !== session.id) {
+          await createNotification({
+            user_id: msgBody.receiverId as string,
+            type: "admin_message",
+            title: "New message",
+            body: `${session.displayName} sent you a message`,
+            link: `/dashboard/messages`,
+          }).catch(() => {});
+        }
+        return successResponse(msgData, { status: 201 });
       }
 
       // ── Member settings (account preferences) ──

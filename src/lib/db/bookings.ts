@@ -41,6 +41,27 @@ export async function getVenueBookings(venueId: string) {
   return data ?? [];
 }
 
+export async function getAllBookings() {
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("venue_bookings")
+    .select(`
+      *,
+      organizer:organizer_id ( display_name ),
+      venue:venue_id ( name )
+    `)
+    .order("requested_date", { ascending: false });
+
+  if (error) {
+    console.error("Failed to fetch all bookings:", error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
 export async function updateBookingStatus(
   bookingId: string,
   status: BookingStatus,

@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Check, Loader2, Calendar, Ticket } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
+import { useUser } from "@/hooks/use-user";
 
 /* ── localStorage helpers for mock-mode RSVP persistence ────── */
 
@@ -88,6 +90,8 @@ interface RsvpButtonProps {
 export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }: RsvpButtonProps) {
   const t = useTranslations("common");
   const { toast } = useToast();
+  const router = useRouter();
+  const { user, isLoading: userLoading } = useUser();
   const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -125,8 +129,16 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
     toast("info", t("rsvpCancelled"));
   }
 
+  const loginUrl = `/login?redirect=/events/${eventSlug}` as import("next").Route;
+
   async function handleRsvp() {
     if (state === "loading") return;
+
+    // Not logged in → redirect to login
+    if (!user) {
+      router.push(loginUrl);
+      return;
+    }
 
     if (state === "going") {
       // Cancel RSVP
@@ -140,13 +152,13 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
       return;
     }
 
-    // Paid events require payment — block free RSVP
+    // Paid event → redirect to ticket purchase
     if (isPaid) {
-      toast("info", t("ticketsPending"));
+      router.push(`/events/${eventSlug}/tickets` as import("next").Route);
       return;
     }
 
-    // Create RSVP (free events only)
+    // Create RSVP for free event
     setState("loading");
     try {
       const response = await fetch(`/api/events/${eventSlug}/rsvp`, {
@@ -155,9 +167,12 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
         body: JSON.stringify({}),
       });
       if (response.status === 403) {
+        // Session expired or invalid → redirect to login
+        router.push(loginUrl);
+      } else if (!response.ok) {
         setState("error");
-        setMessage(t("signInToRsvp"));
-        toast("error", t("signInToRsvp"));
+        setMessage(t("rsvpError") ?? "Something went wrong");
+        toast("error", t("rsvpError") ?? "Something went wrong");
       } else {
         saveRsvp(eventSlug);
         setState("going");
@@ -165,10 +180,10 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
         toast("success", t("youreGoing"));
       }
     } catch {
-      saveRsvp(eventSlug);
-      setState("going");
-      setMessage("");
-      toast("success", t("youreGoing"));
+      // Network error with active session → show error, don't fake success
+      setState("error");
+      setMessage(t("rsvpError") ?? "Something went wrong");
+      toast("error", t("rsvpError") ?? "Something went wrong");
     }
   }
 
