@@ -46,7 +46,7 @@ const roleValues: Array<{ key: string; value: AccountType }> = [
   { key: "member", value: "user" },
   { key: "organizer", value: "organizer" },
   { key: "venuePartner", value: "venue" },
-  { key: "admin", value: "admin" },
+  // Admin role is not selectable from signup — only assignable by an existing admin
 ];
 
 export function AuthPanel({
@@ -358,6 +358,37 @@ export function AuthPanel({
                     password: account.passwordHint,
                     requestedAccountType: account.accountType,
                   }));
+                  // Auto-submit after filling demo credentials
+                  startTransition(async () => {
+                    const response = await fetch("/api/auth/login", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        email: account.email,
+                        password: account.passwordHint,
+                      }),
+                    });
+                    const payload = (await response.json()) as {
+                      ok?: boolean;
+                      data?: { redirectTo?: string };
+                      note?: string;
+                      details?: { formErrors?: string[] };
+                    };
+                    if (!response.ok || !payload.ok) {
+                      setError(
+                        payload.details?.formErrors?.[0] ??
+                          payload.note ??
+                          tErrors("generic"),
+                      );
+                      return;
+                    }
+                    setError("");
+                    refreshUser();
+                    if (payload.data?.redirectTo) {
+                      router.push(payload.data.redirectTo as Route);
+                      router.refresh();
+                    }
+                  });
                 }}
                 className="flex w-full items-center justify-between gap-3 rounded-xl border border-brand-border-light bg-white px-4 py-3 text-left transition hover:border-brand-indigo"
               >

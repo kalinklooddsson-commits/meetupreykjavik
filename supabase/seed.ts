@@ -313,6 +313,7 @@ async function seed() {
       ownerId: userIds.venueLebowski, tier: "premium" as const,
       lat: 64.1475, lng: -21.9256, amenities: ["Hosted meetup area", "Cocktail menu", "Late hours", "Group seating"],
       photo: "/place-images/reykjavik/venues/lebowski-bar.jpg",
+      description: "A lively central venue that embraces a bold, retro theme on Laugavegur. Lebowski Bar offers dedicated group seating, a full cocktail menu, and late-night availability — making it ideal for social mixers, trivia nights, and casual networking events.",
     },
     {
       slug: "kex-hostel", name: "Kex Hostel", type: "Bar & Venue", area: "Skulagata",
@@ -320,6 +321,7 @@ async function seed() {
       ownerId: userIds.venueKex, tier: "standard" as const,
       lat: 64.1499, lng: -21.9319, amenities: ["Arrival desk", "Food service", "Flexible tables", "Harbor access"],
       photo: "/place-images/reykjavik/venues/kex-hostel.jpg",
+      description: "A flexible social venue with harbor views on Skulagata. Kex Hostel combines a spacious ground-floor bar with a mezzanine performance area, food service, and a welcoming atmosphere that suits everything from panel talks to live music nights.",
     },
     {
       slug: "grandi-hub", name: "Grandi Hub", type: "Coworking", area: "Grandi",
@@ -327,6 +329,7 @@ async function seed() {
       ownerId: userIds.venueGrandi, tier: "standard" as const,
       lat: 64.1562, lng: -21.9558, amenities: ["Projector", "Fast wifi", "Stage zone", "Coffee setup"],
       photo: "/place-images/reykjavik/venues/grandi-hub.jpg",
+      description: "A practical venue for workshops, pitch nights, and tech meetups in the Grandi harbor district. Grandi Hub provides fast wifi, a projector, a stage zone, and a coffee setup — purpose-built for productive group events.",
     },
     {
       slug: "bryggjuhusid", name: "Bryggjuhusid", type: "Wine Bar", area: "Bankastraeti",
@@ -334,6 +337,7 @@ async function seed() {
       ownerId: userIds.venueLebowski, tier: "premium" as const,
       amenities: ["Seated tasting", "Curated menu", "Premium service", "Quiet format"],
       photo: "/place-images/reykjavik/venues/apotek.jpg",
+      description: "A premium small-format wine bar on Bankastraeti, perfect for curated tasting events and intimate gatherings. Bryggjuhusid offers seated tasting setups, a carefully curated menu, and a quiet, upscale atmosphere for groups of up to 40.",
     },
     {
       slug: "loft-hostel", name: "Loft Hostel", type: "Bar & Social Space", area: "Bankastraeti",
@@ -341,6 +345,7 @@ async function seed() {
       ownerId: userIds.venueKex, tier: "free" as const,
       lat: 64.1471, lng: -21.9331, amenities: ["Rooftop terrace", "Flexible ground floor", "Morning availability"],
       photo: "/place-images/reykjavik/venues/loft-hostel.jpg",
+      description: "A central social space with a rooftop terrace overlooking the city. Loft Hostel offers a flexible ground floor for morning yoga sessions and afternoon meetups, plus a popular bar area for evening socials.",
     },
     {
       slug: "micro-bar", name: "Micro Bar", type: "Craft Beer Bar", area: "Vesturgata",
@@ -348,6 +353,7 @@ async function seed() {
       ownerId: userIds.venueKex, tier: "standard" as const,
       amenities: ["Rotating tap list", "Tasting boards", "Knowledgeable staff", "Intimate seating"],
       photo: "/place-images/reykjavik/venues/micro-bar.jpg",
+      description: "An intimate craft beer bar on Vesturgata with rotating taps from Icelandic and international microbreweries. Micro Bar is ideal for tasting events and small-group socials, with knowledgeable staff and a cozy, unpretentious vibe.",
     },
     {
       slug: "hlemmur-square", name: "Hlemmur Square", type: "Food Hall & Bar", area: "Hlemmur",
@@ -355,6 +361,7 @@ async function seed() {
       ownerId: userIds.venueLebowski, tier: "premium" as const,
       lat: 64.1443, lng: -21.9148, amenities: ["Multiple food stalls", "Central bar", "High ceilings", "Stage area"],
       photo: "/place-images/reykjavik/venues/hlemmur-square.jpg",
+      description: "A food hall and bar venue near Hlemmur with high ceilings, a central bar, and a stage area. Hlemmur Square works well for large-format events, food-themed meetups, and community gatherings with diverse catering options.",
     },
     {
       slug: "mokka", name: "Mokka Kaffi", type: "Historic Cafe", area: "Skólavörðustígur",
@@ -362,6 +369,7 @@ async function seed() {
       ownerId: userIds.venueGrandi, tier: "free" as const,
       amenities: ["Historic interior", "Strong coffee", "Quiet atmosphere", "Waffle menu"],
       photo: "/place-images/reykjavik/venues/mokka.jpg",
+      description: "The oldest cafe in Reykjavik, Mokka Kaffi has been serving strong coffee and fresh waffles since 1958. Its historic interior and quiet atmosphere make it perfect for book clubs, language exchanges, and intimate morning meetups.",
     },
     {
       slug: "stofan-cafe", name: "Stofan Café", type: "Café", area: "Vesturgata",
@@ -369,6 +377,7 @@ async function seed() {
       ownerId: userIds.venueGrandi, tier: "free" as const,
       lat: 64.1483, lng: -21.9411, amenities: ["Cozy seating", "Coffee & cake", "Board games", "Quiet daytime"],
       photo: "/place-images/reykjavik/venues/stofan-cafe.jpg",
+      description: "A cozy neighborhood cafe on Vesturgata with mismatched furniture, board games, and strong coffee. Stofan is a community favorite for daytime meetups, study groups, and relaxed weekend socials.",
     },
     {
       slug: "cafe-rosenberg", name: "Cafe Rosenberg", type: "Live Music Cafe", area: "Klapparstígur",
@@ -376,6 +385,7 @@ async function seed() {
       ownerId: userIds.venueKex, tier: "standard" as const,
       amenities: ["Stage with sound system", "Candlelit tables", "Good acoustics", "Bar service"],
       photo: "/place-images/reykjavik/venues/cafe-rosenberg.jpg",
+      description: "A live music cafe with warm acoustics and candlelit tables on Klapparstígur. Cafe Rosenberg hosts jazz nights, open mics, and acoustic sessions — a natural fit for music-centered meetups and intimate performance events.",
     },
     {
       slug: "snaps", name: "Snaps Bistro Bar", type: "Restaurant & Bar", area: "Þórsgata",
@@ -383,6 +393,7 @@ async function seed() {
       ownerId: userIds.venueLebowski, tier: "standard" as const,
       amenities: ["Communal tables", "Set menu option", "Wine pairing", "Private dining area"],
       photo: "/place-images/reykjavik/venues/hlemmur-square.jpg",
+      description: "A neighborhood bistro with communal tables and a private dining area on Þórsgata. Snaps offers set menu options and wine pairing — great for dinner socials, foodie meetups, and small celebration events.",
     },
     {
       slug: "dillon", name: "Dillon", type: "Bar", area: "Laugavegur",
@@ -390,6 +401,7 @@ async function seed() {
       ownerId: userIds.venueKex, tier: "free" as const,
       amenities: ["Live music stage", "Late hours", "Affordable drinks", "Standing room"],
       photo: "/place-images/reykjavik/venues/dillon.jpg",
+      description: "A no-frills rock bar on Laugavegur with a live music stage and late hours. Dillon is the go-to for casual evening meetups, music-focused socials, and groups that prefer an affordable, high-energy atmosphere.",
     },
   ];
 
@@ -404,7 +416,7 @@ async function seed() {
       owner_id: v.ownerId,
       name: v.name,
       type: dbType,
-      description: `${v.name} — ${v.area}`,
+      description: v.description ?? `${v.name} — ${v.area}`,
       address: v.address,
       city: "Reykjavik",
       latitude: v.lat ?? null,

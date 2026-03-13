@@ -1823,10 +1823,10 @@ export const blogPosts: BlogPost[] = [
 ] as const;
 
 export const aboutStats = [
-  { label: "Members", value: "2,847" },
-  { label: "Groups", value: "156" },
-  { label: "Venue partners", value: "34" },
-  { label: "Weekly events", value: "89" }
+  { label: "Members", value: "19" },
+  { label: "Groups", value: "8" },
+  { label: "Venue partners", value: "20" },
+  { label: "Weekly events", value: "5" }
 ] as const;
 
 export const aboutTeam = [

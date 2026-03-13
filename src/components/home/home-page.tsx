@@ -301,10 +301,10 @@ export function HomePage({
   const tSocial = useTranslations("home.social");
 
   const localizedHeroStats = [
-    { value: heroStats[0]?.value ?? "2,847", label: tStats("members") },
-    { value: heroStats[1]?.value ?? "156", label: tStats("groups") },
-    { value: heroStats[2]?.value ?? "89", label: tStats("thisWeek") },
-    { value: heroStats[3]?.value ?? "34", label: tStats("venuePartners") },
+    { value: heroStats[0]?.value ?? "19", label: tStats("members") },
+    { value: heroStats[1]?.value ?? "8", label: tStats("groups") },
+    { value: heroStats[2]?.value ?? "12", label: tStats("thisWeek") },
+    { value: heroStats[3]?.value ?? "12", label: tStats("venuePartners") },
   ];
 
   const localizedSteps = [

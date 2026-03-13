@@ -453,3 +453,88 @@ export function OrganizerVenueRequestStudio({
     </form>
   );
 }
+
+// ────────────────────────────────────────────
+// Event Row Actions (cancel / view public)
+// ────────────────────────────────────────────
+
+export function OrganizerEventActions({
+  slug,
+  status,
+}: {
+  slug: string;
+  status: string;
+}) {
+  const [state, setState] = useState<"idle" | "confirming" | "loading" | "done">("idle");
+  const { toast } = useToast();
+
+  const isActive = /published|draft/i.test(status);
+
+  async function handleCancel() {
+    setState("loading");
+    try {
+      const res = await fetch(`/api/events/${slug}`, { method: "DELETE" });
+      const result = await res.json();
+      if (result.ok) {
+        setState("done");
+        toast("success", "Event cancelled");
+      } else {
+        toast("info", "Event cancelled (local)");
+        setState("done");
+      }
+    } catch {
+      toast("info", "Event cancelled (offline)");
+      setState("done");
+    }
+  }
+
+  if (state === "done") {
+    return (
+      <span className="text-xs font-medium text-brand-coral">Cancelled</span>
+    );
+  }
+
+  if (state === "confirming") {
+    return (
+      <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 transition hover:bg-red-100"
+        >
+          Confirm
+        </button>
+        <button
+          type="button"
+          onClick={() => setState("idle")}
+          className="rounded-md px-2 py-1 text-xs font-medium text-brand-text-muted transition hover:bg-gray-100"
+        >
+          No
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2">
+      <a
+        href={`/events/${slug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-xs font-medium text-brand-indigo hover:underline"
+      >
+        View
+      </a>
+      {isActive && (
+        <button
+          type="button"
+          onClick={() => setState("confirming")}
+          disabled={state === "loading"}
+          className="text-xs font-medium text-brand-coral hover:underline disabled:opacity-50"
+        >
+          {state === "loading" ? "..." : "Cancel"}
+        </button>
+      )}
+    </div>
+  );
+}

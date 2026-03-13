@@ -24,7 +24,7 @@ export const mockAccounts: MockAccount[] = [
     slug: "anna-jonsdottir",
     accountType: "user",
     locale: "en",
-    premiumTier: null,
+    premiumTier: "plus",
     password: MOCK_PASSWORD_HINT,
   },
   {
@@ -51,7 +51,7 @@ export const mockAccounts: MockAccount[] = [
     id: "mock-admin",
     email: "admin@meetupreykjavik.is",
     displayName: "Platform Admin",
-    slug: "platform-admin",
+    slug: "admin",
     accountType: "admin",
     locale: "en",
     premiumTier: null,
@@ -70,25 +70,25 @@ export const demoAuthAccounts = [
     email: "anna@example.com",
     displayName: "Anna Jonsdottir",
     accountType: "user" as AccountType,
-    passwordHint: MOCK_PASSWORD_HINT,
+    passwordHint: "Member123!",
   },
   {
     email: "kari@meetupreykjavik.is",
     displayName: "Kari Sigurdsson",
     accountType: "organizer" as AccountType,
-    passwordHint: MOCK_PASSWORD_HINT,
+    passwordHint: "Organizer123!",
   },
   {
     email: "lebowski@meetupreykjavik.is",
     displayName: "Lebowski Bar",
     accountType: "venue" as AccountType,
-    passwordHint: MOCK_PASSWORD_HINT,
+    passwordHint: "Venue123!",
   },
   {
     email: "admin@meetupreykjavik.is",
     displayName: "Platform Admin",
     accountType: "admin" as AccountType,
-    passwordHint: MOCK_PASSWORD_HINT,
+    passwordHint: "Admin123!",
   },
 ];
 

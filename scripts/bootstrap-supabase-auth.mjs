@@ -161,6 +161,16 @@ async function main() {
     });
   }
 
+  // Delete any existing profiles with these slugs to avoid unique constraint violations
+  // (seed data may have created profiles with different IDs)
+  for (const profile of createdProfiles) {
+    await supabase
+      .from("profiles")
+      .delete()
+      .eq("slug", profile.slug)
+      .neq("id", profile.id);
+  }
+
   const { error: profileError } = await supabase
     .from("profiles")
     .upsert(createdProfiles, { onConflict: "id" });

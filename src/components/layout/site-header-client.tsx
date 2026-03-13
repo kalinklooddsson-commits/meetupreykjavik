@@ -368,6 +368,12 @@ function MobileDrawer({
 /*  Search overlay                                                            */
 /* -------------------------------------------------------------------------- */
 
+type SearchResult = {
+  events: { slug: string; title: string; starts_at?: string }[];
+  groups: { slug: string; name: string }[];
+  venues: { slug: string; name: string; type?: string }[];
+};
+
 function SearchOverlay({
   open,
   onClose,
@@ -394,10 +400,26 @@ function SearchOverlay({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Build flat list of navigable results for arrow-key navigation
+  const flatResults: { label: string; href: string; section: string }[] = [];
+  if (results) {
+    for (const e of results.events) flatResults.push({ label: e.title, href: `/events/${e.slug}`, section: "Events" });
+    for (const g of results.groups) flatResults.push({ label: g.name, href: `/groups/${g.slug}`, section: "Groups" });
+    for (const v of results.venues) flatResults.push({ label: v.name, href: `/venues/${v.slug}`, section: "Venues" });
+  }
 
   useEffect(() => {
     if (open) {
       inputRef.current?.focus();
+      setQuery("");
+      setResults(null);
+      setSelectedIdx(0);
     }
   }, [open]);
 
@@ -415,16 +437,41 @@ function SearchOverlay({
     function handleGlobalKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        if (!open) {
-          // Parent will handle opening, but we prevent default
-        }
       }
     }
     document.addEventListener("keydown", handleGlobalKey);
     return () => document.removeEventListener("keydown", handleGlobalKey);
-  }, [open]);
+  }, []);
+
+  // Debounced live search
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const q = query.trim();
+    if (q.length < 2) { setResults(null); return; }
+    setLoading(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+        if (res.ok) {
+          const json = await res.json();
+          setResults(json.data ?? json);
+          setSelectedIdx(0);
+        }
+      } catch { /* ignore */ }
+      setLoading(false);
+    }, 300);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [query]);
+
+  function navigateTo(href: string) {
+    router.push(href as Route);
+    onClose();
+  }
 
   if (!open) return null;
+
+  const hasResults = flatResults.length > 0;
+  const showDefaultContent = !query.trim() || query.trim().length < 2;
 
   return (
     <div
@@ -437,17 +484,16 @@ function SearchOverlay({
       }}
     >
       <div className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black/[0.03]">
-        {/* Top accent border */}
         <div className="h-0.5 bg-gradient-to-r from-brand-indigo via-brand-coral to-brand-indigo" />
 
         <div className="p-5">
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              const q = inputRef.current?.value.trim();
-              if (q) {
-                router.push(`/events?q=${encodeURIComponent(q)}` as Route);
-                onClose();
+              if (hasResults && flatResults[selectedIdx]) {
+                navigateTo(flatResults[selectedIdx].href);
+              } else if (query.trim()) {
+                navigateTo(`/events?q=${encodeURIComponent(query.trim())}`);
               }
             }}
           >
@@ -457,8 +503,22 @@ function SearchOverlay({
                 ref={inputRef}
                 type="search"
                 placeholder={placeholder}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setSelectedIdx((i) => Math.min(i + 1, flatResults.length - 1));
+                  } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setSelectedIdx((i) => Math.max(i - 1, 0));
+                  }
+                }}
                 className="flex-1 bg-transparent text-base text-gray-900 outline-none placeholder:text-gray-400"
               />
+              {loading && (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-brand-indigo" />
+              )}
               <button
                 type="button"
                 onClick={onClose}
@@ -469,69 +529,97 @@ function SearchOverlay({
             </div>
           </form>
 
-          {/* Recent searches placeholder */}
-          <div className="mt-5 border-t border-gray-100 pt-4">
-            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
-              {overlayLabels?.recentSearches ?? "Recent searches"}
-            </p>
-            <p className="mt-2 text-sm text-gray-500">
-              {overlayLabels?.noRecentSearches ?? "No recent searches"}
-            </p>
-          </div>
-
-          {/* Quick links */}
-          <div className="mt-4 border-t border-gray-100 pt-4">
-            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
-              {overlayLabels?.browse ?? "Browse"}
-            </p>
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              {[
-                { label: overlayLabels?.browseEvents ?? "Events", href: "/events" },
-                { label: overlayLabels?.browseGroups ?? "Groups", href: "/groups" },
-                { label: overlayLabels?.browseVenues ?? "Venues", href: "/venues" },
-              ].map((link) => (
-                <button
-                  key={link.href}
-                  type="button"
-                  onClick={() => {
-                    router.push(link.href as Route);
-                    onClose();
-                  }}
-                  className="rounded-full border border-gray-200 bg-gray-50 px-3.5 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
-                >
-                  {link.label}
-                </button>
-              ))}
+          {/* Live search results */}
+          {!showDefaultContent && hasResults && (
+            <div className="mt-4 max-h-80 overflow-y-auto">
+              {(["Events", "Groups", "Venues"] as const).map((section) => {
+                const items = flatResults.filter((r) => r.section === section);
+                if (items.length === 0) return null;
+                return (
+                  <div key={section} className="mb-3">
+                    <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
+                      {section}
+                    </p>
+                    {items.map((item) => {
+                      const idx = flatResults.indexOf(item);
+                      return (
+                        <button
+                          key={item.href}
+                          type="button"
+                          onClick={() => navigateTo(item.href)}
+                          className={`w-full text-left rounded-lg px-3 py-2 text-sm transition ${
+                            idx === selectedIdx
+                              ? "bg-brand-indigo/10 text-brand-indigo font-semibold"
+                              : "text-gray-700 hover:bg-gray-50"
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
-          </div>
+          )}
 
-          {/* Popular categories */}
-          <div className="mt-4 border-t border-gray-100 pt-4">
-            <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
-              {overlayLabels?.popularCategories ?? "Popular categories"}
-            </p>
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              {[
-                { label: overlayLabels?.catMusic ?? "Music", slug: "music" },
-                { label: overlayLabels?.catTech ?? "Tech", slug: "tech" },
-                { label: overlayLabels?.catArt ?? "Art", slug: "art" },
-                { label: overlayLabels?.catOutdoors ?? "Outdoors", slug: "outdoors" },
-                { label: overlayLabels?.catFood ?? "Food", slug: "food" },
-              ].map((tag) => (
-                <button
-                  key={tag.slug}
-                  type="button"
-                  onClick={() => {
-                    router.push(`/events?category=${encodeURIComponent(tag.slug)}` as Route);
-                    onClose();
-                  }}
-                  className="rounded-full border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
-                >
-                  {tag.label}
-                </button>
-              ))}
+          {/* No results */}
+          {!showDefaultContent && !hasResults && !loading && (
+            <div className="mt-4 border-t border-gray-100 pt-4">
+              <p className="text-sm text-gray-500">No results found for &ldquo;{query.trim()}&rdquo;</p>
             </div>
-          </div>
+          )}
+
+          {/* Default browse content when no query */}
+          {showDefaultContent && (
+            <>
+              <div className="mt-4 border-t border-gray-100 pt-4">
+                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
+                  {overlayLabels?.browse ?? "Browse"}
+                </p>
+                <div className="mt-2.5 flex flex-wrap gap-2">
+                  {[
+                    { label: overlayLabels?.browseEvents ?? "Events", href: "/events" },
+                    { label: overlayLabels?.browseGroups ?? "Groups", href: "/groups" },
+                    { label: overlayLabels?.browseVenues ?? "Venues", href: "/venues" },
+                  ].map((link) => (
+                    <button
+                      key={link.href}
+                      type="button"
+                      onClick={() => navigateTo(link.href)}
+                      className="rounded-full border border-gray-200 bg-gray-50 px-3.5 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 border-t border-gray-100 pt-4">
+                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
+                  {overlayLabels?.popularCategories ?? "Popular categories"}
+                </p>
+                <div className="mt-2.5 flex flex-wrap gap-2">
+                  {[
+                    { label: overlayLabels?.catMusic ?? "Music", slug: "music" },
+                    { label: overlayLabels?.catTech ?? "Tech", slug: "tech" },
+                    { label: overlayLabels?.catArt ?? "Art", slug: "art" },
+                    { label: overlayLabels?.catOutdoors ?? "Outdoors", slug: "outdoors" },
+                    { label: overlayLabels?.catFood ?? "Food", slug: "food" },
+                  ].map((tag) => (
+                    <button
+                      key={tag.slug}
+                      type="button"
+                      onClick={() => navigateTo(`/events?category=${encodeURIComponent(tag.slug)}`)}
+                      className="rounded-full border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
+                    >
+                      {tag.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

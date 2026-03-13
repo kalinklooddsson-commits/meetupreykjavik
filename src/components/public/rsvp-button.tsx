@@ -152,13 +152,7 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
       return;
     }
 
-    // Paid event → redirect to ticket purchase
-    if (isPaid) {
-      router.push(`/events/${eventSlug}/tickets` as import("next").Route);
-      return;
-    }
-
-    // Create RSVP for free event
+    // Create RSVP (both free and paid events use the API directly)
     setState("loading");
     try {
       const response = await fetch(`/api/events/${eventSlug}/rsvp`, {

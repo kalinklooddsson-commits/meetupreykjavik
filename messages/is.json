@@ -235,7 +235,7 @@
       "connectDescription": "Mættu, hittu raunverulegt fólk og styrktu staðina í Reykjavík á sama tíma."
     },
     "social": {
-      "headline": "Vertu með 2.800+ meðlimum sem uppgötva Reykjavík",
+      "headline": "Vertu með meðlimum sem uppgötva Reykjavík",
       "headlineDynamic": "Vertu með {count}+ meðlimum sem uppgötva Reykjavík",
       "meetup": "hitting",
       "meetups": "hittingar"
@@ -740,6 +740,7 @@
     "youreGoing": "Þú ert á leið!",
     "cancelRsvp": "Hætta við",
     "rsvpCancelled": "Skráningu hætt",
+    "rsvpError": "Eitthvað fór úrskeiðis. Vinsamlegast reyndu aftur.",
     "signInToRsvp": "Skráðu þig inn til að mæta",
     "ticketsPending": "Miðasala opnar fljótlega — kíktu aftur!",
     "capacity": "Rými",

@@ -17,6 +17,7 @@ function organizerLinks(activeKey: string) {
     { key: "groups", label: "Groups", href: "/organizer/groups" as Route },
     { key: "bookings", label: "Bookings", href: "/organizer/bookings" as Route },
     { key: "venues", label: "Venues", href: "/organizer/venues" as Route },
+    { key: "analytics", label: "Analytics", href: "/organizer/analytics" as Route },
     { key: "messages", label: "Messages", href: "/organizer/messages" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }

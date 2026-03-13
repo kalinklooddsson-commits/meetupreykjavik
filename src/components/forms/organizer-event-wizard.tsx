@@ -200,6 +200,7 @@ export function OrganizerEventWizard({
           body: JSON.stringify({
             title: form.title,
             description: form.description,
+            status: "published",
             group_slug: form.groupSlug || null,
             category_id: null,
             event_type: form.locationMode === "online" ? "online" : "in_person",
@@ -229,7 +230,12 @@ export function OrganizerEventWizard({
         });
         const result = await response.json();
         if (result.ok) {
-          setMessage("Event submitted successfully! It's now saved as a draft on the server.");
+          const createdSlug = result.data?.slug;
+          if (createdSlug) {
+            window.location.href = `/events/${createdSlug}`;
+            return;
+          }
+          setMessage("Event published successfully!");
         } else {
           setMessage(`Server responded: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
         }

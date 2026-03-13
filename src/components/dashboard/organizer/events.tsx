@@ -11,6 +11,7 @@ import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getOrganizerPortalData } from "@/lib/dashboard-fetchers";
 import { resolveOrganizerTier, getMaxActiveEvents } from "@/lib/entitlements";
 import { AlertTriangle, ArrowRight } from "lucide-react";
+import { OrganizerEventActions } from "./panels";
 
 function organizerLinks(activeKey: string) {
   return [
@@ -19,6 +20,7 @@ function organizerLinks(activeKey: string) {
     { key: "groups", label: "Groups", href: "/organizer/groups" as Route },
     { key: "bookings", label: "Bookings", href: "/organizer/bookings" as Route },
     { key: "venues", label: "Venues", href: "/organizer/venues" as Route },
+    { key: "analytics", label: "Analytics", href: "/organizer/analytics" as Route },
     { key: "messages", label: "Messages", href: "/organizer/messages" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
@@ -106,14 +108,16 @@ export async function OrganizerEventsScreen() {
                 <span key="revenue" className="tabular-nums">
                   {e.revenue}
                 </span>,
-                <Link
-                  key="detail"
-                  href={`/organizer/events/${e.slug}` as Route}
-                  className="inline-flex items-center gap-1 text-sm font-medium text-brand-indigo hover:underline"
-                >
-                  Manage
-                  <ArrowRight className="h-3 w-3" />
-                </Link>,
+                <div key="actions" className="flex items-center gap-3">
+                  <Link
+                    href={`/organizer/events/${e.slug}` as Route}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-brand-indigo hover:underline"
+                  >
+                    Manage
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+                  <OrganizerEventActions slug={e.slug} status={e.status} />
+                </div>,
               ],
             }))}
             caption="All managed events"

@@ -102,9 +102,9 @@ export function rateLimitKeyFromRequest(
   return `${prefix}:${ip}`;
 }
 
-/** Preset: auth endpoints — 10 requests per 60 seconds per IP */
+/** Preset: auth endpoints — 60 requests per 60 seconds per IP (relaxed for demo) */
 export const AUTH_RATE_LIMIT: RateLimitConfig = {
-  maxRequests: 10,
+  maxRequests: 60,
   windowMs: 60 * 1000,
 };
 

@@ -67,11 +67,19 @@ export function MessageActions({ messageKey, subject }: { messageKey: string; su
     setIsRead(getReadMessages().has(messageKey));
   }, [messageKey]);
 
-  function handleMarkRead() {
+  async function handleMarkRead() {
     markAsRead(messageKey);
     setIsRead(true);
     window.dispatchEvent(new Event("message-read"));
     toast("success", `Marked "${subject}" as read`);
+    // Persist to backend
+    try {
+      await fetch("/api/notifications/read", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: [messageKey] }),
+      });
+    } catch { /* localStorage is primary, API is best-effort */ }
   }
 
   if (isRead) {

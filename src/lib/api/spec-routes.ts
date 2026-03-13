@@ -127,6 +127,8 @@ export const apiSpecRoutes: ApiSpecRoute[] = [
   { category: "cron", method: "POST", pattern: "/api/cron/event-reminders", description: "Send reminder emails for upcoming events.", implementation: "scaffold" },
   { category: "cron", method: "POST", pattern: "/api/cron/weekly-digest", description: "Send weekly digests.", implementation: "scaffold" },
   { category: "cron", method: "POST", pattern: "/api/cron/post-event-rating", description: "Send post-event rating requests.", implementation: "scaffold" },
+
+  { category: "search", method: "GET", pattern: "/api/search", description: "Search events, groups, and venues.", implementation: "scaffold" },
 ];
 
 function patternToRegex(pattern: string) {

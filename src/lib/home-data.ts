@@ -34,10 +34,10 @@ export type HomeVenue = {
 };
 
 export const heroStats = [
-  { value: "2,847", label: "Members" },
-  { value: "156", label: "Groups" },
-  { value: "89", label: "This Week" },
-  { value: "34", label: "Venue Partners" },
+  { value: "19", label: "Members" },
+  { value: "8", label: "Groups" },
+  { value: "12", label: "This Week" },
+  { value: "12", label: "Venue Partners" },
 ] as const;
 
 export const categories = [
