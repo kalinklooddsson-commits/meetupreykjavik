@@ -45,7 +45,7 @@ export async function VenueProfileScreen() {
       >
         <div className="flex flex-wrap items-center gap-3">
           <ToneBadge tone={tier === "premium" ? "indigo" : tier === "partner" ? "sage" : "neutral"}>
-            {data.partnershipTier}
+            {tier.charAt(0).toUpperCase() + tier.slice(1)}
           </ToneBadge>
           <span className="text-sm text-brand-text-muted">
             Onboarding: {data.onboarding.completion}

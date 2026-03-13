@@ -74,23 +74,23 @@ export const eventSchema = eventInputSchema
   );
 
 export const rsvpSchema = z.object({
-  eventId: z.uuid(),
-  userId: z.uuid(),
+  eventId: z.uuid().optional(),
+  userId: z.uuid().optional(),
   ticketTierId: z.uuid().optional(),
   status: z.enum(rsvpStatuses).default("going"),
   guestCount: z.number().int().min(0).max(6).default(0),
 });
 
 export const eventCommentSchema = z.object({
-  eventId: z.uuid(),
-  userId: z.uuid(),
+  eventId: z.uuid().optional(),
+  userId: z.uuid().optional(),
   text: z.string().trim().min(1).max(1200),
   parentId: z.uuid().optional(),
 });
 
 export const eventRatingSchema = z.object({
-  eventId: z.uuid(),
-  userId: z.uuid(),
+  eventId: z.uuid().optional(),
+  userId: z.uuid().optional(),
   rating: z.number().int().min(1).max(5),
   text: z.string().trim().max(1200).optional(),
 });

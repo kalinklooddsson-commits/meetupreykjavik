@@ -773,7 +773,7 @@ export function getManagedOrganizerEvent(slug: string) {
 
 export const venuePortalData = {
   venue: lebowski,
-  partnershipTier: "Venue Premium",
+  partnershipTier: "premium",
   onboarding: {
     completion: "8 / 10 complete",
     reviewer: "Baldvin, partnerships",
