@@ -1024,6 +1024,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
   const tCards = useTranslations("cards");
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
+  const displaySummary = cleanSourcedSummary(place);
 
   return (
     <article className="overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
@@ -1060,7 +1061,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
         )}
       </div>
       <div className="p-5 space-y-3">
-        <p className="text-sm text-gray-600">{place.summary}</p>
+        <p className="text-sm text-gray-600">{displaySummary}</p>
         <div className="flex items-center gap-2 text-sm text-gray-500">
           <MapPin className="h-4 w-4 text-gray-400" />
           {place.address || place.area}
@@ -1717,7 +1718,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                   { key: "venue", label: t("labels.venue"), value: event.venueName },
                   ...(event.groupName ? [{ key: "group", label: t("labels.group"), value: event.groupName }] : []),
                   { key: "price", label: t("labels.ticket"), value: event.priceLabel },
-                  { key: "age", label: t("labels.age"), value: event.ageLabel },
+                  ...(event.ageLabel && event.ageLabel !== "none" ? [{ key: "age", label: t("labels.age"), value: event.ageLabel }] : []),
                 ].filter((item) => item.value)}
               />
               <div className="mt-4 rounded-lg bg-gray-50 p-4">
@@ -1826,11 +1827,13 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
 
 export function GroupsIndexScreen({
   groups = publicGroups,
-  eventCount = publicEvents.length,
+  events = publicEvents,
+  eventCount,
   searchQuery,
   activeCategory,
 }: {
   groups?: PublicGroup[];
+  events?: PublicEvent[];
   eventCount?: number;
   searchQuery?: string;
   activeCategory?: string;
@@ -1847,10 +1850,11 @@ export function GroupsIndexScreen({
   const allCategories = Array.from(new Set(groups.map((g) => g.category)));
 
   /* Map group slugs to their next upcoming event title */
+  const resolvedEventCount = eventCount ?? events.length;
   const nextEventByGroup = new Map<string, string>();
   for (const group of groups) {
     if ((group.upcomingEventSlugs ?? []).length > 0) {
-      const event = publicEvents.find((e) => e.slug === (group.upcomingEventSlugs ?? [])[0]);
+      const event = events.find((e) => e.slug === (group.upcomingEventSlugs ?? [])[0]);
       if (event) nextEventByGroup.set(group.slug, event.title);
     }
   }
@@ -1875,7 +1879,7 @@ export function GroupsIndexScreen({
           { label: t("stats.activeGroups"), value: String(groups.length) },
           { label: t("stats.totalMembers"), value: totalMembers.toLocaleString() },
           { label: t("stats.avgActivity"), value: `${avgActivity}%` },
-          { label: t("stats.weeklyEvents"), value: String(eventCount) },
+          { label: t("stats.weeklyEvents"), value: String(resolvedEventCount) },
         ]}
         actions={[
           { href: "/signup", label: t("actions.joinGroup"), primary: true },
@@ -1969,7 +1973,7 @@ export function GroupsIndexScreen({
                   </div>
 
                   <div className="mt-3 text-xl font-bold tracking-tight text-gray-900">{group.name}</div>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{groupArchetype(group)}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{group.description || groupArchetype(group)}</p>
 
                   {/* Activity bar */}
                   <div className="mt-4">
@@ -2279,7 +2283,7 @@ export function GroupDetailScreen({ group }: { group: PublicGroup }) {
                   { label: t("labels.bestKnownFor"), value: (group.tags ?? []).join(" · ") },
                   {
                     label: t("labels.whyThisGroupMatters"),
-                    value: groupArchetype(group),
+                    value: group.description || groupArchetype(group),
                   },
                 ].map((item) => (
                   <div
@@ -2838,6 +2842,18 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
   );
 }
 
+function cleanSourcedSummary(place: { summary?: string; name: string; area?: string; category?: string }): string {
+  const raw = place.summary ?? "";
+  // Detect auto-generated boilerplate patterns
+  if (/Website (not listed|listed)/.test(raw) || /Hours (not listed|listed)/.test(raw)) {
+    // Generate a better summary from available metadata
+    const areaLabel = place.area ? ` in ${place.area}` : " in Reykjavik";
+    const typeLabel = place.category ?? "venue";
+    return `${place.name} is a ${typeLabel.toLowerCase()}${areaLabel}. Visit their page to learn more or claim this venue to add details.`;
+  }
+  return raw;
+}
+
 export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place: SourcedPlace; relatedPlaces?: SourcedPlace[] }) {
   const tNav = useTranslations("nav");
   const t = useTranslations("sourcedVenueDetail");
@@ -2845,6 +2861,7 @@ export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place:
   const imageSrc = place.image?.localPath || place.image?.remoteUrl;
   const hasPhoto = place.image?.kind === "photo";
   const signals = sourcedPlaceSignals(place, tSignals);
+  const displaySummary = cleanSourcedSummary(place);
 
   return (
     <>
@@ -2872,7 +2889,7 @@ export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place:
         <div className="section-shell relative z-10 py-10 text-white sm:py-14 md:py-20">
           <span className="text-xs font-semibold uppercase tracking-widest text-white/85">{t("eyebrow")}</span>
           <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{place.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/80">{place.summary}</p>
+          <p className="mt-4 max-w-2xl text-lg text-white/80">{displaySummary}</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/venue/onboarding"
@@ -2899,7 +2916,7 @@ export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place:
         <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
           <div className="space-y-6">
             <Section title={t("about")}>
-              <p className="text-sm leading-relaxed text-gray-600">{place.summary}</p>
+              <p className="text-sm leading-relaxed text-gray-600">{displaySummary}</p>
               {place.address ? (
                 <div className="mt-3 flex items-center gap-2 text-sm text-gray-500">
                   <MapPin className="h-4 w-4 text-gray-400" />
@@ -3199,7 +3216,7 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
   );
 }
 
-export function AboutScreen() {
+export function AboutScreen({ stats }: { stats?: { label: string; value: string }[] } = {}) {
   const t = useTranslations("aboutPage");
 
   const values = [
@@ -3255,7 +3272,7 @@ export function AboutScreen() {
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-16">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {aboutStats.map((stat) => (
+            {(stats ?? aboutStats).map((stat) => (
               <div key={stat.label} className="rounded-2xl border border-gray-200 bg-white p-7 text-center transition hover:shadow-md">
                 <div className="text-4xl font-bold tracking-tight text-brand-indigo">{stat.value}</div>
                 <div className="mt-2 text-sm font-medium text-gray-600">{stat.label}</div>

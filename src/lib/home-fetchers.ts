@@ -47,6 +47,29 @@ function formatNumber(n: number): string {
   return n.toLocaleString("en-US");
 }
 
+/** Title-case a venue name (e.g. "lebowski bar" → "Lebowski Bar"). */
+function titleCase(s: string): string {
+  return s.replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/** Detect generic placeholder descriptions like "X — community group in Reykjavik". */
+function isGenericDescription(desc?: string | null): boolean {
+  if (!desc) return true;
+  return /community group in/i.test(desc) || desc.length < 20;
+}
+
+/** Extract a short area label from address + city, avoiding "Reykjavik, Reykjavik". */
+function extractArea(address?: string | null, city?: string | null): string {
+  if (address) {
+    // Use the street part (before first comma) as the area label
+    const street = address.split(",")[0].trim();
+    if (street && street.toLowerCase() !== (city ?? "").toLowerCase()) {
+      return street;
+    }
+  }
+  return city || "Reykjavik";
+}
+
 /** Guess a short tag from a category name_en. */
 function categoryTag(categoryName: string | null | undefined): string {
   if (!categoryName) return "Social";
@@ -94,11 +117,12 @@ async function fetchHeroStats(
       .gte("starts_at", now.toISOString())
       .lte("starts_at", endOfWeek.toISOString());
 
-    // Count active venues
+    // Count venue partners (only those that have hosted at least one event)
     const { count: venueCount } = await supabase
       .from("venues")
       .select("*", { count: "exact", head: true })
-      .eq("status", "active");
+      .eq("status", "active")
+      .gt("events_hosted", 0);
 
     return [
       { value: formatNumber(profileCount ?? 0), label: "Members" },
@@ -157,7 +181,7 @@ async function fetchEvents(
         day: parsed.day,
         date: parsed.date,
         time: parsed.time,
-        venue: row.venue_name ?? venueRow?.name ?? "TBA",
+        venue: titleCase(row.venue_name ?? venueRow?.name ?? "TBA"),
         venueSlug: venueRow?.slug ?? "",
         attendees: row.rsvp_count ?? 0,
         deal: undefined,
@@ -200,7 +224,9 @@ async function fetchGroups(
         name: row.name,
         category: categoryTag(categoryRow?.name_en),
         members: row.member_count ?? 0,
-        description: row.description ?? "",
+        description: isGenericDescription(row.description)
+          ? (fallbackGroups.find((g) => g.slug === row.slug)?.description ?? row.description ?? "")
+          : (row.description ?? ""),
         photo: row.banner_url ?? DEFAULT_GROUP_PHOTO,
       };
     });
@@ -237,7 +263,7 @@ async function fetchVenues(
       slug: row.slug,
       name: row.name,
       type: row.type ?? "Venue",
-      area: row.address ?? row.city ?? "Reykjavik",
+      area: extractArea(row.address, row.city),
       rating: Number(row.avg_rating) || 0,
       events: row.events_hosted ?? 0,
       deal: undefined,

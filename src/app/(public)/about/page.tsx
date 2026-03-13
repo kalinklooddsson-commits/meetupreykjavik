@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AboutScreen } from "@/components/public/public-pages";
+import { fetchHomePageData } from "@/lib/home-fetchers";
 
 export const metadata: Metadata = {
   title: "About",
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
-  return <AboutScreen />;
+export default async function AboutPage() {
+  const { heroStats } = await fetchHomePageData();
+  const stats = heroStats.map((s) => ({ label: s.label, value: s.value }));
+  return <AboutScreen stats={stats} />;
 }

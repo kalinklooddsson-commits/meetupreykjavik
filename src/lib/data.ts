@@ -1,7 +1,8 @@
 import { hasSupabaseEnv } from "@/lib/env";
-import { getEvents, getEventBySlug } from "@/lib/db/events";
+import { getEvents } from "@/lib/db/events";
 import { getGroups, getGroupBySlug } from "@/lib/db/groups";
 import { getVenues, getVenueBySlug } from "@/lib/db/venues";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   publicEvents,
   publicGroups,
@@ -13,7 +14,6 @@ import {
   type PublicGroup,
   type PublicVenue,
 } from "@/lib/public-data";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 // ── Mappers: DB rows with joins → public presentation types ──
 
@@ -26,6 +26,21 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
   const isFree = row.is_free !== false;
   const ageRaw = row.age_restriction as string | null;
   const ageLabel = !ageRaw || ageRaw === "none" ? "All ages" : ageRaw;
+
+  // Map event_ratings / venue_reviews joined data if present
+  const rawRatings = Array.isArray(row.event_ratings) ? row.event_ratings : [];
+  const ratings = (rawRatings as Record<string, unknown>[]).map((r) => ({
+    author: (r.reviewer_name as string) ?? (r.display_name as string) ?? "Anonymous",
+    rating: (r.rating as number) ?? 5,
+    text: (r.comment as string) ?? (r.text as string) ?? "",
+  }));
+
+  const rawComments = Array.isArray(row.event_comments) ? row.event_comments : [];
+  const comments = (rawComments as Record<string, unknown>[]).map((c) => ({
+    author: (c.author_name as string) ?? (c.display_name as string) ?? "Anonymous",
+    text: (c.content as string) ?? (c.text as string) ?? "",
+    postedAt: (c.created_at as string) ?? new Date().toISOString(),
+  }));
 
   return {
     slug: row.slug as string,
@@ -59,13 +74,24 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     gallery: Array.isArray(row.gallery_photos)
       ? (row.gallery_photos as string[])
       : [],
-    comments: [],
-    ratings: [],
+    comments,
+    ratings,
   };
 }
 
-function mapDbGroupToPublic(row: Record<string, unknown>): PublicGroup {
+function mapDbGroupToPublic(
+  row: Record<string, unknown>,
+  eventSlugs?: string[],
+): PublicGroup {
   const organizer = row.profiles as Record<string, unknown> | null;
+
+  // Extract discussions from join if present
+  const rawDiscussions = Array.isArray(row.discussions) ? row.discussions : [];
+  const discussions = (rawDiscussions as Record<string, unknown>[]).map((d) => ({
+    title: (d.title as string) ?? "",
+    replies: (d.reply_count as number) ?? 0,
+    preview: ((d.content as string) ?? "").slice(0, 100),
+  }));
 
   return {
     slug: row.slug as string,
@@ -82,13 +108,36 @@ function mapDbGroupToPublic(row: Record<string, unknown>): PublicGroup {
       (row.banner_url as string) ??
       "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Reykjavik_rooftops.jpg/1200px-Reykjavik_rooftops.jpg",
     tags: Array.isArray(row.tags) ? (row.tags as string[]) : [],
-    upcomingEventSlugs: [],
+    upcomingEventSlugs: eventSlugs ?? [],
     pastEvents: [],
-    discussions: [],
+    discussions,
   };
 }
 
-function mapDbVenueToPublic(row: Record<string, unknown>): PublicVenue {
+function mapDbVenueToPublic(
+  row: Record<string, unknown>,
+  eventSlugs?: string[],
+): PublicVenue {
+  // Extract deal text from venue_deals join if present
+  const rawDeals = Array.isArray(row.venue_deals) ? row.venue_deals : [];
+  const activeDeal = (rawDeals as Record<string, unknown>[]).find(
+    (d) => d.is_active !== false,
+  );
+  const dealText = activeDeal
+    ? (activeDeal.title as string) ?? (activeDeal.description as string) ?? ""
+    : "";
+
+  // Extract hours from venue_availability join if present
+  const rawAvail = Array.isArray(row.venue_availability) ? row.venue_availability : [];
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const hours = (rawAvail as Record<string, unknown>[])
+    .filter((a) => a.is_blocked !== true)
+    .map((a) => ({
+      day: dayNames[(a.day_of_week as number) ?? 0] ?? "Monday",
+      open: `${(a.start_time as string) ?? "12:00"} – ${(a.end_time as string) ?? "23:00"}`,
+      highlighted: (a.day_of_week as number) === new Date().getDay(),
+    }));
+
   return {
     slug: row.slug as string,
     name: row.name as string,
@@ -105,9 +154,9 @@ function mapDbVenueToPublic(row: Record<string, unknown>): PublicVenue {
     amenities: Array.isArray(row.amenities)
       ? (row.amenities as string[])
       : [],
-    hours: [],
-    deal: "",
-    upcomingEventSlugs: [],
+    hours,
+    deal: dealText,
+    upcomingEventSlugs: eventSlugs ?? [],
     gallery: Array.isArray(row.photos) ? (row.photos as string[]) : [],
     art:
       (row.hero_photo_url as string) ??
@@ -127,6 +176,138 @@ function getDateFilter(startsAt: string): PublicEvent["dateFilter"] {
   if (days < 7) return "This Week";
   if (start.getDay() === 0 || start.getDay() === 6) return "Weekend";
   return "Month";
+}
+
+// ── Helper queries for related data ──
+
+async function getUpcomingEventSlugsForVenue(venueId: string): Promise<string[]> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) return [];
+    const { data } = await supabase
+      .from("events")
+      .select("slug")
+      .eq("venue_id", venueId)
+      .eq("status", "published")
+      .gte("starts_at", new Date().toISOString())
+      .order("starts_at", { ascending: true })
+      .limit(10);
+    return (data ?? []).map((e) => e.slug);
+  } catch {
+    return [];
+  }
+}
+
+async function getUpcomingEventSlugsForGroup(groupId: string): Promise<string[]> {
+  try {
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) return [];
+    const { data } = await supabase
+      .from("events")
+      .select("slug")
+      .eq("group_id", groupId)
+      .eq("status", "published")
+      .gte("starts_at", new Date().toISOString())
+      .order("starts_at", { ascending: true })
+      .limit(10);
+    return (data ?? []).map((e) => e.slug);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Batch-fetch the next upcoming event slug for each group in a single query.
+ * Returns a Map from group_id → [slug, ...].
+ */
+async function getUpcomingEventSlugsByGroup(
+  groupIds: string[],
+): Promise<Map<string, string[]>> {
+  const result = new Map<string, string[]>();
+  if (groupIds.length === 0) return result;
+
+  try {
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) return result;
+    const { data } = await supabase
+      .from("events")
+      .select("slug, group_id")
+      .in("group_id", groupIds)
+      .eq("status", "published")
+      .gte("starts_at", new Date().toISOString())
+      .order("starts_at", { ascending: true });
+    for (const row of data ?? []) {
+      const gid = row.group_id as string;
+      const existing = result.get(gid) ?? [];
+      existing.push(row.slug);
+      result.set(gid, existing);
+    }
+  } catch {
+    // Ignore — returns empty map
+  }
+  return result;
+}
+
+/**
+ * Compute activity score for a group based on upcoming event count + member count.
+ * Returns a percentage 0-100.
+ */
+function computeGroupActivity(
+  memberCount: number,
+  upcomingEventCount: number,
+): number {
+  // Groups with events and members are more active
+  // Base: 30 for existing, +30 for having events, +up to 40 scaled by events/members
+  if (memberCount === 0 && upcomingEventCount === 0) return 0;
+  let score = 30; // base for existing
+  if (upcomingEventCount > 0) score += 30;
+  // Scale remaining 40 points: more events per 10 members = higher
+  const density = memberCount > 0 ? (upcomingEventCount / Math.max(memberCount / 10, 1)) : 0;
+  score += Math.min(40, Math.round(density * 20));
+  return Math.min(100, score);
+}
+
+async function getEventBySlugWithRatings(slug: string) {
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return null;
+
+  const { data, error } = await supabase
+    .from("events")
+    .select(`
+      *,
+      venues (*),
+      profiles:host_id (*),
+      categories (*),
+      ticket_tiers (*),
+      event_ratings ( id, rating, comment, created_at, profiles:user_id ( display_name ) ),
+      event_comments ( id, content, created_at, profiles:user_id ( display_name ) )
+    `)
+    .eq("slug", slug)
+    .single();
+
+  if (error) {
+    console.error("Failed to fetch event with ratings:", error);
+    return null;
+  }
+
+  // Flatten the nested profile join for ratings/comments
+  if (data) {
+    const row = data as Record<string, unknown>;
+    if (Array.isArray(row.event_ratings)) {
+      row.event_ratings = (row.event_ratings as Record<string, unknown>[]).map((r) => ({
+        ...r,
+        reviewer_name: (r.profiles as Record<string, unknown> | null)?.display_name ?? "Anonymous",
+      }));
+    }
+    if (Array.isArray(row.event_comments)) {
+      row.event_comments = (row.event_comments as Record<string, unknown>[]).map((c) => ({
+        ...c,
+        author_name: (c.profiles as Record<string, unknown> | null)?.display_name ?? "Anonymous",
+      }));
+    }
+  }
+
+  return data;
 }
 
 // ── Public data fetchers (try real DB first, fall back to mock) ──
@@ -157,7 +338,7 @@ export async function fetchEvents(options?: {
 export async function fetchEventBySlug(slug: string) {
   if (hasSupabaseEnv()) {
     try {
-      const row = await getEventBySlug(slug);
+      const row = await getEventBySlugWithRatings(slug);
       if (row) {
         return mapDbEventToPublic(row as unknown as Record<string, unknown>);
       }
@@ -173,9 +354,21 @@ export async function fetchGroups(options?: { limit?: number }) {
     try {
       const rows = await getGroups({ limit: options?.limit ?? 20 });
       if (rows.length > 0) {
-        return rows.map((row) =>
-          mapDbGroupToPublic(row as unknown as Record<string, unknown>),
-        );
+        // Batch-fetch upcoming events for all groups in one query
+        const groupIds = rows.map((r) => (r as unknown as Record<string, unknown>).id as string).filter(Boolean);
+        const eventsByGroup = await getUpcomingEventSlugsByGroup(groupIds);
+
+        return rows.map((row) => {
+          const r = row as unknown as Record<string, unknown>;
+          const gid = r.id as string;
+          const eventSlugs = eventsByGroup.get(gid) ?? [];
+          const mapped = mapDbGroupToPublic(r, eventSlugs);
+          // Compute real activity if DB doesn't have it
+          if (!r.activity_score) {
+            mapped.activity = computeGroupActivity(mapped.members, eventSlugs.length);
+          }
+          return mapped;
+        });
       }
     } catch {
       // Fall through to mock
@@ -189,7 +382,14 @@ export async function fetchGroupBySlug(slug: string) {
     try {
       const row = await getGroupBySlug(slug);
       if (row) {
-        return mapDbGroupToPublic(row as unknown as Record<string, unknown>);
+        // Query upcoming events for this group
+        const eventSlugs = await getUpcomingEventSlugsForGroup(
+          (row as Record<string, unknown>).id as string,
+        );
+        return mapDbGroupToPublic(
+          row as unknown as Record<string, unknown>,
+          eventSlugs,
+        );
       }
     } catch {
       // Fall through to mock
@@ -219,7 +419,14 @@ export async function fetchVenueBySlug(slug: string) {
     try {
       const row = await getVenueBySlug(slug);
       if (row) {
-        return mapDbVenueToPublic(row as unknown as Record<string, unknown>);
+        // Query upcoming events at this venue
+        const eventSlugs = await getUpcomingEventSlugsForVenue(
+          (row as Record<string, unknown>).id as string,
+        );
+        return mapDbVenueToPublic(
+          row as unknown as Record<string, unknown>,
+          eventSlugs,
+        );
       }
     } catch {
       // Fall through to mock

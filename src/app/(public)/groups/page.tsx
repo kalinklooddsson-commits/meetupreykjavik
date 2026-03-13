@@ -52,7 +52,7 @@ export default async function GroupsPage({
   return (
     <GroupsIndexScreen
       groups={filteredGroups}
-      eventCount={events.length}
+      events={events}
       searchQuery={q}
       activeCategory={category}
     />
