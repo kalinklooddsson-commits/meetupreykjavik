@@ -16,18 +16,9 @@ import {
   Zap,
 } from "lucide-react";
 
-import {
-  categories as defaultCategories,
-  events as defaultEvents,
-  groups as defaultGroups,
-  heroStats as defaultHeroStats,
-  steps,
-  venues as defaultVenues,
-  type HomeEvent,
-  type HomeGroup,
-  type HomeVenue,
-} from "@/lib/home-data";
-import type { HomePageData } from "@/lib/home-fetcher";
+import type { HomeEvent, HomeGroup, HomeVenue } from "@/lib/home-data";
+import { categories, steps } from "@/lib/home-data";
+import type { HeroStat } from "@/lib/home-fetchers";
 
 /* ------------------------------------------------------------------ */
 /*  Color maps                                                         */
@@ -289,13 +280,17 @@ function VenueCard({ venue }: { venue: HomeVenue }) {
 /*  HOME PAGE                                                          */
 /* ================================================================== */
 
-export function HomePage({ data }: { data?: HomePageData }) {
-  const heroStats = data?.heroStats ?? [...defaultHeroStats];
-  const events = data?.events ?? defaultEvents;
-  const groups = data?.groups ?? defaultGroups;
-  const venues = data?.venues ?? [...defaultVenues];
-  const categories = data?.categories ?? [...defaultCategories];
-
+export function HomePage({
+  heroStats,
+  events,
+  groups,
+  venues,
+}: {
+  heroStats: readonly HeroStat[];
+  events: HomeEvent[];
+  groups: HomeGroup[];
+  venues: HomeVenue[];
+}) {
   const tHero = useTranslations("home.hero");
   const tSections = useTranslations("home.sections");
   const tCta = useTranslations("cta");
@@ -304,10 +299,10 @@ export function HomePage({ data }: { data?: HomePageData }) {
   const tSocial = useTranslations("home.social");
 
   const localizedHeroStats = [
-    { value: heroStats[0]?.value ?? "0", label: tStats("members") },
-    { value: heroStats[1]?.value ?? "0", label: tStats("groups") },
-    { value: heroStats[2]?.value ?? "0", label: tStats("thisWeek") },
-    { value: heroStats[3]?.value ?? "0", label: tStats("venuePartners") },
+    { value: heroStats[0]?.value ?? "2,847", label: tStats("members") },
+    { value: heroStats[1]?.value ?? "156", label: tStats("groups") },
+    { value: heroStats[2]?.value ?? "89", label: tStats("thisWeek") },
+    { value: heroStats[3]?.value ?? "34", label: tStats("venuePartners") },
   ];
 
   const localizedSteps = [
@@ -500,10 +495,10 @@ export function HomePage({ data }: { data?: HomePageData }) {
                 href={
                   `/categories/${slugify(category.name)}` as import("next").Route
                 }
-                className={`group relative overflow-hidden rounded-2xl border ${toneBorder[category.tone as keyof typeof toneBorder] ?? ""} bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-card`}
+                className={`group relative overflow-hidden rounded-2xl border ${toneBorder[category.tone]} bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-card`}
               >
                 <span
-                  className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-black ${toneMap[category.tone as keyof typeof toneMap] ?? ""}`}
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-black ${toneMap[category.tone]}`}
                 >
                   {category.letter}
                 </span>

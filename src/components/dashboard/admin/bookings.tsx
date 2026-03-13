@@ -13,7 +13,9 @@ import {
   StatCard,
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
-import { adminBookings } from "@/lib/dashboard-data";
+import { adminBookings as mockAdminBookings } from "@/lib/dashboard-data";
+import { hasSupabaseEnv } from "@/lib/env";
+import { getAllBookings } from "@/lib/db/bookings";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -47,7 +49,44 @@ function formatStatus(s: string): string {
 /* ── Screen ──────────────────────────────────────────────────── */
 
 export async function AdminBookingsScreen() {
-  const bookings = adminBookings;
+  let bookings: Array<{
+    key: string;
+    organizer: string;
+    venue: string;
+    date: string;
+    time: string;
+    attendance: string;
+    status: string;
+    message?: string;
+  }>;
+
+  if (hasSupabaseEnv()) {
+    try {
+      const dbBookings = await getAllBookings();
+      if (dbBookings.length > 0) {
+        bookings = dbBookings.map((b: Record<string, unknown>) => {
+          const organizer = b.organizer as { display_name: string } | null;
+          const venue = b.venue as { name: string } | null;
+          return {
+            key: b.id as string,
+            organizer: organizer?.display_name ?? "Unknown",
+            venue: venue?.name ?? "Unknown venue",
+            date: (b.requested_date as string) ?? "",
+            time: (b.requested_time as string) ?? "",
+            attendance: String((b.expected_attendance as number) ?? 0),
+            status: (b.status as string) ?? "pending",
+            message: (b.message as string) ?? undefined,
+          };
+        });
+      } else {
+        bookings = [...mockAdminBookings];
+      }
+    } catch {
+      bookings = [...mockAdminBookings];
+    }
+  } else {
+    bookings = [...mockAdminBookings];
+  }
 
   const pending = bookings.filter((b) => b.status === "pending").length;
   const accepted = bookings.filter((b) => /accepted|completed/.test(b.status)).length;

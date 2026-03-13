@@ -9,7 +9,7 @@ import {
   CONTACT_RATE_LIMIT,
 } from "@/lib/security/rate-limit";
 import { hasSupabaseEnv } from "@/lib/env";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const newsletterSchema = z.object({
   email: z.string().email().max(200),
@@ -47,40 +47,23 @@ export async function POST(request: NextRequest) {
 
     const { email } = parsed.data;
 
-    // Persist to database when available
     if (hasSupabaseEnv()) {
-      const admin = createSupabaseAdminClient();
-      if (admin) {
-        // Read current subscribers list from platform_settings
-        // Use type assertion to bypass generated types for JSONB column
-        const { data: existing } = await (admin as unknown as { from: (t: string) => { select: (c: string) => { eq: (k: string, v: string) => { single: () => Promise<{ data: { value: Record<string, unknown> } | null }> } } } })
-          .from("platform_settings")
-          .select("value")
-          .eq("key", "newsletter_subscribers")
-          .single();
+      const supabase = await createSupabaseServerClient();
+      if (supabase) {
+        const { error } = await supabase
+          .from("newsletter_subscribers")
+          .upsert(
+            { email, subscribed_at: new Date().toISOString(), unsubscribed_at: null },
+            { onConflict: "email" },
+          );
 
-        const existingValue = existing?.value ?? {};
-        const subscribers: string[] = Array.isArray(existingValue.emails)
-          ? (existingValue.emails as string[])
-          : [];
-
-        if (!subscribers.includes(email)) {
-          subscribers.push(email);
-          await (admin as unknown as { from: (t: string) => { upsert: (d: unknown, o: unknown) => Promise<unknown> } })
-            .from("platform_settings")
-            .upsert(
-              {
-                key: "newsletter_subscribers",
-                value: { emails: subscribers, count: subscribers.length },
-                updated_at: new Date().toISOString(),
-              },
-              { onConflict: "key" },
-            );
+        if (error) {
+          console.error("[Newsletter] DB insert failed:", error.message);
         }
       }
+    } else {
+      console.log(`[Newsletter] New subscriber: ${email}`);
     }
-
-    console.log(`[Newsletter] New subscriber: ${email}`);
 
     return NextResponse.json({
       ok: true,

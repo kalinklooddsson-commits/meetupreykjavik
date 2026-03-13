@@ -25,7 +25,7 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
   return {
     slug: row.slug as string,
     title: row.title as string,
-    category: (category?.name as string) ?? "Social",
+    category: (category?.name_en as string) ?? "Social",
     eventType: (row.event_type as PublicEvent["eventType"]) ?? "in_person",
     dateFilter: getDateFilter(row.starts_at as string),
     startsAt: row.starts_at as string,
@@ -39,7 +39,7 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     summary: ((row.description as string) ?? "").slice(0, 200),
     description: row.description ? [(row.description as string)] : [],
     attendees: (row.rsvp_count as number) ?? 0,
-    capacity: (row.capacity as number) ?? 50,
+    capacity: (row.attendee_limit as number) ?? 50,
     priceLabel: row.is_free === true ? "Free" : "Paid",
     ageLabel: (row.age_restriction as string) ?? "All ages",
     isFree: (row.is_free as boolean) ?? true,
@@ -66,7 +66,7 @@ function mapDbGroupToPublic(row: Record<string, unknown>): PublicGroup {
     slug: row.slug as string,
     name: row.name as string,
     category:
-      ((row.categories as Record<string, unknown> | null)?.name as string) ??
+      ((row.categories as Record<string, unknown> | null)?.name_en as string) ??
       "Social",
     members: (row.member_count as number) ?? 0,
     activity: (row.activity_score as number) ?? 50,

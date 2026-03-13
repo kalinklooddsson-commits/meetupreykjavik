@@ -321,8 +321,8 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
 
   try {
     const [eventsResult, venuesResult, revenue] = await Promise.all([
-      getEvents({ limit: 1 }),
-      getVenues({ limit: 1 }),
+      getEvents({ limit: 50 }),
+      getVenues({ limit: 50 }),
       getPlatformRevenue(),
     ]);
 

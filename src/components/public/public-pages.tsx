@@ -1555,7 +1555,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
         ]}
         rsvpSlot={
           <div className="flex items-center gap-3">
-            <RsvpButton eventSlug={event.slug} ticketType={event.isFree ? "free" : "paid"} />
+            <RsvpButton eventSlug={event.slug} ticketType={event.isFree ? "free" : "paid"} priceLabel={event.priceLabel} />
             <ShareButton title={event.title} text={event.summary} />
           </div>
         }
@@ -1724,7 +1724,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                 <AttendeeCount eventSlug={event.slug} serverCount={event.attendees} capacity={event.capacity} />
               </div>
               <div className="mt-5">
-                <RsvpButton eventSlug={event.slug} className="w-full justify-center" ticketType={event.isFree ? "free" : "paid"} />
+                <RsvpButton eventSlug={event.slug} className="w-full justify-center" ticketType={event.isFree ? "free" : "paid"} priceLabel={event.priceLabel} />
               </div>
             </div>
 

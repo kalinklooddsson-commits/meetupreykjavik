@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Check, Loader2, Calendar, Ticket } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
+import { useUser } from "@/hooks/use-user";
 
 /* ── localStorage helpers for mock-mode RSVP persistence ────── */
 
@@ -82,11 +84,14 @@ interface RsvpButtonProps {
   eventSlug: string;
   className?: string;
   ticketType?: string;
+  priceLabel?: string;
 }
 
-export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButtonProps) {
+export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }: RsvpButtonProps) {
   const t = useTranslations("common");
   const { toast } = useToast();
+  const router = useRouter();
+  const { user, isLoading: userLoading } = useUser();
   const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
   const [message, setMessage] = useState("");
 
@@ -124,8 +129,16 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
     toast("info", t("rsvpCancelled"));
   }
 
+  const loginUrl = `/login?redirect=/events/${eventSlug}` as import("next").Route;
+
   async function handleRsvp() {
     if (state === "loading") return;
+
+    // Not logged in → redirect to login
+    if (!user) {
+      router.push(loginUrl);
+      return;
+    }
 
     if (state === "going") {
       // Cancel RSVP
@@ -139,7 +152,13 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
       return;
     }
 
-    // Create RSVP
+    // Paid event → redirect to ticket purchase
+    if (isPaid) {
+      router.push(`/events/${eventSlug}/tickets` as import("next").Route);
+      return;
+    }
+
+    // Create RSVP for free event
     setState("loading");
     try {
       const response = await fetch(`/api/events/${eventSlug}/rsvp`, {
@@ -148,9 +167,12 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
         body: JSON.stringify({}),
       });
       if (response.status === 403) {
+        // Session expired or invalid → redirect to login
+        router.push(loginUrl);
+      } else if (!response.ok) {
         setState("error");
-        setMessage(t("signInToRsvp"));
-        toast("error", t("signInToRsvp"));
+        setMessage(t("rsvpError") ?? "Something went wrong");
+        toast("error", t("rsvpError") ?? "Something went wrong");
       } else {
         saveRsvp(eventSlug);
         setState("going");
@@ -158,10 +180,10 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
         toast("success", t("youreGoing"));
       }
     } catch {
-      saveRsvp(eventSlug);
-      setState("going");
-      setMessage("");
-      toast("success", t("youreGoing"));
+      // Network error with active session → show error, don't fake success
+      setState("error");
+      setMessage(t("rsvpError") ?? "Something went wrong");
+      toast("error", t("rsvpError") ?? "Something went wrong");
     }
   }
 
@@ -192,7 +214,7 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
         ) : (
           <>
             {isPaid ? <Ticket className="h-4 w-4" /> : <Calendar className="h-4 w-4" />}
-            {isPaid ? t("getTickets") : t("attendEvent")}
+            {isPaid ? (priceLabel ? `${t("getTickets")} — ${priceLabel}` : t("getTickets")) : t("attendEvent")}
           </>
         )}
       </button>

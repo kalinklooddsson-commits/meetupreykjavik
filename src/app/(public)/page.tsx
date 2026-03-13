@@ -1,7 +1,15 @@
+import { fetchHomePageData } from "@/lib/home-fetchers";
 import { HomePage } from "@/components/home/home-page";
-import { getHomePageData } from "@/lib/home-fetcher";
 
 export default async function PublicHomePage() {
-  const data = await getHomePageData();
-  return <HomePage data={data} />;
+  const data = await fetchHomePageData();
+
+  return (
+    <HomePage
+      heroStats={data.heroStats}
+      events={data.events}
+      groups={data.groups}
+      venues={data.venues}
+    />
+  );
 }
