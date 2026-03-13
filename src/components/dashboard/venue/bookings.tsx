@@ -1,7 +1,6 @@
 import type { Route } from "next";
 import {
   Inbox,
-  Users,
   ShieldCheck,
 } from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";

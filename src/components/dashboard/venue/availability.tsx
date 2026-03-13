@@ -1,5 +1,5 @@
 import type { Route } from "next";
-import { CalendarRange, Clock, AlertTriangle } from "lucide-react";
+import { CalendarRange, AlertTriangle } from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,

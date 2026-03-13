@@ -17,7 +17,7 @@ export function LeaveGroupButton({ groupSlug, groupName }: { groupSlug: string; 
     if (state === "confirming") {
       setState("loading");
       try {
-        await fetch(`/api/groups/${groupSlug}/membership`, { method: "DELETE" });
+        await fetch(`/api/groups/${groupSlug}/leave`, { method: "POST" });
         setState("left");
         toast("success", `Left ${groupName}`);
       } catch {
