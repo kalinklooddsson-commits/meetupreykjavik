@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Save, X } from "lucide-react";
+import { Save } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 
 type SettingsSection = {

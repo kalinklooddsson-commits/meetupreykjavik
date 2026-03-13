@@ -14,6 +14,7 @@ type FieldErrors = {
 
 export function ContactForm() {
   const t = useTranslations("contactForm");
+  const tCommon = useTranslations("common");
   const topics = [
     t("topics.general"),
     t("topics.organizer"),
@@ -104,18 +105,18 @@ export function ContactForm() {
       const result = await res.json();
       if (result.ok) {
         setStatus(result.message ?? t("status.saved"));
-        toast("success", "Message sent! We'll be in touch.");
+        toast("success", tCommon("messageSent"));
         startTransition(() => {
           setForm(initialForm);
           setFieldErrors({});
         });
       } else {
-        setStatus(result.error ?? "Could not send message.");
-        toast("error", result.error ?? "Could not send message.");
+        setStatus(result.error ?? tCommon("messageFailed"));
+        toast("error", result.error ?? tCommon("messageFailed"));
       }
     } catch {
       setStatus(t("status.saved"));
-      toast("info", "Saved locally. We'll send when you're back online.");
+      toast("info", tCommon("messageSavedOffline"));
     } finally {
       setSubmitting(false);
     }

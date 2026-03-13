@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
-import { ArrowRight } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 
 interface FaqItem {
   question: string;
@@ -17,9 +16,11 @@ interface FaqSection {
 export function FaqSearchableContent({
   sections,
   searchPlaceholder,
+  noResultsMessage = "No questions match your search. Try different keywords.",
 }: {
   sections: FaqSection[];
   searchPlaceholder: string;
+  noResultsMessage?: string;
 }) {
   const [query, setQuery] = useState("");
   const normalizedQuery = query.trim().toLowerCase();
@@ -69,7 +70,7 @@ export function FaqSearchableContent({
         {filteredSections.length === 0 ? (
           <div className="py-10 text-center">
             <p className="text-gray-500">
-              No questions match your search. Try different keywords.
+              {noResultsMessage}
             </p>
           </div>
         ) : (

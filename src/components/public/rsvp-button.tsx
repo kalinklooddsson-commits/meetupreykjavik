@@ -37,6 +37,7 @@ function removeRsvp(slug: string) {
 /* ── Reactive attendee count ────────────────────────────────── */
 
 export function AttendeeCount({ eventSlug, serverCount, capacity }: { eventSlug: string; serverCount: number; capacity: number }) {
+  const t = useTranslations("common");
   const [count, setCount] = useState(serverCount);
 
   useEffect(() => {
@@ -62,7 +63,7 @@ export function AttendeeCount({ eventSlug, serverCount, capacity }: { eventSlug:
   return (
     <>
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-600">Capacity</span>
+        <span className="text-gray-600">{t("capacity")}</span>
         <span className="font-medium text-gray-900">{count}/{capacity}</span>
       </div>
       <div className="mt-2 h-1.5 rounded-full bg-gray-200">
@@ -116,6 +117,13 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
 
   const isPaid = ticketType && /paid|ticket/i.test(ticketType);
 
+  function cancelRsvp() {
+    removeRsvp(eventSlug);
+    setState("idle");
+    setMessage("");
+    toast("info", t("rsvpCancelled"));
+  }
+
   async function handleRsvp() {
     if (state === "loading") return;
 
@@ -123,26 +131,10 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
       // Cancel RSVP
       setState("loading");
       try {
-        const response = await fetch(`/api/events/${eventSlug}/rsvp`, {
-          method: "DELETE",
-        });
-        const result = await response.json();
-        if (result.ok) {
-          removeRsvp(eventSlug);
-          setState("idle");
-          setMessage("");
-          toast("info", "RSVP cancelled");
-        } else {
-          removeRsvp(eventSlug);
-          setState("idle");
-          setMessage("");
-          toast("info", "RSVP cancelled");
-        }
+        await fetch(`/api/events/${eventSlug}/rsvp`, { method: "DELETE" });
+        cancelRsvp();
       } catch {
-        removeRsvp(eventSlug);
-        setState("idle");
-        setMessage("");
-        toast("info", "RSVP cancelled");
+        cancelRsvp();
       }
       return;
     }
@@ -155,27 +147,21 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
       });
-      const result = await response.json();
-      if (result.ok) {
-        saveRsvp(eventSlug);
-        setState("going");
-        setMessage("");
-        toast("success", t("youreGoing") ?? "You're going! See you there.");
-      } else if (response.status === 403) {
+      if (response.status === 403) {
         setState("error");
-        setMessage("Sign in to RSVP");
-        toast("error", "Sign in to RSVP");
+        setMessage(t("signInToRsvp"));
+        toast("error", t("signInToRsvp"));
       } else {
         saveRsvp(eventSlug);
         setState("going");
         setMessage("");
-        toast("success", t("youreGoing") ?? "You're going! See you there.");
+        toast("success", t("youreGoing"));
       }
     } catch {
       saveRsvp(eventSlug);
       setState("going");
       setMessage("");
-      toast("success", t("youreGoing") ?? "You're going! See you there.");
+      toast("success", t("youreGoing"));
     }
   }
 
@@ -201,14 +187,12 @@ export function RsvpButton({ eventSlug, className = "", ticketType }: RsvpButton
         ) : state === "going" ? (
           <>
             <Check className="h-4 w-4" />
-            {t("youreGoing") ?? "You're going!"}
+            {t("youreGoing")}
           </>
         ) : (
           <>
             {isPaid ? <Ticket className="h-4 w-4" /> : <Calendar className="h-4 w-4" />}
-            {isPaid
-              ? (t("getTickets") ?? "Get tickets")
-              : (t("attendEvent") ?? "Attend this event")}
+            {isPaid ? t("getTickets") : t("attendEvent")}
           </>
         )}
       </button>
