@@ -1299,3 +1299,34 @@ set
   suggested_capacity = excluded.suggested_capacity,
   amenities_needed = excluded.amenities_needed,
   is_active = excluded.is_active;
+
+-- ── Newsletter subscribers ──────────────────────────────────────────────
+create table if not exists public.newsletter_subscribers (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  locale text not null default 'en' check (locale in ('en', 'is')),
+  subscribed_at timestamptz not null default now(),
+  unsubscribed_at timestamptz,
+  source text not null default 'footer',
+  constraint newsletter_subscribers_email_unique unique (email)
+);
+
+alter table public.newsletter_subscribers enable row level security;
+
+create policy "newsletter_admin_select"
+on public.newsletter_subscribers
+for select
+to authenticated
+using (
+  exists (
+    select 1 from public.profiles
+    where profiles.id = auth.uid()
+      and profiles.account_type = 'admin'
+  )
+);
+
+create policy "newsletter_anon_insert"
+on public.newsletter_subscribers
+for insert
+to anon, authenticated
+with check (true);

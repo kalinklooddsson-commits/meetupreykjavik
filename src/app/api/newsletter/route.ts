@@ -8,6 +8,8 @@ import {
   rateLimitKeyFromRequest,
   CONTACT_RATE_LIMIT,
 } from "@/lib/security/rate-limit";
+import { hasSupabaseEnv } from "@/lib/env";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const newsletterSchema = z.object({
   email: z.string().email().max(200),
@@ -43,9 +45,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production this would add to a mailing list (e.g. Resend audience).
-    // For now, acknowledge the subscription.
-    console.log(`[Newsletter] New subscriber: ${parsed.data.email}`);
+    const { email } = parsed.data;
+
+    if (hasSupabaseEnv()) {
+      const supabase = await createSupabaseServerClient();
+      if (supabase) {
+        const { error } = await supabase
+          .from("newsletter_subscribers")
+          .upsert(
+            { email, subscribed_at: new Date().toISOString(), unsubscribed_at: null },
+            { onConflict: "email" },
+          );
+
+        if (error) {
+          console.error("[Newsletter] DB insert failed:", error.message);
+        }
+      }
+    } else {
+      console.log(`[Newsletter] New subscriber: ${email}`);
+    }
 
     return NextResponse.json({
       ok: true,

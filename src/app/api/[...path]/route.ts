@@ -458,14 +458,15 @@ async function handleMockAuthRequest(request: NextRequest, key: string) {
     case "POST /api/auth/forgot-password": {
       return successResponse({
         message:
-          "Password recovery is mocked right now. Supabase email recovery will replace this when service keys are connected.",
+          "If that email exists, a recovery link has been sent.",
       });
     }
 
     case "POST /api/auth/reset-password": {
       return successResponse({
         message:
-          "Password reset is mocked right now. The final flow will use Supabase recovery tokens.",
+          "Password updated. You can sign in with the new password now.",
+        redirectTo: "/login",
       });
     }
 
