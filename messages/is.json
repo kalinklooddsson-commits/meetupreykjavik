@@ -551,6 +551,7 @@
       }
     },
     "searchPlaceholder": "Leita að spurningum...",
+    "noResults": "Engar spurningar passa við leitina þína. Prófaðu önnur leitarorð.",
     "cta": {
       "heading": "Ertu enn með spurningar?",
       "description": "Teymið okkar er tilbúið að hjálpa. Hafðu samband og við svörum innan eins vinnudags."
@@ -735,7 +736,13 @@
     "getTickets": "Fá miða",
     "youreGoing": "Þú ert á leið!",
     "cancelRsvp": "Hætta við",
+    "rsvpCancelled": "Skráningu hætt",
     "signInToRsvp": "Skráðu þig inn til að mæta",
+    "capacity": "Rými",
+    "messageSent": "Skilaboð send! Við verðum í sambandi.",
+    "messageFailed": "Gat ekki sent skilaboð.",
+    "messageSavedOffline": "Vistað staðbundið. Við sendum þegar þú tengist aftur.",
+    "noFaqResults": "Engar spurningar passa við leitina þína. Prófaðu önnur leitarorð.",
     "joinGroup": "Ganga í hóp",
     "leaveGroup": "Yfirgefa hóp",
     "memberOfGroup": "Þú ert meðlimur"

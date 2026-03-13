@@ -4040,6 +4040,7 @@ export function FaqScreen() {
           <FaqSearchableContent
             sections={faqSections}
             searchPlaceholder={t("searchPlaceholder")}
+            noResultsMessage={t("noResults")}
           />
         </div>
       </section>

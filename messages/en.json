@@ -551,6 +551,7 @@
       }
     },
     "searchPlaceholder": "Search questions...",
+    "noResults": "No questions match your search. Try different keywords.",
     "cta": {
       "heading": "Still have questions?",
       "description": "Our team is here to help. Reach out and we will get back to you within one business day."
@@ -735,7 +736,13 @@
     "getTickets": "Get tickets",
     "youreGoing": "You're going!",
     "cancelRsvp": "Cancel RSVP",
+    "rsvpCancelled": "RSVP cancelled",
     "signInToRsvp": "Sign in to RSVP",
+    "capacity": "Capacity",
+    "messageSent": "Message sent! We'll be in touch.",
+    "messageFailed": "Could not send message.",
+    "messageSavedOffline": "Saved locally. We'll send when you're back online.",
+    "noFaqResults": "No questions match your search. Try different keywords.",
     "joinGroup": "Join group",
     "leaveGroup": "Leave group",
     "memberOfGroup": "You're a member"
