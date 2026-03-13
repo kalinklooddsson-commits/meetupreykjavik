@@ -24,8 +24,13 @@ import { useUnsavedChangesWarning } from "@/hooks/use-unsaved-changes-warning";
 import { writeSessionDraft } from "@/lib/storage/session-drafts";
 import { cn } from "@/lib/utils";
 
+export type EventFormData = ReturnType<typeof createInitialForm>;
+
 type OrganizerEventWizardProps = {
   organizerName: string;
+  mode?: "create" | "edit";
+  initialData?: Partial<EventFormData>;
+  eventSlug?: string;
 };
 
 const steps = [
@@ -129,11 +134,21 @@ const sectionClassName =
 
 export function OrganizerEventWizard({
   organizerName,
+  mode = "create",
+  initialData,
+  eventSlug,
 }: OrganizerEventWizardProps) {
+  const isEdit = mode === "edit";
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState(createInitialForm);
+  const [form, setForm] = useState(() => {
+    const base = createInitialForm();
+    return initialData ? { ...base, ...initialData } : base;
+  });
   const [message, setMessage] = useState("");
-  const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(createInitialForm()));
+  const [savedSnapshot, setSavedSnapshot] = useState(() => {
+    const base = createInitialForm();
+    return JSON.stringify(initialData ? { ...base, ...initialData } : base);
+  });
 
   const selectedGroup =
     publicGroups.find((group) => group.slug === form.groupSlug) ?? publicGroups[0];
@@ -174,62 +189,74 @@ export function OrganizerEventWizard({
     });
   }
 
+  function buildPayload() {
+    const selectedVenue = publicVenues.find((v) => v.slug === form.venueSlug);
+    return {
+      title: form.title,
+      description: form.description,
+      status: "published",
+      group_slug: form.groupSlug || null,
+      category_id: null,
+      event_type: form.locationMode === "online" ? "online" : "in_person",
+      starts_at: form.startsOn && form.startTime
+        ? new Date(`${form.startsOn}T${form.startTime}`).toISOString()
+        : null,
+      ends_at: form.startsOn && form.endTime
+        ? new Date(`${form.startsOn}T${form.endTime}`).toISOString()
+        : null,
+      venue_slug: form.venueSlug || null,
+      venue_name: selectedVenue?.name ?? form.venueAddress ?? null,
+      venue_address: form.venueAddress || selectedVenue?.address || null,
+      online_link: form.onlineLink || null,
+      attendee_limit: form.attendeeLimit || null,
+      guest_limit: form.guestLimit || 0,
+      age_restriction: form.ageRestriction || "",
+      age_min: form.ageMin ? Number(form.ageMin) : null,
+      age_max: form.ageMax ? Number(form.ageMax) : null,
+      is_free: form.isFree,
+      rsvp_mode: form.rsvpMode,
+      comments_enabled: form.commentsEnabled,
+      recurrence_rule: form.recurring ? form.recurrenceRule : null,
+      recurrence_end: form.recurring && form.recurrenceEnds ? form.recurrenceEnds : null,
+      featured_photo_url: form.featuredPhotoUrl || null,
+      tags: tags.length > 0 ? tags : null,
+    };
+  }
+
   async function saveDraft(action: "draft" | "publish-ready") {
     // Always save locally first
-    writeSessionDraft(
-      "meetupreykjavik-event-draft",
-      {
-        ...form,
-        slug,
-        tags,
-        ticketPriceIsk,
-        organizerName,
-        status: action === "publish-ready" ? "ready_for_review" : "draft",
-      },
-    );
+    if (!isEdit) {
+      writeSessionDraft(
+        "meetupreykjavik-event-draft",
+        {
+          ...form,
+          slug,
+          tags,
+          ticketPriceIsk,
+          organizerName,
+          status: action === "publish-ready" ? "ready_for_review" : "draft",
+        },
+      );
+    }
     setSavedSnapshot(JSON.stringify(form));
 
     if (action === "publish-ready") {
       // Submit to API
-      setMessage("Submitting event to server...");
+      setMessage(isEdit ? "Saving changes..." : "Submitting event to server...");
       try {
-        const selectedVenue = publicVenues.find((v) => v.slug === form.venueSlug);
-        const response = await fetch("/api/events", {
-          method: "POST",
+        const url = isEdit ? `/api/events/${eventSlug}` : "/api/events";
+        const method = isEdit ? "PATCH" : "POST";
+        const response = await fetch(url, {
+          method,
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            title: form.title,
-            description: form.description,
-            status: "published",
-            group_slug: form.groupSlug || null,
-            category_id: null,
-            event_type: form.locationMode === "online" ? "online" : "in_person",
-            starts_at: form.startsOn && form.startTime
-              ? new Date(`${form.startsOn}T${form.startTime}`).toISOString()
-              : null,
-            ends_at: form.startsOn && form.endTime
-              ? new Date(`${form.startsOn}T${form.endTime}`).toISOString()
-              : null,
-            venue_slug: form.venueSlug || null,
-            venue_name: selectedVenue?.name ?? form.venueAddress ?? null,
-            venue_address: form.venueAddress || selectedVenue?.address || null,
-            online_link: form.onlineLink || null,
-            attendee_limit: form.attendeeLimit || null,
-            guest_limit: form.guestLimit || 0,
-            age_restriction: form.ageRestriction || "",
-            age_min: form.ageMin ? Number(form.ageMin) : null,
-            age_max: form.ageMax ? Number(form.ageMax) : null,
-            is_free: form.isFree,
-            rsvp_mode: form.rsvpMode,
-            comments_enabled: form.commentsEnabled,
-            recurrence_rule: form.recurring ? form.recurrenceRule : null,
-            recurrence_end: form.recurring && form.recurrenceEnds ? form.recurrenceEnds : null,
-            featured_photo_url: form.featuredPhotoUrl || null,
-            tags: tags.length > 0 ? tags : null,
-          }),
+          body: JSON.stringify(buildPayload()),
         });
         const result = await response.json();
         if (result.ok) {
+          if (isEdit) {
+            window.location.href = `/organizer/events/${eventSlug}`;
+            return;
+          }
           const createdSlug = result.data?.slug;
           if (createdSlug) {
             window.location.href = `/events/${createdSlug}`;
@@ -240,7 +267,9 @@ export function OrganizerEventWizard({
           setMessage(`Server responded: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
         }
       } catch {
-        setMessage("Could not reach the server. Event saved locally as a draft.");
+        setMessage(isEdit
+          ? "Could not reach the server. Changes were not saved."
+          : "Could not reach the server. Event saved locally as a draft.");
       }
     } else {
       setMessage("Event draft saved locally. Nothing has been published or deployed.");
@@ -837,20 +866,22 @@ export function OrganizerEventWizard({
               </div>
 
               <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={() => saveDraft("draft")}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.18)] bg-white px-5 py-3 text-sm font-bold text-brand-indigo transition hover:-translate-y-0.5"
-                >
-                  Save local draft
-                  <ListChecks className="h-4 w-4" />
-                </button>
+                {!isEdit && (
+                  <button
+                    type="button"
+                    onClick={() => saveDraft("draft")}
+                    className="inline-flex min-h-12 items-center gap-2 rounded-full border border-[rgba(79,70,229,0.18)] bg-white px-5 py-3 text-sm font-bold text-brand-indigo transition hover:-translate-y-0.5"
+                  >
+                    Save local draft
+                    <ListChecks className="h-4 w-4" />
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => saveDraft("publish-ready")}
                   className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
                 >
-                  Mark ready for review
+                  {isEdit ? "Save changes" : "Mark ready for review"}
                   <CheckCheck className="h-4 w-4" />
                 </button>
               </div>

@@ -10,6 +10,7 @@ import {
 } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { venueReviews } from "@/lib/dashboard-data";
+import { VenueReviewReply } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -109,16 +110,11 @@ export async function VenueReviewsScreen() {
               </span>,
               <ToneBadge key="event" tone="neutral">{r.eventName}</ToneBadge>,
               <span key="date" className="text-sm text-brand-text-muted">{r.date}</span>,
-              ("venueResponse" in r && r.venueResponse) ? (
-                <div key="response" className="max-w-xs">
-                  <ToneBadge tone="sage">Responded</ToneBadge>
-                  <p className="mt-1 text-xs text-brand-text-muted line-clamp-1">
-                    {r.venueResponse}
-                  </p>
-                </div>
-              ) : (
-                <ToneBadge key="response" tone="sand">No response</ToneBadge>
-              ),
+              <VenueReviewReply
+                key="response"
+                reviewKey={r.key}
+                existingResponse={"venueResponse" in r ? (r.venueResponse as string) : undefined}
+              />,
             ],
           }))}
           caption="Venue reviews"

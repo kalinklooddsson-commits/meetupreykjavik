@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/env";
+import { createSceneCoverDataUrl } from "@/lib/visuals";
 import type { HomeEvent, HomeGroup, HomeVenue } from "@/lib/home-data";
 import {
   heroStats as fallbackHeroStats,
@@ -28,9 +29,37 @@ export type HomePageData = {
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
-const DEFAULT_EVENT_PHOTO = "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
-const DEFAULT_GROUP_PHOTO = "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
-const DEFAULT_VENUE_PHOTO = "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
+/** Cycle through Reykjavik landmark photos so cards aren't all identical. */
+const PLACE_PHOTOS = [
+  "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
+  "/place-images/reykjavik/hof-i-deccf755.jpg",
+  "/place-images/reykjavik/reykjavik-871-2-78434189.jpg",
+  "/place-images/reykjavik/dill-0aeca160.jpg",
+  "/place-images/reykjavik/hafnarborg-1be7b43b.jpg",
+  "/place-images/reykjavik/arb-jarsafn-c71d7348.jpg",
+];
+
+function pickPhoto(slug: string, photos: readonly string[]): string {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
+  return photos[hash % photos.length];
+}
+
+/** Venue-specific photos from the public directory. */
+const VENUE_PHOTOS: Record<string, string> = {
+  "kex-hostel": "/place-images/reykjavik/venues/kex-hostel.jpg",
+  "loft-hostel": "/place-images/reykjavik/venues/loft-hostel.jpg",
+  "lebowski-bar": "/place-images/reykjavik/venues/lebowski-bar.jpg",
+  "mokka": "/place-images/reykjavik/venues/mokka.jpg",
+  "cafe-rosenberg": "/place-images/reykjavik/venues/cafe-rosenberg.jpg",
+  "dillon": "/place-images/reykjavik/venues/dillon.jpg",
+  "micro-bar": "/place-images/reykjavik/venues/micro-bar.jpg",
+  "stofan-cafe": "/place-images/reykjavik/venues/stofan-cafe.jpg",
+  "hlemmur-square": "/place-images/reykjavik/venues/hlemmur-square.jpg",
+  "reykjavik-roasters": "/place-images/reykjavik/venues/reykjavik-roasters.jpg",
+  "apotek": "/place-images/reykjavik/venues/apotek.jpg",
+  "grandi-hub": "/place-images/reykjavik/venues/grandi-hub.jpg",
+};
 
 /** Format a starts_at timestamptz into day / date / time for the event card. */
 function formatHomeDay(isoDate: string): { day: string; date: string; time: string } {
@@ -185,7 +214,7 @@ async function fetchEvents(
         venueSlug: venueRow?.slug ?? "",
         attendees: row.rsvp_count ?? 0,
         deal: undefined,
-        photo: row.featured_photo_url ?? DEFAULT_EVENT_PHOTO,
+        photo: row.featured_photo_url ?? pickPhoto(row.slug, PLACE_PHOTOS),
       };
     });
   } catch {
@@ -227,7 +256,7 @@ async function fetchGroups(
         description: isGenericDescription(row.description)
           ? (fallbackGroups.find((g) => g.slug === row.slug)?.description ?? row.description ?? "")
           : (row.description ?? ""),
-        photo: row.banner_url ?? DEFAULT_GROUP_PHOTO,
+        photo: row.banner_url ?? pickPhoto(row.slug, PLACE_PHOTOS),
       };
     });
   } catch {
@@ -267,7 +296,7 @@ async function fetchVenues(
       rating: Number(row.avg_rating) || 0,
       events: row.events_hosted ?? 0,
       deal: undefined,
-      photo: row.hero_photo_url ?? DEFAULT_VENUE_PHOTO,
+      photo: row.hero_photo_url ?? VENUE_PHOTOS[row.slug] ?? pickPhoto(row.slug, PLACE_PHOTOS),
     }));
   } catch {
     return [...fallbackVenues];

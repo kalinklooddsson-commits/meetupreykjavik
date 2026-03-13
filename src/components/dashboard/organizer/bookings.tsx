@@ -11,6 +11,7 @@ import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getOrganizerPortalData } from "@/lib/dashboard-fetchers";
 import { organizerHasFeature } from "@/lib/entitlements";
 import { ArrowRight, Lock } from "lucide-react";
+import { OrganizerVenueRequestStudio } from "./panels";
 
 function organizerLinks(activeKey: string) {
   return [
@@ -141,28 +142,15 @@ export async function OrganizerVenuesScreen() {
           />
         </Surface>
 
-        {/* Venue request CTA */}
+        {/* Venue request form */}
         {hasVenueWorkflows ? (
-          <div className="rounded-xl border border-brand-border-light bg-white p-5">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="text-sm font-semibold text-brand-text">
-                  Ready to book a venue?
-                </div>
-                <p className="mt-0.5 text-sm text-brand-text-muted">
-                  Send a structured booking request with event details, expected
-                  attendance, and format requirements.
-                </p>
-              </div>
-              <Link
-                href={"/organizer/bookings" as Route}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2.5 text-sm font-medium text-white transition hover:bg-brand-indigo/90"
-              >
-                New venue request
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </div>
+          <Surface
+            eyebrow="Send request"
+            title="New venue booking request"
+            description="Select a venue and send a structured booking request."
+          >
+            <OrganizerVenueRequestStudio venues={data.venueMatches} />
+          </Surface>
         ) : (
           <div className="rounded-xl border border-brand-border-light bg-brand-sand-light p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

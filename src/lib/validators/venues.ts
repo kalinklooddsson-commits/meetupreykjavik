@@ -93,12 +93,14 @@ export const venueReviewSchema = z.object({
 });
 
 export const bookingRequestSchema = z.object({
-  venueId: z.uuid(),
-  organizerId: z.uuid(),
+  venueId: z.uuid().optional(),
+  venueSlug: z.string().trim().max(200).optional(),
+  organizerId: z.uuid().optional(),
   eventId: z.uuid().optional(),
-  requestedDate: dateSchema,
-  requestedStart: timeSchema,
-  requestedEnd: timeSchema,
+  eventTitle: z.string().trim().max(200).optional(),
+  requestedDate: dateSchema.optional(),
+  requestedStart: timeSchema.optional(),
+  requestedEnd: timeSchema.optional(),
   expectedAttendance: z.number().int().min(0).max(5000).optional(),
   eventDescription: z.string().trim().max(1500).optional(),
   message: z.string().trim().max(1500).optional(),

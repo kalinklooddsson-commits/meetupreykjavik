@@ -281,22 +281,18 @@ export function OrganizerVenueRequestStudio({
     if (!selectedVenue || !eventTitle) return;
     setSending(true);
     try {
-      // Build a payload that satisfies bookingRequestSchema.
-      // The endpoint is scaffolded (501) so UUIDs are placeholders;
-      // real wiring will resolve venue slug → UUID server-side.
       const now = new Date();
-      const dateStr = now.toISOString().slice(0, 10); // YYYY-MM-DD
+      const dateStr = now.toISOString().slice(0, 10);
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          venueId: "00000000-0000-0000-0000-000000000000",
-          organizerId: "00000000-0000-0000-0000-000000000000",
+          venueSlug: selectedVenue,
           requestedDate: dateStr,
           requestedStart: "18:00",
           requestedEnd: "21:00",
           expectedAttendance: expectedAttendance ? parseInt(expectedAttendance, 10) || undefined : undefined,
-          eventDescription: eventTitle,
+          eventTitle,
           message,
         }),
       });

@@ -1833,8 +1833,8 @@ export const aboutStats = [
 
 export const aboutTeam = [
   {
-    name: "Baldvin",
-    role: "Platform owner",
+    name: "Meetup Reykjavik",
+    role: "Platform team",
     note: "Setting the product direction, partnerships, and community tone.",
   },
   {

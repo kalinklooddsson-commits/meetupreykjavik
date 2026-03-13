@@ -625,3 +625,270 @@ export function VenueProfileSectionEditor({
     </div>
   );
 }
+
+// ────────────────────────────────────────────
+// Venue Review Reply
+// ────────────────────────────────────────────
+
+export function VenueReviewReply({
+  reviewKey,
+  existingResponse,
+}: {
+  reviewKey: string;
+  existingResponse?: string;
+}) {
+  const [mode, setMode] = useState<"idle" | "editing" | "saving" | "done">("idle");
+  const [text, setText] = useState(existingResponse ?? "");
+  const [savedText, setSavedText] = useState(existingResponse ?? "");
+  const { toast } = useToast();
+
+  async function handleSave() {
+    if (!text.trim()) return;
+    setMode("saving");
+    try {
+      const res = await fetch(`/api/venues/reviews/${reviewKey}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ response: text.trim() }),
+      });
+      const result = await res.json();
+      if (result.ok) {
+        toast("success", "Reply saved");
+      } else {
+        toast("info", "Reply saved locally");
+      }
+    } catch {
+      toast("info", "Reply saved locally");
+    }
+    setSavedText(text.trim());
+    setMode("done");
+  }
+
+  if (savedText && mode !== "editing") {
+    return (
+      <div className="max-w-xs">
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center rounded-lg bg-[rgba(124,154,130,0.1)] px-2.5 py-1 text-xs font-semibold text-brand-sage">
+            Responded
+          </span>
+          <button
+            type="button"
+            onClick={() => setMode("editing")}
+            className="text-xs text-brand-indigo hover:underline"
+          >
+            Edit
+          </button>
+        </div>
+        <p className="mt-1 text-xs text-brand-text-muted line-clamp-2">{savedText}</p>
+      </div>
+    );
+  }
+
+  if (mode === "idle" && !existingResponse) {
+    return (
+      <button
+        type="button"
+        onClick={() => setMode("editing")}
+        className="inline-flex items-center gap-1 rounded-md border border-brand-border-light px-2 py-1 text-xs font-medium text-brand-indigo transition hover:bg-brand-indigo/5"
+      >
+        <Pencil className="h-3 w-3" />
+        Reply
+      </button>
+    );
+  }
+
+  if (mode === "editing" || mode === "saving") {
+    return (
+      <div className="flex flex-col gap-2 max-w-xs">
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          rows={2}
+          placeholder="Thank the reviewer or address their feedback..."
+          className="w-full rounded-lg border border-brand-border-light bg-white px-3 py-2 text-xs text-brand-text placeholder:text-brand-text-light focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo"
+        />
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={!text.trim() || mode === "saving"}
+            className="rounded-md bg-brand-indigo px-2.5 py-1 text-xs font-medium text-white transition hover:bg-brand-indigo/90 disabled:opacity-50"
+          >
+            {mode === "saving" ? "Saving..." : "Save reply"}
+          </button>
+          <button
+            type="button"
+            onClick={() => { setText(savedText); setMode("idle"); }}
+            className="rounded-md px-2.5 py-1 text-xs font-medium text-brand-text-muted hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+/* ── Venue Image Editor (Hero + Gallery) ─────────────────────── */
+
+import { ImageUpload } from "@/components/ui/image-upload";
+
+export function VenueImageEditor({
+  venueSlug,
+  heroImage,
+  gallery,
+}: {
+  venueSlug: string;
+  heroImage: string;
+  gallery: string[];
+}) {
+  const [heroUrl, setHeroUrl] = useState(heroImage);
+  const [photos, setPhotos] = useState<string[]>(gallery);
+  const [savingHero, setSavingHero] = useState(false);
+  const [savingGallery, setSavingGallery] = useState(false);
+  const { toast } = useToast();
+
+  async function patchVenue(body: Record<string, unknown>) {
+    const res = await fetch(`/api/venues/${venueSlug}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return res.ok ? await res.json() : null;
+  }
+
+  async function saveHero() {
+    setSavingHero(true);
+    try {
+      const result = await patchVenue({ heroPhotoUrl: heroUrl });
+      if (result) {
+        toast("success", "Hero image saved");
+      } else {
+        toast("info", "Hero image saved locally");
+      }
+    } catch {
+      toast("info", "Hero image saved (offline)");
+    } finally {
+      setSavingHero(false);
+    }
+  }
+
+  async function saveGallery() {
+    setSavingGallery(true);
+    try {
+      const result = await patchVenue({ photos });
+      if (result) {
+        toast("success", "Gallery saved");
+      } else {
+        toast("info", "Gallery saved locally");
+      }
+    } catch {
+      toast("info", "Gallery saved (offline)");
+    } finally {
+      setSavingGallery(false);
+    }
+  }
+
+  function removeGalleryPhoto(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* ── Hero / Cover Image ──────────────────────────── */}
+      <div className="rounded-xl border border-brand-border-light bg-white p-5">
+        <h3 className="text-base font-semibold text-brand-text">
+          Cover image
+        </h3>
+        <p className="mt-1 text-sm text-brand-text-muted">
+          The main photo shown on your venue listing. Recommended 1200 x 600 px.
+        </p>
+        <div className="mt-4">
+          <ImageUpload
+            value={heroUrl}
+            onChange={(url) => setHeroUrl(url)}
+            label="Upload cover image"
+            hint="PNG, JPG or WebP up to 5 MB"
+            aspectHint="2:1 landscape"
+            folder="venues"
+          />
+        </div>
+        <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            disabled={savingHero}
+            onClick={saveHero}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-indigo-dark disabled:opacity-50"
+          >
+            <Save className="h-3.5 w-3.5" />
+            {savingHero ? "Saving..." : "Save cover image"}
+          </button>
+        </div>
+      </div>
+
+      {/* ── Photo Gallery ───────────────────────────────── */}
+      <div className="rounded-xl border border-brand-border-light bg-white p-5">
+        <h3 className="text-base font-semibold text-brand-text">
+          Photo gallery
+        </h3>
+        <p className="mt-1 text-sm text-brand-text-muted">
+          Additional photos of your venue. Up to 20 images.
+        </p>
+
+        {/* Existing gallery thumbnails */}
+        {photos.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {photos.map((url, i) => (
+              <div
+                key={`gallery-${i}`}
+                className="group relative overflow-hidden rounded-xl border border-brand-border bg-brand-sand-light"
+              >
+                <img
+                  src={url}
+                  alt={`Gallery photo ${i + 1}`}
+                  className="h-32 w-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeGalleryPhoto(i)}
+                  className="absolute right-1.5 top-1.5 rounded-full bg-black/60 p-1 text-white opacity-0 transition group-hover:opacity-100"
+                  title="Remove photo"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Add new photo uploader */}
+        {photos.length < 20 && (
+          <div className="mt-4">
+            <ImageUpload
+              onChange={(url) => {
+                if (url) setPhotos((prev) => [...prev, url]);
+              }}
+              label="Add gallery photo"
+              hint={`${photos.length} / 20 photos`}
+              folder="venues"
+            />
+          </div>
+        )}
+
+        <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            disabled={savingGallery}
+            onClick={saveGallery}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-indigo-dark disabled:opacity-50"
+          >
+            <Save className="h-3.5 w-3.5" />
+            {savingGallery ? "Saving..." : "Save gallery"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

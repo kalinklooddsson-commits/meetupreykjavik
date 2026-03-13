@@ -476,7 +476,7 @@ async function seed() {
       name: g.name,
       description: groupDescriptions[g.slug] ?? `${g.name} — community group in Reykjavik`,
       category_id: catIds[g.catSlug],
-      organizer_id: userIds[g.organizer],
+      organizer_id: userIds[g.organizer] ?? userIds.admin,
       member_count: g.members,
       status: "active" as const,
       is_featured: true,
@@ -629,7 +629,7 @@ async function seed() {
       title: e.title,
       description: eventDescriptions[e.slug] ?? `${e.title} event in Reykjavik`,
       group_id: groupIds[e.group] ?? null,
-      host_id: userIds[e.host],
+      host_id: userIds[e.host] ?? userIds.admin,
       venue_id: venueId,
       category_id: catNameMap[e.cat] ?? null,
       event_type: e.eventType,
@@ -727,6 +727,10 @@ async function seed() {
   ];
 
   for (const m of messages) {
+    if (!userIds[m.from] || !userIds[m.to]) {
+      console.log(`  ⊘ msg skipped (missing user: ${!userIds[m.from] ? m.from : m.to})`);
+      continue;
+    }
     const threadId = deterministicUuid(`thread-${m.from}-${m.to}-${m.subject}`);
     const id = deterministicUuid(`msg-${m.from}-${m.to}-${m.subject}`);
     const { error } = await sb.from("messages").upsert(
@@ -758,6 +762,10 @@ async function seed() {
   ];
 
   for (const t of txns) {
+    if (!userIds[t.user]) {
+      console.log(`  ⊘ txn skipped (missing user: ${t.user})`);
+      continue;
+    }
     const id = deterministicUuid(`txn-${t.user}-${t.desc}`);
     const { error } = await sb.from("transactions").upsert(
       {
@@ -800,6 +808,10 @@ async function seed() {
   ];
 
   for (const b of bookings) {
+    if (!venueIds[b.venue] || !userIds[b.organizer]) {
+      console.log(`  ⊘ booking skipped (missing venue or organizer)`);
+      continue;
+    }
     const id = deterministicUuid(`booking-${b.venue}-${b.date}`);
     const { error } = await sb.from("venue_bookings").upsert(
       {
@@ -866,6 +878,10 @@ async function seed() {
   ];
 
   for (const t of ticketEvents) {
+    if (!eventIds[t.event]) {
+      console.log(`  ⊘ ticket skipped (missing event: ${t.event})`);
+      continue;
+    }
     const id = deterministicUuid(`ticket-${t.event}-${t.name}`);
     const { error } = await sb.from("ticket_tiers").upsert(
       {

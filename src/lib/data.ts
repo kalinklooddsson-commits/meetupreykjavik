@@ -3,6 +3,7 @@ import { getEvents } from "@/lib/db/events";
 import { getGroups, getGroupBySlug } from "@/lib/db/groups";
 import { getVenues, getVenueBySlug } from "@/lib/db/venues";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSceneCoverDataUrl } from "@/lib/visuals";
 import {
   publicEvents,
   publicGroups,
@@ -42,40 +43,47 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     postedAt: (c.created_at as string) ?? new Date().toISOString(),
   }));
 
+  // Enrich with mock data when DB has sparse/placeholder content
+  const eventSlug = row.slug as string;
+  const mockEvent = getMockEvent(eventSlug);
+  const dbDesc = (row.description as string) ?? "";
+  const isGenericEventDesc = !dbDesc || dbDesc.length < 30;
+
   return {
-    slug: row.slug as string,
+    slug: eventSlug,
     title: row.title as string,
-    category: (category?.name_en as string) ?? "Social",
+    category: (category?.name_en as string) ?? mockEvent?.category ?? "Social",
     eventType: (row.event_type as PublicEvent["eventType"]) ?? "in_person",
     dateFilter: getDateFilter(row.starts_at as string),
     startsAt: row.starts_at as string,
     endsAt: (row.ends_at as string) ?? (row.starts_at as string),
-    venueName: (venue?.name as string) ?? (row.venue_name as string) ?? "",
-    venueSlug: (venue?.slug as string) ?? "",
-    groupName: (group?.name as string) ?? "",
-    groupSlug: (group?.slug as string) ?? "",
-    hostName: (host?.display_name as string) ?? "",
-    area: (venue?.city as string) ?? "Reykjavik",
-    summary: ((row.description as string) ?? "").slice(0, 200),
-    description: row.description ? [(row.description as string)] : [],
-    attendees: (row.rsvp_count as number) ?? 0,
-    capacity: (row.attendee_limit as number) ?? 50,
-    priceLabel: isFree ? "Free" : "Paid",
+    venueName: (venue?.name as string) ?? (row.venue_name as string) ?? mockEvent?.venueName ?? "",
+    venueSlug: (venue?.slug as string) ?? mockEvent?.venueSlug ?? "",
+    groupName: (group?.name as string) ?? mockEvent?.groupName ?? "",
+    groupSlug: (group?.slug as string) ?? mockEvent?.groupSlug ?? "",
+    hostName: (host?.display_name as string) ?? mockEvent?.hostName ?? "",
+    area: (venue?.city as string) ?? mockEvent?.area ?? "Reykjavik",
+    summary: isGenericEventDesc && mockEvent ? mockEvent.summary : dbDesc.slice(0, 200),
+    description: isGenericEventDesc && mockEvent ? mockEvent.description : (dbDesc ? [dbDesc] : []),
+    attendees: (row.rsvp_count as number) ?? mockEvent?.attendees ?? 0,
+    capacity: (row.attendee_limit as number) ?? mockEvent?.capacity ?? 50,
+    priceLabel: isFree ? (mockEvent?.priceLabel ?? "Free") : (mockEvent?.priceLabel ?? "Paid"),
     ageLabel,
     isFree,
-    visibilityLabel: (row.visibility_mode as string) ?? "public",
-    approvalLabel: (row.rsvp_mode as string) ?? "open",
-    reminderLabel: (row.reminder_policy as string) ?? "24h before",
-    hostContact: (row.host_contact as string) ?? "",
+    visibilityLabel: (row.visibility_mode as string) ?? mockEvent?.visibilityLabel ?? "public",
+    approvalLabel: (row.rsvp_mode as string) ?? mockEvent?.approvalLabel ?? "open",
+    reminderLabel: (row.reminder_policy as string) ?? mockEvent?.reminderLabel ?? "24h before",
+    hostContact: (row.host_contact as string) ?? mockEvent?.hostContact ?? "",
     shareLabel: "Share this event",
     art:
       (row.featured_photo_url as string) ??
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Reykjavik_rooftops.jpg/1200px-Reykjavik_rooftops.jpg",
-    gallery: Array.isArray(row.gallery_photos)
+      mockEvent?.art ??
+      createSceneCoverDataUrl(row.title as string, (category?.name_en as string) ?? "Event"),
+    gallery: (Array.isArray(row.gallery_photos) && (row.gallery_photos as string[]).length > 0)
       ? (row.gallery_photos as string[])
-      : [],
-    comments,
-    ratings,
+      : mockEvent?.gallery ?? [],
+    comments: comments.length > 0 ? comments : mockEvent?.comments ?? [],
+    ratings: ratings.length > 0 ? ratings : mockEvent?.ratings ?? [],
   };
 }
 
@@ -93,21 +101,29 @@ function mapDbGroupToPublic(
     preview: ((d.content as string) ?? "").slice(0, 100),
   }));
 
+  // Enrich with mock data if DB has generic/placeholder content
+  const slug = row.slug as string;
+  const mockFallback = getMockGroup(slug);
+  const dbDesc = (row.description as string) ?? "";
+  const isGenericDesc = !dbDesc || /community group in/i.test(dbDesc) || dbDesc.length < 30;
+
   return {
-    slug: row.slug as string,
+    slug,
     name: row.name as string,
     category:
       ((row.categories as Record<string, unknown> | null)?.name_en as string) ??
+      mockFallback?.category ??
       "Social",
-    members: (row.member_count as number) ?? 0,
+    members: (row.member_count as number) ?? mockFallback?.members ?? 0,
     activity: (row.activity_score as number) ?? 50,
-    summary: ((row.description as string) ?? "").slice(0, 200),
-    description: row.description ? [(row.description as string)] : [],
-    organizer: (organizer?.display_name as string) ?? "",
+    summary: isGenericDesc && mockFallback ? mockFallback.summary : dbDesc.slice(0, 200),
+    description: isGenericDesc && mockFallback ? mockFallback.description : (dbDesc ? [dbDesc] : []),
+    organizer: (organizer?.display_name as string) ?? mockFallback?.organizer ?? "",
     banner:
       (row.banner_url as string) ??
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Reykjavik_rooftops.jpg/1200px-Reykjavik_rooftops.jpg",
-    tags: Array.isArray(row.tags) ? (row.tags as string[]) : [],
+      mockFallback?.banner ??
+      createSceneCoverDataUrl(row.name as string, "Group"),
+    tags: Array.isArray(row.tags) ? (row.tags as string[]) : mockFallback?.tags ?? [],
     upcomingEventSlugs: eventSlugs ?? [],
     pastEvents: [],
     discussions,
@@ -138,31 +154,41 @@ function mapDbVenueToPublic(
       highlighted: (a.day_of_week as number) === new Date().getDay(),
     }));
 
+  // Enrich with mock data when DB has sparse content
+  const venueSlug = row.slug as string;
+  const mockVenue = getMockVenue(venueSlug);
+  const dbVenueDesc = (row.description as string) ?? "";
+  const isGenericVenueDesc = !dbVenueDesc || dbVenueDesc.length < 30;
+
   return {
-    slug: row.slug as string,
+    slug: venueSlug,
     name: row.name as string,
-    type: (row.type as string) ?? "bar",
-    area: (row.city as string) ?? "Reykjavik",
+    type: (row.type as string) ?? mockVenue?.type ?? "bar",
+    area: (row.city as string) ?? mockVenue?.area ?? "Reykjavik",
     capacity:
       (row.capacity_total as number) ??
       (row.capacity_standing as number) ??
+      mockVenue?.capacity ??
       0,
-    rating: (row.avg_rating as number) ?? 0,
-    summary: ((row.description as string) ?? "").slice(0, 200),
-    description: row.description ? [(row.description as string)] : [],
-    address: (row.address as string) ?? "",
-    amenities: Array.isArray(row.amenities)
+    rating: (row.avg_rating as number) ?? mockVenue?.rating ?? 0,
+    summary: isGenericVenueDesc && mockVenue ? mockVenue.summary : dbVenueDesc.slice(0, 200),
+    description: isGenericVenueDesc && mockVenue ? mockVenue.description : (dbVenueDesc ? [dbVenueDesc] : []),
+    address: (row.address as string) ?? mockVenue?.address ?? "",
+    amenities: (Array.isArray(row.amenities) && (row.amenities as string[]).length > 0)
       ? (row.amenities as string[])
-      : [],
-    hours,
-    deal: dealText,
-    upcomingEventSlugs: eventSlugs ?? [],
-    gallery: Array.isArray(row.photos) ? (row.photos as string[]) : [],
+      : mockVenue?.amenities ?? [],
+    hours: hours.length > 0 ? hours : mockVenue?.hours ?? [],
+    deal: dealText || mockVenue?.deal || "",
+    upcomingEventSlugs: eventSlugs ?? mockVenue?.upcomingEventSlugs ?? [],
+    gallery: (Array.isArray(row.photos) && (row.photos as string[]).length > 0)
+      ? (row.photos as string[])
+      : mockVenue?.gallery ?? [],
     art:
       (row.hero_photo_url as string) ??
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Reykjavik_rooftops.jpg/1200px-Reykjavik_rooftops.jpg",
-    latitude: (row.latitude as number) ?? undefined,
-    longitude: (row.longitude as number) ?? undefined,
+      mockVenue?.art ??
+      createSceneCoverDataUrl(row.name as string, "Venue"),
+    latitude: (row.latitude as number) ?? mockVenue?.latitude ?? undefined,
+    longitude: (row.longitude as number) ?? mockVenue?.longitude ?? undefined,
   };
 }
 

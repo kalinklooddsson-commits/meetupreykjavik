@@ -19,6 +19,7 @@ import {
   DollarSign,
   ScanQrCode,
   ArrowRight,
+  Pencil,
 } from "lucide-react";
 
 function organizerLinks(activeKey: string) {
@@ -108,6 +109,13 @@ export async function OrganizerEventDetailScreen({ slug }: { slug: string }) {
               {event.commentsSummary}
             </span>
           )}
+          <Link
+            href={`/organizer/events/${slug}/edit` as Route}
+            className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-brand-border-light bg-white px-3 py-1.5 text-sm font-medium text-brand-text transition hover:bg-brand-sand-light"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Edit event
+          </Link>
         </div>
 
         {/* Stat cards */}

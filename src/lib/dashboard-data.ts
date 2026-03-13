@@ -776,7 +776,7 @@ export const venuePortalData = {
   partnershipTier: "premium",
   onboarding: {
     completion: "8 / 10 complete",
-    reviewer: "Baldvin, partnerships",
+    reviewer: "Partnerships team",
     steps: [
       { key: "terms", title: "Account + agreement", detail: "Business account, terms, and venue partner summary accepted.", status: "done" as const },
       { key: "business", title: "Business identity", detail: "Kennitala, legal business name, and VAT status verified.", status: "done" as const },
@@ -1762,21 +1762,21 @@ export const venueReviews = [
 
 export const adminBookings = [
   { key: "ab-1", organizer: "Anna Sigurdsson", venue: "Kex Hostel", date: "2026-03-20", time: "18:00–22:00", attendance: "40", status: "pending", message: "Looking for a cozy space for our singles mixer." },
-  { key: "ab-2", organizer: "Baldvin Oddsson", venue: "Loft Hostel", date: "2026-03-25", time: "14:00–18:00", attendance: "25", status: "accepted" },
+  { key: "ab-2", organizer: "Einar Jónsson", venue: "Loft Hostel", date: "2026-03-25", time: "14:00–18:00", attendance: "25", status: "accepted" },
   { key: "ab-3", organizer: "Jón Árnason", venue: "Iðnó", date: "2026-04-01", time: "19:00–23:00", attendance: "80", status: "counter_offered", message: "Can we also use the upstairs room?" },
   { key: "ab-4", organizer: "Helga Björnsdóttir", venue: "Kex Hostel", date: "2026-03-15", time: "10:00–14:00", attendance: "15", status: "completed" },
   { key: "ab-5", organizer: "María Jónsdóttir", venue: "Hlemmur Mathöll", date: "2026-03-28", time: "17:00–21:00", attendance: "50", status: "declined", message: "Food hall event for expat community" },
 ] as const;
 
 export const adminAuditLog = [
-  { key: "au-1", admin: "Baldvin Oddsson", action: "venue_approved", targetType: "venue" as const, targetId: "kex-hostel", details: "status: pending → active", timestamp: "2026-03-12T14:30:00Z" },
-  { key: "au-2", admin: "Baldvin Oddsson", action: "user_role_changed", targetType: "user" as const, targetId: "jon-arnason", details: "role: user → organizer", timestamp: "2026-03-12T12:15:00Z" },
-  { key: "au-3", admin: "Baldvin Oddsson", action: "event_featured", targetType: "event" as const, targetId: "singles-night-25-35", details: "is_featured: false → true", timestamp: "2026-03-11T18:00:00Z" },
-  { key: "au-4", admin: "Baldvin Oddsson", action: "group_approved", targetType: "group" as const, targetId: "reykjavik-hikers", details: "status: pending → active", timestamp: "2026-03-11T10:30:00Z" },
-  { key: "au-5", admin: "Baldvin Oddsson", action: "user_suspended", targetType: "user" as const, targetId: "spam-account-1", details: "reason: spam reports (3)", timestamp: "2026-03-10T09:00:00Z" },
-  { key: "au-6", admin: "Baldvin Oddsson", action: "setting_changed", targetType: "setting" as const, targetId: "commission_rate", details: "value: 3% → 5%", timestamp: "2026-03-09T16:45:00Z" },
-  { key: "au-7", admin: "Baldvin Oddsson", action: "venue_rejected", targetType: "venue" as const, targetId: "unknown-bar", details: "reason: incomplete application", timestamp: "2026-03-08T11:20:00Z" },
-  { key: "au-8", admin: "Baldvin Oddsson", action: "refund_issued", targetType: "transaction" as const, targetId: "tx-4", details: "amount: 2,500 ISK — event cancelled", timestamp: "2026-03-05T14:00:00Z" },
+  { key: "au-1", admin: "Platform Admin", action: "venue_approved", targetType: "venue" as const, targetId: "kex-hostel", details: "status: pending → active", timestamp: "2026-03-12T14:30:00Z" },
+  { key: "au-2", admin: "Platform Admin", action: "user_role_changed", targetType: "user" as const, targetId: "jon-arnason", details: "role: user → organizer", timestamp: "2026-03-12T12:15:00Z" },
+  { key: "au-3", admin: "Platform Admin", action: "event_featured", targetType: "event" as const, targetId: "singles-night-25-35", details: "is_featured: false → true", timestamp: "2026-03-11T18:00:00Z" },
+  { key: "au-4", admin: "Platform Admin", action: "group_approved", targetType: "group" as const, targetId: "reykjavik-hikers", details: "status: pending → active", timestamp: "2026-03-11T10:30:00Z" },
+  { key: "au-5", admin: "Platform Admin", action: "user_suspended", targetType: "user" as const, targetId: "spam-account-1", details: "reason: spam reports (3)", timestamp: "2026-03-10T09:00:00Z" },
+  { key: "au-6", admin: "Platform Admin", action: "setting_changed", targetType: "setting" as const, targetId: "commission_rate", details: "value: 3% → 5%", timestamp: "2026-03-09T16:45:00Z" },
+  { key: "au-7", admin: "Platform Admin", action: "venue_rejected", targetType: "venue" as const, targetId: "unknown-bar", details: "reason: incomplete application", timestamp: "2026-03-08T11:20:00Z" },
+  { key: "au-8", admin: "Platform Admin", action: "refund_issued", targetType: "transaction" as const, targetId: "tx-4", details: "amount: 2,500 ISK — event cancelled", timestamp: "2026-03-05T14:00:00Z" },
 ] as const;
 
 export const dashboardReferenceData = {

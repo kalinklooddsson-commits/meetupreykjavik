@@ -6,7 +6,7 @@ import {
 } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { resolveVenueTier } from "@/lib/entitlements";
-import { VenueProfileSectionEditor } from "./panels";
+import { VenueProfileSectionEditor, VenueImageEditor } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -23,11 +23,38 @@ function venueLinks(activeKey: string) {
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
+/* ── Helpers: extract a clean image URL from the venue data ─── */
+
+function cleanImageUrl(raw: string): string {
+  // The mock data stores images as css url() values like "url('/path.jpg')"
+  // while DB data stores plain URLs. Normalise both to a plain string.
+  const match = /^url\(['"]?(.*?)['"]?\)$/.exec(raw);
+  return match ? match[1] : raw;
+}
+
 /* ── Screen ──────────────────────────────────────────────────── */
 
 export async function VenueProfileScreen() {
   const data = await getVenuePortalData();
   const tier = resolveVenueTier(data.partnershipTier);
+
+  // Resolve image fields from the venue object.
+  // DB venues use hero_photo_url / photos; mock data uses art / gallery.
+  const venue = data.venue as Record<string, unknown>;
+  const heroImage = cleanImageUrl(
+    String(
+      venue.hero_photo_url ??
+        venue.heroPhotoUrl ??
+        venue.art ??
+        "",
+    ),
+  );
+  const galleryRaw = (
+    (venue.photos as string[]) ??
+    (venue.gallery as string[]) ??
+    []
+  );
+  const gallery = galleryRaw.map(cleanImageUrl);
 
   return (
     <PortalShell
@@ -51,6 +78,19 @@ export async function VenueProfileScreen() {
             Onboarding: {data.onboarding.completion}
           </span>
         </div>
+      </Surface>
+
+      {/* ── Venue images (hero + gallery) ─────────────────── */}
+      <Surface
+        eyebrow="Media"
+        title="Venue photos"
+        description="Manage the cover image and photo gallery shown on your public listing."
+      >
+        <VenueImageEditor
+          venueSlug={data.venue.slug}
+          heroImage={heroImage}
+          gallery={gallery}
+        />
       </Surface>
 
       {/* ── Profile sections (editable) ──────────────────── */}
