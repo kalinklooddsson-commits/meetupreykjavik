@@ -38,6 +38,7 @@ import {
   Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/components/ui/toast";
 import {
   Surface,
   DashboardTable,
@@ -137,7 +138,7 @@ export function AdminUserCommandCenter({
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
   const roleChips = [
     { key: "all", label: "All", active: roleFilter === "all" },
@@ -157,11 +158,6 @@ export function AdminUserCommandCenter({
   });
 
   const selected = selectedKey ? localUsers.find((u) => u.key === selectedKey) : null;
-
-  function showFeedback(msg: string) {
-    setFeedback(msg);
-    setTimeout(() => setFeedback(""), 3000);
-  }
 
   function updateUser(key: string, patch: Partial<UserRow>) {
     setLocalUsers((prev) => prev.map((u) => (u.key === key ? { ...u, ...patch } : u)));
@@ -183,8 +179,6 @@ export function AdminUserCommandCenter({
         </div>
       </div>
       <FilterChips items={roleChips} onSelect={(k) => setRoleFilter(k)} />
-
-      {feedback && <FeedbackToast message={feedback} />}
 
       <div className="grid gap-4 xl:grid-cols-[1fr_360px]">
         {/* Users table */}
@@ -238,9 +232,17 @@ export function AdminUserCommandCenter({
                 <select
                   className={selectClass}
                   value={selected.type.toLowerCase()}
-                  onChange={(e) => {
-                    updateUser(selected.key, { type: e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1) });
-                    showFeedback(`Role changed to ${e.target.value}`);
+                  onChange={async (e) => {
+                    const newRole = e.target.value;
+                    try {
+                      await fetch("/api/admin/users/action", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ userKey: selected.key, action: "role", value: newRole }),
+                      });
+                    } catch {}
+                    updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
+                    toast("success", `Role changed to ${newRole}`);
                   }}
                 >
                   <option value="user">User</option>
@@ -255,11 +257,19 @@ export function AdminUserCommandCenter({
                 <button
                   type="button"
                   className={btnOutline}
-                  onClick={() => {
+                  onClick={async () => {
+                    const action = selected.status === "Verified" ? "unverify" : "verify";
+                    try {
+                      await fetch("/api/admin/users/action", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ userKey: selected.key, action, value: action }),
+                      });
+                    } catch {}
                     updateUser(selected.key, {
                       status: selected.status === "Verified" ? "Unverified" : "Verified",
                     });
-                    showFeedback(selected.status === "Verified" ? "Verification removed" : "User verified");
+                    toast("success", selected.status === "Verified" ? "Verification removed" : "User verified");
                   }}
                 >
                   <ShieldCheck className="h-3.5 w-3.5" />
@@ -268,11 +278,19 @@ export function AdminUserCommandCenter({
                 <button
                   type="button"
                   className={btnOutline}
-                  onClick={() => {
+                  onClick={async () => {
+                    const action = selected.type === "Premium" ? "remove_premium" : "grant_premium";
+                    try {
+                      await fetch("/api/admin/users/action", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ userKey: selected.key, action, value: action }),
+                      });
+                    } catch {}
                     updateUser(selected.key, {
                       type: selected.type === "Premium" ? "User" : "Premium",
                     });
-                    showFeedback(selected.type === "Premium" ? "Premium removed" : "Premium granted");
+                    toast("success", selected.type === "Premium" ? "Premium removed" : "Premium granted");
                   }}
                 >
                   <Crown className="h-3.5 w-3.5" />
@@ -281,11 +299,19 @@ export function AdminUserCommandCenter({
                 <button
                   type="button"
                   className={selected.status === "Suspended" ? btnPrimary : btnDanger}
-                  onClick={() => {
+                  onClick={async () => {
+                    const action = selected.status === "Suspended" ? "unsuspend" : "suspend";
+                    try {
+                      await fetch("/api/admin/users/action", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ userKey: selected.key, action, value: action }),
+                      });
+                    } catch {}
                     updateUser(selected.key, {
                       status: selected.status === "Suspended" ? "Active" : "Suspended",
                     });
-                    showFeedback(selected.status === "Suspended" ? "User unsuspended" : "User suspended");
+                    toast("success", selected.status === "Suspended" ? "User unsuspended" : "User suspended");
                   }}
                 >
                   <Ban className="h-3.5 w-3.5" />
@@ -429,18 +455,33 @@ type CurationDossier = {
 export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDossier }) {
   const [notes, setNotes] = useState<string[]>([...dossier.adminNotes]);
   const [newNote, setNewNote] = useState("");
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
-  function addNote() {
+  async function addNote() {
     if (!newNote.trim()) return;
-    setNotes((prev) => [...prev, newNote.trim()]);
+    const note = newNote.trim();
+    try {
+      await fetch("/api/admin/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: dossier.name, action: "add", note }),
+      });
+    } catch {}
+    setNotes((prev) => [...prev, note]);
     setNewNote("");
-    setFeedback("Note added");
-    setTimeout(() => setFeedback(""), 2000);
+    toast("success", "Note added");
   }
 
-  function removeNote(idx: number) {
+  async function removeNote(idx: number) {
+    try {
+      await fetch("/api/admin/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: dossier.name, action: "remove", note: notes[idx] }),
+      });
+    } catch {}
     setNotes((prev) => prev.filter((_, i) => i !== idx));
+    toast("success", "Note removed");
   }
 
   return (
@@ -525,7 +566,6 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
 
       {/* Admin notes */}
       <Surface eyebrow="Internal" title="Admin notes">
-        {feedback && <FeedbackToast message={feedback} />}
         <div className="space-y-2 mt-2">
           {notes.map((n, i) => (
             <div key={i} className="flex items-start justify-between gap-3 rounded-lg border border-brand-border-light bg-white p-3">
@@ -586,17 +626,22 @@ export function AdminGroupOperationsDesk({
   groups: readonly GroupRow[];
 }) {
   const [localGroups, setLocalGroups] = useState<GroupRow[]>([...groups]);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
-  function updateGroup(key: string, status: string) {
+  async function updateGroup(key: string, status: string) {
+    try {
+      await fetch("/api/admin/groups/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setLocalGroups((prev) => prev.map((g) => (g.key === key ? { ...g, status } : g)));
-    setFeedback(`Group ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Group ${status.toLowerCase()}`);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {localGroups.map((g) => (
           <StreamCard
@@ -663,14 +708,20 @@ export function AdminEventOperationsDesk({
   events: readonly EventRow[];
 }) {
   const [localEvents, setLocalEvents] = useState<EventRow[]>([...events]);
-  const [feedback, setFeedback] = useState("");
   const [confirmKey, setConfirmKey] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState("");
+  const { toast } = useToast();
 
-  function updateEvent(key: string, status: string) {
+  async function updateEvent(key: string, status: string) {
+    try {
+      await fetch("/api/admin/events/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setLocalEvents((prev) => prev.map((e) => (e.key === key ? { ...e, status } : e)));
-    setFeedback(`Event ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Event ${status.toLowerCase()}`);
     setConfirmKey(null);
   }
 
@@ -681,7 +732,6 @@ export function AdminEventOperationsDesk({
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       {confirmKey && (
         <ConfirmDialog
           message={`Are you sure you want to ${confirmAction.toLowerCase()} this event?`}
@@ -743,19 +793,24 @@ export function AdminRevenueControlDesk({
   transactions: readonly TransactionRow[];
 }) {
   const [localTx, setLocalTx] = useState<TransactionRow[]>([...transactions]);
-  const [feedback, setFeedback] = useState("");
   const [refundKey, setRefundKey] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  function processRefund(key: string) {
+  async function processRefund(key: string) {
+    try {
+      await fetch("/api/admin/refund", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key }),
+      });
+    } catch {}
     setLocalTx((prev) => prev.map((t) => (t.key === key ? { ...t, status: "Refunded" } : t)));
-    setFeedback("Refund processed");
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", "Refund processed");
     setRefundKey(null);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       {refundKey && (
         <ConfirmDialog
           message="Are you sure you want to process this refund? This action cannot be undone."
@@ -950,19 +1005,24 @@ export function AdminOpsInboxDesk({
   inbox: readonly OpsItem[];
 }) {
   const [items, setItems] = useState<OpsItem[]>([...inbox]);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
   const lanes = [...new Set(items.map((i) => i.lane))];
 
-  function updateItem(key: string, status: string) {
+  async function updateItem(key: string, status: string) {
+    try {
+      await fetch("/api/admin/ops/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setItems((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
-    setFeedback(`Item ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Item ${status.toLowerCase()}`);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       {lanes.map((lane) => {
         const laneItems = items.filter((i) => i.lane === lane);
         return (
@@ -1028,17 +1088,22 @@ export function AdminIncidentCommandDesk({
   incidents: readonly Incident[];
 }) {
   const [localIncidents, setLocalIncidents] = useState<Incident[]>([...incidents]);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
-  function updateIncident(key: string, status: string) {
+  async function updateIncident(key: string, status: string) {
+    try {
+      await fetch("/api/admin/incidents/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setLocalIncidents((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
-    setFeedback(`Incident ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Incident ${status.toLowerCase()}`);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {localIncidents.map((inc) => (
           <div key={inc.key} className="rounded-xl border border-brand-border-light bg-white p-4">
@@ -1097,20 +1162,14 @@ export function AdminVenueOperationsDesk({
   venues: readonly VenueRow[];
 }) {
   const [localVenues, setLocalVenues] = useState<VenueRow[]>([...venues]);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
   function updateVenue(key: string, patch: Partial<VenueRow>) {
     setLocalVenues((prev) => prev.map((v) => (v.key === key ? { ...v, ...patch } : v)));
   }
 
-  function showFeedback(msg: string) {
-    setFeedback(msg);
-    setTimeout(() => setFeedback(""), 3000);
-  }
-
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       <DashboardTable
         columns={["Venue", "Area", "Type", "Rating", "Actions"]}
         rows={localVenues.map((v) => ({
@@ -1133,8 +1192,15 @@ export function AdminVenueOperationsDesk({
               <button
                 type="button"
                 className={btnGhost}
-                onClick={() => {
-                  showFeedback(`${v.name} verified`);
+                onClick={async () => {
+                  try {
+                    await fetch("/api/admin/venues/action", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ key: v.key, action: "verify" }),
+                    });
+                  } catch {}
+                  toast("success", `${v.name} verified`);
                 }}
               >
                 <ShieldCheck className="h-3.5 w-3.5 text-brand-sage" /> Verify
@@ -1142,8 +1208,15 @@ export function AdminVenueOperationsDesk({
               <button
                 type="button"
                 className={btnGhost}
-                onClick={() => {
-                  showFeedback(`${v.name} suspended`);
+                onClick={async () => {
+                  try {
+                    await fetch("/api/admin/venues/action", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ key: v.key, action: "suspend" }),
+                    });
+                  } catch {}
+                  toast("success", `${v.name} suspended`);
                 }}
               >
                 <Ban className="h-3.5 w-3.5 text-brand-coral" /> Suspend
@@ -1152,7 +1225,7 @@ export function AdminVenueOperationsDesk({
                 type="button"
                 className={btnGhost}
                 onClick={() => {
-                  showFeedback(`Editing ${v.name}`);
+                  toast("success", `Editing ${v.name}`);
                 }}
               >
                 <Edit2 className="h-3.5 w-3.5" /> Edit
@@ -1185,17 +1258,22 @@ export function AdminModerationOperationsDesk({
   reports: readonly ModerationReport[];
 }) {
   const [localReports, setLocalReports] = useState<ModerationReport[]>([...reports]);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
-  function updateReport(key: string, status: string) {
+  async function updateReport(key: string, status: string) {
+    try {
+      await fetch("/api/admin/moderation/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setLocalReports((prev) => prev.map((r) => (r.key === key ? { ...r, status } : r)));
-    setFeedback(`Report ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Report ${status.toLowerCase()}`);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {localReports.map((r) => (
           <div key={r.key} className="rounded-xl border border-brand-border-light bg-white p-4">
@@ -1244,19 +1322,32 @@ export function AdminVenueApprovalConsole({
 }) {
   const [localApps, setLocalApps] = useState<VenueApplication[]>([...applications]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
-  function updateApp(key: string, status: string) {
+  async function updateApp(key: string, status: string) {
+    try {
+      await fetch("/api/admin/venues/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setLocalApps((prev) => prev.map((a) => (a.key === key ? { ...a, status } : a)));
-    setFeedback(`Application ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Application ${status.toLowerCase()}`);
   }
 
-  function batchUpdate(status: string) {
+  async function batchUpdate(status: string) {
+    const keys = [...selected];
+    try {
+      await fetch("/api/admin/venues/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keys, action: status.toLowerCase() }),
+      });
+    } catch {}
     setLocalApps((prev) => prev.map((a) => (selected.has(a.key) ? { ...a, status } : a)));
-    setFeedback(`${selected.size} applications ${status.toLowerCase()}`);
+    toast("success", `${selected.size} applications ${status.toLowerCase()}`);
     setSelected(new Set());
-    setTimeout(() => setFeedback(""), 3000);
   }
 
   function toggleSelect(key: string) {
@@ -1270,8 +1361,6 @@ export function AdminVenueApprovalConsole({
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
-
       {selected.size > 0 && (
         <div className="flex items-center gap-3 rounded-lg border border-brand-indigo/20 bg-brand-indigo/5 p-3">
           <span className="text-sm font-medium text-brand-text">{selected.size} selected</span>
@@ -1341,17 +1430,22 @@ export function AdminModerationConsole({
   items: readonly BannedItem[];
 }) {
   const [localItems, setLocalItems] = useState<BannedItem[]>([...items]);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
-  function unban(key: string) {
+  async function unban(key: string) {
+    try {
+      await fetch("/api/admin/moderation/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: "unban" }),
+      });
+    } catch {}
     setLocalItems((prev) => prev.filter((i) => i.key !== key));
-    setFeedback("User unbanned");
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", "User unbanned");
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       <DashboardTable
         columns={["User", "Reason", "Appeal", "Actions"]}
         rows={localItems.map((item) => ({
@@ -1375,7 +1469,7 @@ export function AdminModerationConsole({
                 <Shield className="h-3.5 w-3.5" /> Unban
               </button>
               {item.appeal && (
-                <button type="button" className={btnOutline} onClick={() => setFeedback(`Reviewing appeal for ${item.name}`)}>
+                <button type="button" className={btnOutline} onClick={() => toast("success", `Reviewing appeal for ${item.name}`)}>
                   <FileText className="h-3.5 w-3.5" /> Review
                 </button>
               )}
@@ -1411,7 +1505,7 @@ export function AdminSettingsControlCenter({
     }))
   );
   const [editingSection, setEditingSection] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
   function updateItem(sectionKey: string, label: string, value: string) {
     setSections((prev) =>
@@ -1423,15 +1517,21 @@ export function AdminSettingsControlCenter({
     );
   }
 
-  function saveSection(sectionKey: string) {
+  async function saveSection(sectionKey: string) {
+    const section = sections.find((s) => s.key === sectionKey);
+    try {
+      await fetch("/api/admin/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sectionKey, items: section?.items }),
+      });
+    } catch {}
     setEditingSection(null);
-    setFeedback(`${sectionKey} settings saved`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `${sectionKey} settings saved`);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
       {sections.map((section) => {
         const isEditing = editingSection === section.key;
         return (
@@ -1490,23 +1590,34 @@ type ContentData = {
 export function AdminContentControlCenter({ content }: { content: ContentData }) {
   const [sections, setSections] = useState([...content.sections.map((s) => ({ ...s }))]);
   const [blogQueue, setBlogQueue] = useState([...content.blogQueue.map((b) => ({ ...b }))]);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
-  function updateSection(key: string, status: string) {
+  async function updateSection(key: string, status: string) {
+    try {
+      await fetch("/api/admin/content/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setSections((prev) => prev.map((s) => (s.key === key ? { ...s, status } : s)));
-    setFeedback(`Section ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Section ${status.toLowerCase()}`);
   }
 
-  function updateBlog(key: string, status: string) {
+  async function updateBlog(key: string, status: string) {
+    try {
+      await fetch("/api/admin/content/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: status.toLowerCase() }),
+      });
+    } catch {}
     setBlogQueue((prev) => prev.map((b) => (b.key === key ? { ...b, status } : b)));
-    setFeedback(`Post ${status.toLowerCase()}`);
-    setTimeout(() => setFeedback(""), 3000);
+    toast("success", `Post ${status.toLowerCase()}`);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
 
       {/* Content sections */}
       <Surface eyebrow="Content" title="Sections">
@@ -1602,20 +1713,25 @@ export function AdminCommsStudio({ comms }: { comms: CommsData }) {
   const [draft, setDraft] = useState({ ...comms.draft });
   const [selectedAudience, setSelectedAudience] = useState(comms.audiences[0] ?? "");
   const [showPreview, setShowPreview] = useState(false);
-  const [feedback, setFeedback] = useState("");
+  const { toast } = useToast();
 
   function updateDraft(field: keyof typeof draft, value: string) {
     setDraft((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSend() {
-    setFeedback(`Message sent to "${selectedAudience}"`);
-    setTimeout(() => setFeedback(""), 3000);
+  async function handleSend() {
+    try {
+      await fetch("/api/admin/comms/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ audience: selectedAudience, draft }),
+      });
+    } catch {}
+    toast("success", `Message sent to "${selectedAudience}"`);
   }
 
   return (
     <div className="space-y-4">
-      {feedback && <FeedbackToast message={feedback} />}
 
       <div className="grid gap-4 xl:grid-cols-2">
         {/* Draft editor */}

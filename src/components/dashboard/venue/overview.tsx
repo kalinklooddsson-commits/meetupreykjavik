@@ -24,6 +24,7 @@ import {
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { resolveVenueTier, venueHasFeature } from "@/lib/entitlements";
+import { MessageActions } from "../member/message-actions";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -268,7 +269,7 @@ export async function VenueMessagesScreen() {
         description="Booking threads, compliance notices, and organizer conversations."
       >
         <DashboardTable
-          columns={["From", "Role", "Subject", "Preview", "Channel", "Status", "When"]}
+          columns={["From", "Role", "Subject", "Preview", "Channel", "Status", "Action"]}
           rows={data.messages.map((m) => ({
             key: m.key,
             cells: [
@@ -283,7 +284,7 @@ export async function VenueMessagesScreen() {
               <ToneBadge key="status" tone={statusTone(m.status)}>
                 {m.status}
               </ToneBadge>,
-              m.meta,
+              <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
             ],
           }))}
           caption="All venue messages"
