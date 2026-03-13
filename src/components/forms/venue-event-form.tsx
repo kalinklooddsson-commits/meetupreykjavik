@@ -4,12 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Route } from "next";
 import {
-  ArrowLeft,
   CalendarDays,
   Clock,
   Loader2,
   MapPin,
-  Save,
   Send,
   Users,
 } from "lucide-react";
@@ -163,34 +161,8 @@ export function VenueEventForm({
   const minDate = tomorrow.toISOString().split("T")[0];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-3xl items-center gap-4 px-4 py-4 sm:px-6">
-          <Link
-            href={"/venue/events" as Route}
-            className="flex items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-gray-900"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to events
-          </Link>
-          <div className="ml-auto flex items-center gap-2 text-sm text-gray-500">
-            <MapPin className="h-4 w-4" />
-            {venueName}
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          {isEdit ? "Edit event" : "Create a new event"}
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Host an event at {venueName}. Fill in the details below and publish when ready.
-        </p>
-
-        <div className="mt-8 space-y-8">
-          {/* Title */}
+    <div className="space-y-8">
+      {/* Title */}
           <fieldset>
             <label
               htmlFor="event-title"
@@ -410,8 +382,6 @@ export function VenueEventForm({
               {isEdit ? "Save changes" : "Publish event"}
             </button>
           </div>
-        </div>
-      </main>
     </div>
   );
 }
