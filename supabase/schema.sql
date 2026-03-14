@@ -1222,6 +1222,13 @@ to authenticated
 using (public.is_admin())
 with check (public.is_admin());
 
+-- Allow authenticated users to read their own user_settings row
+create policy "platform_settings_user_read_own"
+on public.platform_settings
+for select
+to authenticated
+using (key = 'user_settings:' || auth.uid()::text);
+
 create policy "event_templates_select_public"
 on public.event_templates
 for select

@@ -22,6 +22,7 @@ import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getMemberProfile, getMemberPortalData } from "@/lib/dashboard-fetchers";
 import { shouldShowPremiumBadge } from "@/lib/features/member-features";
 import { SettingsForm } from "./settings-form";
+import { MarkAllReadButton } from "../notification-actions";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -340,6 +341,16 @@ export async function MemberNotificationsScreen() {
         title="Recent alerts"
         description="Your latest notifications across all channels."
       >
+        {(() => {
+          const unreadIds = data.notifications
+            .filter((n) => n.status === "New" || n.status === "Unread" || n.status === "Action required")
+            .map((n) => n.key);
+          return unreadIds.length > 0 ? (
+            <div className="mb-4 flex justify-end">
+              <MarkAllReadButton ids={unreadIds} />
+            </div>
+          ) : null;
+        })()}
         <ActivityFeed
           items={data.notifications.map((n) => ({
             key: n.key,
