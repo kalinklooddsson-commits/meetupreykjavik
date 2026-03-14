@@ -890,7 +890,11 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       bookings: {
         incoming,
         history,
-        guestFit: [] as Array<{ label: string; value: number }>,
+        guestFit: {
+          summary: "Guest behavior data will appear here as bookings are completed.",
+          signals: [] as Array<{ key: string; label: string; score: number; note: string }>,
+          roomGuidance: [] as string[],
+        },
       },
       availability: mappedAvailability,
       deals: mappedDeals.length > 0 ? mappedDeals : [],
