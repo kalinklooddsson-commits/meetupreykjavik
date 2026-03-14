@@ -195,30 +195,28 @@ export function OrganizerEventWizard({
       title: form.title,
       description: form.description,
       status: "published",
-      group_slug: form.groupSlug || null,
-      category_id: null,
-      event_type: form.locationMode === "online" ? "online" : "in_person",
-      starts_at: form.startsOn && form.startTime
+      groupSlug: form.groupSlug || null,
+      eventType: form.locationMode === "online" ? "online" : "in_person",
+      startsAt: form.startsOn && form.startTime
         ? new Date(`${form.startsOn}T${form.startTime}`).toISOString()
         : null,
-      ends_at: form.startsOn && form.endTime
+      endsAt: form.startsOn && form.endTime
         ? new Date(`${form.startsOn}T${form.endTime}`).toISOString()
         : null,
-      venue_slug: form.venueSlug || null,
-      venue_name: selectedVenue?.name ?? form.venueAddress ?? null,
-      venue_address: form.venueAddress || selectedVenue?.address || null,
-      online_link: form.onlineLink || null,
-      attendee_limit: form.attendeeLimit || null,
-      guest_limit: form.guestLimit || 0,
-      age_restriction: form.ageRestriction || "",
-      age_min: form.ageMin ? Number(form.ageMin) : null,
-      age_max: form.ageMax ? Number(form.ageMax) : null,
-      is_free: form.isFree,
-      rsvp_mode: form.rsvpMode,
-      comments_enabled: form.commentsEnabled,
-      recurrence_rule: form.recurring ? form.recurrenceRule : null,
-      recurrence_end: form.recurring && form.recurrenceEnds ? form.recurrenceEnds : null,
-      featured_photo_url: form.featuredPhotoUrl || null,
+      venueSlug: form.venueSlug || null,
+      venueName: selectedVenue?.name ?? form.venueAddress ?? null,
+      venueAddress: form.venueAddress || selectedVenue?.address || null,
+      onlineLink: form.onlineLink || null,
+      attendeeLimit: form.attendeeLimit || null,
+      guestLimit: form.guestLimit || 0,
+      ageRestriction: form.ageRestriction || "",
+      ageMin: form.ageMin ? Number(form.ageMin) : null,
+      ageMax: form.ageMax ? Number(form.ageMax) : null,
+      isFree: form.isFree,
+      rsvpMode: form.rsvpMode,
+      commentsEnabled: form.commentsEnabled,
+      recurrence: form.recurring ? form.recurrenceRule : null,
+      featuredPhotoUrl: form.featuredPhotoUrl || null,
       tags: tags.length > 0 ? tags : null,
     };
   }
