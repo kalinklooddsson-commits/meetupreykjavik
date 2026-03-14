@@ -330,22 +330,22 @@ export const publicEvents: PublicEvent[] = [
   },
   {
     slug: "craft-beer-tasting-vesturgata",
-    title: "Craft Beer Tasting - Vesturgata",
+    title: "Craft Beer Tasting",
     category: "Food",
     eventType: "in_person",
     dateFilter: "Weekend",
     startsAt: "2026-03-21T18:00:00Z",
     endsAt: "2026-03-21T20:30:00Z",
-    venueName: "Micro Bar",
-    venueSlug: "micro-bar",
+    venueName: "Lebowski Bar",
+    venueSlug: "lebowski-bar",
     groupName: "Reykjavik Foodies",
     groupSlug: "reykjavik-foodies",
     hostName: "Sara Magnusdottir",
-    area: "Vesturgata",
+    area: "Laugavegur",
     summary: "A guided walk through six Icelandic craft beers with tasting notes, food pairings, and candid brewer stories.",
     description: [
       "This tasting is built for curiosity rather than expertise. Each pour comes with a short introduction from the host, covering ingredients, brewing approach, and the local story behind the label. The pace is relaxed and questions are welcome throughout.",
-      "The intimate room at Micro Bar means conversations happen naturally between pours. The format works well for both solo attendees and small groups, and the food pairing keeps things grounded across the evening."
+      "The bar's central location and spacious layout mean conversations happen naturally between pours. The format works well for both solo attendees and small groups, and the food pairing keeps things grounded across the evening."
     ],
     attendees: 35,
     capacity: 45,
@@ -357,9 +357,9 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "24h reminder with tasting preview and arrival note",
     hostContact: "Sara Magnusdottir via host inbox",
     shareLabel: "Share with a friend who appreciates good craft beer",
-    art: "url('/place-images/reykjavik/venues/micro-bar.jpg')",
+    art: "url('/place-images/reykjavik/venues/lebowski-bar.jpg')",
     gallery: [
-      "url('/place-images/reykjavik/venues/micro-bar.jpg')"
+      "url('/place-images/reykjavik/venues/lebowski-bar.jpg')"
     ],
     comments: [
       { author: "Gunnar", text: "The brewer stories made this way more interesting than a standard tasting.", postedAt: "3 hours ago" },
@@ -420,16 +420,16 @@ export const publicEvents: PublicEvent[] = [
     dateFilter: "Month",
     startsAt: "2026-04-02T19:00:00Z",
     endsAt: "2026-04-02T21:30:00Z",
-    venueName: "Hlemmur Square",
-    venueSlug: "hlemmur-square",
+    venueName: "Lebowski Bar",
+    venueSlug: "lebowski-bar",
     groupName: "Tech Community RVK",
     groupSlug: "tech-community-rvk",
     hostName: "Bjorn Olafsson",
-    area: "Hlemmur",
+    area: "Laugavegur",
     summary: "Five early-stage founders pitch to a room of builders, operators, and curious locals in a structured but informal format.",
     description: [
       "Each founder gets eight minutes to present and four minutes for questions. The format keeps things tight without making it feel like a competition. The audience includes developers, designers, and people from outside tech who bring fresh perspective.",
-      "After the pitches, the room opens up for food and conversation. Hlemmur Square provides a good mix of energy and space, and the bar menu keeps the social half grounded in something more than networking platitudes."
+      "After the pitches, the room opens up for drinks and conversation. Lebowski Bar provides a good mix of energy and space, and the bar menu keeps the social half grounded in something more than networking platitudes."
     ],
     attendees: 78,
     capacity: 120,
@@ -441,9 +441,9 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "48h reminder with pitch lineup and 2h doors-open alert",
     hostContact: "Bjorn Olafsson via organizer inbox",
     shareLabel: "Share with founders and curious builders in your network",
-    art: "url('/place-images/reykjavik/venues/hlemmur-square.jpg')",
+    art: "url('/place-images/reykjavik/venues/lebowski-bar.jpg')",
     gallery: [
-      "url('/place-images/reykjavik/venues/hlemmur-square.jpg')"
+      "url('/place-images/reykjavik/venues/lebowski-bar.jpg')"
     ],
     comments: [
       { author: "Dagny", text: "The format is tight. Eight minutes forces clarity.", postedAt: "Today" },
@@ -451,7 +451,7 @@ export const publicEvents: PublicEvent[] = [
     ],
     ratings: [
       { author: "Hanna", rating: 5, text: "One of the best startup events in the city. No fluff." },
-      { author: "Einar", rating: 4, text: "Strong lineup. The food hall setting keeps it relaxed after the pitches." }
+      { author: "Einar", rating: 4, text: "Strong lineup. The bar setting keeps it relaxed after the pitches." }
     ],
   },
   {
@@ -546,7 +546,7 @@ export const publicEvents: PublicEvent[] = [
     dateFilter: "Weekend",
     startsAt: "2026-03-20T19:30:00Z",
     endsAt: "2026-03-20T22:30:00Z",
-    venueName: "Snaps Bistro Bar",
+    venueName: "Snaps",
     venueSlug: "snaps",
     groupName: "Nightlife Reykjavik",
     groupSlug: "nightlife-reykjavik",
@@ -555,7 +555,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A hosted dinner night with communal seating, a set menu, and a social format that makes meeting people over food feel natural.",
     description: [
       "The evening starts with a welcome drink and a brief host introduction. Guests are seated at communal tables with a rotating conversation format during the first course. By the second course, the table has settled into its own rhythm.",
-      "Snaps Bistro Bar handles the food side beautifully. The set menu removes decision fatigue and the wine pairing option keeps the evening cohesive. This is one of those events where the venue and the format genuinely reinforce each other."
+      "Snaps handles the food side beautifully. The set menu removes decision fatigue and the wine pairing option keeps the evening cohesive. This is one of those events where the venue and the format genuinely reinforce each other."
     ],
     attendees: 42,
     capacity: 60,
@@ -567,9 +567,9 @@ export const publicEvents: PublicEvent[] = [
     reminderLabel: "48h menu preview and same-day table assignment",
     hostContact: "Kari Sigurdsson via social host inbox",
     shareLabel: "Share with someone who enjoys a good dinner conversation",
-    art: "url('/place-images/reykjavik/venues/hlemmur-square.jpg')",
+    art: "url('/place-images/reykjavik/venues/lebowski-bar.jpg')",
     gallery: [
-      "url('/place-images/reykjavik/venues/hlemmur-square.jpg')"
+      "url('/place-images/reykjavik/venues/lebowski-bar.jpg')"
     ],
     comments: [
       { author: "Vala", text: "The communal table format works so well here. Met great people.", postedAt: "Today" },
@@ -679,7 +679,7 @@ export const publicGroups: PublicGroup[] = [
       "Members range from home cooks to hospitality professionals, and the discussions often surface restaurant tips, seasonal recommendations, and behind-the-scenes stories from the local food world."
     ],
     organizer: "Sara Magnusdottir",
-    banner: "/place-images/reykjavik/venues/hlemmur-square.jpg",
+    banner: "/place-images/reykjavik/venues/lebowski-bar.jpg",
     tags: ["Tastings", "Food walks", "Wine", "Craft beer"],
     upcomingEventSlugs: ["wine-tasting-volcanic-terroir", "craft-beer-tasting-vesturgata"],
     pastEvents: ["Fermented food workshop", "Bakery crawl downtown", "Seasonal lamb tasting"],
@@ -742,7 +742,7 @@ export const publicGroups: PublicGroup[] = [
       "It has become one of the most reliable weekly meetups in the city. Members come for the practice and stay for the community. The discussions often extend into grammar tips, resource sharing, and cultural context that textbooks miss."
     ],
     organizer: "Pierre Dupont",
-    banner: "/place-images/reykjavik/venues/stofan-cafe.jpg",
+    banner: "/place-images/reykjavik/venues/mokka.jpg",
     tags: ["Icelandic", "Language tables", "Conversation practice", "Multilingual"],
     upcomingEventSlugs: ["language-exchange-thursday"],
     pastEvents: ["Icelandic movie night with subtitles", "Grammar workshop for beginners", "Holiday vocabulary session"],
@@ -766,7 +766,7 @@ export const publicVenues: PublicVenue[] = [
       "Lebowski works because the room is flexible. Hosts can reserve a clear meetup zone, the bar supports quick arrivals, and the energy is social without becoming too loud too early.",
       "For the platform, it is a strong example of a venue partner that benefits from recurring formats and member-only deals."
     ],
-    address: "Laugavegur 20b, 101 Reykjavik",
+    address: "Laugavegur 20a, 101 Reykjavik",
     amenities: ["Hosted meetup area", "Cocktail menu", "Late hours", "Group seating"],
     hours: [
       { day: "Mon", open: "16:00-00:00" },
@@ -777,8 +777,8 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "15:00-02:00" },
       { day: "Sun", open: "16:00-00:00" }
     ],
-    deal: "2-for-1 welcome drink for MeetupReykjavik hosts before 21:00",
-    upcomingEventSlugs: ["singles-night-25-35"],
+    deal: "",
+    upcomingEventSlugs: ["singles-night-25-35", "startup-pitch-night", "craft-beer-tasting-vesturgata"],
     gallery: [
       "url('/place-images/reykjavik/venues/lebowski-bar.jpg')"
     ],
@@ -809,7 +809,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "12:00-01:00" },
       { day: "Sun", open: "12:00-22:00" }
     ],
-    deal: "Welcome drink for approved organizers and discounted group platters",
+    deal: "",
     upcomingEventSlugs: ["speed-friending-newcomers"],
     gallery: [
       "url('/place-images/reykjavik/venues/kex-hostel.jpg')"
@@ -841,7 +841,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "Closed" },
       { day: "Sun", open: "Closed" }
     ],
-    deal: "Free coffee service for workshop hosts on standard and premium plans",
+    deal: "",
     upcomingEventSlugs: ["react-server-components-workshop"],
     gallery: [
       "url('/place-images/reykjavik/venues/grandi-hub.jpg')"
@@ -862,7 +862,7 @@ export const publicVenues: PublicVenue[] = [
       "Bryggjuhusid is one of the strongest examples of premium inventory in the venue network. Its seating, pacing, and staff support make it ideal for limited-capacity events that should feel worth paying for.",
       "As the product matures, this type of venue is where margin, reviews, and recurring quality can compound."
     ],
-    address: "Bankastraeti 9, 101 Reykjavik",
+    address: "Vesturgata 2, 101 Reykjavik",
     amenities: ["Seated tasting", "Curated menu", "Premium service", "Quiet format"],
     hours: [
       { day: "Mon", open: "Closed" },
@@ -873,7 +873,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "17:00-01:00" },
       { day: "Sun", open: "Closed" }
     ],
-    deal: "Hosted tasting add-on menu for venue premium partners",
+    deal: "",
     upcomingEventSlugs: ["wine-tasting-volcanic-terroir"],
     gallery: [
       "url('/place-images/reykjavik/generated/kitchen-and-wine-restaurant.svg')"
@@ -892,7 +892,7 @@ export const publicVenues: PublicVenue[] = [
       "Loft Hostel sits right on Bankastraeti with one of the better rooftop views in downtown Reykjavik. The ground floor bar doubles as a social hub with flexible seating that can accommodate everything from yoga mats to speed friending tables.",
       "For the platform, it represents a versatile venue partner. The morning availability makes it unusual among bar-first venues, and the hostel crowd adds a natural international energy to any event held here."
     ],
-    address: "Bankastraeti 7a, 101 Reykjavik",
+    address: "Bankastræti 7, 101 Reykjavik",
     amenities: ["Rooftop terrace", "Flexible ground floor", "Morning availability", "International crowd"],
     hours: [
       { day: "Mon", open: "08:00-23:00" },
@@ -903,7 +903,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "09:00-01:00" },
       { day: "Sun", open: "09:00-22:00" }
     ],
-    deal: "Free room setup for morning wellness events booked through MeetupReykjavik",
+    deal: "",
     upcomingEventSlugs: ["morning-yoga-flow"],
     gallery: [
       "url('/place-images/reykjavik/venues/loft-hostel.jpg')"
@@ -913,72 +913,10 @@ export const publicVenues: PublicVenue[] = [
     longitude: -21.9331,
   },
   {
-    slug: "micro-bar",
-    name: "Micro Bar",
-    type: "Craft Beer Bar",
-    area: "Vesturgata",
-    capacity: 45,
-    rating: 4.8,
-    summary: "An intimate craft beer bar with a curated tap list and a room that turns every tasting into a conversation.",
-    description: [
-      "Micro Bar is one of the best small venues in the city for events that thrive on proximity. The tap list rotates with Icelandic and Nordic craft breweries, and the staff genuinely know the product, which elevates any hosted tasting format.",
-      "The tight room means events here feel like gatherings rather than performances. For organizers who want quality over headcount, this is one of the strongest venue options in downtown Reykjavik."
-    ],
-    address: "Vesturgata 2, 101 Reykjavik",
-    amenities: ["Rotating tap list", "Tasting boards", "Knowledgeable staff", "Intimate seating"],
-    hours: [
-      { day: "Mon", open: "Closed" },
-      { day: "Tue", open: "16:00-23:00" },
-      { day: "Wed", open: "16:00-23:00" },
-      { day: "Thu", open: "16:00-00:00" },
-      { day: "Fri", open: "15:00-01:00", highlighted: true },
-      { day: "Sat", open: "14:00-01:00" },
-      { day: "Sun", open: "15:00-22:00" }
-    ],
-    deal: "Tasting board discount for MeetupReykjavik hosted events of 10+ guests",
-    upcomingEventSlugs: ["craft-beer-tasting-vesturgata"],
-    gallery: [
-      "url('/place-images/reykjavik/venues/micro-bar.jpg')"
-    ],
-    art: "url('/place-images/reykjavik/venues/micro-bar.jpg')",
-  },
-  {
-    slug: "hlemmur-square",
-    name: "Hlemmur Square",
-    type: "Food Hall & Bar",
-    area: "Hlemmur",
-    capacity: 200,
-    rating: 4.4,
-    summary: "A food hall and bar venue with high ceilings, multiple zones, and enough capacity for large community events and pitch nights.",
-    description: [
-      "Hlemmur Square occupies the former bus station at the east end of Laugavegur. The space has been converted into a food hall with multiple kitchen stalls, a central bar, and enough open floor to host events from fifty to two hundred people.",
-      "For larger formats like pitch nights and community showcases, this is one of the few downtown venues that handles scale without losing atmosphere. The food stalls also mean attendees can eat during the event rather than scrambling for dinner plans afterward."
-    ],
-    address: "Laugavegur 105, 105 Reykjavik",
-    amenities: ["Multiple food stalls", "Central bar", "High ceilings", "Stage area", "Flexible layout"],
-    hours: [
-      { day: "Mon", open: "11:00-22:00" },
-      { day: "Tue", open: "11:00-22:00" },
-      { day: "Wed", open: "11:00-23:00" },
-      { day: "Thu", open: "11:00-23:00" },
-      { day: "Fri", open: "11:00-01:00", highlighted: true },
-      { day: "Sat", open: "11:00-01:00" },
-      { day: "Sun", open: "11:00-22:00" }
-    ],
-    deal: "Reserved section and sound system access for events booked 2+ weeks in advance",
-    upcomingEventSlugs: ["startup-pitch-night"],
-    gallery: [
-      "url('/place-images/reykjavik/venues/hlemmur-square.jpg')"
-    ],
-    art: "url('/place-images/reykjavik/venues/hlemmur-square.jpg')",
-    latitude: 64.1443,
-    longitude: -21.9148,
-  },
-  {
     slug: "cafe-rosenberg",
     name: "Cafe Rosenberg",
     type: "Live Music Cafe",
-    area: "Klapparstígur",
+    area: "Vesturgata",
     capacity: 60,
     rating: 4.7,
     summary: "A live music cafe with warm acoustics, candlelit tables, and a room that gives every performer and speaker a proper audience.",
@@ -986,7 +924,7 @@ export const publicVenues: PublicVenue[] = [
       "Cafe Rosenberg has been part of the Reykjavik music and cultural scene for years. The room is built for listening: the acoustics carry voices well, the seating draws attention forward, and the atmosphere is warm without being precious.",
       "For community events like open mics, readings, and small cultural nights, this venue adds something that most bars cannot: genuine attention. The audience here tends to be engaged and generous, which makes it a strong fit for creative formats."
     ],
-    address: "Klapparstígur 25-27, 101 Reykjavik",
+    address: "Vesturgata 3, 101 Reykjavik",
     amenities: ["Stage with sound system", "Candlelit tables", "Good acoustics", "Bar service"],
     hours: [
       { day: "Mon", open: "Closed" },
@@ -997,7 +935,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "17:00-01:00" },
       { day: "Sun", open: "Closed" }
     ],
-    deal: "Free sound check and stage setup for MeetupReykjavik cultural events",
+    deal: "",
     upcomingEventSlugs: ["poetry-open-mic"],
     gallery: [
       "url('/place-images/reykjavik/venues/cafe-rosenberg.jpg')"
@@ -1006,7 +944,7 @@ export const publicVenues: PublicVenue[] = [
   },
   {
     slug: "snaps",
-    name: "Snaps Bistro Bar",
+    name: "Snaps",
     type: "Restaurant & Bar",
     area: "Þórsgata",
     capacity: 80,
@@ -1027,7 +965,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "17:00-00:00" },
       { day: "Sun", open: "17:00-22:00" }
     ],
-    deal: "Complimentary welcome drink for MeetupReykjavik dinner groups of 8+",
+    deal: "",
     upcomingEventSlugs: ["friday-dinner-social"],
     gallery: [
       "linear-gradient(135deg, rgba(190,140,100,0.2), rgba(42,38,56,0.4)), url('/place-images/reykjavik/generated/snaps.svg')"
@@ -1057,7 +995,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "10:00-18:00" },
       { day: "Sun", open: "10:00-17:00" }
     ],
-    deal: "Reserved corner table for MeetupReykjavik language and book events on weekday afternoons",
+    deal: "",
     upcomingEventSlugs: ["language-exchange-thursday"],
     gallery: [
       "url('/place-images/reykjavik/venues/mokka.jpg')"
@@ -1066,7 +1004,7 @@ export const publicVenues: PublicVenue[] = [
   },
   {
     slug: "dillon",
-    name: "Dillon",
+    name: "Dillon Whiskey Bar",
     type: "Bar",
     area: "Laugavegur",
     capacity: 80,
@@ -1087,7 +1025,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "16:00-04:30" },
       { day: "Sun", open: "17:00-01:00" }
     ],
-    deal: "Free entry for MeetupReykjavik group socials on weeknights",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "url('/place-images/reykjavik/venues/dillon.jpg')"
@@ -1117,7 +1055,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "09:00-17:00", highlighted: true },
       { day: "Sun", open: "09:00-17:00" }
     ],
-    deal: "10% off group orders for MeetupReykjavik morning sessions",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "url('/place-images/reykjavik/venues/reykjavik-roasters.jpg')"
@@ -1147,7 +1085,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "11:30-01:00" },
       { day: "Sun", open: "11:30-22:00" }
     ],
-    deal: "Complimentary welcome cocktail for premium MeetupReykjavik dinner events",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "url('/place-images/reykjavik/venues/apotek.jpg')"
@@ -1155,42 +1093,10 @@ export const publicVenues: PublicVenue[] = [
     art: "url('/place-images/reykjavik/venues/apotek.jpg')",
   },
   {
-    slug: "stofan-cafe",
-    name: "Stofan Café",
-    type: "Café",
-    area: "Vesturgata",
-    capacity: 50,
-    rating: 4.7,
-    summary: "A cozy living-room café with mismatched furniture. Perfect for book clubs and casual meetups.",
-    description: [
-      "Stofan feels like someone's living room — old couches, warm lighting, and an honest menu. It draws a mix of locals, students, and travelers.",
-      "Organizers use it for book clubs, casual language exchanges, and creative writing sessions. The vibe does the hosting."
-    ],
-    address: "Vesturgata 3, 101 Reykjavik",
-    amenities: ["Cozy seating", "Coffee & cake", "Board games", "Quiet daytime"],
-    hours: [
-      { day: "Mon", open: "10:00-22:00" },
-      { day: "Tue", open: "10:00-22:00" },
-      { day: "Wed", open: "10:00-22:00" },
-      { day: "Thu", open: "10:00-23:00" },
-      { day: "Fri", open: "10:00-01:00", highlighted: true },
-      { day: "Sat", open: "10:00-01:00" },
-      { day: "Sun", open: "11:00-22:00" }
-    ],
-    deal: "Free board game access for MeetupReykjavik hosted sessions",
-    upcomingEventSlugs: [],
-    gallery: [
-      "url('/place-images/reykjavik/venues/stofan-cafe.jpg')"
-    ],
-    art: "url('/place-images/reykjavik/venues/stofan-cafe.jpg')",
-    latitude: 64.1483,
-    longitude: -21.9411,
-  },
-  {
     slug: "messinn",
     name: "Messinn",
     type: "Restaurant",
-    area: "Grandi",
+    area: "Lækjargata",
     capacity: 60,
     rating: 4.8,
     summary: "Famous for sizzling fish pans. A seafood institution perfect for group dining events.",
@@ -1198,7 +1104,7 @@ export const publicVenues: PublicVenue[] = [
       "Messinn serves Icelandic fish in cast-iron skillets. The communal energy and simple menu make it ideal for foodie meetups and group dinners.",
       "Tables can be combined for larger groups. The food is honest and the portions are generous — exactly what a dinner meetup needs."
     ],
-    address: "Grandi, Grandagarður 8, 101 Reykjavik",
+    address: "Lækjargata 6, 101 Reykjavik",
     amenities: ["Group seating", "Seafood focus", "Casual dining", "Walk-in friendly"],
     hours: [
       { day: "Mon", open: "11:30-14:00, 17:00-22:00" },
@@ -1209,7 +1115,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "12:00-22:00" },
       { day: "Sun", open: "12:00-22:00" }
     ],
-    deal: "Reserved group table for MeetupReykjavik dinner socials, pre-order available",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(60,90,120,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/messinn.svg')"
@@ -1239,7 +1145,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "17:00-01:00" },
       { day: "Sun", open: "17:00-23:00" }
     ],
-    deal: "Complimentary appetizer platter for MeetupReykjavik tasting groups of 8+",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(200,80,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/tapas-barinn.svg')"
@@ -1269,7 +1175,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "11:00-01:00" },
       { day: "Sun", open: "12:00-22:00" }
     ],
-    deal: "Hákarl tasting included for MeetupReykjavik cultural experience groups",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(30,27,46,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/islenski-barinn.svg')"
@@ -1299,7 +1205,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "10:00-22:00" },
       { day: "Sun", open: "10:00-21:00" }
     ],
-    deal: "Free slice of cake with coffee for MeetupReykjavik small group bookings",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(220,180,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/cafe-babalu.svg')"
@@ -1329,7 +1235,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "09:00-21:00", highlighted: true },
       { day: "Sun", open: "09:00-21:00" }
     ],
-    deal: "Group tasting platter at a fixed rate for MeetupReykjavik food events",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(90,70,50,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/cafe-loki.svg')"
@@ -1359,7 +1265,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "12:00-01:00" },
       { day: "Sun", open: "14:00-23:00" }
     ],
-    deal: "Guided beer flight for MeetupReykjavik tasting events at a group rate",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(180,140,40,0.2), rgba(30,27,46,0.15)), url('/place-images/reykjavik/generated/skuli-craft-bar.svg')"
@@ -1389,7 +1295,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "11:00-01:00" },
       { day: "Sun", open: "11:00-22:00" }
     ],
-    deal: "Signature cocktail on the house for MeetupReykjavik networking events of 15+",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(79,70,229,0.2), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/slippbarinn.svg')"
@@ -1419,7 +1325,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "17:00-01:00" },
       { day: "Sun", open: "Closed" }
     ],
-    deal: "Chef's selection tasting menu at group rate for MeetupReykjavik food events",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(200,80,60,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/forrettabarinn.svg')"
@@ -1449,7 +1355,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "11:30-01:00" },
       { day: "Sun", open: "11:30-22:00" }
     ],
-    deal: "Seasonal tasting board for MeetupReykjavik dinner groups of 6+",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(50,50,50,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/rok.svg')"
@@ -1479,7 +1385,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "09:00-01:00", highlighted: true },
       { day: "Sun", open: "09:00-23:00" }
     ],
-    deal: "Free coffee refills for MeetupReykjavik community brunch events",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(100,160,200,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/the-laundromat-cafe.svg')"
@@ -1509,7 +1415,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "08:00-21:00", highlighted: true },
       { day: "Sun", open: "08:00-21:00" }
     ],
-    deal: "Group breakfast platter for MeetupReykjavik morning sessions",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(245,240,232,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/bergsson-mathus.svg')"
@@ -1539,7 +1445,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "17:30-01:00" },
       { day: "Sun", open: "17:30-22:00" }
     ],
-    deal: "Group omakase menu at a fixed rate for MeetupReykjavik dining events",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(30,27,46,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/sushi-social.svg')"
@@ -1569,7 +1475,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "12:00-23:30" },
       { day: "Sun", open: "17:00-22:00" }
     ],
-    deal: "Mezze platter on the house for MeetupReykjavik groups of 10+",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(200,140,60,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/sumac.svg')"
@@ -1588,7 +1494,7 @@ export const publicVenues: PublicVenue[] = [
       "Gló is where Reykjavik's health-conscious crowd eats. The menu is organic, seasonal, and mostly plant-based. The space is bright and clean.",
       "Great for wellness meetups, yoga group lunches, and anyone running events where dietary flexibility matters."
     ],
-    address: "Laugavegur 20b, 101 Reykjavik",
+    address: "Laugavegur 20a, 101 Reykjavik",
     amenities: ["Organic menu", "Vegan options", "Bright space", "Lunchtime focus"],
     hours: [
       { day: "Mon", open: "11:00-21:00" },
@@ -1599,7 +1505,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "11:30-21:00", highlighted: true },
       { day: "Sun", open: "11:30-21:00" }
     ],
-    deal: "10% group discount for MeetupReykjavik wellness community lunches",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(124,154,130,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/glo-reykjavik.svg')"
@@ -1629,7 +1535,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "12:00-23:00" },
       { day: "Sun", open: "12:00-22:00" }
     ],
-    deal: "Group dinner discount for MeetupReykjavik community meals of 6+",
+    deal: "",
     upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(200,140,30,0.2), rgba(232,97,77,0.15)), url('/place-images/reykjavik/generated/shalimar.svg')"
@@ -1659,7 +1565,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "Open 24h", highlighted: true },
       { day: "Sun", open: "Open 24h", highlighted: true }
     ],
-    deal: "Free group photos for MeetupReykjavik hiking events",
+    deal: "",
     upcomingEventSlugs: ["saturday-hike-mt-esja"],
     gallery: [
       "linear-gradient(135deg, rgba(124,154,130,0.2), rgba(45,95,58,0.4)), url('/place-images/reykjavik/generated/esja.svg')"
@@ -1691,7 +1597,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sat", open: "16:00-04:30", highlighted: true },
       { day: "Sun", open: "16:00-01:00" }
     ],
-    deal: "Happy hour extended to 20:00 for MeetupReykjavik events",
+    deal: "",
     upcomingEventSlugs: ["harbor-jazz-social"],
     gallery: [
       "linear-gradient(135deg, rgba(91,33,182,0.2), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/gaukurinn.svg')"
@@ -1733,7 +1639,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 8, 2026",
     excerpt: "The best social formats reduce friction on arrival, use host structure well, and make the first five minutes feel safe.",
     readTime: "4 min read",
-    hero: "/place-images/reykjavik/venues/stofan-cafe.jpg",
+    hero: "/place-images/reykjavik/venues/mokka.jpg",
     sections: [
       {
         heading: "Arrival is the product",
@@ -1798,19 +1704,19 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "March 3, 2026",
     excerpt: "A spotlight on five venues across the city that show how different spaces shape different kinds of community events.",
     readTime: "5 min read",
-    hero: "/place-images/reykjavik/venues/hlemmur-square.jpg",
+    hero: "/place-images/reykjavik/venues/lebowski-bar.jpg",
     sections: [
       {
         heading: "Mokka Kaffi for intimate conversation",
         body: "The oldest cafe in Reykjavik has a quiet warmth that makes it ideal for language tables and book clubs. The room is small, the coffee is strong, and the atmosphere does most of the hosting work for you.",
       },
       {
-        heading: "Hlemmur Square for scale and energy",
-        body: "When an event needs room to breathe, the former bus station turned food hall delivers. Multiple food stalls, a central bar, and high ceilings make it one of the few downtown venues that handles large crowds without sacrificing atmosphere.",
+        heading: "Lebowski Bar for flexible socials",
+        body: "Named after the Coen Brothers classic, Lebowski Bar on Laugavegur brings a lively, flexible space that works for everything from structured mixers to casual group hangouts. The room adapts well to different formats and the central location makes it easy for everyone to find.",
       },
       {
-        heading: "Micro Bar for craft and closeness",
-        body: "Craft beer tastings thrive in tight spaces where the bartender can tell the story behind each pour. Micro Bar on Vesturgata does this better than anywhere else in the city, with a rotating tap list and staff who genuinely care about the product.",
+        heading: "Dillon Whiskey Bar for creative energy",
+        body: "Dillon is loud, dark, and authentic — a rock bar with a dive-bar soul. It works best for casual meetups where people need an excuse to be in the same room. The creative crowd and affordable drinks keep the atmosphere honest.",
       },
       {
         heading: "Cafe Rosenberg for the stage",

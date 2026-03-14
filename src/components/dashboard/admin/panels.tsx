@@ -752,7 +752,7 @@ export function AdminEventOperationsDesk({
         rows={localEvents.map((e) => ({
           key: e.key,
           cells: [
-            <span key="t" className="font-medium">{e.title}</span>,
+            <a key="t" href={`/events/${e.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-primary hover:underline">{e.title}</a>,
             <ToneBadge key="c" tone="neutral">{e.category}</ToneBadge>,
             e.venue,
             e.date,
@@ -1202,7 +1202,7 @@ export function AdminVenueOperationsDesk({
             <div key="n" className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-brand-text-muted" />
               <div>
-                <div className="text-sm font-medium">{v.name}</div>
+                <a href={`/venues/${v.key}`} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-brand-primary hover:underline">{v.name}</a>
                 {v.note && <div className="text-xs text-brand-text-muted">{v.note}</div>}
               </div>
             </div>,

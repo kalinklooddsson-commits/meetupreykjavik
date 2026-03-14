@@ -43,7 +43,7 @@ const PLACE_PHOTOS = [
   "/place-images/reykjavik/venues/kex-hostel.jpg",
   "/place-images/reykjavik/venues/lebowski-bar.jpg",
   "/place-images/reykjavik/venues/grandi-hub.jpg",
-  "/place-images/reykjavik/venues/stofan-cafe.jpg",
+  "/place-images/reykjavik/venues/reykjavik-roasters.jpg",
   "/place-images/reykjavik/venues/mokka.jpg",
 ];
 
@@ -68,9 +68,6 @@ const VENUE_PHOTOS: Record<string, string> = {
   "mokka": "/place-images/reykjavik/venues/mokka.jpg",
   "cafe-rosenberg": "/place-images/reykjavik/venues/cafe-rosenberg.jpg",
   "dillon": "/place-images/reykjavik/venues/dillon.jpg",
-  "micro-bar": "/place-images/reykjavik/venues/micro-bar.jpg",
-  "stofan-cafe": "/place-images/reykjavik/venues/stofan-cafe.jpg",
-  "hlemmur-square": "/place-images/reykjavik/venues/hlemmur-square.jpg",
   "reykjavik-roasters": "/place-images/reykjavik/venues/reykjavik-roasters.jpg",
   "apotek": "/place-images/reykjavik/venues/apotek.jpg",
   "grandi-hub": "/place-images/reykjavik/venues/grandi-hub.jpg",
