@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       event_type: eventType ?? "in_person",
       attendee_limit: attendeeLimit ?? null,
       guest_limit: guestLimit ?? 0,
-      age_restriction: ageRestriction ?? "none",
+      age_restriction: ageRestriction || "none",
       age_min: ageMin ?? null,
       age_max: ageMax ?? null,
       is_free: isFree ?? true,
