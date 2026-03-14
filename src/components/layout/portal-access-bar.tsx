@@ -1,7 +1,15 @@
 import Link from "next/link";
+import type { Route } from "next";
 import { ArrowUpRight, Compass } from "lucide-react";
 import type { MockSession } from "@/lib/auth/mock-auth-config";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+
+function dashboardHref(accountType: string): Route {
+  if (accountType === "venue") return "/venue/dashboard" as Route;
+  if (accountType === "organizer") return "/organizer" as Route;
+  if (accountType === "admin") return "/admin" as Route;
+  return "/dashboard" as Route;
+}
 
 export function PortalAccessBar({ session }: { session: MockSession }) {
   return (
@@ -28,7 +36,7 @@ export function PortalAccessBar({ session }: { session: MockSession }) {
 
         <div className="flex flex-wrap items-center gap-3">
           <Link
-            href="/dashboard"
+            href={dashboardHref(session.accountType)}
             className="inline-flex min-h-11 items-center gap-2 rounded-full border border-[rgba(153,148,168,0.16)] bg-white/78 px-4 py-2 text-sm font-semibold text-brand-text"
           >
             Account hub
