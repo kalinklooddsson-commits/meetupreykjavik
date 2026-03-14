@@ -168,17 +168,40 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
     if (supabase) {
       const { data: memberships } = await supabase
         .from("group_members")
-        .select("role, groups(slug, name)")
+        .select("role, groups(id, slug, name)")
         .eq("user_id", session.id);
-      memberGroups = (memberships ?? []).map((m: Record<string, unknown>) => {
+      const groupRows = (memberships ?? []).map((m: Record<string, unknown>) => {
         const g = m.groups as Record<string, string> | null;
-        return {
-          group: { slug: g?.slug ?? "", name: g?.name ?? "Unknown group" },
-          role: ((m.role as string) ?? "member").replace(/^\w/, (c: string) => c.toUpperCase()),
-          nextEvent: "",
-          unread: "0",
-        };
+        return { m, g };
       });
+
+      // Batch-fetch next upcoming event per group
+      const groupIds = groupRows.map(({ g }) => g?.id).filter(Boolean) as string[];
+      let nextEventMap: Record<string, string> = {};
+      if (groupIds.length > 0) {
+        try {
+          const { data: upcoming } = await supabase
+            .from("events")
+            .select("group_id, title, starts_at")
+            .in("group_id", groupIds)
+            .eq("status", "published")
+            .gte("starts_at", new Date().toISOString())
+            .order("starts_at", { ascending: true });
+          for (const ev of upcoming ?? []) {
+            const gid = ev.group_id as string;
+            if (gid && !nextEventMap[gid]) {
+              nextEventMap[gid] = ev.title as string;
+            }
+          }
+        } catch { /* non-critical */ }
+      }
+
+      memberGroups = groupRows.map(({ m, g }) => ({
+        group: { slug: g?.slug ?? "", name: g?.name ?? "Unknown group" },
+        role: ((m.role as string) ?? "member").replace(/^\w/, (c: string) => c.toUpperCase()),
+        nextEvent: nextEventMap[g?.id ?? ""] ?? "",
+        unread: "0",
+      }));
     }
     const groupCount = memberGroups.length;
 
@@ -470,8 +493,30 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       if (supabase2) {
         const { data: ownedGroups } = await supabase2
           .from("groups")
-          .select("slug, name, status, join_mode")
+          .select("id, slug, name, status, join_mode")
           .eq("organizer_id", session.id);
+
+        // Batch-fetch next upcoming event per organizer group
+        const orgGroupIds = (ownedGroups ?? []).map((g: Record<string, unknown>) => g.id as string).filter(Boolean);
+        let orgNextEventMap: Record<string, string> = {};
+        if (orgGroupIds.length > 0) {
+          try {
+            const { data: upcoming } = await supabase2
+              .from("events")
+              .select("group_id, title, starts_at")
+              .in("group_id", orgGroupIds)
+              .eq("status", "published")
+              .gte("starts_at", new Date().toISOString())
+              .order("starts_at", { ascending: true });
+            for (const ev of upcoming ?? []) {
+              const gid = ev.group_id as string;
+              if (gid && !orgNextEventMap[gid]) {
+                orgNextEventMap[gid] = ev.title as string;
+              }
+            }
+          } catch { /* non-critical */ }
+        }
+
         organizerGroups = (ownedGroups ?? []).map((g: Record<string, unknown>) => ({
           group: { slug: g.slug as string, name: g.name as string },
           coHosts: 0,
@@ -479,7 +524,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
           status: ((g.status as string) ?? "active").replace(/^\w/, (c: string) => c.toUpperCase()),
           pendingMembers: 0,
           health: "Healthy",
-          nextEvent: "",
+          nextEvent: orgNextEventMap[g.id as string] ?? "",
         }));
       }
     } catch { /* non-critical */ }
@@ -570,10 +615,12 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
           detail: "Total ticket and membership revenue.",
         },
       ],
-      // Use all mapped events for the events page, slice for nextEvents (overview)
+      // Use all mapped events for the events page; nextEvents filters out cancelled/completed
       events: allMappedEvents,
       groups: organizerGroups,
-      nextEvents: allMappedEvents.slice(0, 10),
+      nextEvents: allMappedEvents
+        .filter((e) => !/cancelled|completed/i.test(e.status))
+        .slice(0, 10),
       ...(rsvpTrendData ? { rsvpTrend: rsvpTrendData } : {}),
 
       // ── Real notifications (same pattern as member/venue) ────────

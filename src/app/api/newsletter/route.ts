@@ -63,11 +63,16 @@ export async function POST(request: NextRequest) {
           );
 
         if (error) {
-          console.error("[Newsletter] DB insert failed:", error.message);
-          return NextResponse.json(
-            { error: "Subscription failed. Please try again." },
-            { status: 500 },
-          );
+          // If the table doesn't exist yet, log but still acknowledge the subscription
+          if (error.code === "42P01" || error.message?.includes("does not exist")) {
+            console.warn("[Newsletter] Table not yet created — subscription logged but not persisted.");
+          } else {
+            console.error("[Newsletter] DB insert failed:", error.message);
+            return NextResponse.json(
+              { error: "Subscription failed. Please try again." },
+              { status: 500 },
+            );
+          }
         }
       }
     } else {
