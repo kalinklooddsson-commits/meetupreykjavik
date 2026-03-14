@@ -310,6 +310,27 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       })(),
     ]);
 
+    // Fetch groups the organizer manages
+    let organizerGroups: Array<{ group: { slug: string; name: string }; coHosts: number; joinMode: string; status: string; pendingMembers: number; health: string; nextEvent: string }> = [];
+    try {
+      const supabase2 = await createSupabaseServerClient();
+      if (supabase2) {
+        const { data: ownedGroups } = await supabase2
+          .from("groups")
+          .select("slug, name, status, join_mode")
+          .eq("organizer_id", session.id);
+        organizerGroups = (ownedGroups ?? []).map((g: Record<string, unknown>) => ({
+          group: { slug: g.slug as string, name: g.name as string },
+          coHosts: 0,
+          joinMode: ((g.join_mode as string) ?? "open").replace(/^\w/, (c: string) => c.toUpperCase()),
+          status: ((g.status as string) ?? "active").replace(/^\w/, (c: string) => c.toUpperCase()),
+          pendingMembers: 0,
+          health: "Healthy",
+          nextEvent: "",
+        }));
+      }
+    } catch { /* non-critical */ }
+
     const totalRevenue = transactions.reduce(
       (sum: number, t: Record<string, unknown>) =>
         sum + ((t.amount_isk as number) ?? 0),
@@ -398,7 +419,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       ],
       // Use all mapped events for the events page, slice for nextEvents (overview)
       events: allMappedEvents,
-      groups: [],
+      groups: organizerGroups,
       bookings: [],
       nextEvents: allMappedEvents.slice(0, 10),
       ...(rsvpTrendData ? { rsvpTrend: rsvpTrendData } : {}),
