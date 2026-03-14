@@ -2134,7 +2134,7 @@ async function handleLiveDataRequest(
           .upsert({
             event_id: event.id,
             user_id: body.userId as string,
-            status: (body.status as string) ?? "confirmed",
+            status: (body.status as string) ?? "going",
           }, { onConflict: "event_id,user_id" })
           .select()
           .single();
