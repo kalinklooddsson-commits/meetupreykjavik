@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { fetchEvents, fetchGroups, fetchVenues } from "@/lib/data";
 import { EventsIndexScreen } from "@/components/public/public-pages";
+import { categories as homepageCategories } from "@/lib/home-data";
 
 export const metadata: Metadata = {
   title: "Events",
@@ -50,11 +51,25 @@ export default async function EventsPage({
     );
   }
 
-  // Category filter
+  // Category filter — homepage categories are compound names like "Nightlife & Social"
+  // The URL param uses the first word (e.g. "Nightlife") but events may use either part
   if (category) {
-    filteredEvents = filteredEvents.filter(
-      (e) => e.category.toLowerCase() === category.toLowerCase(),
+    const catLower = category.toLowerCase();
+    // Find the compound homepage category that starts with the filter param
+    const homeCat = homepageCategories.find(
+      (c) => c.name.toLowerCase().startsWith(catLower),
     );
+    // Build a list of terms to match: both parts of "X & Y" plus the original param
+    const matchTerms = homeCat
+      ? homeCat.name.toLowerCase().split(/\s*&\s*/).map((s) => s.trim())
+      : [catLower];
+
+    filteredEvents = filteredEvents.filter((e) => {
+      const eCat = e.category.toLowerCase();
+      return matchTerms.some(
+        (term) => eCat.includes(term) || term.includes(eCat),
+      );
+    });
   }
 
   // Time filter (uses the dateFilter field on each event)

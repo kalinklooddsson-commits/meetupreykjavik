@@ -133,28 +133,34 @@ export async function MemberOverviewScreen() {
         actionLabel="View calendar"
         actionHref={"/dashboard/calendar" as Route}
       >
-        <DashboardTable
-          columns={["Event", "Venue", "Status", "Seat / Position", "Action"]}
-          rows={data.upcomingEvents.map((e) => ({
-            key: e.event.slug,
-            cells: [
-              <Link
-                key="title"
-                href={`/events/${e.event.slug}` as Route}
-                className="font-medium text-brand-indigo hover:underline"
-              >
-                {e.event.title}
-              </Link>,
-              e.event.venueName,
-              <ToneBadge key="status" tone={statusTone(e.status)}>
-                {e.status}
-              </ToneBadge>,
-              e.seat,
-              <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
-            ],
-          }))}
-          caption="Your upcoming events"
-        />
+        {data.upcomingEvents.length > 0 ? (
+          <DashboardTable
+            columns={["Event", "Venue", "Status", "Seat / Position", "Action"]}
+            rows={data.upcomingEvents.map((e) => ({
+              key: e.event.slug,
+              cells: [
+                <Link
+                  key="title"
+                  href={`/events/${e.event.slug}` as Route}
+                  className="font-medium text-brand-indigo hover:underline"
+                >
+                  {e.event.title}
+                </Link>,
+                e.event.venueName,
+                <ToneBadge key="status" tone={statusTone(e.status)}>
+                  {e.status}
+                </ToneBadge>,
+                e.seat,
+                <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
+              ],
+            }))}
+            caption="Your upcoming events"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No upcoming events yet. <Link href={"/events" as Route} className="text-brand-indigo hover:underline">Browse events</Link> to find something you&apos;ll love.
+          </p>
+        )}
       </Surface>
 
       {/* ── Activity feed ───────────────────────────────────── */}
@@ -202,24 +208,30 @@ export async function MemberOverviewScreen() {
         title="Recent notifications"
         description="Action items and system updates."
       >
-        <DashboardTable
-          columns={["Notification", "Channel", "Status", "When"]}
-          rows={data.notifications.map((n) => ({
-            key: n.key,
-            cells: [
-              <div key="body">
-                <div className="font-medium">{n.title}</div>
-                <div className="mt-0.5 text-xs text-brand-text-muted">{n.detail}</div>
-              </div>,
-              n.channel,
-              <ToneBadge key="status" tone={statusTone(n.status)}>
-                {n.status}
-              </ToneBadge>,
-              n.meta,
-            ],
-          }))}
-          caption="Recent notifications"
-        />
+        {data.notifications.length > 0 ? (
+          <DashboardTable
+            columns={["Notification", "Channel", "Status", "When"]}
+            rows={data.notifications.map((n) => ({
+              key: n.key,
+              cells: [
+                <div key="body">
+                  <div className="font-medium">{n.title}</div>
+                  <div className="mt-0.5 text-xs text-brand-text-muted">{n.detail}</div>
+                </div>,
+                n.channel,
+                <ToneBadge key="status" tone={statusTone(n.status)}>
+                  {n.status}
+                </ToneBadge>,
+                n.meta,
+              ],
+            }))}
+            caption="Recent notifications"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No notifications right now. You&apos;ll see updates about your events and groups here.
+          </p>
+        )}
       </Surface>
     </PortalShell>
   );

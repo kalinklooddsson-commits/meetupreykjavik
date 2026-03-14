@@ -47,6 +47,9 @@ type RouteRule = {
   allowedRoles: AccountType[];
 };
 
+/** Routes that any authenticated user can access (no role restriction) */
+const PUBLIC_AUTHENTICATED_ROUTES = ["/venue/onboarding"];
+
 const PROTECTED_ROUTES: RouteRule[] = [
   { prefix: "/admin", allowedRoles: ["admin"] },
   { prefix: "/organizer", allowedRoles: ["organizer", "admin"] },
@@ -175,6 +178,11 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set("redirect", pathname);
       return applySecurityHeaders(NextResponse.redirect(loginUrl));
     }
+  }
+
+  // Allow public authenticated routes (e.g. /venue/onboarding) for any logged-in user
+  if (PUBLIC_AUTHENTICATED_ROUTES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
+    return applySecurityHeaders(response);
   }
 
   // Check if the user's role is allowed for this route

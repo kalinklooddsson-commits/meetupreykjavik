@@ -30,30 +30,92 @@ function statusTone(s: string): DashboardTone {
   return "neutral";
 }
 
+/** Safely extract a numeric RSVP count from an event object */
+function extractRsvpCount(e: Record<string, unknown>): number {
+  // `.rsvps` is a number in both mock and real data
+  const rsvps = e.rsvps;
+  if (typeof rsvps === "number") return rsvps;
+  // fallback: `.rsvpCount` (number) or length of `.attendees` array
+  const rsvpCount = e.rsvpCount;
+  if (typeof rsvpCount === "number") return rsvpCount;
+  const attendees = e.attendees;
+  if (Array.isArray(attendees)) return attendees.length;
+  if (typeof attendees === "number") return attendees;
+  return 0;
+}
+
+/** Find a metric value by fuzzy label match */
+function findMetric(
+  metrics: readonly { label: string; value: string }[],
+  ...labels: string[]
+): string | undefined {
+  for (const label of labels) {
+    const found = metrics.find((m) =>
+      m.label.toLowerCase().includes(label.toLowerCase()),
+    );
+    if (found) return found.value;
+  }
+  return undefined;
+}
+
 export async function OrganizerAnalyticsScreen() {
   const data = await getOrganizerPortalData();
 
-  const events = data.events ?? [];
-  const totalRevenue = data.metrics.find((m) => m.label === "Revenue")?.value ?? "0 ISK";
-  const totalAttendees = data.metrics.find((m) => m.label === "Total RSVPs")?.value ?? "0";
-  const eventCount = data.metrics.find((m) => m.label === "Active events")?.value ?? "0";
+  // Use nextEvents (real + mock data) — events may have attendees as an array, nextEvents always has rsvps as number
+  const events = data.nextEvents ?? data.events ?? [];
 
-  // Safely extract attendees and capacity from event data
+  // Find metrics by flexible label matching to handle both mock and real metric names
+  const totalRevenue = findMetric(data.metrics, "revenue") ?? "0 ISK";
+  const totalAttendees = findMetric(data.metrics, "rsvp", "attendee") ?? "0";
+  const eventCount = findMetric(data.metrics, "event", "live") ?? String(events.length);
+
+  // Compute revenue from events if the metric shows 0
+  const computedRevenue =
+    totalRevenue === "0 ISK" || totalRevenue === "0"
+      ? (() => {
+          const sum = events.reduce((acc, e) => {
+            const rev = (e as unknown as Record<string, unknown>).revenue;
+            if (typeof rev === "string") {
+              const num = parseInt(rev.replace(/[^\d]/g, ""), 10);
+              return acc + (isNaN(num) ? 0 : num);
+            }
+            return acc + (typeof rev === "number" ? rev : 0);
+          }, 0);
+          return sum > 0 ? `${sum.toLocaleString()} ISK` : totalRevenue;
+        })()
+      : totalRevenue;
+
+  // Build table rows using the safe numeric extractor
   const eventRows = events.map((e, idx) => {
-    const attendees = (e as unknown as Record<string, unknown>).rsvpCount ?? (e as unknown as Record<string, unknown>).attendees ?? 0;
-    const cap = (e as unknown as Record<string, unknown>).capacity ?? 50;
+    const rec = e as unknown as Record<string, unknown>;
+    const rsvpCount = extractRsvpCount(rec);
+    const cap = typeof rec.capacity === "number" ? rec.capacity : 50;
+    const fillPct = cap > 0 ? Math.round((rsvpCount / cap) * 100) : 0;
     return {
       key: `event-${idx}`,
       cells: [
         e.title,
         e.dateLabel ?? "—",
         e.venueName ?? "—",
-        String(attendees),
-        `${attendees}/${cap}`,
+        String(rsvpCount),
+        `${fillPct}%`,
         e.status ?? "Published",
       ] as React.ReactNode[],
     };
   });
+
+  // Compute avg fill rate from the actual event data
+  const avgFillRate =
+    events.length > 0
+      ? `${Math.round(
+          events.reduce((sum, e) => {
+            const rec = e as unknown as Record<string, unknown>;
+            const att = extractRsvpCount(rec);
+            const cap = Math.max(typeof rec.capacity === "number" ? rec.capacity : 50, 1);
+            return sum + (att / cap) * 100;
+          }, 0) / events.length,
+        )}%`
+      : "—";
 
   const trendData = data.rsvpTrend ?? [];
 
@@ -65,24 +127,10 @@ export async function OrganizerAnalyticsScreen() {
       links={organizerLinks("analytics")}
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Revenue" value={String(totalRevenue)} icon={DollarSign} />
+        <StatCard label="Total Revenue" value={String(computedRevenue)} icon={DollarSign} />
         <StatCard label="Total Attendees" value={String(totalAttendees)} icon={Users} />
         <StatCard label="Events Created" value={String(eventCount)} icon={BarChart3} />
-        <StatCard
-          label="Avg Fill Rate"
-          value={
-            events.length > 0
-              ? `${Math.round(
-                  events.reduce((sum, e) => {
-                    const att = Number((e as unknown as Record<string, unknown>).rsvpCount ?? (e as unknown as Record<string, unknown>).attendees ?? 0);
-                    const cap = Math.max(Number((e as unknown as Record<string, unknown>).capacity ?? 50), 1);
-                    return sum + (att / cap) * 100;
-                  }, 0) / events.length,
-                )}%`
-              : "—"
-          }
-          icon={TrendingUp}
-        />
+        <StatCard label="Avg Fill Rate" value={avgFillRate} icon={TrendingUp} />
       </div>
 
       {trendData.length > 0 && (
@@ -111,7 +159,7 @@ export async function OrganizerAnalyticsScreen() {
 
       <Surface title="Revenue Summary" className="mt-6">
         <p className="text-sm text-gray-600">
-          Total gross: {totalRevenue} · Platform commission: 5% ·{" "}
+          Total gross: {computedRevenue} · Platform commission: 5% ·{" "}
           Net earnings reflect your share after the platform fee.
         </p>
       </Surface>
