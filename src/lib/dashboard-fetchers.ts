@@ -678,6 +678,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       : mockVenuePortalData.deals;
 
     // ── 2I: Availability ──
+    const trimTime = (t: string) => t?.replace(/:00$/, "") ?? t; // "19:00:00" → "19:00"
     const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const weeklyGrid = availability.length > 0
       ? dayNames.map((day, i) => {
@@ -689,7 +690,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
             blocks: daySlots.length > 0
               ? daySlots.map(
                   (s) =>
-                    `${(s.start_time as string) ?? "?"}-${(s.end_time as string) ?? "?"} ${(s.notes as string) ?? "Open"}`,
+                    `${trimTime((s.start_time as string) ?? "?")}-${trimTime((s.end_time as string) ?? "?")} ${(s.notes as string) ?? "Open"}`,
                 )
               : ["No slots set"],
           };
@@ -702,7 +703,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
             .filter((a) => a.is_recurring)
             .map(
               (a) =>
-                `${dayNames[(a.day_of_week as number) ?? 0]} ${(a.start_time as string) ?? ""}-${(a.end_time as string) ?? ""} ${(a.notes as string) ?? ""}`.trim(),
+                `${dayNames[(a.day_of_week as number) ?? 0]} ${trimTime((a.start_time as string) ?? "")}-${trimTime((a.end_time as string) ?? "")} ${(a.notes as string) ?? ""}`.trim(),
             )
         : mockVenuePortalData.availability.recurring,
       exceptions: mockVenuePortalData.availability.exceptions,
@@ -915,9 +916,9 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       supabase
         ? supabase
             .from("venues")
-            .select("id, slug, name, address, city, type, avg_rating, status")
+            .select("id, slug, name, address, city, type, avg_rating, status, created_at")
             .order("name", { ascending: true })
-            .limit(50)
+            .limit(500)
         : Promise.resolve({ data: null }),
       // Fetch recent transactions for admin revenue page
       supabase
@@ -1010,18 +1011,26 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       if (u.is_premium) return "Premium";
       return "Free";
     }
-    const usersTable = allUsers.map((u) => ({
-      key: (u.slug as string) ?? (u.id as string),
-      name: (u.display_name as string) ?? "Unknown",
-      email: (u.email as string) ?? "",
-      type: formatAccountType((u.account_type as string) ?? "member"),
-      status: deriveUserStatus(u),
-      joined: new Date(u.created_at as string).toLocaleDateString("en", { month: "short", year: "numeric" }),
-      lastActive: timeAgo(u.last_active_at as string | null),
-      groups: "—",
-      events: "—",
-      plan: deriveTier(u),
-    }));
+    // Deduplicate by key (slug or id) to prevent duplicate entries
+    const seenUserKeys = new Set<string>();
+    const usersTable = allUsers
+      .map((u) => ({
+        key: (u.slug as string) ?? (u.id as string),
+        name: (u.display_name as string) ?? "Unknown",
+        email: (u.email as string) ?? "",
+        type: formatAccountType((u.account_type as string) ?? "member"),
+        status: deriveUserStatus(u),
+        joined: new Date(u.created_at as string).toLocaleDateString("en", { month: "short", year: "numeric" }),
+        lastActive: timeAgo(u.last_active_at as string | null),
+        groups: "—",
+        events: "—",
+        plan: deriveTier(u),
+      }))
+      .filter((u) => {
+        if (seenUserKeys.has(u.key)) return false;
+        seenUserKeys.add(u.key);
+        return true;
+      });
 
     // ── Build admin groups table from real data ──
     const allGroups = (groupsResult?.data ?? []) as Array<Record<string, unknown>>;
@@ -1484,7 +1493,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         },
         {
           label: "Active venues",
-          value: String(venuesResult.count),
+          value: String(allVenues.length),
           delta: "Partners",
           detail: "Venues currently in the partner network.",
         },
