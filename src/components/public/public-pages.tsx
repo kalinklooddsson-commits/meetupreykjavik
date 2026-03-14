@@ -2053,7 +2053,7 @@ export function GroupsIndexScreen({
           <div className="mb-6 flex flex-wrap items-center gap-2">
             <span className="mr-1 text-sm font-medium text-gray-500">{t("grid.filterByCategory")}</span>
             <Link
-              href="/groups"
+              href={(searchQuery ? `/groups?q=${encodeURIComponent(searchQuery)}` : "/groups") as Route}
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                 !activeCategory
@@ -2065,11 +2065,15 @@ export function GroupsIndexScreen({
             </Link>
             {allCategories.map((cat) => {
               const isActive = activeCategory?.toLowerCase() === cat.toLowerCase();
-              const href = (`/groups?category=${encodeURIComponent(cat.toLowerCase())}`) as Route;
+              const catParams = new URLSearchParams();
+              catParams.set("category", cat.toLowerCase());
+              if (searchQuery) catParams.set("q", searchQuery);
+              const href = (`/groups?${catParams.toString()}`) as Route;
+              const clearParams = (searchQuery ? `/groups?q=${encodeURIComponent(searchQuery)}` : "/groups") as Route;
               return (
                 <Link
                   key={cat}
-                  href={isActive ? "/groups" : href}
+                  href={isActive ? clearParams : href}
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                     isActive
@@ -2504,7 +2508,7 @@ export function VenuesIndexScreen({
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <span className="mr-1 text-sm font-medium text-gray-500">{t("grid.filterByType")}</span>
             <Link
-              href="/venues"
+              href={(searchQuery ? `/venues?q=${encodeURIComponent(searchQuery)}` : "/venues") as Route}
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                 !activeType && !activeArea
@@ -2519,6 +2523,7 @@ export function VenuesIndexScreen({
               const params = new URLSearchParams();
               if (!isActive) params.set("type", vType.toLowerCase());
               if (activeArea) params.set("area", activeArea);
+              if (searchQuery) params.set("q", searchQuery);
               const qs = params.toString();
               const href = (qs ? `/venues?${qs}` : "/venues") as Route;
               return (
@@ -2546,6 +2551,7 @@ export function VenuesIndexScreen({
               const params = new URLSearchParams();
               if (activeType) params.set("type", activeType);
               if (!isActive) params.set("area", vArea.toLowerCase());
+              if (searchQuery) params.set("q", searchQuery);
               const qs = params.toString();
               const href = (qs ? `/venues?${qs}` : "/venues") as Route;
               return (
