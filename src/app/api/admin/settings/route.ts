@@ -30,9 +30,10 @@ export async function PATCH(request: NextRequest) {
     const db = supabase as any;
 
     // Upsert into platform_settings
+    // value column is JSONB — Supabase serializes automatically, no JSON.stringify needed
     const { error } = await db
       .from("platform_settings")
-      .upsert({ key, value: JSON.stringify(value), updated_at: new Date().toISOString() }, { onConflict: "key" });
+      .upsert({ key, value, updated_by: session.id }, { onConflict: "key" });
 
     if (error) {
       console.error("Settings update failed:", error);

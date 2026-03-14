@@ -64,41 +64,37 @@ export async function AdminBookingsScreen() {
   if (hasSupabaseEnv()) {
     try {
       const dbBookings = await getAllBookings();
-      if (dbBookings.length > 0) {
-        bookings = dbBookings.map((b: Record<string, unknown>) => {
-          const organizer = b.organizer as { display_name: string } | null;
-          const venue = b.venue as { name: string } | null;
-          return {
-            key: b.id as string,
-            organizer: organizer?.display_name ?? "Unknown",
-            venue: venue?.name ?? "Unknown venue",
-            date: (b.requested_date as string) ?? "",
-            time: (() => {
-              // Try explicit time field first, then extract from date if it has a time component
-              const t = b.requested_time as string | null;
-              if (t) return t.replace(/:00$/, "");
-              const dateStr = b.requested_date as string | null;
-              if (dateStr && dateStr.includes("T")) {
-                const d = new Date(dateStr);
-                return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
-              }
-              // Fall back to event start time if available
-              const event = b.events as Record<string, unknown> | null;
-              const startsAt = event?.starts_at as string | null;
-              if (startsAt) {
-                const d = new Date(startsAt);
-                return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
-              }
-              return "—";
-            })(),
-            attendance: String((b.expected_attendance as number) ?? 0),
-            status: (b.status as string) ?? "pending",
-            message: (b.message as string) ?? undefined,
-          };
-        });
-      } else {
-        bookings = [...mockAdminBookings];
-      }
+      bookings = dbBookings.map((b: Record<string, unknown>) => {
+        const organizer = b.organizer as { display_name: string } | null;
+        const venue = b.venue as { name: string } | null;
+        return {
+          key: b.id as string,
+          organizer: organizer?.display_name ?? "Unknown",
+          venue: venue?.name ?? "Unknown venue",
+          date: (b.requested_date as string) ?? "",
+          time: (() => {
+            // Try explicit time field first, then extract from date if it has a time component
+            const t = b.requested_time as string | null;
+            if (t) return t.replace(/:00$/, "");
+            const dateStr = b.requested_date as string | null;
+            if (dateStr && dateStr.includes("T")) {
+              const d = new Date(dateStr);
+              return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
+            }
+            // Fall back to event start time if available
+            const event = b.events as Record<string, unknown> | null;
+            const startsAt = event?.starts_at as string | null;
+            if (startsAt) {
+              const d = new Date(startsAt);
+              return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false });
+            }
+            return "—";
+          })(),
+          attendance: String((b.expected_attendance as number) ?? 0),
+          status: (b.status as string) ?? "pending",
+          message: (b.message as string) ?? undefined,
+        };
+      });
     } catch {
       bookings = [...mockAdminBookings];
     }

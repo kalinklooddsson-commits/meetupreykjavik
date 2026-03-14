@@ -765,7 +765,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
         label,
         value,
       })),
-      topReferrers: mockVenuePortalData.analytics.topReferrers,
+      topReferrers: [] as Array<{ label: string; value: number }>,
     };
 
     // ── 2K: Profile sections from venue data ──
@@ -857,7 +857,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       bookings: {
         incoming,
         history,
-        guestFit: mockVenuePortalData.bookings.guestFit,
+        guestFit: [] as Array<{ label: string; value: number }>,
       },
       availability: mappedAvailability,
       deals: mappedDeals.length > 0 ? mappedDeals : [],
@@ -1544,24 +1544,24 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
           detail: "Platform systems are running normally.",
         },
       ],
-      users: usersTable.length > 0 ? usersTable : mockAdminPortalData.users,
+      users: usersTable,
       events: {
         ...mockAdminPortalData.events,
-        table: eventsTable.length > 0 ? eventsTable : mockAdminPortalData.events.table,
-        calendar: calendarEntries.length > 0 ? calendarEntries : mockAdminPortalData.events.calendar,
+        table: eventsTable,
+        calendar: calendarEntries,
         ...(audiencePickerData ? { audiencePicker: audiencePickerData } : {}),
       },
       groups: {
         ...mockAdminPortalData.groups,
-        table: groupsTable.length > 0 ? groupsTable : mockAdminPortalData.groups.table,
+        table: groupsTable,
       },
       venues: {
         ...mockAdminPortalData.venues,
-        active: venuesActive.length > 0 ? venuesActive : mockAdminPortalData.venues.active,
+        active: venuesActive,
       },
       revenue: {
         ...mockAdminPortalData.revenue,
-        transactions: revenueTransactions.length > 0 ? revenueTransactions : mockAdminPortalData.revenue.transactions,
+        transactions: revenueTransactions,
         ...(revenueSources ? { sources: revenueSources } : {}),
       },
       ...(revenueTrend ? { revenueTrend } : {}),
