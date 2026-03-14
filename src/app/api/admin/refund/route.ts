@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     const { error } = await db
       .from("transactions")
-      .update({ status: "refunded", refund_reason: reason ?? null })
+      .update({ status: "refunded" })
       .eq("id", transactionId);
 
     if (error) {

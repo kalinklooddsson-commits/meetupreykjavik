@@ -1699,8 +1699,9 @@ async function handleLiveDataRequest(
           case "role": updates.account_type = value; break;
           case "verify": updates.is_verified = true; break;
           case "unverify": updates.is_verified = false; break;
-          case "suspend": updates.is_suspended = true; break;
-          case "unsuspend": updates.is_suspended = false; break;
+          // suspend/unsuspend: is_suspended column does not exist in profiles schema
+          case "suspend": return validationMessage("User suspension is not supported (no is_suspended column).");
+          case "unsuspend": return validationMessage("User suspension is not supported (no is_suspended column).");
           case "grant_premium": updates.is_premium = true; break;
           case "remove_premium": updates.is_premium = false; break;
           default: return validationMessage(`Unknown user action: ${action}`);

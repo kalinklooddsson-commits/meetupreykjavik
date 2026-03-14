@@ -43,7 +43,7 @@ export function VenueBookingCommandCenter({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: action,
-          counter_note: counterNotes[key] || undefined,
+          counterOffer: counterNotes[key] || undefined,
         }),
       });
       const result = await res.json();
@@ -51,7 +51,7 @@ export function VenueBookingCommandCenter({
       if (result.ok) {
         toast("success", `Booking ${action} successfully`);
       } else {
-        toast("info", `Booking ${action} (local only)`);
+        toast("error", result.error ?? `Could not ${action} booking. Please try again.`);
       }
     } catch {
       toast("error", `Could not ${action} booking. Please try again.`);

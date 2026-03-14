@@ -81,7 +81,7 @@ export function OrganizerAttendeeControlCenter({
       if (result.ok) {
         toast("success", `${name} — ${action === "checkin" ? "checked in" : action + "d"} successfully`);
       } else {
-        toast("info", `${name} — ${action === "checkin" ? "checked in" : action + "d"} (local only)`);
+        toast("error", result.error ?? `Could not ${action === "checkin" ? "check in" : action} ${name}. Please try again.`);
       }
     } catch {
       toast("error", `Could not ${action === "checkin" ? "check in" : action} ${name}. Please try again.`);
