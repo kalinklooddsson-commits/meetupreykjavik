@@ -11,8 +11,10 @@ import {
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getMemberProfile } from "@/lib/dashboard-fetchers";
-import { memberTransactions } from "@/lib/dashboard-data";
+import { memberTransactions as mockMemberTransactions } from "@/lib/dashboard-data";
 import { resolveMemberTier } from "@/lib/entitlements";
+import { getUser } from "@/lib/auth/guards";
+import { getUserTransactions } from "@/lib/db/transactions";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -46,6 +48,30 @@ function typeTone(type: string): DashboardTone {
 export async function MemberTransactionsScreen() {
   const profile = await getMemberProfile();
   const tier = resolveMemberTier(profile.tier);
+
+  // Fetch real transactions from DB, fall back to mock if empty
+  const session = await getUser().catch(() => null);
+  let memberTransactions: readonly { key: string; type: string; description: string; amount: string; status: string; date: string; eventSlug?: string }[] = [];
+  if (session?.id) {
+    try {
+      const dbTxns = await getUserTransactions(session.id);
+      if (dbTxns.length > 0) {
+        memberTransactions = dbTxns.map((t: Record<string, unknown>) => ({
+          key: (t.id as string) ?? "",
+          type: (t.type as string) ?? "ticket",
+          description: (t.description as string) ?? (t.event_title as string) ?? "Transaction",
+          amount: `${((t.amount_isk as number) ?? 0).toLocaleString()} ISK`,
+          status: (t.status as string) ?? "completed",
+          date: ((t.created_at as string) ?? "").slice(0, 10),
+          eventSlug: (t.event_slug as string) ?? undefined,
+        }));
+      }
+    } catch { /* fall through to mock */ }
+  }
+  // Use mock data only if no real transactions found
+  if (memberTransactions.length === 0) {
+    memberTransactions = mockMemberTransactions;
+  }
 
   const completedTotal = memberTransactions
     .filter((t) => t.status === "completed" && !t.amount.startsWith("-"))
