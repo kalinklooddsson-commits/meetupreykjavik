@@ -24,7 +24,8 @@ import {
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { resolveVenueTier, venueHasFeature } from "@/lib/entitlements";
-import { MessageActions } from "../member/message-actions";
+import { MessageActions, ComposeMessageButton } from "../member/message-actions";
+import { MarkAllReadButton } from "../notification-actions";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -281,6 +282,9 @@ export async function VenueMessagesScreen() {
       links={venueLinks("overview")}
       roleMode="venue"
     >
+      {/* ── Compose button ──────────────────────────────────── */}
+      <ComposeMessageButton />
+
       <Surface
         eyebrow="Inbox"
         title="All messages"
@@ -323,6 +327,10 @@ export async function VenueMessagesScreen() {
 export async function VenueNotificationsScreen() {
   const data = await getVenuePortalData();
 
+  const unreadIds = data.notifications
+    .filter((n) => n.status === "Unread" || n.status === "New")
+    .map((n) => n.key);
+
   return (
     <PortalShell
       eyebrow="Venue portal"
@@ -336,6 +344,11 @@ export async function VenueNotificationsScreen() {
         title="All notifications"
         description="Booking deadlines, revenue updates, and platform notices."
       >
+        {unreadIds.length > 0 && (
+          <div className="mb-4 flex justify-end">
+            <MarkAllReadButton ids={unreadIds} />
+          </div>
+        )}
         <ActivityFeed
           items={data.notifications.map((n) => ({
             key: n.key,

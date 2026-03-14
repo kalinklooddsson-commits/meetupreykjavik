@@ -7,7 +7,8 @@ import {
   ActivityFeed,
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
-import { MessageActions } from "../member/message-actions";
+import { MessageActions, ComposeMessageButton } from "../member/message-actions";
+import { MarkAllReadButton } from "../notification-actions";
 import { getOrganizerPortalData } from "@/lib/dashboard-fetchers";
 
 function organizerLinks(activeKey: string) {
@@ -40,6 +41,9 @@ export async function OrganizerMessagesScreen() {
       links={organizerLinks("messages")}
       roleMode="organizer"
     >
+      {/* ── Compose button ──────────────────────────────────── */}
+      <ComposeMessageButton />
+
       <div className="space-y-6">
         <Surface
           eyebrow="Inbox"
@@ -99,6 +103,11 @@ export async function OrganizerNotificationsScreen() {
     tone: n.tone,
   }));
 
+  // Unread notification IDs for "Mark all read" — unread items have tone "coral" or "indigo"
+  const unreadIds = data.notifications
+    .filter((n) => n.status === "Unread" || n.status === "New")
+    .map((n) => n.key);
+
   return (
     <PortalShell
       eyebrow="Organizer portal"
@@ -113,6 +122,11 @@ export async function OrganizerNotificationsScreen() {
           title="Notifications"
           description="Important updates about your events, approvals, revenue targets, and system actions."
         >
+          {unreadIds.length > 0 && (
+            <div className="mb-4 flex justify-end">
+              <MarkAllReadButton ids={unreadIds} />
+            </div>
+          )}
           <ActivityFeed items={notificationFeed} />
         </Surface>
       </div>

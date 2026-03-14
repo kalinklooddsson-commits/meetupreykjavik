@@ -9,7 +9,7 @@ import {
   CONTACT_RATE_LIMIT,
 } from "@/lib/security/rate-limit";
 import { hasSupabaseEnv } from "@/lib/env";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const newsletterSchema = z.object({
   email: z.string().email().max(200),
@@ -48,9 +48,14 @@ export async function POST(request: NextRequest) {
     const { email } = parsed.data;
 
     if (hasSupabaseEnv()) {
-      const supabase = await createSupabaseServerClient();
+      const supabase = createSupabaseAdminClient();
       if (supabase) {
-        const { error } = await supabase
+        // newsletter_subscribers is not in the generated Database types,
+        // so we cast to access the table via the admin client (which also
+        // bypasses RLS — appropriate for a public subscribe endpoint).
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const db = supabase as any;
+        const { error } = await db
           .from("newsletter_subscribers")
           .upsert(
             { email, subscribed_at: new Date().toISOString(), unsubscribed_at: null },

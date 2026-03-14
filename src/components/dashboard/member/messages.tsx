@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import { MessageSquare, Lock } from "lucide-react";
-import { MessageActions, MessageStatusBadge } from "./message-actions";
+import { MessageActions, MessageStatusBadge, ComposeMessageButton } from "./message-actions";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -81,6 +81,9 @@ export async function MemberMessagesScreen() {
           </div>
         </div>
       ) : null}
+
+      {/* ── Compose button ──────────────────────────────────── */}
+      {canMessage && <ComposeMessageButton />}
 
       {/* ── Stats ───────────────────────────────────────────── */}
       <div className="grid gap-4 sm:grid-cols-2">

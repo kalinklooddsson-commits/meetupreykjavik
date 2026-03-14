@@ -17,8 +17,14 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
   async function handleShare() {
     const url = window.location.href;
 
-    // Try native share API first (mobile)
-    if (navigator.share) {
+    // Only use the Web Share API on devices that reliably support it
+    // (mobile / tablet with touch). On desktop browsers navigator.share
+    // can exist but open about:blank or show a broken picker.
+    const isTouchDevice =
+      typeof navigator !== "undefined" &&
+      ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+
+    if (isTouchDevice && navigator.share) {
       try {
         await navigator.share({ title, text, url });
         return;
@@ -34,7 +40,22 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
       toast("success", "Link copied to clipboard");
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast("error", "Could not copy link");
+      // Final fallback for insecure contexts or denied clipboard permission
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = url;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        setCopied(true);
+        toast("success", "Link copied to clipboard");
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        toast("error", "Could not copy link");
+      }
     }
   }
 

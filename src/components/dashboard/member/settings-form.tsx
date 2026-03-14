@@ -72,8 +72,13 @@ export function SettingsForm({
     "Renewal date",
     "Stored invoices",
     "Bio length",
-    "Interests",
   ]);
+
+  // Fields that should render as textareas
+  const textareaFields = new Set(["Bio"]);
+
+  // Fields that should render as tag inputs
+  const tagFields = new Set(["Interests"]);
 
   // Fields that should render as select dropdowns
   const selectFields: Record<string, string[]> = {
@@ -114,14 +119,29 @@ export function SettingsForm({
               const currentValue = sectionVals[item.label] ?? item.value;
               const isReadOnly = readOnlyFields.has(item.label);
               const options = selectFields[item.label];
+              const isTextarea = textareaFields.has(item.label);
+              const isTagField = tagFields.has(item.label);
 
               return (
-                <div key={item.label} className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4">
+                <div key={item.label} className={`flex flex-col gap-1.5 ${isTextarea || isTagField ? "" : "sm:flex-row sm:items-center"} sm:gap-4`}>
                   <label className="min-w-[160px] text-sm font-medium text-brand-text">
                     {item.label}
                   </label>
                   {isReadOnly ? (
                     <span className="text-sm text-brand-text-muted">{currentValue}</span>
+                  ) : isTextarea ? (
+                    <textarea
+                      value={currentValue}
+                      onChange={(e) => updateValue(section.key, item.label, e.target.value)}
+                      rows={3}
+                      placeholder={`Enter your ${item.label.toLowerCase()}…`}
+                      className="flex-1 rounded-lg border border-brand-border-light bg-white px-3 py-2 text-sm text-brand-text transition focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20 resize-none"
+                    />
+                  ) : isTagField ? (
+                    <TagInput
+                      value={currentValue}
+                      onChange={(newVal) => updateValue(section.key, item.label, newVal)}
+                    />
                   ) : options ? (
                     <select
                       value={currentValue}
@@ -157,6 +177,65 @@ export function SettingsForm({
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+/** Tag input for comma-separated values like interests */
+function TagInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [inputValue, setInputValue] = useState("");
+  const tags = value ? value.split(",").map((t) => t.trim()).filter(Boolean) : [];
+
+  function addTag() {
+    const trimmed = inputValue.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      const updated = [...tags, trimmed].join(", ");
+      onChange(updated);
+    }
+    setInputValue("");
+  }
+
+  function removeTag(tag: string) {
+    const updated = tags.filter((t) => t !== tag).join(", ");
+    onChange(updated);
+  }
+
+  return (
+    <div className="flex-1 space-y-2">
+      <div className="flex flex-wrap gap-1.5">
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="inline-flex items-center gap-1 rounded-lg bg-brand-indigo/10 px-2.5 py-1 text-xs font-medium text-brand-indigo"
+          >
+            {tag}
+            <button
+              type="button"
+              onClick={() => removeTag(tag)}
+              className="ml-0.5 text-brand-indigo/60 transition hover:text-brand-coral"
+            >
+              ×
+            </button>
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag(); } }}
+          placeholder="Add interest and press Enter…"
+          className="flex-1 rounded-lg border border-brand-border-light bg-white px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-light transition focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20"
+        />
+        <button
+          type="button"
+          onClick={addTag}
+          className="rounded-lg border border-brand-indigo/30 px-3 py-2 text-xs font-medium text-brand-indigo transition hover:bg-brand-indigo/5"
+        >
+          Add
+        </button>
+      </div>
     </div>
   );
 }

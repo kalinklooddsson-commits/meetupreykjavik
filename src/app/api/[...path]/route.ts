@@ -1342,16 +1342,55 @@ async function handleLiveDataRequest(
       case "POST /api/messages": {
         if (!session) return forbiddenResponse("Authentication required.");
         const msgBody = ((await parseValidatedBody(request, key)) ?? await request.json()) as Record<string, unknown>;
+
+        // Determine receiver — direct ID, threadId reply, or name/email lookup
+        let receiverId = msgBody.receiverId as string | undefined;
+
+        // Reply to existing thread — look up the other party
+        if (!receiverId && msgBody.threadId) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            const { data: origMsg } = await supabase
+              .from("messages")
+              .select("sender_id, receiver_id")
+              .eq("id", msgBody.threadId as string)
+              .maybeSingle();
+            if (origMsg) {
+              receiverId = (origMsg.sender_id as string) === session.id
+                ? (origMsg.receiver_id as string)
+                : (origMsg.sender_id as string);
+            }
+          }
+        }
+
+        // If receiverId looks like a name/email, resolve to profile ID
+        if (receiverId && !receiverId.match(/^[0-9a-f-]{36}$/i)) {
+          const supabase = await createSupabaseServerClient();
+          if (supabase) {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("id")
+              .or(`display_name.ilike.%${receiverId}%,email.ilike.%${receiverId}%`)
+              .limit(1)
+              .maybeSingle();
+            if (profile) receiverId = profile.id as string;
+          }
+        }
+
+        if (!receiverId) {
+          return validationMessage("Recipient not found. Please provide a valid name or email.");
+        }
+
         const msgData = await sendMessage({
           sender_id: session.id,
-          receiver_id: msgBody.receiverId as string,
+          receiver_id: receiverId,
           subject: (msgBody.subject as string) ?? "",
           body: msgBody.body as string,
         });
         // Notify recipient about new message
-        if (msgBody.receiverId && msgBody.receiverId !== session.id) {
+        if (receiverId !== session.id) {
           await createNotification({
-            user_id: msgBody.receiverId as string,
+            user_id: receiverId,
             type: "admin_message",
             title: "New message",
             body: `${session.displayName} sent you a message`,
