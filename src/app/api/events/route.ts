@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       title, description, startsAt, endsAt, venueName, venueSlug,
       venueAddress, onlineLink, eventType, attendeeLimit, guestLimit,
       ageRestriction, ageMin, ageMax, isFree, ticketTiers,
-      rsvpMode, visibility, recurrence, reminderPolicy, summary,
+      rsvpMode, recurrence,
     } = body;
 
     if (!title) {
