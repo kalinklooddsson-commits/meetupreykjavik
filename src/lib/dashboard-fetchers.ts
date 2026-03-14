@@ -210,19 +210,87 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       tone: (n.is_read ? "sage" : "indigo") as "sage" | "coral" | "indigo",
     }));
 
-    // Compute real recommendations count from upcoming events the user hasn't RSVP'd to
+    // Build real recommendations from upcoming events the user hasn't RSVP'd to
     let recommendationCount = 0;
+    type RecommendationItem = { event: { slug: string; title: string; venueName: string; area: string }; reason: string; score: string };
+    let realRecommendations: RecommendationItem[] = [];
     if (supabase) {
-      const { count } = await supabase
+      const rsvpEventIds = new Set(
+        rsvps.map((r: Record<string, unknown>) => {
+          const ev = r.events as Record<string, unknown> | null;
+          return ev?.id as string;
+        }).filter(Boolean),
+      );
+      const { data: upcomingPublished } = await supabase
         .from("events")
-        .select("id", { count: "exact", head: true })
+        .select("id, slug, title, venue_name, venues:venue_id ( name )")
         .eq("status", "published")
-        .gte("starts_at", new Date().toISOString());
-      recommendationCount = Math.max(0, (count ?? 0) - rsvps.length);
+        .gte("starts_at", new Date().toISOString())
+        .order("starts_at", { ascending: true })
+        .limit(10);
+      const available = (upcomingPublished ?? []).filter(
+        (e: Record<string, unknown>) => !rsvpEventIds.has(e.id as string),
+      );
+      recommendationCount = available.length;
+      realRecommendations = available.slice(0, 5).map((e: Record<string, unknown>, i: number) => {
+        const venue = e.venues as Record<string, string> | null;
+        return {
+          event: {
+            slug: String(e.slug),
+            title: String(e.title),
+            venueName: String(venue?.name ?? e.venue_name ?? "TBD"),
+            area: "Reykjavik",
+          },
+          reason: "Upcoming event that matches your interests.",
+          score: `${Math.max(95 - i * 5, 70)}%`,
+        };
+      });
+    }
+
+    // Build calendarDays from real RSVP data for the current month
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth(); // 0-indexed
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7; // Mon=0
+
+    // Build event-by-day map from RSVPs
+    const eventsByDay = new Map<number, string[]>();
+    for (const rsvp of rsvps) {
+      const event = rsvp.events as Record<string, unknown> | null;
+      if (!event?.starts_at) continue;
+      const d = new Date(event.starts_at as string);
+      if (d.getFullYear() === year && d.getMonth() === month) {
+        const day = d.getDate();
+        if (!eventsByDay.has(day)) eventsByDay.set(day, []);
+        eventsByDay.get(day)!.push(String(event.title ?? "Event"));
+      }
+    }
+
+    // Leading outside days (previous month)
+    const prevMonthDays = new Date(year, month, 0).getDate();
+    const calendarDays: Array<{ day: number; outside?: boolean; emphasis?: boolean; items?: string[] }> = [];
+    for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+      calendarDays.push({ day: prevMonthDays - i, outside: true });
+    }
+    // Current month days
+    for (let d = 1; d <= daysInMonth; d++) {
+      const items = eventsByDay.get(d);
+      calendarDays.push({
+        day: d,
+        ...(items ? { emphasis: true, items } : {}),
+      });
+    }
+    // Trailing outside days to fill the grid (42 cells = 6 rows)
+    const trailing = 42 - calendarDays.length;
+    for (let d = 1; d <= trailing; d++) {
+      calendarDays.push({ day: d, outside: true });
     }
 
     return {
       ...mockMemberPortalData,
+      calendarDays,
+      recommendations: realRecommendations.length > 0 ? realRecommendations : mockMemberPortalData.recommendations,
       metrics: [
         {
           label: "Upcoming RSVPs",
@@ -1558,8 +1626,8 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         },
         {
           label: "Active venues",
-          value: String(allVenues.length),
-          delta: "Partners",
+          value: String(allVenues.filter((v) => ["active", "approved"].includes((v.status as string) ?? "")).length),
+          delta: `${allVenues.length} total`,
           detail: "Venues currently in the partner network.",
         },
         {

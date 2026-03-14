@@ -653,14 +653,16 @@ export function VenueReviewReply({
       const result = await res.json();
       if (result.ok) {
         toast("success", "Reply saved");
+        setSavedText(text.trim());
+        setMode("done");
       } else {
         toast("error", result.error ?? "Could not save reply. Please try again.");
+        setMode("editing");
       }
     } catch {
       toast("error", "Could not save reply. Please try again.");
+      setMode("editing");
     }
-    setSavedText(text.trim());
-    setMode("done");
   }
 
   if (savedText && mode !== "editing") {

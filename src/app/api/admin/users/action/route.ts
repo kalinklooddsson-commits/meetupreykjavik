@@ -72,6 +72,12 @@ export async function POST(request: NextRequest) {
       case "unverify":
         update = { is_verified: false };
         break;
+      case "suspend":
+        update = { status: "suspended" };
+        break;
+      case "unsuspend":
+        update = { status: "active" };
+        break;
       case "role":
       case "change_role": {
         const newRole = body.value;
