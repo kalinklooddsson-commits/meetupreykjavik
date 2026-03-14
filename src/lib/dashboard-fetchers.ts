@@ -858,7 +858,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       supabase
         ? supabase
             .from("profiles")
-            .select("id, display_name, email, account_type, is_verified, is_premium, premium_tier, created_at, last_active_at")
+            .select("id, slug, display_name, email, account_type, is_verified, is_premium, premium_tier, created_at, last_active_at")
             .order("created_at", { ascending: false })
             .limit(100)
         : Promise.resolve({ data: null }),
@@ -954,7 +954,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       return "Free";
     }
     const usersTable = allUsers.map((u) => ({
-      key: u.id as string,
+      key: (u.slug as string) ?? (u.id as string),
       name: (u.display_name as string) ?? "Unknown",
       email: (u.email as string) ?? "",
       type: formatAccountType((u.account_type as string) ?? "member"),
