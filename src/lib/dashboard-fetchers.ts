@@ -611,7 +611,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       .slice(0, 10)
       .map((e) => ({
         event: { slug: e.slug as string, title: e.title as string },
-        organizer: ((e.host as Record<string, unknown> | null)?.display_name as string) ?? "Unknown",
+        organizer: ((e.host as unknown as Record<string, unknown> | null)?.display_name as string) ?? "Unknown",
         status: (e.status as string) === "draft" ? "Pending review" : "Confirmed",
         note: "",
       }));
@@ -720,7 +720,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
 
     const eventTypeCounts: Record<string, number> = {};
     for (const e of events) {
-      const catObj = e.categories as Record<string, unknown> | null;
+      const catObj = e.categories as unknown as Record<string, unknown> | null;
       const cat = (catObj?.name_en as string) ?? "Other";
       eventTypeCounts[cat] = (eventTypeCounts[cat] ?? 0) + 1;
     }
@@ -1179,7 +1179,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       candidates: memberProfiles.slice(0, 8).map((p, i) => ({
         id: p.id as string,
         name: (p.display_name as string) ?? "Unknown",
-        tier: (p.premium_tier as string)?.charAt(0).toUpperCase() + ((p.premium_tier as string) ?? "free").slice(1) ?? "Free",
+        tier: (() => { const t = (p.premium_tier as string | null) ?? "free"; return t.charAt(0).toUpperCase() + t.slice(1); })(),
         status: p.is_verified ? "Verified member" : "Active",
         fitScore: 95 - (i * 5),
         lastActive: timeAgo(p.last_active_at as string | null),

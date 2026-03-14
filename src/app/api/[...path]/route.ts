@@ -745,7 +745,8 @@ async function handleLiveDataRequest(
           if (!adminClient) throw new Error("Database unavailable");
           const { data: inserted, error: insertErr } = await adminClient
             .from("events")
-            .insert(eventPayload as Record<string, unknown>)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .insert(eventPayload as any)
             .select()
             .single();
           if (insertErr) throw insertErr;
