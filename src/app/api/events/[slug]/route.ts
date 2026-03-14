@@ -27,6 +27,21 @@ export async function PATCH(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
+    // Ownership check: only the host or an admin can edit
+    const { data: eventRow } = await db
+      .from("events")
+      .select("host_id")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (!eventRow) {
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    }
+
+    if (eventRow.host_id !== session.id && session.accountType !== "admin") {
+      return NextResponse.json({ error: "You can only edit your own events" }, { status: 403 });
+    }
+
     const allowedFields = [
       "title", "description", "starts_at", "ends_at",
       "venue_name", "venue_address", "online_link", "event_type",
@@ -89,8 +104,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Only organizers and admins can cancel events
-    if (session.accountType !== "organizer" && session.accountType !== "admin") {
+    // Only organizers, venue owners, and admins can cancel events
+    if (!["organizer", "venue", "admin"].includes(session.accountType ?? "")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
@@ -102,6 +117,21 @@ export async function DELETE(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
+
+    // Ownership check: only the host or admin can cancel
+    const { data: eventRow } = await db
+      .from("events")
+      .select("host_id")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (!eventRow) {
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    }
+
+    if (eventRow.host_id !== session.id && session.accountType !== "admin") {
+      return NextResponse.json({ error: "You can only cancel your own events" }, { status: 403 });
+    }
 
     // Soft-delete: set status to cancelled
     const { error } = await db
