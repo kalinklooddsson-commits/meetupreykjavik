@@ -1603,7 +1603,7 @@ async function handleLiveDataRequest(
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
         const body = await request.json();
-        const status = body.status === "rejected" ? "rejected" : "active";
+        const status = body.status === "rejected" ? "archived" : "active";
         const { data, error } = await supabase
           .from("groups")
           .update({ status })

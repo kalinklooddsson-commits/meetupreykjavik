@@ -27,8 +27,7 @@ export async function PATCH(request: NextRequest) {
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      // No DB — settings saved client-side only
-      return NextResponse.json({ ok: true, offline: true });
+      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

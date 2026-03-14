@@ -33,8 +33,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      // Accept the action — frontend handles optimistic update
-      return NextResponse.json({ ok: true, offline: true });
+      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,8 +58,7 @@ export async function POST(request: NextRequest) {
       .maybeSingle();
 
     if (!attendeeProfile) {
-      // Can't find the user in DB — return success for optimistic UI
-      return NextResponse.json({ ok: true, action, name, local: true });
+      return NextResponse.json({ ok: false, error: `Attendee "${name}" not found` }, { status: 404 });
     }
 
     // Build the update query with proper filters
@@ -80,7 +78,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // No event slug — can't safely update without knowing which event
-      return NextResponse.json({ ok: true, action, name, local: true });
+      return NextResponse.json({ ok: false, error: "Event slug is required to update attendee status" }, { status: 400 });
     }
 
     return NextResponse.json({ ok: true, action, name });

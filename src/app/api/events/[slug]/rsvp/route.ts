@@ -69,10 +69,9 @@ export async function POST(
 
     if (error) {
       console.error("RSVP creation failed:", error);
-      // Still return success — the UI should update optimistically
       return NextResponse.json(
-        { ok: true, action: "created", id: `local-rsvp-${Date.now()}`, local: true },
-        { status: 201 },
+        { ok: false, error: "Could not create RSVP. Please try again." },
+        { status: 500 },
       );
     }
 
@@ -96,7 +95,7 @@ export async function DELETE(
     const { slug } = await params;
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: true, offline: true });
+      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

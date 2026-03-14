@@ -21,7 +21,7 @@ export async function PATCH(
     const body = await request.json();
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: true, offline: true });
+      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,7 +97,7 @@ export async function DELETE(
     const { slug } = await params;
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: true, offline: true });
+      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
