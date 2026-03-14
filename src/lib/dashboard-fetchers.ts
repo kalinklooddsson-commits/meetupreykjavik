@@ -364,24 +364,44 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
         );
       }
 
-      // Override profile section with real profile data
+      // Override profile, account, and billing sections with real data
       savedSettingsSections = savedSettingsSections.map(
         (section: { key: string; title: string; description: string; items: Array<{ label: string; value: string }> }) => {
           if (section.key === "profile") {
+            const bioText = (realProfile as Record<string, unknown>)?.bio as string ?? "";
             return {
               ...section,
               items: section.items.map((item: { label: string; value: string }) => {
                 if (item.label === "Display name") return { ...item, value: realProfile?.name ?? item.value };
+                if (item.label === "Bio") return { ...item, value: bioText };
+                if (item.label === "Interests") {
+                  const interests = (realProfile as Record<string, unknown>)?.interests as string[] | undefined;
+                  return { ...item, value: (interests ?? []).join(", ") };
+                }
                 return item;
               }),
             };
           }
           if (section.key === "account") {
+            const tier = (realProfile as Record<string, unknown>)?.premium_tier as string | null;
+            const isPremium = (realProfile as Record<string, unknown>)?.is_premium as boolean | undefined;
             return {
               ...section,
               items: section.items.map((item: { label: string; value: string }) => {
                 if (item.label === "Primary email") return { ...item, value: session.email ?? item.value };
-                if (item.label === "Account tier") return { ...item, value: realProfile?.tier ?? item.value };
+                if (item.label === "Account tier") return { ...item, value: isPremium ? (tier ?? "Plus") : "Free" };
+                return item;
+              }),
+            };
+          }
+          if (section.key === "billing") {
+            const isPremium = (realProfile as Record<string, unknown>)?.is_premium as boolean | undefined;
+            return {
+              ...section,
+              items: section.items.map((item: { label: string; value: string }) => {
+                if (item.label === "Current plan") return { ...item, value: isPremium ? ((realProfile as Record<string, unknown>)?.premium_tier as string ?? "Plus") : "Free" };
+                if (item.label === "Renewal date") return { ...item, value: isPremium ? item.value : "—" };
+                if (item.label === "Stored invoices") return { ...item, value: isPremium ? item.value : "—" };
                 return item;
               }),
             };

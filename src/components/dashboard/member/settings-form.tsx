@@ -71,7 +71,6 @@ export function SettingsForm({
     "Current plan",
     "Renewal date",
     "Stored invoices",
-    "Bio length",
   ]);
 
   // Fields that should render as textareas

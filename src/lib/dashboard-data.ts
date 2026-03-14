@@ -388,8 +388,8 @@ export const memberPortalData = {
       description: "Display identity, languages, interests, and profile completion.",
       items: [
         { label: "Display name", value: memberProfile.name },
-        { label: "Bio length", value: "238 / 300 characters" },
-        { label: "Interests", value: "5 active tags" },
+        { label: "Bio", value: "" },
+        { label: "Interests", value: "" },
       ],
     },
     {
