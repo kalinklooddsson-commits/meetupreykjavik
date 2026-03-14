@@ -1253,10 +1253,10 @@ export function AdminVenueOperationsDesk({
                 type="button"
                 className={btnGhost}
                 onClick={() => {
-                  toast("info", `Editing ${v.name}`);
+                  window.open(`/venues/${v.key}`, "_blank");
                 }}
               >
-                <Edit2 className="h-3.5 w-3.5" /> Edit
+                <Edit2 className="h-3.5 w-3.5" /> View
               </button>
             </div>,
           ],
@@ -1506,7 +1506,7 @@ export function AdminModerationConsole({
                 <Shield className="h-3.5 w-3.5" /> Unban
               </button>
               {item.appeal && (
-                <button type="button" className={btnOutline} onClick={() => toast("info", `Reviewing appeal for ${item.name}`)}>
+                <button type="button" className={btnOutline} onClick={() => toast("info", `Appeal from ${item.name}: "${item.appeal}". Use Unban to reinstate.`)}>
                   <FileText className="h-3.5 w-3.5" /> Review
                 </button>
               )}
