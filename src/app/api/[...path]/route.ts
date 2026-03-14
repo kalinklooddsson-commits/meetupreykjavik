@@ -1660,9 +1660,9 @@ async function handleLiveDataRequest(
           const notifications = users.map((u) => ({
             user_id: u.id,
             title,
-            detail,
-            channel: "announcement",
-            status: "unread" as const,
+            body: detail,
+            type: "admin_message",
+            is_read: false,
           }));
           const { error } = await supabase.from("notifications").insert(notifications);
           if (error) throw error;
@@ -2293,9 +2293,10 @@ async function handleLiveDataRequest(
         const notifications = userIds.map((uid) => ({
           user_id: uid,
           title: `You're invited to ${event.title ?? "an event"}`,
-          detail: body.message ?? `You've been invited to attend an upcoming event.`,
-          channel: "invite",
-          status: "unread" as const,
+          body: body.message ?? `You've been invited to attend an upcoming event.`,
+          type: "new_event",
+          link: `/events/${match.params.slug}`,
+          is_read: false,
         }));
         const { error } = await supabase.from("notifications").insert(notifications);
         if (error) throw error;
