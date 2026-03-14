@@ -236,8 +236,7 @@ export function AdminUserCommandCenter({
                       updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
                       toast("success", `Role changed to ${newRole}`);
                     } catch {
-                      updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
-                      toast("info", `Role changed to ${newRole} (offline)`);
+                      toast("error", `Could not change role. Please try again.`);
                     }
                   }}
                 >
@@ -265,8 +264,7 @@ export function AdminUserCommandCenter({
                       updateUser(selected.key, { status: selected.status === "Verified" ? "Unverified" : "Verified" });
                       toast("success", msg);
                     } catch {
-                      updateUser(selected.key, { status: selected.status === "Verified" ? "Unverified" : "Verified" });
-                      toast("info", `${msg} (offline)`);
+                      toast("error", `Could not update verification. Please try again.`);
                     }
                   }}
                 >
@@ -290,8 +288,7 @@ export function AdminUserCommandCenter({
                       updateUser(selected.key, { plan: newPlan });
                       toast("success", msg);
                     } catch {
-                      updateUser(selected.key, { plan: newPlan });
-                      toast("info", `${msg} (offline)`);
+                      toast("error", `Could not update premium status. Please try again.`);
                     }
                   }}
                 >
@@ -313,8 +310,7 @@ export function AdminUserCommandCenter({
                       updateUser(selected.key, { status: selected.status === "Suspended" ? "Active" : "Suspended" });
                       toast("success", msg);
                     } catch {
-                      updateUser(selected.key, { status: selected.status === "Suspended" ? "Active" : "Suspended" });
-                      toast("info", `${msg} (offline)`);
+                      toast("error", `Could not update suspension status. Please try again.`);
                     }
                   }}
                 >
@@ -474,9 +470,7 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
       setNewNote("");
       toast("success", "Note added");
     } catch {
-      setNotes((prev) => [...prev, note]);
-      setNewNote("");
-      toast("info", "Note added (offline)");
+      toast("error", "Could not add note. Please try again.");
     }
   }
 
@@ -490,8 +484,7 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
       setNotes((prev) => prev.filter((_, i) => i !== idx));
       toast("success", "Note removed");
     } catch {
-      setNotes((prev) => prev.filter((_, i) => i !== idx));
-      toast("info", "Note removed (offline)");
+      toast("error", "Could not remove note. Please try again.");
     }
   }
 
@@ -649,8 +642,7 @@ export function AdminGroupOperationsDesk({
       setLocalGroups((prev) => prev.map((g) => (g.key === key ? { ...g, status } : g)));
       toast("success", `Group ${status.toLowerCase()}`);
     } catch {
-      setLocalGroups((prev) => prev.map((g) => (g.key === key ? { ...g, status } : g)));
-      toast("info", `Group ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update group. Please try again.`);
     }
   }
 
@@ -736,8 +728,7 @@ export function AdminEventOperationsDesk({
       setLocalEvents((prev) => prev.map((e) => (e.key === key ? { ...e, status } : e)));
       toast("success", `Event ${status.toLowerCase()}`);
     } catch {
-      setLocalEvents((prev) => prev.map((e) => (e.key === key ? { ...e, status } : e)));
-      toast("info", `Event ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update event. Please try again.`);
     }
     setConfirmKey(null);
   }
@@ -833,8 +824,7 @@ export function AdminRevenueControlDesk({
       setLocalTx((prev) => prev.map((t) => (t.key === key ? { ...t, status: "Refunded" } : t)));
       toast("success", "Refund processed");
     } catch {
-      setLocalTx((prev) => prev.map((t) => (t.key === key ? { ...t, status: "Refunded" } : t)));
-      toast("info", "Refund processed (offline)");
+      toast("error", "Could not process refund. Please try again.");
     }
     setRefundKey(null);
   }
@@ -1049,8 +1039,7 @@ export function AdminOpsInboxDesk({
       setItems((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
       toast("success", `Item ${status.toLowerCase()}`);
     } catch {
-      setItems((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
-      toast("info", `Item ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update item. Please try again.`);
     }
   }
 
@@ -1133,8 +1122,7 @@ export function AdminIncidentCommandDesk({
       setLocalIncidents((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
       toast("success", `Incident ${status.toLowerCase()}`);
     } catch {
-      setLocalIncidents((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
-      toast("info", `Incident ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update incident. Please try again.`);
     }
   }
 
@@ -1237,7 +1225,7 @@ export function AdminVenueOperationsDesk({
                     });
                     toast("success", `${v.name} verified`);
                   } catch {
-                    toast("info", `${v.name} verified (offline)`);
+                    toast("error", `Could not verify ${v.name}. Please try again.`);
                   }
                 }}
               >
@@ -1255,7 +1243,7 @@ export function AdminVenueOperationsDesk({
                     });
                     toast("success", `${v.name} suspended`);
                   } catch {
-                    toast("info", `${v.name} suspended (offline)`);
+                    toast("error", `Could not suspend ${v.name}. Please try again.`);
                   }
                 }}
               >
@@ -1310,8 +1298,7 @@ export function AdminModerationOperationsDesk({
       setLocalReports((prev) => prev.map((r) => (r.key === key ? { ...r, status } : r)));
       toast("success", `Report ${status.toLowerCase()}`);
     } catch {
-      setLocalReports((prev) => prev.map((r) => (r.key === key ? { ...r, status } : r)));
-      toast("info", `Report ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update report. Please try again.`);
     }
   }
 
@@ -1377,8 +1364,7 @@ export function AdminVenueApprovalConsole({
       setLocalApps((prev) => prev.map((a) => (a.key === key ? { ...a, status } : a)));
       toast("success", `Application ${status.toLowerCase()}`);
     } catch {
-      setLocalApps((prev) => prev.map((a) => (a.key === key ? { ...a, status } : a)));
-      toast("info", `Application ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update application. Please try again.`);
     }
   }
 
@@ -1394,8 +1380,7 @@ export function AdminVenueApprovalConsole({
       setLocalApps((prev) => prev.map((a) => (selected.has(a.key) ? { ...a, status } : a)));
       toast("success", `${count} applications ${status.toLowerCase()}`);
     } catch {
-      setLocalApps((prev) => prev.map((a) => (selected.has(a.key) ? { ...a, status } : a)));
-      toast("info", `${count} applications ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update applications. Please try again.`);
     }
     setSelected(new Set());
   }
@@ -1492,8 +1477,7 @@ export function AdminModerationConsole({
       setLocalItems((prev) => prev.filter((i) => i.key !== key));
       toast("success", "User unbanned");
     } catch {
-      setLocalItems((prev) => prev.filter((i) => i.key !== key));
-      toast("info", "User unbanned (offline)");
+      toast("error", "Could not unban user. Please try again.");
     }
   }
 
@@ -1580,7 +1564,7 @@ export function AdminSettingsControlCenter({
       });
       toast("success", `${sectionKey} settings saved`);
     } catch {
-      toast("info", `${sectionKey} settings saved (offline)`);
+      toast("error", `Could not save ${sectionKey} settings. Please try again.`);
     }
     setEditingSection(null);
   }
@@ -1657,8 +1641,7 @@ export function AdminContentControlCenter({ content }: { content: ContentData })
       setSections((prev) => prev.map((s) => (s.key === key ? { ...s, status } : s)));
       toast("success", `Section ${status.toLowerCase()}`);
     } catch {
-      setSections((prev) => prev.map((s) => (s.key === key ? { ...s, status } : s)));
-      toast("info", `Section ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update section. Please try again.`);
     }
   }
 
@@ -1672,8 +1655,7 @@ export function AdminContentControlCenter({ content }: { content: ContentData })
       setBlogQueue((prev) => prev.map((b) => (b.key === key ? { ...b, status } : b)));
       toast("success", `Post ${status.toLowerCase()}`);
     } catch {
-      setBlogQueue((prev) => prev.map((b) => (b.key === key ? { ...b, status } : b)));
-      toast("info", `Post ${status.toLowerCase()} (offline)`);
+      toast("error", `Could not update post. Please try again.`);
     }
   }
 
@@ -1789,7 +1771,7 @@ export function AdminCommsStudio({ comms }: { comms: CommsData }) {
       });
       toast("success", `Message sent to "${selectedAudience}"`);
     } catch {
-      toast("info", `Message queued for "${selectedAudience}" (offline)`);
+      toast("error", `Could not send message. Please try again.`);
     }
   }
 
@@ -1930,8 +1912,7 @@ export function AdminActionButton({
       setDone(true);
       toast("success", `Action "${actionLabel}" completed`);
     } catch {
-      setDone(true);
-      toast("info", `Action "${actionLabel}" completed (offline)`);
+      toast("error", `Could not complete "${actionLabel}". Please try again.`);
     }
     setLoading(false);
   }

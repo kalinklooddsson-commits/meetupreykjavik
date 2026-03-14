@@ -54,8 +54,7 @@ export function VenueBookingCommandCenter({
         toast("info", `Booking ${action} (local only)`);
       }
     } catch {
-      setDecisions((prev) => ({ ...prev, [key]: action }));
-      toast("info", `Booking ${action} (offline)`);
+      toast("error", `Could not ${action} booking. Please try again.`);
     } finally {
       setLoading(null);
     }
@@ -303,7 +302,7 @@ export function VenueAvailabilityStudio({
                 toast("info", "Schedule saved locally");
               }
             } catch {
-              toast("info", "Schedule saved (offline)");
+              toast("error", "Could not save schedule. Please try again.");
             } finally {
               setSaving(false);
             }
@@ -462,7 +461,7 @@ export function VenueDealStudio({
                   setShowForm(false);
                   setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                 } catch {
-                  toast("info", "Deal saved (offline)");
+                  toast("error", "Could not save deal. Please try again.");
                   setShowForm(false);
                   setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                 } finally {
@@ -611,7 +610,7 @@ export function VenueProfileSectionEditor({
                 toast("info", "Profile saved locally");
               }
             } catch {
-              toast("info", "Profile saved (offline)");
+              toast("error", "Could not save profile. Please try again.");
             } finally {
               setSaving(false);
             }
@@ -769,7 +768,7 @@ export function VenueImageEditor({
         toast("info", "Hero image saved locally");
       }
     } catch {
-      toast("info", "Hero image saved (offline)");
+      toast("error", "Could not save hero image. Please try again.");
     } finally {
       setSavingHero(false);
     }
@@ -785,7 +784,7 @@ export function VenueImageEditor({
         toast("info", "Gallery saved locally");
       }
     } catch {
-      toast("info", "Gallery saved (offline)");
+      toast("error", "Could not save gallery. Please try again.");
     } finally {
       setSavingGallery(false);
     }

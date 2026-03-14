@@ -36,8 +36,10 @@ function attendeeStatusColor(status: string) {
 
 export function OrganizerAttendeeControlCenter({
   attendees,
+  eventSlug,
 }: {
   attendees: readonly Attendee[];
+  eventSlug?: string;
 }) {
   const [localAttendees, setLocalAttendees] = useState<Attendee[]>([
     ...attendees,
@@ -72,7 +74,7 @@ export function OrganizerAttendeeControlCenter({
       const res = await fetch("/api/attendees/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ attendeeName: name, action }),
+        body: JSON.stringify({ name, action, eventSlug }),
       });
       const result = await res.json();
       applyLocal(name, action);
@@ -82,8 +84,7 @@ export function OrganizerAttendeeControlCenter({
         toast("info", `${name} — ${action === "checkin" ? "checked in" : action + "d"} (local only)`);
       }
     } catch {
-      applyLocal(name, action);
-      toast("info", `${name} — ${action === "checkin" ? "checked in" : action + "d"} (offline)`);
+      toast("error", `Could not ${action === "checkin" ? "check in" : action} ${name}. Please try again.`);
     } finally {
       setLoading(null);
     }
@@ -304,8 +305,7 @@ export function OrganizerVenueRequestStudio({
         toast("info", "Booking request saved locally");
       }
     } catch {
-      setSubmitted(true);
-      toast("info", "Booking request saved (offline)");
+      toast("error", "Could not send booking request. Please try again.");
     } finally {
       setSending(false);
     }
@@ -479,8 +479,8 @@ export function OrganizerEventActions({
         setState("done");
       }
     } catch {
-      toast("info", "Event cancelled (offline)");
-      setState("done");
+      toast("error", "Could not cancel event. Please try again.");
+      setState("idle");
     }
   }
 

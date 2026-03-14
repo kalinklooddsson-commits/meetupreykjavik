@@ -174,7 +174,7 @@ export async function OrganizerEventDetailScreen({ slug }: { slug: string }) {
           title="Attendee list"
           description={`${event.attendees.length} attendees registered for this event.`}
         >
-          <OrganizerAttendeeControlCenter attendees={event.attendees} />
+          <OrganizerAttendeeControlCenter attendees={event.attendees} eventSlug={slug} />
         </Surface>
 
         {/* Timeline + Co-organizers side by side */}

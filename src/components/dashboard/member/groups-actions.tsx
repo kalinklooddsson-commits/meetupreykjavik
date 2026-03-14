@@ -21,8 +21,8 @@ export function LeaveGroupButton({ groupSlug, groupName }: { groupSlug: string; 
         setState("left");
         toast("success", `Left ${groupName}`);
       } catch {
-        setState("left");
-        toast("info", `Left ${groupName} (offline)`);
+        setState("idle");
+        toast("error", `Could not leave ${groupName}. Please try again.`);
       }
     }
   }
