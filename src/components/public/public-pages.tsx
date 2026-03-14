@@ -3903,7 +3903,7 @@ export function CategoriesIndexScreen() {
                 </span>
               </div>
               <h2 className="mt-4 text-lg font-bold text-gray-900">{item.category.name}</h2>
-              <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: item.category.count })}</p>
+              <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: item.eventsCount })}</p>
               <div className="mt-4 flex gap-4 text-sm text-gray-500">
                 <span>{t("events", { count: item.eventsCount })}</span>
                 <span>{t("groups", { count: item.groupsCount })}</span>
@@ -3933,16 +3933,19 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
         />
         <section className="section-shell py-8">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {categoryDirectory.map((category) => (
-              <Link
-                key={category.slug}
-                href={categoryHref(category.slug)}
-                className="rounded-lg border border-gray-200 p-4 transition hover:bg-gray-50"
-              >
-                <div className="font-medium text-gray-900">{category.name}</div>
-                <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: category.count })}</p>
-              </Link>
-            ))}
+            {categoryDirectory.map((category) => {
+              const catBundle = getCategoryBundle(category.slug);
+              return (
+                <Link
+                  key={category.slug}
+                  href={categoryHref(category.slug)}
+                  className="rounded-lg border border-gray-200 p-4 transition hover:bg-gray-50"
+                >
+                  <div className="font-medium text-gray-900">{category.name}</div>
+                  <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: catBundle?.events.length ?? 0 })}</p>
+                </Link>
+              );
+            })}
           </div>
         </section>
       </>
@@ -3951,7 +3954,8 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
 
   const relatedCategories = categoryDirectory
     .filter((item) => item.slug !== bundle.category.slug)
-    .slice(0, 3);
+    .slice(0, 3)
+    .map((cat) => ({ ...cat, computedCount: getCategoryBundle(cat.slug)?.events.length ?? 0 }));
 
   return (
     <>
@@ -3965,7 +3969,7 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
       <PageHeader
         eyebrow={t("detail.eyebrow")}
         title={bundle.category.name}
-        description={t("detail.meetupsInCategory", { count: bundle.category.count })}
+        description={t("detail.meetupsInCategory", { count: bundle.events.length })}
         actions={[
           { href: "/signup", label: t("detail.join"), primary: true },
           { href: categoriesHref(), label: t("detail.allCategories") },
@@ -4038,7 +4042,7 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
                   className="rounded-lg border border-gray-200 p-4 transition hover:bg-gray-50"
                 >
                   <div className="font-medium text-gray-900">{category.name}</div>
-                  <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: category.count })}</p>
+                  <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: category.computedCount })}</p>
                 </Link>
               ))}
             </div>

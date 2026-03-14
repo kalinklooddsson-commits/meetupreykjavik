@@ -68,9 +68,11 @@ export function SettingsForm({
   // Fields that should be read-only
   const readOnlyFields = new Set([
     "Account tier",
+    "Current plan",
     "Renewal date",
     "Stored invoices",
     "Bio length",
+    "Interests",
   ]);
 
   // Fields that should render as select dropdowns

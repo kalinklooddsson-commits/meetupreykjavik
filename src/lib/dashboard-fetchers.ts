@@ -188,12 +188,14 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
     }));
 
     const mappedMessages = conversations.slice(0, 5).map((m: Record<string, unknown>) => {
+      const body = (m.body as string) ?? "";
+      const subjectText = (m.subject as string) || (m.title as string) || body.slice(0, 40) || "Message";
       return {
         key: m.id as string,
         counterpart: (m.other_display_name as string) ?? "Unknown",
         role: "Member",
-        subject: ((m.body as string) ?? "").slice(0, 60),
-        preview: (m.body as string) ?? "",
+        subject: subjectText,
+        preview: body !== subjectText ? body.slice(0, 80) : "",
         channel: "Direct message",
         status: "Unread",
         meta: formatRelativeTime(m.created_at as string),
@@ -287,9 +289,66 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       calendarDays.push({ day: d, outside: true });
     }
 
+    // Read saved user settings from platform_settings to persist across reloads
+    let savedSettingsSections = mockMemberPortalData.settingsSections;
+    if (supabase) {
+      const settingsKey = `user_settings:${session.id}`;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const settingsDb = supabase as any;
+      const { data: savedRow } = await settingsDb
+        .from("platform_settings")
+        .select("value")
+        .eq("key", settingsKey)
+        .maybeSingle() as { data: { value: Record<string, Record<string, string>> } | null };
+
+      if (savedRow?.value) {
+        const saved = savedRow.value;
+        savedSettingsSections = mockMemberPortalData.settingsSections.map(
+          (section: { key: string; title: string; description: string; items: Array<{ label: string; value: string }> }) => {
+            const sectionOverrides = saved[section.key];
+            if (!sectionOverrides) return section;
+            return {
+              ...section,
+              items: section.items.map((item: { label: string; value: string }) => ({
+                label: item.label,
+                value: sectionOverrides[item.label] ?? item.value,
+              })),
+            };
+          },
+        );
+      }
+
+      // Override profile section with real profile data
+      savedSettingsSections = savedSettingsSections.map(
+        (section: { key: string; title: string; description: string; items: Array<{ label: string; value: string }> }) => {
+          if (section.key === "profile") {
+            return {
+              ...section,
+              items: section.items.map((item: { label: string; value: string }) => {
+                if (item.label === "Display name") return { ...item, value: realProfile?.name ?? item.value };
+                return item;
+              }),
+            };
+          }
+          if (section.key === "account") {
+            return {
+              ...section,
+              items: section.items.map((item: { label: string; value: string }) => {
+                if (item.label === "Primary email") return { ...item, value: session.email ?? item.value };
+                if (item.label === "Account tier") return { ...item, value: realProfile?.tier ?? item.value };
+                return item;
+              }),
+            };
+          }
+          return section;
+        },
+      );
+    }
+
     return {
       ...mockMemberPortalData,
       calendarDays,
+      settingsSections: savedSettingsSections,
       recommendations: realRecommendations.length > 0 ? realRecommendations : mockMemberPortalData.recommendations,
       metrics: [
         {

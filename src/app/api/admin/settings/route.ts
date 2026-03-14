@@ -15,7 +15,9 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { key, value } = body as { key: string; value: unknown };
+    // Support both { key, value } and { sectionKey, items } from admin settings UI
+    const key = (body.key as string) ?? (body.sectionKey as string) ?? "";
+    const value = body.value ?? body.items ?? null;
 
     if (!key) {
       return NextResponse.json({ error: "Missing key" }, { status: 400 });

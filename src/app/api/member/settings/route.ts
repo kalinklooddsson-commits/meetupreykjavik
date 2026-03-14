@@ -60,6 +60,18 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Update failed" }, { status: 500 });
     }
 
+    // If updating the profile section, also persist key fields to the profiles table
+    if (section === "profile") {
+      const profileUpdate: Record<string, unknown> = {};
+      const displayName = values["Display name"];
+      if (displayName && typeof displayName === "string") {
+        profileUpdate.display_name = displayName;
+      }
+      if (Object.keys(profileUpdate).length > 0) {
+        await db.from("profiles").update(profileUpdate).eq("id", session.id);
+      }
+    }
+
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("Member settings error:", error);
