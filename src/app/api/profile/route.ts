@@ -27,23 +27,56 @@ export async function PATCH(request: NextRequest) {
 
     // If body contains "sections", it's a structured venue profile update
     if (body.sections) {
-      // Extract relevant fields from sections for the profiles table
       const sections = body.sections as Array<{
         key: string;
         items: Array<{ label: string; value: string }>;
       }>;
 
-      const update: Record<string, unknown> = {};
+      // Extract profile fields (bio lives on profiles table)
+      const profileUpdate: Record<string, unknown> = {};
+      // Extract venue fields (address, capacity, etc. live on venues table)
+      const venueUpdate: Record<string, unknown> = {};
+
       for (const section of sections) {
         if (section.key === "general") {
           for (const item of section.items) {
-            if (item.label === "Public summary") update.bio = item.value;
+            if (item.label === "Public summary") profileUpdate.bio = item.value;
+            if (item.label === "Address") venueUpdate.address = item.value;
+            if (item.label === "Capacity") {
+              // Parse capacity string like "120 standing / mixed"
+              const match = item.value.match(/^(\d+)/);
+              if (match) venueUpdate.capacity_standing = parseInt(match[1], 10);
+            }
           }
+        }
+        if (section.key === "hours") {
+          // Build opening_hours JSONB from day/hours items
+          const hours: Record<string, string> = {};
+          for (const item of section.items) {
+            hours[item.label] = item.value;
+          }
+          venueUpdate.opening_hours = hours;
+        }
+        if (section.key === "socials") {
+          const links: Record<string, string> = {};
+          for (const item of section.items) {
+            const key = item.label.toLowerCase();
+            if (key === "website") venueUpdate.website = item.value;
+            else if (key === "booking phone" || key === "phone") venueUpdate.phone = item.value;
+            else links[key] = item.value;
+          }
+          if (Object.keys(links).length > 0) venueUpdate.social_links = links;
         }
       }
 
-      if (Object.keys(update).length > 0) {
-        await db.from("profiles").update(update).eq("id", session.id);
+      // Save profile fields
+      if (Object.keys(profileUpdate).length > 0) {
+        await db.from("profiles").update(profileUpdate).eq("id", session.id);
+      }
+
+      // Save venue fields (find venue owned by this user)
+      if (Object.keys(venueUpdate).length > 0) {
+        await db.from("venues").update(venueUpdate).eq("owner_id", session.id);
       }
 
       return NextResponse.json({ ok: true });
