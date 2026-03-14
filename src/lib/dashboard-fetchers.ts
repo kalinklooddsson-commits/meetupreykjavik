@@ -80,7 +80,7 @@ export async function getMemberProfile(): Promise<MemberProfile> {
       .join("")
       .slice(0, 2)
       .toUpperCase(),
-    tier: profile.account_type === "user" ? "Free member" : "Plus member",
+    tier: ((profile as unknown as Record<string, unknown>).subscription_tier as string) ?? (profile.account_type === "user" ? "Free" : "Plus"),
     city: profile.city ?? "Reykjavik",
     memberSince: new Date(profile.created_at).toLocaleDateString("en-US", {
       month: "long",
@@ -321,8 +321,8 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
         rsvps: (e.rsvp_count as number) ?? 0,
         capacity: (e.attendee_limit as number) ?? 50,
         waitlist: 0,
-        ticketsSold: 0,
-        revenue: "0 ISK",
+        ticketsSold: (e.ticket_count as number) ?? 0,
+        revenue: `${((e.ticket_revenue as number) ?? 0).toLocaleString()} ISK`,
         checkIns: `0 / ${(e.rsvp_count as number) ?? 0}`,
         notes: "",
         timeline: [] as { time: string; label: string }[],

@@ -1305,7 +1305,20 @@ export function EventsIndexScreen({
   const totalAttendees = events.reduce((sum, e) => sum + e.attendees, 0);
   const featuredImage = featured ? (extractImageUrl(featured.art) ?? "/place-images/reykjavik/reykjavik-871-2-78434189.jpg") : "/place-images/reykjavik/reykjavik-871-2-78434189.jpg";
   const lanes = discoveryLanes(events, tSignals);
-  const usedCategories = Array.from(new Set(events.map((e) => e.category)));
+  // Build usedCategories using the same expanded-term logic as the server filter:
+  // publicCategoryOptions derives first-word names (e.g. "Nightlife" from "Nightlife & Social"),
+  // but events use simple category names like "Social". Map through homepage categories to match.
+  const usedCategories = publicCategoryOptions.filter((catOpt) => {
+    const catLower = catOpt.toLowerCase();
+    const homeCat = categories.find((c) => c.name.toLowerCase().startsWith(catLower));
+    const matchTerms = homeCat
+      ? homeCat.name.toLowerCase().split(/\s*&\s*/).map((s) => s.trim())
+      : [catLower];
+    return events.some((e) => {
+      const eCat = e.category.toLowerCase();
+      return matchTerms.some((term) => eCat.includes(term) || term.includes(eCat));
+    });
+  });
 
   return (
     <>

@@ -362,29 +362,24 @@ export const memberPortalData = {
     },
   ],
   calendarDays: [
-    { day: 1 }, { day: 2 }, { day: 3 }, { day: 4 }, { day: 5 }, { day: 6 }, { day: 7 },
-    { day: 8 }, { day: 9 }, { day: 10 }, { day: 11 }, { day: 12 }, { day: 13 }, { day: 14 },
-    { day: 15, emphasis: true, items: [singlesNight.title] },
-    { day: 16 },
-    { day: 17 },
-    { day: 18 },
-    { day: 19, emphasis: true, items: [reactWorkshop.title] },
-    { day: 20, emphasis: true, items: [newcomersNight.title] },
-    { day: 21, emphasis: true, items: [saturdayHike.title] },
-    { day: 22 },
-    { day: 23 },
-    { day: 24 },
-    { day: 25 },
-    { day: 26 },
-    { day: 27 },
-    { day: 28 },
-    { day: 29 },
-    { day: 30 },
-    { day: 31 },
-    { day: 1, outside: true },
-    { day: 2, outside: true },
-    { day: 3, outside: true },
-    { day: 4, outside: true },
+    // March 2026 starts on Sunday — 6 leading outside days (Mon 23 Feb – Sat 28 Feb)
+    { day: 23, outside: true }, { day: 24, outside: true }, { day: 25, outside: true },
+    { day: 26, outside: true }, { day: 27, outside: true }, { day: 28, outside: true },
+    { day: 1 }, // Sun
+    { day: 2 }, { day: 3 }, { day: 4 }, { day: 5 }, { day: 6 }, { day: 7 }, { day: 8 },
+    { day: 9 }, { day: 10 }, { day: 11 }, { day: 12 }, { day: 13 }, { day: 14 },
+    { day: 15, emphasis: true, items: [singlesNight.title] }, // Sat
+    { day: 16 }, // Sun
+    { day: 17 }, { day: 18 },
+    { day: 19, emphasis: true, items: [reactWorkshop.title, wineTasting.title] }, // Thu
+    { day: 20, emphasis: true, items: [newcomersNight.title] }, // Fri
+    { day: 21, emphasis: true, items: [saturdayHike.title] }, // Sat
+    { day: 22 }, // Sun
+    { day: 23 }, { day: 24 }, { day: 25 }, { day: 26 }, { day: 27 }, { day: 28 },
+    { day: 29 }, // Sun
+    { day: 30 }, { day: 31 },
+    { day: 1, outside: true }, { day: 2, outside: true }, { day: 3, outside: true },
+    { day: 4, outside: true }, { day: 5, outside: true },
   ],
   settingsSections: [
     {
@@ -442,7 +437,7 @@ export const memberPortalData = {
       title: "Billing",
       description: "Subscription status, invoices, credits, and premium renewal behavior.",
       items: [
-        { label: "Current plan", value: "Plus monthly" },
+        { label: "Current plan", value: "Plus" },
         { label: "Renewal date", value: "April 10, 2026" },
         { label: "Stored invoices", value: "6 available" },
       ],
