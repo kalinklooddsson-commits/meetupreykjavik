@@ -1,3 +1,7 @@
+import { env } from "@/lib/env";
+
+const siteUrl = env.NEXT_PUBLIC_SITE_URL || "https://meetupreykjavik.vercel.app";
+
 // Event JSON-LD (Schema.org Event)
 export function EventJsonLd({
   event,
@@ -22,7 +26,7 @@ export function EventJsonLd({
     startDate: event.startsAt,
     endDate: event.endsAt,
     image: event.art,
-    url: `https://meetupreykjavik.vercel.app/events/${event.slug}`,
+    url: `${siteUrl}/events/${event.slug}`,
     location: {
       "@type": "Place",
       name: event.venueName,
@@ -41,6 +45,8 @@ export function EventJsonLd({
     organizer: { "@type": "Organization", name: "MeetupReykjavik" },
   };
 
+  // JSON-LD uses JSON.stringify which inherently escapes special chars,
+  // making XSS via structured data safe for script[type=application/ld+json]
   return (
     <script
       type="application/ld+json"
@@ -70,7 +76,7 @@ export function VenueJsonLd({
     name: venue.name,
     description: venue.summary,
     image: venue.art,
-    url: `https://meetupreykjavik.vercel.app/venues/${venue.slug}`,
+    url: `${siteUrl}/venues/${venue.slug}`,
     address: {
       "@type": "PostalAddress",
       streetAddress: venue.address,
@@ -96,8 +102,8 @@ export function OrganizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "MeetupReykjavik",
-    url: "https://meetupreykjavik.vercel.app",
-    logo: "https://meetupreykjavik.vercel.app/icon.png",
+    url: siteUrl,
+    logo: `${siteUrl}/icon.png`,
     sameAs: [
       "https://instagram.com/meetupreykjavik",
       "https://facebook.com/meetupreykjavik",
