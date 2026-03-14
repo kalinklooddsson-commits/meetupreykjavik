@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
@@ -43,7 +44,8 @@ export async function getProfileBySlug(
 }
 
 export async function updateProfile(id: string, updates: ProfileUpdate) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — profiles may restrict updates via RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase

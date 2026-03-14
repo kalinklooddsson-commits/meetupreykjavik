@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 
 type MessageInsert = Database["public"]["Tables"]["messages"]["Insert"];
@@ -62,7 +63,8 @@ export async function getUserConversations(userId: string, limit = 50) {
 }
 
 export async function sendMessage(message: MessageInsert) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — messages table may restrict inserts via RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase

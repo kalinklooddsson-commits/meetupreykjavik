@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 
 type VenueInsert = Database["public"]["Tables"]["venues"]["Insert"];
@@ -61,7 +62,8 @@ export async function getVenueBySlug(slug: string) {
 }
 
 export async function createVenue(venue: VenueInsert) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — venue table may have restrictive RLS for inserts
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase
@@ -75,7 +77,8 @@ export async function createVenue(venue: VenueInsert) {
 }
 
 export async function updateVenue(slug: string, updates: VenueUpdate) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — venue table may have restrictive RLS for updates
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase

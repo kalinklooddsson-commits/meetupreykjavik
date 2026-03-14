@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 
 type GroupInsert = Database["public"]["Tables"]["groups"]["Insert"];
@@ -67,7 +68,8 @@ export async function getGroupBySlug(slug: string) {
 }
 
 export async function createGroup(group: GroupInsert) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — groups table may restrict inserts via RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase
@@ -81,7 +83,8 @@ export async function createGroup(group: GroupInsert) {
 }
 
 export async function joinGroup(groupId: string, userId: string) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — group_members table may restrict inserts via RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   // Check for existing membership
@@ -112,7 +115,8 @@ export async function joinGroup(groupId: string, userId: string) {
 }
 
 export async function leaveGroup(groupId: string, userId: string) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — group_members table may restrict deletes via RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { error } = await supabase

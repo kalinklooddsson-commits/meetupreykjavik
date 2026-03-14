@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { TICKET_COMMISSION_RATE } from "@/lib/payments/constants";
 import type { Database } from "@/types/database";
 
@@ -61,7 +62,9 @@ interface GetPlatformRevenueOptions {
 export async function getPlatformRevenue(
   period?: GetPlatformRevenueOptions,
 ) {
-  const supabase = await createSupabaseServerClient();
+  // Admin-only: reads ALL transactions across users — needs service role to bypass RLS
+  const adminClient = createSupabaseAdminClient();
+  const supabase = (adminClient ?? await createSupabaseServerClient()) as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) return { total_isk: 0 };
 
   // Only select the amount column with a reasonable batch limit

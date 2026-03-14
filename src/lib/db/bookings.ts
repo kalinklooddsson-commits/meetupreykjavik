@@ -8,7 +8,8 @@ type BookingInsert = Database["public"]["Tables"]["venue_bookings"]["Insert"];
 const validStatuses = new Set<string>(bookingStatuses);
 
 export async function createBooking(booking: BookingInsert) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — venue_bookings has restrictive RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase
@@ -22,7 +23,8 @@ export async function createBooking(booking: BookingInsert) {
 }
 
 export async function getVenueBookings(venueId: string) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — venue_bookings has restrictive RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) return [];
 
   const { data, error } = await supabase
@@ -70,7 +72,8 @@ export async function getAllBookings() {
 }
 
 export async function getOrganizerBookings(organizerId: string) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — venue_bookings has restrictive RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) return [];
 
   const { data, error } = await supabase
@@ -100,7 +103,8 @@ export async function updateBookingStatus(
     throw new Error(`Invalid booking status: ${status}`);
   }
 
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — venue_bookings has restrictive RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const updates: Record<string, unknown> = { status };

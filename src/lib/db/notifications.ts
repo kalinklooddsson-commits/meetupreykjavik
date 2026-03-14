@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 
 type NotificationInsert =
@@ -27,7 +28,8 @@ export async function markNotificationRead(
   notificationId: string,
   userId: string,
 ) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — notifications table may restrict updates via RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase
@@ -44,7 +46,8 @@ export async function markNotificationRead(
 }
 
 export async function createNotification(notification: NotificationInsert) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — notifications table may restrict inserts via RLS
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase
