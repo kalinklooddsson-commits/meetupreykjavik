@@ -879,7 +879,8 @@ export function OrganizerEventWizard({
                 <button
                   type="button"
                   onClick={() => saveDraft("publish-ready")}
-                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
+                  disabled={!steps.every((_, i) => stepIsReady(i, form))}
+                  className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                   {isEdit ? "Save changes" : "Mark ready for review"}
                   <CheckCheck className="h-4 w-4" />

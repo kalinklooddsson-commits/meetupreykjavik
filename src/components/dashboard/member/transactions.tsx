@@ -120,47 +120,53 @@ export async function MemberTransactionsScreen() {
         title="Transaction log"
         description="All your payments, ticket purchases, and refunds."
       >
-        <DashboardTable
-          columns={["Type", "Description", "Amount", "Status", "Date"]}
-          rows={memberTransactions.map((t) => ({
-            key: t.key,
-            cells: [
-              <div key="type" className="flex items-center gap-2">
-                {t.type === "refund" ? (
-                  <ArrowDownLeft className="h-3.5 w-3.5 text-brand-coral" />
-                ) : (
-                  <ArrowUpRight className="h-3.5 w-3.5 text-brand-indigo" />
-                )}
-                <ToneBadge tone={typeTone(t.type)}>
-                  {t.type.charAt(0).toUpperCase() + t.type.slice(1)}
-                </ToneBadge>
-              </div>,
-              <div key="desc">
-                {"eventSlug" in t && t.eventSlug ? (
-                  <Link
-                    href={`/events/${t.eventSlug}` as Route}
-                    className="font-medium text-brand-indigo hover:underline"
-                  >
-                    {t.description}
-                  </Link>
-                ) : (
-                  <span className="font-medium">{t.description}</span>
-                )}
-              </div>,
-              <span
-                key="amount"
-                className={`font-medium tabular-nums ${t.amount.startsWith("-") ? "text-brand-coral" : "text-brand-text"}`}
-              >
-                {t.amount}
-              </span>,
-              <ToneBadge key="status" tone={statusTone(t.status)}>
-                {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
-              </ToneBadge>,
-              <span key="date" className="text-sm text-brand-text-muted">{t.date}</span>,
-            ],
-          }))}
-          caption="Transaction history"
-        />
+        {memberTransactions.length > 0 ? (
+          <DashboardTable
+            columns={["Type", "Description", "Amount", "Status", "Date"]}
+            rows={memberTransactions.map((t) => ({
+              key: t.key,
+              cells: [
+                <div key="type" className="flex items-center gap-2">
+                  {t.type === "refund" ? (
+                    <ArrowDownLeft className="h-3.5 w-3.5 text-brand-coral" />
+                  ) : (
+                    <ArrowUpRight className="h-3.5 w-3.5 text-brand-indigo" />
+                  )}
+                  <ToneBadge tone={typeTone(t.type)}>
+                    {t.type.charAt(0).toUpperCase() + t.type.slice(1)}
+                  </ToneBadge>
+                </div>,
+                <div key="desc">
+                  {"eventSlug" in t && t.eventSlug ? (
+                    <Link
+                      href={`/events/${t.eventSlug}` as Route}
+                      className="font-medium text-brand-indigo hover:underline"
+                    >
+                      {t.description}
+                    </Link>
+                  ) : (
+                    <span className="font-medium">{t.description}</span>
+                  )}
+                </div>,
+                <span
+                  key="amount"
+                  className={`font-medium tabular-nums ${t.amount.startsWith("-") ? "text-brand-coral" : "text-brand-text"}`}
+                >
+                  {t.amount}
+                </span>,
+                <ToneBadge key="status" tone={statusTone(t.status)}>
+                  {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
+                </ToneBadge>,
+                <span key="date" className="text-sm text-brand-text-muted">{t.date}</span>,
+              ],
+            }))}
+            caption="Transaction history"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No transactions yet. Your ticket purchases, refunds, and subscription payments will appear here.
+          </p>
+        )}
       </Surface>
     </PortalShell>
   );

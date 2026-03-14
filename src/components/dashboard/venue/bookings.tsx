@@ -134,20 +134,26 @@ export async function VenueBookingsScreen() {
         title="Booking history"
         description="Past booking decisions and outcomes."
       >
-        <DashboardTable
-          columns={["Organizer", "Result", "Note"]}
-          rows={data.bookings.history.map((h) => ({
-            key: h.key,
-            cells: [
-              <span key="org" className="font-medium">{h.organizer}</span>,
-              <ToneBadge key="result" tone={statusTone(h.result)}>
-                {h.result}
-              </ToneBadge>,
-              <span key="note" className="text-brand-text-muted">{h.note}</span>,
-            ],
-          }))}
-          caption="Booking history"
-        />
+        {data.bookings.history.length > 0 ? (
+          <DashboardTable
+            columns={["Organizer", "Result", "Note"]}
+            rows={data.bookings.history.map((h) => ({
+              key: h.key,
+              cells: [
+                <span key="org" className="font-medium">{h.organizer}</span>,
+                <ToneBadge key="result" tone={statusTone(h.result)}>
+                  {h.result}
+                </ToneBadge>,
+                <span key="note" className="text-brand-text-muted">{h.note}</span>,
+              ],
+            }))}
+            caption="Booking history"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No booking history yet.
+          </p>
+        )}
       </Surface>
 
       {/* ── Guest fit insights ────────────────────────────── */}

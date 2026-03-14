@@ -46,36 +46,42 @@ export async function OrganizerMessagesScreen() {
           title="Messages"
           description="All conversations related to your events and venue partnerships."
         >
-          <DashboardTable
-            columns={["From", "Subject", "Channel", "Status", "Action"]}
-            rows={data.messages.map((m) => ({
-              key: m.key,
-              cells: [
-                <div key="from">
-                  <span className="font-medium text-brand-text">
-                    {m.counterpart}
-                  </span>
-                  <div className="mt-0.5 text-xs text-brand-text-muted">
-                    {m.role}
-                  </div>
-                </div>,
-                <div key="subject">
-                  <div className="font-medium text-brand-text">{m.subject}</div>
-                  <p className="mt-0.5 text-xs leading-relaxed text-brand-text-muted">
-                    {m.preview}
-                  </p>
-                </div>,
-                <ToneBadge key="channel" tone="neutral">
-                  {m.channel}
-                </ToneBadge>,
-                <ToneBadge key="status" tone={messageTone(m.status)}>
-                  {m.status}
-                </ToneBadge>,
-                <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
-              ],
-            }))}
-            caption="Organizer messages"
-          />
+          {data.messages.length > 0 ? (
+            <DashboardTable
+              columns={["From", "Subject", "Channel", "Status", "Action"]}
+              rows={data.messages.map((m) => ({
+                key: m.key,
+                cells: [
+                  <div key="from">
+                    <span className="font-medium text-brand-text">
+                      {m.counterpart}
+                    </span>
+                    <div className="mt-0.5 text-xs text-brand-text-muted">
+                      {m.role}
+                    </div>
+                  </div>,
+                  <div key="subject">
+                    <div className="font-medium text-brand-text">{m.subject}</div>
+                    <p className="mt-0.5 text-xs leading-relaxed text-brand-text-muted">
+                      {m.preview}
+                    </p>
+                  </div>,
+                  <ToneBadge key="channel" tone="neutral">
+                    {m.channel}
+                  </ToneBadge>,
+                  <ToneBadge key="status" tone={messageTone(m.status)}>
+                    {m.status}
+                  </ToneBadge>,
+                  <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
+                ],
+              }))}
+              caption="Organizer messages"
+            />
+          ) : (
+            <p className="py-8 text-center text-sm text-gray-500">
+              No messages yet. You&apos;ll see conversations with venues and attendees here.
+            </p>
+          )}
         </Surface>
       </div>
     </PortalShell>

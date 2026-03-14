@@ -84,34 +84,40 @@ export async function MemberGroupsScreen() {
         actionLabel="Discover groups"
         actionHref={"/groups" as Route}
       >
-        <DashboardTable
-          columns={["Group", "Your Role", "Next Event", "Unread", "Action"]}
-          rows={data.groups.map((g) => ({
-            key: g.group.slug,
-            cells: [
-              <div key="group" className="flex items-center gap-2.5">
-                <AvatarStamp name={g.group.name} size="sm" />
-                <Link
-                  href={`/groups/${g.group.slug}` as Route}
-                  className="font-medium text-brand-indigo hover:underline"
-                >
-                  {g.group.name}
-                </Link>
-              </div>,
-              <ToneBadge key="role" tone="neutral">{g.role}</ToneBadge>,
-              g.nextEvent ? (
-                <span key="event" className="text-sm">{g.nextEvent}</span>
-              ) : (
-                <span key="event" className="text-sm text-brand-text-muted">No upcoming event</span>
-              ),
-              <ToneBadge key="unread" tone={g.unread.includes("0") ? "neutral" : "coral"}>
-                {g.unread}
-              </ToneBadge>,
-              <LeaveGroupButton key="leave" groupSlug={g.group.slug} groupName={g.group.name} />,
-            ],
-          }))}
-          caption="Your groups"
-        />
+        {data.groups.length > 0 ? (
+          <DashboardTable
+            columns={["Group", "Your Role", "Next Event", "Unread", "Action"]}
+            rows={data.groups.map((g) => ({
+              key: g.group.slug,
+              cells: [
+                <div key="group" className="flex items-center gap-2.5">
+                  <AvatarStamp name={g.group.name} size="sm" />
+                  <Link
+                    href={`/groups/${g.group.slug}` as Route}
+                    className="font-medium text-brand-indigo hover:underline"
+                  >
+                    {g.group.name}
+                  </Link>
+                </div>,
+                <ToneBadge key="role" tone="neutral">{g.role}</ToneBadge>,
+                g.nextEvent ? (
+                  <span key="event" className="text-sm">{g.nextEvent}</span>
+                ) : (
+                  <span key="event" className="text-sm text-brand-text-muted">No upcoming event</span>
+                ),
+                <ToneBadge key="unread" tone={g.unread.includes("0") ? "neutral" : "coral"}>
+                  {g.unread}
+                </ToneBadge>,
+                <LeaveGroupButton key="leave" groupSlug={g.group.slug} groupName={g.group.name} />,
+              ],
+            }))}
+            caption="Your groups"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            You haven&apos;t joined any groups yet. <Link href={"/groups" as Route} className="text-brand-indigo hover:underline">Discover groups</Link> to find your community.
+          </p>
+        )}
       </Surface>
 
       {/* ── Group details cards ─────────────────────────────── */}

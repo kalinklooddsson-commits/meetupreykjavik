@@ -86,21 +86,27 @@ export async function VenueDealsScreen() {
         title="Active deals"
         description="Deals currently available to members and organizers."
       >
-        <DashboardTable
-          columns={["Deal", "Type", "Tier", "Redemption", "Status", "Note"]}
-          rows={activeDeals.map((d) => ({
-            key: d.key,
-            cells: [
-              <span key="title" className="font-medium">{d.title}</span>,
-              <ToneBadge key="type" tone="neutral">{d.type}</ToneBadge>,
-              <ToneBadge key="tier" tone="indigo">{d.tier}</ToneBadge>,
-              <span key="redemption" className="text-sm font-medium text-brand-text">{d.redemption}</span>,
-              <ToneBadge key="status" tone={statusTone(d.status)}>{d.status}</ToneBadge>,
-              <span key="note" className="text-brand-text-muted">{d.note}</span>,
-            ],
-          }))}
-          caption="Active venue deals"
-        />
+        {activeDeals.length > 0 ? (
+          <DashboardTable
+            columns={["Deal", "Type", "Tier", "Redemption", "Status", "Note"]}
+            rows={activeDeals.map((d) => ({
+              key: d.key,
+              cells: [
+                <span key="title" className="font-medium">{d.title}</span>,
+                <ToneBadge key="type" tone="neutral">{d.type}</ToneBadge>,
+                <ToneBadge key="tier" tone="indigo">{d.tier}</ToneBadge>,
+                <span key="redemption" className="text-sm font-medium text-brand-text">{d.redemption}</span>,
+                <ToneBadge key="status" tone={statusTone(d.status)}>{d.status}</ToneBadge>,
+                <span key="note" className="text-brand-text-muted">{d.note}</span>,
+              ],
+            }))}
+            caption="Active venue deals"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No active deals yet. Create one to attract organizers and members.
+          </p>
+        )}
       </Surface>
 
       {/* ── Draft deals ──────────────────────────────────── */}
