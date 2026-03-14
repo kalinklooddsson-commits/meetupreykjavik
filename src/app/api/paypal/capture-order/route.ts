@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       commission_amount: customData.commission ?? 0,
       payment_provider: "paypal",
       payment_id: capture?.id ?? orderId,
-      status: captureData.status,
+      status: (captureData.status ?? "pending").toLowerCase(),
     });
 
     return NextResponse.json({
