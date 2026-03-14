@@ -143,13 +143,25 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       getMemberProfile(),
     ]);
 
-    // Count groups from DB
-    let groupCount = 0;
+    // Fetch groups the member belongs to
     const supabase = await createSupabaseServerClient();
+    let memberGroups: Array<{ group: { slug: string; name: string }; role: string; nextEvent: string; unread: string }> = [];
     if (supabase) {
-      const { count } = await supabase.from("group_members").select("id", { count: "exact", head: true }).eq("user_id", session.id);
-      groupCount = count ?? 0;
+      const { data: memberships } = await supabase
+        .from("group_members")
+        .select("role, groups(slug, name)")
+        .eq("user_id", session.id);
+      memberGroups = (memberships ?? []).map((m: Record<string, unknown>) => {
+        const g = m.groups as Record<string, string> | null;
+        return {
+          group: { slug: g?.slug ?? "", name: g?.name ?? "Unknown group" },
+          role: ((m.role as string) ?? "member").replace(/^\w/, (c: string) => c.toUpperCase()),
+          nextEvent: "",
+          unread: "0",
+        };
+      });
     }
+    const groupCount = memberGroups.length;
 
     const upcomingEvents = rsvps.slice(0, 5).map((rsvp: Record<string, unknown>) => {
       const event = rsvp.events as Record<string, unknown> | null;
@@ -241,7 +253,7 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       upcomingEvents,
       // Override mock events/groups so fake data doesn't leak
       events: [],
-      groups: [],
+      groups: memberGroups,
       inbox,
       notifications: mappedNotifications,
       messages: mappedMessages,
