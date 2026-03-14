@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { hasPayPalEnv, verifyWebhookSignature } from "@/lib/payments/paypal";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 /**
  * Database-backed dedup for webhook retries.
@@ -15,9 +15,10 @@ async function isDuplicate(transmissionId: string): Promise<boolean> {
 
   // Try database-backed dedup first (works across serverless instances)
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
     if (supabase) {
-      const { error } = await supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any)
         .from("webhook_dedup")
         .insert({ transmission_id: transmissionId });
 
@@ -99,19 +100,19 @@ export async function POST(request: NextRequest) {
 
   const eventType = event.event_type;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = createSupabaseAdminClient() as any;
+
   try {
     switch (eventType) {
       case "PAYMENT.CAPTURE.COMPLETED": {
         const captureId = event.resource?.id as string | undefined;
-        if (captureId) {
-          const supabase = await createSupabaseServerClient();
-          if (supabase) {
-            await supabase
-              .from("transactions")
-              .update({ status: "completed" })
-              .eq("payment_id", captureId)
-              .eq("payment_provider", "paypal");
-          }
+        if (captureId && db) {
+          await db
+            .from("transactions")
+            .update({ status: "completed" })
+            .eq("payment_id", captureId)
+            .eq("payment_provider", "paypal");
         }
         break;
       }
@@ -120,15 +121,12 @@ export async function POST(request: NextRequest) {
       case "PAYMENT.CAPTURE.REFUNDED": {
         const captureId = event.resource?.id as string | undefined;
         const newStatus = eventType === "PAYMENT.CAPTURE.DENIED" ? "failed" : "refunded";
-        if (captureId) {
-          const supabase = await createSupabaseServerClient();
-          if (supabase) {
-            await supabase
-              .from("transactions")
-              .update({ status: newStatus })
-              .eq("payment_id", captureId)
-              .eq("payment_provider", "paypal");
-          }
+        if (captureId && db) {
+          await db
+            .from("transactions")
+            .update({ status: newStatus })
+            .eq("payment_id", captureId)
+            .eq("payment_provider", "paypal");
         }
         break;
       }
@@ -136,16 +134,13 @@ export async function POST(request: NextRequest) {
       case "BILLING.SUBSCRIPTION.ACTIVATED": {
         const subscriptionId = event.resource?.id as string | undefined;
         const subscriberEmail = (event.resource?.subscriber as Record<string, unknown>)?.email_address as string | undefined;
-        if (subscriptionId && subscriberEmail) {
-          const supabase = await createSupabaseServerClient();
-          if (supabase) {
-            const customId = event.resource?.custom_id as string | undefined;
-            const tier = customId ?? "plus";
-            await supabase
-              .from("profiles")
-              .update({ is_premium: true, premium_tier: tier })
-              .eq("email", subscriberEmail);
-          }
+        if (subscriptionId && subscriberEmail && db) {
+          const customId = event.resource?.custom_id as string | undefined;
+          const tier = customId ?? "plus";
+          await db
+            .from("profiles")
+            .update({ is_premium: true, premium_tier: tier })
+            .eq("email", subscriberEmail);
         }
         break;
       }
@@ -154,14 +149,11 @@ export async function POST(request: NextRequest) {
       case "BILLING.SUBSCRIPTION.EXPIRED":
       case "BILLING.SUBSCRIPTION.SUSPENDED": {
         const subscriberEmail = (event.resource?.subscriber as Record<string, unknown>)?.email_address as string | undefined;
-        if (subscriberEmail) {
-          const supabase = await createSupabaseServerClient();
-          if (supabase) {
-            await supabase
-              .from("profiles")
-              .update({ is_premium: false, premium_tier: null })
-              .eq("email", subscriberEmail);
-          }
+        if (subscriberEmail && db) {
+          await db
+            .from("profiles")
+            .update({ is_premium: false, premium_tier: null })
+            .eq("email", subscriberEmail);
         }
         break;
       }
