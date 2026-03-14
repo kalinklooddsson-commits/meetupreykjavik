@@ -199,6 +199,7 @@ export function VenueEventForm({
     return {
       title: form.title,
       description: form.description || "Event description",
+      category: form.category || undefined,
       status: "draft",
       eventType: form.eventType,
       startsAt:

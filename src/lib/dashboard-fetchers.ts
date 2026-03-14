@@ -321,7 +321,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       revenueByEvent.set(eid, entry);
     }
 
-    const nextEvents = managedEvents.slice(0, 10).map((e: Record<string, unknown>) => {
+    const allMappedEvents = managedEvents.map((e: Record<string, unknown>) => {
       const venue = e.venues as Record<string, unknown> | null;
       const group = e.groups as Record<string, unknown> | null;
       const startsAt = new Date(e.starts_at as string);
@@ -384,11 +384,11 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
           detail: "Total ticket and membership revenue.",
         },
       ],
-      // Override mock events/groups/bookings with empty arrays so fake data doesn't leak
-      events: [],
+      // Use all mapped events for the events page, slice for nextEvents (overview)
+      events: allMappedEvents,
       groups: [],
       bookings: [],
-      nextEvents,
+      nextEvents: allMappedEvents.slice(0, 10),
       ...(rsvpTrendData ? { rsvpTrend: rsvpTrendData } : {}),
     } as unknown as OrganizerPortalData;
   } catch (error) {

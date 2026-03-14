@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       venueAddress, onlineLink, eventType, attendeeLimit, guestLimit,
       ageRestriction, ageMin, ageMax, isFree, ticketTiers,
       rsvpMode, recurrence, recurrenceRule, groupSlug,
-      commentsEnabled, featuredPhotoUrl,
+      commentsEnabled, featuredPhotoUrl, category,
     } = body;
 
     if (!title) {
@@ -66,6 +66,17 @@ export async function POST(request: NextRequest) {
       groupId = group?.id ?? null;
     }
 
+    // Find category by slug if provided
+    let categoryId = null;
+    if (category) {
+      const { data: cat } = await db
+        .from("categories")
+        .select("id")
+        .eq("slug", category)
+        .maybeSingle();
+      categoryId = cat?.id ?? null;
+    }
+
     if (!startsAt) {
       return NextResponse.json({
         error: "Validation failed",
@@ -81,6 +92,7 @@ export async function POST(request: NextRequest) {
       ends_at: endsAt ?? null,
       venue_id: venueId,
       group_id: groupId,
+      category_id: categoryId,
       venue_name: venueName ?? null,
       venue_address: venueAddress ?? null,
       online_link: onlineLink ?? null,
