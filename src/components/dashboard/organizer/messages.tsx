@@ -137,9 +137,9 @@ export async function OrganizerNotificationsScreen() {
     tone: n.tone,
   }));
 
-  // Unread notification IDs for "Mark all read" — unread items have tone "coral" or "indigo"
+  // Unread notification IDs for "Mark all read"
   const unreadIds = data.notifications
-    .filter((n) => n.status === "Unread" || n.status === "New")
+    .filter((n) => n.status === "Unread" || n.status === "New" || n.tone === "coral" || n.tone === "indigo")
     .map((n) => n.key);
 
   return (

@@ -35,6 +35,7 @@ export {
 export {
   createBooking,
   getVenueBookings,
+  getOrganizerBookings,
   getAllBookings,
   updateBookingStatus,
 } from "./bookings";

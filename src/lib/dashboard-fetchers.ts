@@ -16,7 +16,7 @@ import { getUserConversations } from "@/lib/db/messages";
 import { getProfileById } from "@/lib/db/profiles";
 import { getEvents, getEventsByHost } from "@/lib/db/events";
 import { getUserTransactions, getPlatformRevenue } from "@/lib/db/transactions";
-import { getVenueBookings } from "@/lib/db/bookings";
+import { getVenueBookings, getOrganizerBookings } from "@/lib/db/bookings";
 import { getVenues } from "@/lib/db/venues";
 import {
   memberProfile as mockMemberProfile,
@@ -428,9 +428,12 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
   }
 
   try {
-    const [managedEvents, transactions, rsvpTrendData] = await Promise.all([
+    const [managedEvents, transactions, notifications, conversations, organizerBookingsRaw, rsvpTrendData] = await Promise.all([
       getEventsByHost(session.id, { limit: 50 }),
       getUserTransactions(session.id),
+      getUserNotifications(session.id),
+      getUserConversations(session.id),
+      getOrganizerBookings(session.id),
       (async () => {
         // Build RSVP trend from last 7 days
         try {
@@ -570,9 +573,67 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       // Use all mapped events for the events page, slice for nextEvents (overview)
       events: allMappedEvents,
       groups: organizerGroups,
-      bookings: [],
       nextEvents: allMappedEvents.slice(0, 10),
       ...(rsvpTrendData ? { rsvpTrend: rsvpTrendData } : {}),
+
+      // ── Real notifications (same pattern as member/venue) ────────
+      notifications: notifications.length > 0
+        ? notifications.slice(0, 10).map((n: Record<string, unknown>) => ({
+            key: n.id as string,
+            title: (n.title as string) ?? "Notification",
+            detail: (n.body as string) ?? "",
+            channel: (n.type as string) ?? "System",
+            status: n.is_read ? "Read" : "New",
+            meta: formatRelativeTime(n.created_at as string),
+            tone: (n.is_read ? "sage" : "indigo") as "sage" | "coral" | "indigo",
+          }))
+        : mockOrganizerPortalData.notifications,
+
+      // ── Real activity feed from notifications ────────────────────
+      activityFeed: notifications.length > 0
+        ? notifications.slice(0, 5).map((n: Record<string, unknown>) => ({
+            key: n.id as string,
+            title: (n.title as string) ?? "Activity",
+            detail: (n.body as string) ?? "",
+            meta: formatRelativeTime(n.created_at as string),
+            tone: (n.is_read ? "sage" : "coral") as "sage" | "coral" | "indigo",
+          }))
+        : mockOrganizerPortalData.activityFeed,
+
+      // ── Real messages ────────────────────────────────────────────
+      messages: conversations.length > 0
+        ? conversations.slice(0, 10).map((m: Record<string, unknown>) => {
+            const body = (m.body as string) ?? "";
+            const subjectText = (m.subject as string) || body.slice(0, 40) || "Message";
+            return {
+              key: m.id as string,
+              counterpart: (m.other_display_name as string) ?? "Unknown",
+              role: "User",
+              subject: subjectText,
+              preview: body !== subjectText ? body.slice(0, 80) : "",
+              channel: "Direct message",
+              status: m.is_read ? "Read" : "Unread",
+              meta: formatRelativeTime(m.created_at as string),
+            };
+          })
+        : mockOrganizerPortalData.messages,
+
+      // ── Real booking pipeline ────────────────────────────────────
+      bookingPipeline: organizerBookingsRaw.length > 0
+        ? organizerBookingsRaw.map((b: Record<string, unknown>) => {
+            const venue = b.venue as { name: string } | null;
+            return {
+              key: b.id as string,
+              venue: venue?.name ?? "Unknown venue",
+              status: ((b.status as string) ?? "pending").replace(/^\w/, (c: string) => c.toUpperCase()),
+              date: (b.requested_date as string) ?? "",
+              note: (b.message as string) ?? "",
+            };
+          })
+        : mockOrganizerPortalData.bookingPipeline,
+
+      // Keep bookings for backwards compat (the bookings overview uses bookingPipeline)
+      bookings: [],
     } as unknown as OrganizerPortalData;
   } catch (error) {
     console.error("Failed to fetch organizer dashboard data:", error);
