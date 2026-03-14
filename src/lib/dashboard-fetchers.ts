@@ -869,6 +869,24 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
 
     let venueRow = venueRows?.[0];
 
+    // Try email→profile→owner_id chain if direct owner_id lookup failed
+    if (!venueRow && session.email) {
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("email", session.email)
+        .limit(1);
+      if (profileRow?.[0]) {
+        const { data: venueByProfile } = await supabase
+          .from("venues")
+          .select("*")
+          .eq("owner_id", profileRow[0].id as string)
+          .order("created_at", { ascending: true })
+          .limit(1);
+        venueRow = venueByProfile?.[0];
+      }
+    }
+
     // If user doesn't own a venue (e.g. admin), pick a venue that has events for preview
     if (!venueRow && session.accountType === "admin") {
       // Find a venue that has events (most interesting for preview)

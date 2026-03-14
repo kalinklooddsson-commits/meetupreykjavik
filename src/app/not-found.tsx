@@ -2,11 +2,16 @@ import Link from "next/link";
 import { Compass } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+
 export default async function NotFound() {
   const t = await getTranslations("errors.notFound");
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-brand-sand px-4 py-20">
+    <div className="site-shell page-backdrop">
+      <SiteHeader />
+      <main className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-20">
       <div className="text-center">
         <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-indigo">
           <Compass className="h-8 w-8 text-white" />
@@ -41,6 +46,8 @@ export default async function NotFound() {
           </Link>
         </div>
       </div>
-    </main>
+      </main>
+      <SiteFooter />
+    </div>
   );
 }

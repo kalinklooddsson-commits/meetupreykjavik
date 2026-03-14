@@ -1370,6 +1370,13 @@ async function handleLiveDataRequest(
       }
       case "POST /api/messages": {
         if (!session) return forbiddenResponse("Authentication required.");
+        // Messaging is a Plus feature — free users cannot send messages
+        if (!session.premiumTier && session.accountType === "user") {
+          return NextResponse.json(
+            { error: "Messaging is a Plus feature. Upgrade your plan to send messages." },
+            { status: 403 },
+          );
+        }
         const msgBody = ((await parseValidatedBody(request, key)) ?? await request.json()) as Record<string, unknown>;
 
         // Determine receiver — direct ID, threadId reply, or name/email lookup

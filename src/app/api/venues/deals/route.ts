@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Find venue owned by this user (try owner_id first, then slug for demo accounts)
+    // Find venue owned by this user (try owner_id, then email→profile→owner_id, then slug)
     let venue: { id: string } | null = null;
     const { data: venueByOwner } = await db
       .from("venues")
@@ -71,6 +71,23 @@ export async function POST(request: NextRequest) {
       .eq("owner_id", session.id)
       .maybeSingle();
     venue = venueByOwner;
+
+    // Try looking up venue via the user's email → profile → owner_id chain
+    if (!venue && session.email) {
+      const { data: profile } = await db
+        .from("profiles")
+        .select("id")
+        .eq("email", session.email)
+        .maybeSingle();
+      if (profile) {
+        const { data: venueByProfile } = await db
+          .from("venues")
+          .select("id")
+          .eq("owner_id", profile.id)
+          .maybeSingle();
+        venue = venueByProfile;
+      }
+    }
 
     if (!venue && session.slug) {
       const { data: venueBySlug } = await db

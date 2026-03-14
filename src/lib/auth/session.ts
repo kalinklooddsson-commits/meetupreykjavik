@@ -13,7 +13,7 @@ import type { Database } from "@/types/database";
 
 type ProfileRow = Pick<
   Database["public"]["Tables"]["profiles"]["Row"],
-  "id" | "display_name" | "slug" | "email" | "locale" | "account_type"
+  "id" | "display_name" | "slug" | "email" | "locale" | "account_type" | "is_premium" | "premium_tier"
 >;
 type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
 
@@ -83,6 +83,7 @@ function mapProfileToSession(profile: ProfileRow): AppSession {
     slug: profile.slug,
     accountType: normaliseAccountType(profile.account_type),
     locale: normaliseLocale(profile.locale),
+    premiumTier: profile.is_premium ? (profile.premium_tier ?? "plus") : null,
   };
 }
 

@@ -222,6 +222,7 @@ select:focus-visible,
 
 .font-editorial {
   font-family: var(--font-fraunces), serif;
+  font-variation-settings: "WONK" 0;
 }
 
 .site-shell {

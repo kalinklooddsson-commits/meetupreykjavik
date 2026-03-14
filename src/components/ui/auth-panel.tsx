@@ -346,7 +346,7 @@ export function AuthPanel({
             {tAuth("demoAccounts")}
           </div>
           <div className="mt-3 space-y-2">
-            {demoAuthAccounts.map((account) => (
+            {demoAuthAccounts.filter((a) => a.accountType !== "admin").map((account) => (
               <button
                 key={account.email}
                 type="button"

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { Route } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Menu, Search, X } from "lucide-react";
 
@@ -229,7 +230,14 @@ function MobileDrawer({
     return () => document.removeEventListener("keydown", handleKey);
   }, [open, onClose]);
 
-  return (
+  // Portal to document.body to escape the <header>'s backdrop-blur
+  // containing block, which clips fixed children on iOS Safari.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -360,7 +368,8 @@ function MobileDrawer({
           </div>
         </nav>
       </div>
-    </>
+    </>,
+    document.body,
   );
 }
 

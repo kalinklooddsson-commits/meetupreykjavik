@@ -45,6 +45,23 @@ export async function PATCH(request: NextRequest) {
       .maybeSingle();
     venue = venueByOwner;
 
+    // Try looking up venue via the user's email → profile → owner_id chain
+    if (!venue && session.email) {
+      const { data: profile } = await db
+        .from("profiles")
+        .select("id")
+        .eq("email", session.email)
+        .maybeSingle();
+      if (profile) {
+        const { data: venueByProfile } = await db
+          .from("venues")
+          .select("id")
+          .eq("owner_id", profile.id)
+          .maybeSingle();
+        venue = venueByProfile;
+      }
+    }
+
     if (!venue && session.slug) {
       const { data: venueBySlug } = await db
         .from("venues")

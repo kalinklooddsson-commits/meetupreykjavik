@@ -9,14 +9,10 @@ type VenueMapInnerProps = {
   address: string;
 };
 
-const DEFAULT_CENTER: [number, number] = [64.1466, -21.9426];
-
-export default function VenueMapInner({ latitude, longitude, name, address }: VenueMapInnerProps) {
-  const lat = latitude || DEFAULT_CENTER[0];
-  const lng = longitude || DEFAULT_CENTER[1];
-
-  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${name}, ${address}, Reykjavik, Iceland`)}`;
-  const osmEmbedSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.006}%2C${lat - 0.004}%2C${lng + 0.006}%2C${lat + 0.004}&layer=mapnik&marker=${lat}%2C${lng}`;
+export default function VenueMapInner({ name, address }: VenueMapInnerProps) {
+  const searchQuery = encodeURIComponent(`${name}, ${address}, Reykjavik, Iceland`);
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
+  const googleMapsEmbedSrc = `https://maps.google.com/maps?q=${searchQuery}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
 
   return (
     <div className="space-y-2">
@@ -28,7 +24,7 @@ export default function VenueMapInner({ latitude, longitude, name, address }: Ve
           style={{ border: 0 }}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          src={osmEmbedSrc}
+          src={googleMapsEmbedSrc}
           allowFullScreen
         />
       </div>
