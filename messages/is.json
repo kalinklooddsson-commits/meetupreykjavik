@@ -603,7 +603,7 @@
     },
     "expectationsEyebrow": "Svartímar",
     "expectationsTitle": "Við hverju má búast",
-    "expectationsDescription": "Þetta heldur væntingum skýrum áður en virkir tölvupóstsinnviðir tengjast.",
+    "expectationsDescription": "Hér er hvað þú getur búist við þegar þú hefur samband.",
     "expectations": {
       "one": "Markmið fyrir almenna þjónustu: innan eins virks dags.",
       "two": "Staða- og skipuleggjendamál: yfirleitt sama dag.",
@@ -681,7 +681,7 @@
       "venuePartner": "Samstarfsstaður",
       "admin": "Stjórnandi"
     },
-    "demoAccounts": "Prufuaðgangar",
+    "demoAccounts": "Skipta um aðgang",
     "signOut": "Skrá út",
     "backToHome": "Til baka heim",
     "errors": {

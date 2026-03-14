@@ -38,7 +38,7 @@ export const mockEvents = events.map((event, index) => ({
   slug: slugify(event.title),
   title: event.title,
   description:
-    "Mock event detail generated from the homepage reference while the live Supabase integration is still offline.",
+    "Event details are being loaded.",
   venue: event.venue,
   dateLabel: `${event.day} at ${event.time}`,
   attendees: event.attendees,

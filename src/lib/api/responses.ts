@@ -36,7 +36,7 @@ export function scaffoldResponse(match: ApiRouteMatch, options?: { body?: unknow
       description: match.route.description,
       note:
         options?.note ??
-        "This endpoint is registered from the spec but still needs live Supabase, payment, or messaging wiring.",
+        "This feature is not yet available. Please try again later.",
       receivedBody: options?.body ?? null,
     },
     { status: 501 },
@@ -54,7 +54,7 @@ export function serviceUnavailableResponse(match: ApiRouteMatch, options?: { bod
       params: match.params,
       description: match.route.description,
       note:
-        "The request payload validated, but this endpoint needs external service keys before it can execute live.",
+        "This service is temporarily unavailable. Please try again later.",
       receivedBody: options?.body ?? null,
     },
     { status: 503 },

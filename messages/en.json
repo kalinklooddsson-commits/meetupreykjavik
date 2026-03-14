@@ -76,13 +76,13 @@
     "reminderFlow": "Reminder flow",
     "reminderFlowDetail": "How the event maintains momentum and reduces no-shows.",
     "memberBase": "Member base",
-    "membersValue": "{count} members",
+    "membersValue": "{count, plural, one {# member} other {# members}}",
     "memberBaseDetail": "The current community size already supporting the format.",
     "activity": "Activity",
     "activityValue": "{percent}% active",
     "activityDetail": "How much recurring energy the group is carrying right now.",
     "upcomingRhythm": "Upcoming rhythm",
-    "upcomingValue": "{count} upcoming events",
+    "upcomingValue": "{count, plural, one {# upcoming event} other {# upcoming events}}",
     "buildingNext": "Building next cycle",
     "upcomingRhythmDetail": "How consistent the calendar looks for members deciding whether to join.",
     "area": "Area",
@@ -603,7 +603,7 @@
     },
     "expectationsEyebrow": "Response times",
     "expectationsTitle": "What to expect",
-    "expectationsDescription": "This keeps expectations clear before live email infrastructure is connected.",
+    "expectationsDescription": "Here's what to expect when you reach out to us.",
     "expectations": {
       "one": "General support target: within one working day.",
       "two": "Venue and organizer operational questions: usually within the same business day.",
@@ -681,7 +681,7 @@
       "venuePartner": "Venue partner",
       "admin": "Admin"
     },
-    "demoAccounts": "Demo accounts",
+    "demoAccounts": "Switch account",
     "signOut": "Sign out",
     "backToHome": "Back to home",
     "errors": {
@@ -859,7 +859,7 @@
       "reviewsText": "Real ratings from community members who attended events at each venue."
     },
     "neighborhoods": {
-      "venues": "{count} venues",
+      "venues": "{count, plural, one {# venue} other {# venues}}",
       "combinedSeats": "{capacity} combined seats. Best-rated: {topVenue} ({topRating})."
     },
     "grid": {
