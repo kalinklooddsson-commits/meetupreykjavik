@@ -1810,13 +1810,20 @@ async function handleLiveDataRequest(
         if (!supabase) return null;
         const body = await request.json();
         const { key, keys, action: venueAction } = body as { key?: string; keys?: string[]; action: string };
+        // Map action to valid venue status (DB CHECK: pending, active, waitlisted, suspended, rejected)
+        const venueStatusMap: Record<string, string> = {
+          approve: "active", approved: "active",
+          reject: "rejected", rejected: "rejected",
+          waitlist: "waitlisted", waitlisted: "waitlisted",
+          suspend: "suspended", suspended: "suspended",
+          pending: "pending",
+        };
         // Batch operation
         if (keys && keys.length > 0) {
           const batchUpdates: Record<string, unknown> = {};
-          if (venueAction === "approved" || venueAction === "approve") batchUpdates.status = "active";
-          else if (venueAction === "rejected") batchUpdates.status = "rejected";
-          else if (venueAction === "waitlisted") batchUpdates.status = "waitlisted";
-          else batchUpdates.status = venueAction;
+          const mappedStatus = venueStatusMap[venueAction.toLowerCase()];
+          if (!mappedStatus) return validationMessage(`Invalid venue action: ${venueAction}`);
+          batchUpdates.status = mappedStatus;
           const { error } = await supabase.from("venues").update(batchUpdates).in("slug", keys);
           if (error) throw error;
           return successResponse({ ok: true, action: venueAction, count: keys.length });
@@ -1825,10 +1832,11 @@ async function handleLiveDataRequest(
         if (!key) return validationMessage("Missing key or keys");
         const updates: Record<string, unknown> = {};
         if (venueAction === "verify") updates.is_verified = true;
-        else if (venueAction === "suspend") updates.status = "suspended";
-        else if (venueAction === "approve" || venueAction === "approved") updates.status = "active";
-        else if (venueAction === "rejected") updates.status = "rejected";
-        else updates.status = venueAction;
+        else {
+          const mappedStatus = venueStatusMap[venueAction.toLowerCase()];
+          if (!mappedStatus) return validationMessage(`Invalid venue action: ${venueAction}`);
+          updates.status = mappedStatus;
+        }
         const { data, error } = await supabase
           .from("venues")
           .update(updates)

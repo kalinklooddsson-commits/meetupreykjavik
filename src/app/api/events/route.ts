@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       title, description, startsAt, endsAt, venueName, venueSlug,
       venueAddress, onlineLink, eventType, attendeeLimit, guestLimit,
       ageRestriction, ageMin, ageMax, isFree, ticketTiers,
-      rsvpMode, recurrence,
+      rsvpMode, recurrence, recurrenceRule, groupSlug,
     } = body;
 
     if (!title) {
@@ -54,6 +54,17 @@ export async function POST(request: NextRequest) {
       venueId = venue?.id ?? null;
     }
 
+    // Find group by slug if provided
+    let groupId = null;
+    if (groupSlug) {
+      const { data: group } = await db
+        .from("groups")
+        .select("id")
+        .eq("slug", groupSlug)
+        .maybeSingle();
+      groupId = group?.id ?? null;
+    }
+
     if (!startsAt) {
       return NextResponse.json({
         error: "Validation failed",
@@ -68,6 +79,7 @@ export async function POST(request: NextRequest) {
       starts_at: startsAt,
       ends_at: endsAt ?? null,
       venue_id: venueId,
+      group_id: groupId,
       venue_name: venueName ?? null,
       venue_address: venueAddress ?? null,
       online_link: onlineLink ?? null,
@@ -79,7 +91,7 @@ export async function POST(request: NextRequest) {
       age_max: ageMax ?? null,
       is_free: isFree ?? true,
       rsvp_mode: rsvpMode ?? "open",
-      recurrence_rule: recurrence ?? null,
+      recurrence_rule: recurrence ?? recurrenceRule ?? null,
       host_id: session.id,
       status: "draft",
     }).select("id, slug").single();

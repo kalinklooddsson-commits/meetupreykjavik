@@ -71,10 +71,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(resetUrl);
   }
 
-  // If we successfully resolved a profile, redirect to their portal
+  // If we successfully resolved a profile, redirect to the requested page
+  // or fall back to their portal dashboard
   if (session) {
-    const portalUrl = new URL(portalPathForRole(session.accountType), origin);
-    return NextResponse.redirect(portalUrl);
+    const destination = next && next !== "/" ? next : portalPathForRole(session.accountType);
+    const redirectUrl = new URL(destination, origin);
+    return NextResponse.redirect(redirectUrl);
   }
 
   return response;

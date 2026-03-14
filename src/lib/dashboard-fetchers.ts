@@ -1310,7 +1310,9 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         note: `${draftEventCount} event${draftEventCount > 1 ? "s" : ""} submitted by organizers awaiting approval.`,
       });
     }
-    const unresolvedReportCount = allEvents.filter((e) => (e.status as string) === "flagged").length;
+    // Note: events don't have a "flagged" status in the DB schema.
+    // Use the content_reports table count instead (if available), or skip.
+    const unresolvedReportCount = 0; // TODO: query content_reports table when available
     if (unresolvedReportCount > 0) {
       opsInbox.push({
         key: "ops-trust",
