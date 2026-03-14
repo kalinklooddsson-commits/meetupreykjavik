@@ -27,10 +27,10 @@ export async function POST(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Find event by slug
+    // Find event by slug — include attendee_limit and rsvp_count
     const { data: event } = await db
       .from("events")
-      .select("id, title")
+      .select("id, title, attendee_limit, rsvp_count")
       .eq("slug", slug)
       .maybeSingle();
 
@@ -46,18 +46,41 @@ export async function POST(
     // Check if already RSVPed
     const { data: existing } = await db
       .from("rsvps")
-      .select("id")
+      .select("id, status")
       .eq("event_id", event.id)
       .eq("user_id", session.id)
       .maybeSingle();
 
     if (existing) {
-      // Already RSVPed — update status to going
+      if (existing.status === "going") {
+        // Already going — no-op
+        return NextResponse.json({ ok: true, action: "already_going" });
+      }
+      // Re-activate cancelled RSVP — check capacity first
+      if (event.attendee_limit && (event.rsvp_count ?? 0) >= event.attendee_limit) {
+        return NextResponse.json(
+          { error: "Event is full", waitlisted: true },
+          { status: 409 },
+        );
+      }
       await db
         .from("rsvps")
         .update({ status: "going" })
         .eq("id", existing.id);
+      // Increment rsvp_count
+      await db
+        .from("events")
+        .update({ rsvp_count: (event.rsvp_count ?? 0) + 1 })
+        .eq("id", event.id);
       return NextResponse.json({ ok: true, action: "confirmed" });
+    }
+
+    // Check attendee limit before creating new RSVP
+    if (event.attendee_limit && (event.rsvp_count ?? 0) >= event.attendee_limit) {
+      return NextResponse.json(
+        { error: "Event is full", waitlisted: true },
+        { status: 409 },
+      );
     }
 
     // Create new RSVP
@@ -74,6 +97,12 @@ export async function POST(
         { status: 500 },
       );
     }
+
+    // Increment rsvp_count
+    await db
+      .from("events")
+      .update({ rsvp_count: (event.rsvp_count ?? 0) + 1 })
+      .eq("id", event.id);
 
     return NextResponse.json({ ok: true, action: "created" });
   } catch (error) {
@@ -104,7 +133,7 @@ export async function DELETE(
     // Find event by slug
     const { data: event } = await db
       .from("events")
-      .select("id")
+      .select("id, rsvp_count")
       .eq("slug", slug)
       .maybeSingle();
 
@@ -113,15 +142,32 @@ export async function DELETE(
       return NextResponse.json({ ok: true });
     }
 
+    // Check current RSVP status before cancelling (to avoid double-decrement)
+    const { data: existing } = await db
+      .from("rsvps")
+      .select("id, status")
+      .eq("event_id", event.id)
+      .eq("user_id", session.id)
+      .maybeSingle();
+
+    if (!existing || existing.status === "cancelled") {
+      return NextResponse.json({ ok: true });
+    }
+
     // Cancel RSVP
     const { error } = await db
       .from("rsvps")
       .update({ status: "cancelled" })
-      .eq("event_id", event.id)
-      .eq("user_id", session.id);
+      .eq("id", existing.id);
 
     if (error) {
       console.error("RSVP cancellation failed:", error);
+    } else {
+      // Decrement rsvp_count (floor at 0)
+      await db
+        .from("events")
+        .update({ rsvp_count: Math.max((event.rsvp_count ?? 1) - 1, 0) })
+        .eq("id", event.id);
     }
 
     return NextResponse.json({ ok: true });

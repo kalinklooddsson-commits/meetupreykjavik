@@ -151,6 +151,13 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
       router.push(loginUrl);
       return false;
     }
+    if (response.status === 409) {
+      setState("error");
+      const msg = t("eventFull") ?? "This event is full";
+      setMessage(msg);
+      toast("error", msg);
+      return false;
+    }
     if (!response.ok) {
       setState("error");
       setMessage(t("rsvpError") ?? "Something went wrong");
