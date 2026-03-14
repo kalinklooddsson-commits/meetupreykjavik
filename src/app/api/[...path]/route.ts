@@ -1779,7 +1779,8 @@ async function handleLiveDataRequest(
       // ── Admin user actions ──
       case "POST /api/admin/users/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        // Admin client bypasses RLS to update any profile
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { userKey, action, value } = body as { userKey: string; action: string; value?: string };
@@ -1860,7 +1861,7 @@ async function handleLiveDataRequest(
       // ── Admin events action ──
       case "POST /api/admin/events/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { key, action: eventAction } = body as { key: string; action: string };
@@ -1883,7 +1884,7 @@ async function handleLiveDataRequest(
       // ── Admin groups action ──
       case "POST /api/admin/groups/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { key, action: groupAction } = body as { key: string; action: string };
@@ -1906,7 +1907,7 @@ async function handleLiveDataRequest(
       // ── Admin venues action ──
       case "POST /api/admin/venues/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { key, keys, action: venueAction } = body as { key?: string; keys?: string[]; action: string };
@@ -1950,7 +1951,7 @@ async function handleLiveDataRequest(
       // ── Admin refund ──
       case "POST /api/admin/refund": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { key } = body as { key: string };
@@ -1983,7 +1984,7 @@ async function handleLiveDataRequest(
       // ── Admin moderation action ──
       case "POST /api/admin/moderation/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { key, action: modAction } = body as { key: string; action: string };
@@ -2007,24 +2008,27 @@ async function handleLiveDataRequest(
       // ── Admin comms send ──
       case "POST /api/admin/comms/send": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        // Use admin client to bypass RLS — admin needs to read ALL profiles
+        const adminDb = createSupabaseAdminClient();
+        if (!adminDb) return null;
         const body = await request.json();
         const { audience, draft } = body as { audience: string; draft: { subject?: string; headline?: string; body?: string } };
-        let userQuery = supabase.from("profiles").select("id");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let userQuery = (adminDb as any).from("profiles").select("id");
         if (audience && audience !== "all") {
           userQuery = userQuery.eq("account_type", audience);
         }
         const { data: users } = await userQuery;
         if (users && users.length > 0) {
-          const notifications = users.map((u) => ({
+          const notifications = (users as Array<{ id: string }>).map((u) => ({
             user_id: u.id,
             type: "admin_message" as const,
             title: draft?.subject ?? draft?.headline ?? "Communication",
             body: draft?.body ?? "",
           }));
           try {
-            await supabase.from("notifications").insert(notifications);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            await (adminDb as any).from("notifications").insert(notifications);
           } catch (err) { if (hasSupabaseEnv()) throw err; }
         }
         return successResponse({ ok: true, sent: true, recipientCount: users?.length ?? 0 });
