@@ -62,30 +62,36 @@ export async function VenueEventsScreen() {
         title="Upcoming events"
         description="Events confirmed or pending at your venue, sorted by date."
       >
-        <DashboardTable
-          columns={["Event", "Organizer", "Status", "Note"]}
-          rows={data.upcomingEvents.map((e) => ({
-            key: e.event.slug,
-            cells: [
-              <Link
-                key="title"
-                href={`/events/${e.event.slug}` as Route}
-                className="font-medium text-brand-indigo hover:underline"
-              >
-                {e.event.title}
-              </Link>,
-              <div key="org" className="flex items-center gap-2">
-                <AvatarStamp name={e.organizer} size="sm" />
-                <span>{e.organizer}</span>
-              </div>,
-              <ToneBadge key="status" tone={statusTone(e.status)}>
-                {e.status}
-              </ToneBadge>,
-              <span key="note" className="text-brand-text-muted">{e.note}</span>,
-            ],
-          }))}
-          caption="Upcoming venue events"
-        />
+        {data.upcomingEvents.length > 0 ? (
+          <DashboardTable
+            columns={["Event", "Organizer", "Status", "Note"]}
+            rows={data.upcomingEvents.map((e) => ({
+              key: e.event.slug,
+              cells: [
+                <Link
+                  key="title"
+                  href={`/events/${e.event.slug}` as Route}
+                  className="font-medium text-brand-indigo hover:underline"
+                >
+                  {e.event.title}
+                </Link>,
+                <div key="org" className="flex items-center gap-2">
+                  <AvatarStamp name={e.organizer} size="sm" />
+                  <span>{e.organizer}</span>
+                </div>,
+                <ToneBadge key="status" tone={statusTone(e.status)}>
+                  {e.status}
+                </ToneBadge>,
+                <span key="note" className="text-brand-text-muted">{e.note}</span>,
+              ],
+            }))}
+            caption="Upcoming venue events"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No upcoming events at your venue yet.
+          </p>
+        )}
       </Surface>
 
       {data.upcomingEvents.length === 0 && (

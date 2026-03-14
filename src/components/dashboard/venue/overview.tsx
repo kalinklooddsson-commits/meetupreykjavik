@@ -184,32 +184,38 @@ export async function VenueDashboardScreen() {
         actionLabel="All messages"
         actionHref={"/venue/messages" as Route}
       >
-        <DashboardTable
-          columns={["From", "Subject", "Channel", "Status", "When"]}
-          rows={data.messages.map((m) => ({
-            key: m.key,
-            cells: [
-              <div key="from" className="flex items-center gap-2">
-                <AvatarStamp name={m.counterpart} size="sm" />
-                <div>
-                  <div className="font-medium">{m.counterpart}</div>
-                  <div className="text-xs text-brand-text-muted">{m.role}</div>
-                </div>
-              </div>,
-              <div key="subject">
-                <div className="font-medium">{m.subject}</div>
-                <div className="mt-0.5 text-xs text-brand-text-muted line-clamp-1">{m.preview}</div>
-              </div>,
-              m.channel,
-              <ToneBadge key="status" tone={statusTone(m.status)}>
-                {m.status}
-              </ToneBadge>,
-              m.meta,
-            ],
-          }))}
-          caption="Recent venue messages"
-          dense
-        />
+        {data.messages.length > 0 ? (
+          <DashboardTable
+            columns={["From", "Subject", "Channel", "Status", "When"]}
+            rows={data.messages.map((m) => ({
+              key: m.key,
+              cells: [
+                <div key="from" className="flex items-center gap-2">
+                  <AvatarStamp name={m.counterpart} size="sm" />
+                  <div>
+                    <div className="font-medium">{m.counterpart}</div>
+                    <div className="text-xs text-brand-text-muted">{m.role}</div>
+                  </div>
+                </div>,
+                <div key="subject">
+                  <div className="font-medium">{m.subject}</div>
+                  <div className="mt-0.5 text-xs text-brand-text-muted line-clamp-1">{m.preview}</div>
+                </div>,
+                m.channel,
+                <ToneBadge key="status" tone={statusTone(m.status)}>
+                  {m.status}
+                </ToneBadge>,
+                m.meta,
+              ],
+            }))}
+            caption="Recent venue messages"
+            dense
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No messages yet. Conversations with organizers will appear here.
+          </p>
+        )}
       </Surface>
 
       {/* ── Notifications ─────────────────────────────────── */}
@@ -280,27 +286,33 @@ export async function VenueMessagesScreen() {
         title="All messages"
         description="Booking threads, compliance notices, and organizer conversations."
       >
-        <DashboardTable
-          columns={["From", "Role", "Subject", "Preview", "Channel", "Status", "Action"]}
-          rows={data.messages.map((m) => ({
-            key: m.key,
-            cells: [
-              <div key="from" className="flex items-center gap-2">
-                <AvatarStamp name={m.counterpart} size="sm" />
-                <span className="font-medium">{m.counterpart}</span>
-              </div>,
-              <ToneBadge key="role" tone="neutral">{m.role}</ToneBadge>,
-              <span key="subject" className="font-medium">{m.subject}</span>,
-              <span key="preview" className="text-brand-text-muted line-clamp-1">{m.preview}</span>,
-              m.channel,
-              <ToneBadge key="status" tone={statusTone(m.status)}>
-                {m.status}
-              </ToneBadge>,
-              <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
-            ],
-          }))}
-          caption="All venue messages"
-        />
+        {data.messages.length > 0 ? (
+          <DashboardTable
+            columns={["From", "Role", "Subject", "Preview", "Channel", "Status", "Action"]}
+            rows={data.messages.map((m) => ({
+              key: m.key,
+              cells: [
+                <div key="from" className="flex items-center gap-2">
+                  <AvatarStamp name={m.counterpart} size="sm" />
+                  <span className="font-medium">{m.counterpart}</span>
+                </div>,
+                <ToneBadge key="role" tone="neutral">{m.role}</ToneBadge>,
+                <span key="subject" className="font-medium">{m.subject}</span>,
+                <span key="preview" className="text-brand-text-muted line-clamp-1">{m.preview}</span>,
+                m.channel,
+                <ToneBadge key="status" tone={statusTone(m.status)}>
+                  {m.status}
+                </ToneBadge>,
+                <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
+              ],
+            }))}
+            caption="All venue messages"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No messages yet. Conversations with organizers and support will appear here.
+          </p>
+        )}
       </Surface>
     </PortalShell>
   );

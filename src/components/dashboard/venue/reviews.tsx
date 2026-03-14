@@ -95,30 +95,36 @@ export async function VenueReviewsScreen() {
         title="All reviews"
         description="Reviews left by attendees after events at your venue."
       >
-        <DashboardTable
-          columns={["Reviewer", "Rating", "Review", "Event", "Date", "Response"]}
-          rows={venueReviews.map((r) => ({
-            key: r.key,
-            cells: [
-              <div key="reviewer" className="flex items-center gap-2">
-                <AvatarStamp name={r.reviewer} size="sm" />
-                <span className="font-medium">{r.reviewer}</span>
-              </div>,
-              <div key="rating">{renderStars(r.rating)}</div>,
-              <span key="text" className="max-w-xs text-sm text-brand-text-muted line-clamp-2">
-                {r.text}
-              </span>,
-              <ToneBadge key="event" tone="neutral">{r.eventName}</ToneBadge>,
-              <span key="date" className="text-sm text-brand-text-muted">{r.date}</span>,
-              <VenueReviewReply
-                key="response"
-                reviewKey={r.key}
-                existingResponse={"venueResponse" in r ? (r.venueResponse as string) : undefined}
-              />,
-            ],
-          }))}
-          caption="Venue reviews"
-        />
+        {venueReviews.length > 0 ? (
+          <DashboardTable
+            columns={["Reviewer", "Rating", "Review", "Event", "Date", "Response"]}
+            rows={venueReviews.map((r) => ({
+              key: r.key,
+              cells: [
+                <div key="reviewer" className="flex items-center gap-2">
+                  <AvatarStamp name={r.reviewer} size="sm" />
+                  <span className="font-medium">{r.reviewer}</span>
+                </div>,
+                <div key="rating">{renderStars(r.rating)}</div>,
+                <span key="text" className="max-w-xs text-sm text-brand-text-muted line-clamp-2">
+                  {r.text}
+                </span>,
+                <ToneBadge key="event" tone="neutral">{r.eventName}</ToneBadge>,
+                <span key="date" className="text-sm text-brand-text-muted">{r.date}</span>,
+                <VenueReviewReply
+                  key="response"
+                  reviewKey={r.key}
+                  existingResponse={"venueResponse" in r ? (r.venueResponse as string) : undefined}
+                />,
+              ],
+            }))}
+            caption="Venue reviews"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No reviews yet. Reviews from attendees will appear here after events at your venue.
+          </p>
+        )}
       </Surface>
     </PortalShell>
   );
