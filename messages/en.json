@@ -1116,6 +1116,18 @@
       "groupsHeading": "Groups",
       "venuesHeading": "Venues",
       "relatedCategories": "Related categories"
+    },
+    "names": {
+      "nightlife-and-social": "Nightlife & Social",
+      "outdoors-and-hiking": "Outdoors & Hiking",
+      "tech-and-startups": "Tech & Startups",
+      "music-and-arts": "Music & Arts",
+      "food-and-drink": "Food & Drink",
+      "sports-and-fitness": "Sports & Fitness",
+      "language-exchange": "Language Exchange",
+      "expat-community": "Expat Community",
+      "books-and-culture": "Books & Culture",
+      "professional": "Professional"
     }
   },
   "eventDetailPage": {

@@ -1116,6 +1116,18 @@
       "groupsHeading": "Hópar",
       "venuesHeading": "Staðir",
       "relatedCategories": "Skyldir flokkar"
+    },
+    "names": {
+      "nightlife-and-social": "Næturlíf og félagslíf",
+      "outdoors-and-hiking": "Útivist og gönguferðir",
+      "tech-and-startups": "Tækni og sprotafyrirtæki",
+      "music-and-arts": "Tónlist og listir",
+      "food-and-drink": "Matur og drykkur",
+      "sports-and-fitness": "Íþróttir og heilsa",
+      "language-exchange": "Tungumálaskipti",
+      "expat-community": "Útlendingasamfélag",
+      "books-and-culture": "Bækur og menning",
+      "professional": "Fagleg tengslanet"
     }
   },
   "eventDetailPage": {

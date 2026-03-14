@@ -3939,7 +3939,7 @@ export function CategoriesIndexScreen({
                   {item.category.letter}
                 </span>
               </div>
-              <h2 className="mt-4 text-lg font-bold text-gray-900">{item.category.name}</h2>
+              <h2 className="mt-4 text-lg font-bold text-gray-900">{t.has(`names.${item.category.slug}`) ? t(`names.${item.category.slug}`) : item.category.name}</h2>
               <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: item.eventsCount })}</p>
               <div className="mt-4 flex gap-4 text-sm text-gray-500">
                 <span>{t("events", { count: item.eventsCount })}</span>
@@ -3978,7 +3978,7 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
                   href={categoryHref(category.slug)}
                   className="rounded-lg border border-gray-200 p-4 transition hover:bg-gray-50"
                 >
-                  <div className="font-medium text-gray-900">{category.name}</div>
+                  <div className="font-medium text-gray-900">{t.has(`names.${category.slug}`) ? t(`names.${category.slug}`) : category.name}</div>
                   <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: catBundle?.events.length ?? 0 })}</p>
                 </Link>
               );
@@ -4000,12 +4000,12 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
         crumbs={[
           { href: "/" as Route, label: tNav("home") },
           { href: "/categories" as Route, label: tNav("categories") },
-          { label: bundle.category.name },
+          { label: t.has(`names.${bundle.category.slug}`) ? t(`names.${bundle.category.slug}`) : bundle.category.name },
         ]}
       />
       <PageHeader
         eyebrow={t("detail.eyebrow")}
-        title={bundle.category.name}
+        title={t.has(`names.${bundle.category.slug}`) ? t(`names.${bundle.category.slug}`) : bundle.category.name}
         description={t("detail.meetupsInCategory", { count: bundle.events.length })}
         actions={[
           { href: "/signup", label: t("detail.join"), primary: true },
@@ -4078,7 +4078,7 @@ export function CategoryDetailScreen({ slug }: { slug: string }) {
                   href={categoryHref(category.slug)}
                   className="rounded-lg border border-gray-200 p-4 transition hover:bg-gray-50"
                 >
-                  <div className="font-medium text-gray-900">{category.name}</div>
+                  <div className="font-medium text-gray-900">{t.has(`names.${category.slug}`) ? t(`names.${category.slug}`) : category.name}</div>
                   <p className="mt-1 text-sm text-gray-600">{t("meetups", { count: category.computedCount })}</p>
                 </Link>
               ))}
