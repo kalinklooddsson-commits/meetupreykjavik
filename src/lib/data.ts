@@ -192,11 +192,23 @@ function mapDbVenueToPublic(
       highlighted: day === new Date().getDay(),
     });
   }
-  // Sort by day of week (Monday first)
+  // Sort by day of week (Monday first) and deduplicate same-day entries
   hours.sort((a, b) => {
     const order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     return order.indexOf(a.day) - order.indexOf(b.day);
   });
+  // Merge any duplicate day entries (can happen with mixed day_of_week encodings)
+  const dedupedHours: typeof hours = [];
+  for (const h of hours) {
+    const existing = dedupedHours.find((d) => d.day === h.day);
+    if (existing) {
+      existing.open = `${existing.open}, ${h.open}`;
+    } else {
+      dedupedHours.push({ ...h });
+    }
+  }
+  hours.length = 0;
+  hours.push(...dedupedHours);
 
   // Enrich with mock data when DB has sparse content
   const venueSlug = row.slug as string;
