@@ -56,10 +56,22 @@ export async function PATCH(request: NextRequest) {
       "display_name", "bio", "avatar_url", "slug",
       "city", "languages", "interests", "locale", "age_range",
     ];
+    // Accept camelCase aliases from frontend forms
+    const camelToSnake: Record<string, string> = {
+      displayName: "display_name",
+      avatarUrl: "avatar_url",
+      ageRange: "age_range",
+    };
     const update: Record<string, unknown> = {};
     for (const field of allowedFields) {
       if (field in body) {
         update[field] = body[field];
+      }
+    }
+    // Map camelCase keys to snake_case DB columns
+    for (const [camel, snake] of Object.entries(camelToSnake)) {
+      if (camel in body && !(snake in update)) {
+        update[snake] = body[camel];
       }
     }
 
