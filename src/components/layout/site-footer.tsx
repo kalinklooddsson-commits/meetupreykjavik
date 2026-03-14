@@ -52,7 +52,7 @@ export async function SiteFooter() {
                 Meetup
               </div>
               <div className="font-editorial text-2xl text-white">
-                Reykjavik
+                Reykjavík
               </div>
             </div>
           </div>
@@ -111,31 +111,31 @@ export async function SiteFooter() {
             href="https://instagram.com/meetupreykjavik"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Instagram"
+            aria-label={tFooter("socialInstagram")}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Instagram className="h-4 w-4" />
-            <span className="sr-only">Follow us on Instagram</span>
+            <span className="sr-only">{tFooter("socialInstagram")}</span>
           </a>
           <a
             href="https://facebook.com/meetupreykjavik"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Facebook"
+            aria-label={tFooter("socialFacebook")}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Facebook className="h-4 w-4" />
-            <span className="sr-only">Follow us on Facebook</span>
+            <span className="sr-only">{tFooter("socialFacebook")}</span>
           </a>
           <a
             href="https://x.com/meetupreykjavik"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="X (Twitter)"
+            aria-label={tFooter("socialX")}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
           >
             <Twitter className="h-4 w-4" />
-            <span className="sr-only">Follow us on X</span>
+            <span className="sr-only">{tFooter("socialX")}</span>
           </a>
         </div>
       </div>

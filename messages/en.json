@@ -129,7 +129,10 @@
     "newsletter": "Stay in the loop",
     "newsletterPlaceholder": "your@email.com",
     "newsletterButton": "Subscribe",
-    "followUs": "Follow us"
+    "followUs": "Follow us",
+    "socialInstagram": "Follow us on Instagram",
+    "socialFacebook": "Follow us on Facebook",
+    "socialX": "Follow us on X"
   },
   "home": {
     "hero": {

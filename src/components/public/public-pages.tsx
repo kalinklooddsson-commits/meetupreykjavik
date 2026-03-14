@@ -3890,13 +3890,21 @@ export function ContactScreen() {
   );
 }
 
-export function CategoriesIndexScreen() {
+export function CategoriesIndexScreen({
+  categoryCounts,
+}: {
+  categoryCounts?: Array<{ name: string; count: number }>;
+} = {}) {
   const t = useTranslations("categoriesPage");
   const featuredCategories = categoryDirectory.map((category) => {
     const bundle = getCategoryBundle(category.slug);
+    // Prefer real DB event counts when available
+    const dbCount = categoryCounts?.find(
+      (c) => category.name.toLowerCase().includes(c.name.toLowerCase().split(" ")[0]),
+    )?.count;
     return {
       category,
-      eventsCount: bundle?.events.length ?? 0,
+      eventsCount: dbCount ?? bundle?.events.length ?? 0,
       groupsCount: bundle?.groups.length ?? 0,
       venuesCount: bundle?.venues.length ?? 0,
     };

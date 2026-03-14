@@ -129,7 +129,10 @@
     "newsletter": "Fylgstu með",
     "newsletterPlaceholder": "netfang@postur.is",
     "newsletterButton": "Gerast áskrifandi",
-    "followUs": "Fylgdu okkur"
+    "followUs": "Fylgdu okkur",
+    "socialInstagram": "Fylgdu okkur á Instagram",
+    "socialFacebook": "Fylgdu okkur á Facebook",
+    "socialX": "Fylgdu okkur á X"
   },
   "home": {
     "hero": {
