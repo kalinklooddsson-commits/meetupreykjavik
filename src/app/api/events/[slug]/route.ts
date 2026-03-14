@@ -47,6 +47,7 @@ export async function PATCH(
       "venue_name", "venue_address", "online_link", "event_type",
       "attendee_limit", "guest_limit", "age_restriction", "age_min", "age_max",
       "is_free", "rsvp_mode", "recurrence_rule", "status",
+      "comments_enabled", "featured_photo_url",
     ];
 
     // Map camelCase from frontend to snake_case
@@ -57,6 +58,7 @@ export async function PATCH(
       guestLimit: "guest_limit", ageRestriction: "age_restriction",
       ageMin: "age_min", ageMax: "age_max", isFree: "is_free",
       rsvpMode: "rsvp_mode", recurrence: "recurrence_rule", recurrenceRule: "recurrence_rule",
+      commentsEnabled: "comments_enabled", featuredPhotoUrl: "featured_photo_url",
     };
 
     const update: Record<string, unknown> = {};

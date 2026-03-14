@@ -218,6 +218,17 @@ export function OrganizerEventWizard({
       recurrence: form.recurring ? form.recurrenceRule : null,
       featuredPhotoUrl: form.featuredPhotoUrl || null,
       tags: tags.length > 0 ? tags : null,
+      // Build single-tier ticketTiers array for paid events
+      ticketTiers: form.isFree
+        ? []
+        : [
+            {
+              name: form.ticketLabel || "General admission",
+              priceIsk: ticketPriceIsk,
+              priceUsd: 0,
+              quantity: form.attendeeLimit || 50,
+            },
+          ],
     };
   }
 
