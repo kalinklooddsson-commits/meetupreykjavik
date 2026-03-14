@@ -66,14 +66,23 @@ export async function POST(request: NextRequest) {
       groupId = group?.id ?? null;
     }
 
-    // Find category by slug if provided
+    // Find category by slug or name (frontend may send either)
     let categoryId = null;
     if (category) {
-      const { data: cat } = await db
+      // Try slug first
+      let { data: cat } = await db
         .from("categories")
         .select("id")
         .eq("slug", category)
         .maybeSingle();
+      // Fall back to name match (case-insensitive)
+      if (!cat) {
+        ({ data: cat } = await db
+          .from("categories")
+          .select("id")
+          .ilike("name_en", category)
+          .maybeSingle());
+      }
       categoryId = cat?.id ?? null;
     }
 

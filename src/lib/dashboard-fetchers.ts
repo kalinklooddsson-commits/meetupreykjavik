@@ -1143,9 +1143,13 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
   }
 
   try {
-    const supabase = await createSupabaseServerClient();
+    // Admin portal needs to read ALL data (users, events, venues, etc.)
+    // Use admin client to bypass RLS, falling back to server client
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const supabase = (createSupabaseAdminClient() ?? await createSupabaseServerClient()) as any;
     const profileCountPromise = supabase
-      ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r: any) => r.count ?? 0)
       : Promise.resolve(0);
 
     const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult, recentTxnsResult, auditLogResult, settingsResult, categoriesResult] = await Promise.all([
