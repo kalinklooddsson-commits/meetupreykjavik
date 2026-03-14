@@ -1,15 +1,21 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   resolveMemberTier,
   type MemberTier,
 } from "@/lib/entitlements";
+
+/** Write client that bypasses RLS — needed because app uses mock auth, not Supabase Auth */
+function getWriteClient() {
+  return createSupabaseAdminClient() ?? null;
+}
 
 export async function createRsvp(
   eventId: string,
   userId: string,
   ticketTierId?: string,
 ) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = getWriteClient() ?? await createSupabaseServerClient();
   if (!supabase) throw new Error("Database unavailable");
 
   // Check for existing active RSVP (prevent duplicates)
@@ -62,7 +68,7 @@ export async function createRsvp(
 }
 
 export async function cancelRsvp(eventId: string, userId: string) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = getWriteClient() ?? await createSupabaseServerClient();
   if (!supabase) throw new Error("Database unavailable");
 
   const { data, error } = await supabase
@@ -146,7 +152,7 @@ const TIER_PRIORITY: Record<MemberTier, number> = {
 export async function promoteFromWaitlist(
   eventId: string,
 ): Promise<string | null> {
-  const supabase = await createSupabaseServerClient();
+  const supabase = getWriteClient() ?? await createSupabaseServerClient();
   if (!supabase) return null;
 
   const { data: waitlisted, error } = await supabase

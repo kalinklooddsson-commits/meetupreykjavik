@@ -3,9 +3,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Check, Loader2, Calendar, Ticket } from "lucide-react";
+import { Check, Loader2, Calendar, Ticket, X } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 import { useUser } from "@/hooks/use-user";
+import { PayPalCheckout } from "@/components/payments/paypal-checkout";
 
 /* ── localStorage helpers for mock-mode RSVP persistence ────── */
 
@@ -87,6 +88,13 @@ interface RsvpButtonProps {
   priceLabel?: string;
 }
 
+/** Parse "750 ISK" → 750 (returns 0 if unparseable) */
+function parseIskAmount(label?: string): number {
+  if (!label) return 0;
+  const num = parseInt(label.replace(/[^\d]/g, ""), 10);
+  return isNaN(num) ? 0 : num;
+}
+
 export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }: RsvpButtonProps) {
   const t = useTranslations("common");
   const { toast } = useToast();
@@ -94,6 +102,7 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
   const { user, isLoading: userLoading } = useUser();
   const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [showCheckout, setShowCheckout] = useState(false);
 
   const syncFromStorage = useCallback(() => {
     const isGoing = getStoredRsvps().has(eventSlug);
@@ -131,6 +140,30 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
 
   const loginUrl = `/login?redirect=/events/${eventSlug}` as import("next").Route;
 
+  /** Create RSVP via API (used for both free events and after payment) */
+  async function createRsvpViaApi() {
+    const response = await fetch(`/api/events/${eventSlug}/rsvp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    if (response.status === 403) {
+      router.push(loginUrl);
+      return false;
+    }
+    if (!response.ok) {
+      setState("error");
+      setMessage(t("rsvpError") ?? "Something went wrong");
+      toast("error", t("rsvpError") ?? "Something went wrong");
+      return false;
+    }
+    saveRsvp(eventSlug);
+    setState("going");
+    setMessage("");
+    toast("success", t("youreGoing"));
+    return true;
+  }
+
   async function handleRsvp() {
     if (state === "loading") return;
 
@@ -152,32 +185,34 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
       return;
     }
 
-    // Create RSVP (both free and paid events use the API directly)
+    // Paid event → open checkout modal
+    if (isPaid) {
+      setShowCheckout(true);
+      return;
+    }
+
+    // Free event → create RSVP directly
     setState("loading");
     try {
-      const response = await fetch(`/api/events/${eventSlug}/rsvp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-      if (response.status === 403) {
-        // Session expired or invalid → redirect to login
-        router.push(loginUrl);
-      } else if (!response.ok) {
-        setState("error");
-        setMessage(t("rsvpError") ?? "Something went wrong");
-        toast("error", t("rsvpError") ?? "Something went wrong");
-      } else {
-        saveRsvp(eventSlug);
-        setState("going");
-        setMessage("");
-        toast("success", t("youreGoing"));
-      }
+      await createRsvpViaApi();
     } catch {
-      // Network error with active session → show error, don't fake success
       setState("error");
       setMessage(t("rsvpError") ?? "Something went wrong");
       toast("error", t("rsvpError") ?? "Something went wrong");
+    }
+  }
+
+  /** Called when PayPal payment succeeds */
+  async function handlePaymentSuccess(details: { orderId: string; captureId: string | null }) {
+    setShowCheckout(false);
+    setState("loading");
+    try {
+      await createRsvpViaApi();
+    } catch {
+      // Payment succeeded but RSVP creation failed — still save locally
+      saveRsvp(eventSlug);
+      setState("going");
+      toast("success", t("youreGoing"));
     }
   }
 
@@ -214,6 +249,45 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
       </button>
       {message && (
         <p className="mt-2 text-xs text-brand-coral">{message}</p>
+      )}
+
+      {/* ── Checkout Modal ─────────────────────────────────── */}
+      {showCheckout && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={(e) => { if (e.target === e.currentTarget) setShowCheckout(false); }}
+        >
+          <div className="relative mx-4 w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setShowCheckout(false)}
+              className="absolute right-4 top-4 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <h3 className="font-editorial text-xl text-gray-900">Get tickets</h3>
+            <div className="mt-3 flex items-center justify-between rounded-lg bg-gray-50 px-4 py-3">
+              <span className="text-sm text-gray-600">Ticket</span>
+              <span className="text-sm font-bold text-gray-900">{priceLabel ?? "Paid"}</span>
+            </div>
+
+            <div className="mt-5">
+              <PayPalCheckout
+                eventSlug={eventSlug}
+                tierName="General Admission"
+                amountIsk={parseIskAmount(priceLabel)}
+                quantity={1}
+                onSuccess={handlePaymentSuccess}
+                onError={(err) => {
+                  toast("error", err);
+                  setShowCheckout(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

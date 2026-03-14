@@ -159,13 +159,44 @@ function mapDbVenueToPublic(
   // Extract hours from venue_availability join if present
   const rawAvail = Array.isArray(row.venue_availability) ? row.venue_availability : [];
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const hours = (rawAvail as Record<string, unknown>[])
-    .filter((a) => a.is_blocked !== true)
-    .map((a) => ({
-      day: dayNames[(a.day_of_week as number) ?? 0] ?? "Monday",
-      open: `${(a.start_time as string) ?? "12:00"} – ${(a.end_time as string) ?? "23:00"}`,
-      highlighted: (a.day_of_week as number) === new Date().getDay(),
-    }));
+  const trimTime = (t: string) => t?.replace(/:00$/, "") ?? t; // "19:00:00" → "19:00"
+
+  // Group by day and merge overlapping time slots
+  const daySlots = new Map<number, { start: string; end: string }[]>();
+  for (const a of rawAvail as Record<string, unknown>[]) {
+    if (a.is_blocked === true) continue;
+    const day = (a.day_of_week as number) ?? 0;
+    const start = (a.start_time as string) ?? "12:00:00";
+    const end = (a.end_time as string) ?? "23:00:00";
+    if (!daySlots.has(day)) daySlots.set(day, []);
+    daySlots.get(day)!.push({ start, end });
+  }
+
+  const hours: { day: string; open: string; highlighted?: boolean }[] = [];
+  for (const [day, slots] of daySlots) {
+    // Sort by start time and merge overlapping ranges
+    slots.sort((a, b) => a.start.localeCompare(b.start));
+    const merged: { start: string; end: string }[] = [];
+    for (const slot of slots) {
+      const last = merged[merged.length - 1];
+      if (last && slot.start <= last.end) {
+        last.end = slot.end > last.end ? slot.end : last.end;
+      } else {
+        merged.push({ ...slot });
+      }
+    }
+    const range = merged.map((s) => `${trimTime(s.start)} – ${trimTime(s.end)}`).join(", ");
+    hours.push({
+      day: dayNames[day] ?? "Monday",
+      open: range,
+      highlighted: day === new Date().getDay(),
+    });
+  }
+  // Sort by day of week (Monday first)
+  hours.sort((a, b) => {
+    const order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    return order.indexOf(a.day) - order.indexOf(b.day);
+  });
 
   // Enrich with mock data when DB has sparse content
   const venueSlug = row.slug as string;
