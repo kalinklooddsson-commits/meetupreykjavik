@@ -1157,7 +1157,7 @@ async function handleLiveDataRequest(
           ...body,
           venue_id: (body.venue_id ?? body.venueId) as string,
           organizer_id: session.id,
-          event_title: (body.eventTitle as string) ?? (body.event_title as string) ?? "",
+          event_description: (body.eventTitle as string) ?? (body.event_description as string) ?? "",
           requested_date: (body.requestedDate ?? body.requested_date) as string,
           requested_start: (body.requestedStart ?? body.requested_start) as string ?? "18:00",
           requested_end: (body.requestedEnd ?? body.requested_end) as string ?? "21:00",
@@ -2374,7 +2374,7 @@ async function handleLiveDataRequest(
         if (!supabase) return null;
         const { data, error } = await supabase
           .from("blocked_users")
-          .select("*, blocker:blocked_by (*), blocked:blocked_user_id (*)")
+          .select("*, blocker:blocked_by (*), blocked:user_id (*)")
           .order("created_at", { ascending: false });
         if (error) throw error;
         return successResponse(data ?? []);
