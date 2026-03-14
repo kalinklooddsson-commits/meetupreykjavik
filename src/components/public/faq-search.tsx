@@ -27,14 +27,20 @@ export function FaqSearchableContent({
 
   const filteredSections = normalizedQuery
     ? sections
-        .map((section) => ({
-          ...section,
-          items: section.items.filter(
-            (item) =>
-              item.question.toLowerCase().includes(normalizedQuery) ||
-              item.answer.toLowerCase().includes(normalizedQuery),
-          ),
-        }))
+        .map((section) => {
+          // If the section title matches, show all items in it
+          const sectionMatches = section.title.toLowerCase().includes(normalizedQuery);
+          return {
+            ...section,
+            items: sectionMatches
+              ? section.items
+              : section.items.filter(
+                  (item) =>
+                    item.question.toLowerCase().includes(normalizedQuery) ||
+                    item.answer.toLowerCase().includes(normalizedQuery),
+                ),
+          };
+        })
         .filter((section) => section.items.length > 0)
     : sections;
 

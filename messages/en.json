@@ -273,7 +273,7 @@
         "copy": "RSVPs, waitlist movement, approvals, attendance signals, and venue interactions are used to keep events reliable and to help organizers and admins make better decisions. The product is opinionated about trust and quality, so operational activity is part of the product record.",
         "point1": "RSVP and approval history may be visible to organizers or admins where relevant.",
         "point2": "Venue and event interactions can be used to improve recommendations and reduce abuse.",
-        "point3": "Payment and payout records are retained for billing and audit once live providers are connected."
+        "point3": "Payment and payout records are retained for billing and audit purposes."
       },
       "comms": {
         "title": "Communications and analytics",
@@ -336,7 +336,7 @@
       },
       "events": {
         "title": "Events, payments, and cancellations",
-        "copy": "Public events are designed to start at 500 ISK or higher unless they are sponsor-backed or specially approved. Booking holds, waitlists, and payment confirmations are part of the operating model, and once live providers are connected, fee handling, refunds, and payout timing will follow the configured commercial terms.",
+        "copy": "Public events are designed to start at 500 ISK or higher unless they are sponsor-backed or specially approved. Booking holds, waitlists, and payment confirmations are part of the operating model. Fee handling, refunds, and payout timing follow the configured commercial terms.",
         "point1": "A confirmed seat or booking can depend on payment, approval, or both.",
         "point2": "Refund and cancellation treatment can differ by event, venue, or subscription state.",
         "point3": "Admin can intervene when quality, trust, or abuse issues affect a listing or transaction."
@@ -612,7 +612,7 @@
   },
   "contactForm": {
     "title": "Contact the team",
-    "description": "This local form mirrors the support flow. It stores a draft on this machine so the structure is in place before email delivery is wired.",
+    "description": "Send us a message and we'll get back to you within one business day.",
     "fields": {
       "name": "Name",
       "email": "Email",
@@ -626,10 +626,10 @@
       "billing": "Payments and billing",
       "privacy": "Privacy or moderation"
     },
-    "submit": "Save local support draft",
+    "submit": "Send message",
     "status": {
-      "incomplete": "Add your name, email, and message before saving this local draft.",
-      "saved": "Saved locally as a contact draft. No live message was sent from this build."
+      "incomplete": "Please fill in your name, email, and message before sending.",
+      "saved": "Thank you! Your message has been received. We'll respond within one business day."
     }
   },
   "auth": {

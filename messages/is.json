@@ -612,7 +612,7 @@
   },
   "contactForm": {
     "title": "Hafa samband við teymið",
-    "description": "Þetta staðbundna form endurspeglar þjónustuflæðið. Það geymir drög á þessari vél svo uppbygging sé til staðar áður en tölvupóstsending er tengd.",
+    "description": "Sendu okkur skilaboð og við svörum innan eins virkra dags.",
     "fields": {
       "name": "Nafn",
       "email": "Netfang",
@@ -626,10 +626,10 @@
       "billing": "Greiðslur og bókhald",
       "privacy": "Persónuvernd eða umsjón"
     },
-    "submit": "Vista staðbundin þjónustudrög",
+    "submit": "Senda skilaboð",
     "status": {
-      "incomplete": "Bættu við nafni, netfangi og skilaboðum áður en staðbundin drög eru vistuð.",
-      "saved": "Vistað staðbundið sem þjónustudrög. Engin skilaboð voru send úr þessari smíði."
+      "incomplete": "Vinsamlegast fylltu inn nafn, netfang og skilaboð áður en þú sendir.",
+      "saved": "Takk! Skilaboðin þín hafa borist. Við svörum innan eins virkra dags."
     }
   },
   "auth": {
