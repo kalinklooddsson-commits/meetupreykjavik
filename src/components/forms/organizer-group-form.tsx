@@ -87,7 +87,7 @@ export function OrganizerGroupForm({
       slug,
       tags,
       organizerName,
-      status: form.accepted ? "pending_review" : "draft",
+      status: form.accepted ? "pending" : "pending",
     };
 
     writeSessionDraft("meetupreykjavik-group-draft", payload);

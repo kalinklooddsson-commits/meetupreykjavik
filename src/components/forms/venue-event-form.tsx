@@ -199,7 +199,7 @@ export function VenueEventForm({
     return {
       title: form.title,
       description: form.description || "Event description",
-      status: "pending_review",
+      status: "draft",
       eventType: form.eventType,
       startsAt:
         form.startsOn && form.startTime
