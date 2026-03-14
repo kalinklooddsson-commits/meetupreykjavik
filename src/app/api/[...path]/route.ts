@@ -1762,7 +1762,7 @@ async function handleLiveDataRequest(
       // ── Admin settings update ──
       case "PATCH /api/admin/settings": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { sectionKey, items } = body as { sectionKey: string; items: { label: string; value: string }[] };
@@ -1822,7 +1822,7 @@ async function handleLiveDataRequest(
       // ── Admin notes ──
       case "POST /api/admin/notes": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { key, action: noteAction, note } = body as { key: string; action: string; note: string };
@@ -1843,7 +1843,7 @@ async function handleLiveDataRequest(
       // ── Admin notes delete ──
       case "DELETE /api/admin/notes": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = await createSupabaseServerClient();
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
         if (!supabase) return null;
         const body = await request.json();
         const { key, note } = body as { key: string; note: string };
