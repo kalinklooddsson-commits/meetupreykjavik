@@ -68,6 +68,8 @@ export type Database = {
           premium_tier: string | null;
           premium_expires_at: Timestamp | null;
           is_verified: boolean;
+          is_suspended: boolean;
+          suspended_at: Timestamp | null;
           last_active_at: Timestamp | null;
           created_at: Timestamp;
           updated_at: Timestamp;
@@ -89,6 +91,8 @@ export type Database = {
           premium_tier?: string | null;
           premium_expires_at?: Timestamp | null;
           is_verified?: boolean;
+          is_suspended?: boolean;
+          suspended_at?: Timestamp | null;
           last_active_at?: Timestamp | null;
           created_at?: Timestamp;
           updated_at?: Timestamp;
@@ -109,6 +113,8 @@ export type Database = {
           premium_tier: string | null;
           premium_expires_at: Timestamp | null;
           is_verified: boolean;
+          is_suspended: boolean;
+          suspended_at: Timestamp | null;
           last_active_at: Timestamp | null;
           updated_at: Timestamp;
         }>

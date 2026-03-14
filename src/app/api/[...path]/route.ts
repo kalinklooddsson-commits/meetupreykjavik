@@ -1740,9 +1740,8 @@ async function handleLiveDataRequest(
           case "role": updates.account_type = value; break;
           case "verify": updates.is_verified = true; break;
           case "unverify": updates.is_verified = false; break;
-          // suspend/unsuspend: is_suspended column does not exist in profiles schema
-          case "suspend": return validationMessage("User suspension is not supported (no is_suspended column).");
-          case "unsuspend": return validationMessage("User suspension is not supported (no is_suspended column).");
+          case "suspend": updates.is_suspended = true; updates.suspended_at = new Date().toISOString(); break;
+          case "unsuspend": updates.is_suspended = false; updates.suspended_at = null; break;
           case "grant_premium": updates.is_premium = true; break;
           case "remove_premium": updates.is_premium = false; break;
           default: return validationMessage(`Unknown user action: ${action}`);
@@ -1907,20 +1906,16 @@ async function handleLiveDataRequest(
         return successResponse({ ok: true, key });
       }
 
-      // ── Admin ops action (no dedicated table) ──
+      // ── Admin ops action (no dedicated table yet) ──
       case "POST /api/admin/ops/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const body = await request.json();
-        const { key, action: opsAction } = body as { key: string; action: string };
-        return successResponse({ ok: true, action: opsAction, key });
+        return validationMessage("Ops actions are not yet implemented. This feature is coming soon.");
       }
 
-      // ── Admin incidents action (no dedicated table) ──
+      // ── Admin incidents action (no dedicated table yet) ──
       case "POST /api/admin/incidents/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const body = await request.json();
-        const { key, action: incidentAction } = body as { key: string; action: string };
-        return successResponse({ ok: true, action: incidentAction, key });
+        return validationMessage("Incident actions are not yet implemented. This feature is coming soon.");
       }
 
       // ── Admin moderation action ──
@@ -1941,12 +1936,10 @@ async function handleLiveDataRequest(
         return successResponse({ ok: true, action: modAction, key });
       }
 
-      // ── Admin content action (no dedicated table) ──
+      // ── Admin content action (no dedicated table yet) ──
       case "POST /api/admin/content/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const body = await request.json();
-        const { key, action: contentAction } = body as { key: string; action: string };
-        return successResponse({ ok: true, action: contentAction, key });
+        return validationMessage("Content moderation actions are not yet implemented. This feature is coming soon.");
       }
 
       // ── Admin comms send ──

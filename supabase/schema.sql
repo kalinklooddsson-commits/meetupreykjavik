@@ -31,6 +31,8 @@ create table if not exists public.profiles (
   premium_tier text,
   premium_expires_at timestamptz,
   is_verified boolean not null default false,
+  is_suspended boolean not null default false,
+  suspended_at timestamptz,
   last_active_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
