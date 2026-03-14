@@ -1012,8 +1012,29 @@ async function handleLiveDataRequest(
         if (venueToUpdate.owner_id !== session.id && session.accountType !== "admin") {
           return forbiddenResponse("You can only edit your own venues.");
         }
-        const body = await parseValidatedBody(request, key);
-        const data = await updateVenue(match.params.slug, body as Parameters<typeof updateVenue>[1]);
+        let venueBody = await parseValidatedBody(request, key);
+        // Schema validates camelCase but DB uses snake_case — convert
+        if (venueBody && typeof venueBody === "object") {
+          const camelToSnakeMap: Record<string, string> = {
+            heroPhotoUrl: "hero_photo_url",
+            capacitySeated: "capacity_seated",
+            capacityStanding: "capacity_standing",
+            capacityTotal: "capacity_total",
+            socialLinks: "social_links",
+            openingHours: "opening_hours",
+            happyHour: "happy_hour",
+            partnershipTier: "partnership_tier",
+            legalName: "legal_name",
+            ownerId: "owner_id",
+            galleryUrls: "gallery_urls",
+          };
+          const converted: Record<string, unknown> = {};
+          for (const [k, v] of Object.entries(venueBody as Record<string, unknown>)) {
+            converted[camelToSnakeMap[k] ?? k] = v;
+          }
+          venueBody = converted;
+        }
+        const data = await updateVenue(match.params.slug, venueBody as Parameters<typeof updateVenue>[1]);
         return successResponse(data);
       }
 
@@ -1438,9 +1459,36 @@ async function handleLiveDataRequest(
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
         const body = await request.json();
-        const { attendeeName, rsvpId, action: attAction } = body as {
-          attendeeName: string; rsvpId?: string; action: string;
-        };
+        // Accept both field-name conventions: { attendeeName, rsvpId } or { name, eventSlug }
+        const attendeeName = (body.attendeeName ?? body.name) as string;
+        const attAction = body.action as string;
+        let rsvpId = body.rsvpId as string | undefined;
+        const eventSlug = body.eventSlug as string | undefined;
+
+        // If no rsvpId but we have eventSlug + name, look up the RSVP
+        if (!rsvpId && eventSlug && attendeeName) {
+          const { data: evt } = await supabase
+            .from("events")
+            .select("id")
+            .eq("slug", eventSlug)
+            .maybeSingle();
+          if (evt) {
+            // Find RSVP by matching user display name on this event
+            const { data: rsvpRow } = await supabase
+              .from("rsvps")
+              .select("id, user_id, profiles:user_id ( display_name )")
+              .eq("event_id", evt.id)
+              .limit(100);
+            if (rsvpRow) {
+              const match = (rsvpRow as Array<Record<string, unknown>>).find((r) => {
+                const profile = r.profiles as { display_name?: string } | null;
+                return profile?.display_name?.toLowerCase() === attendeeName.toLowerCase();
+              });
+              if (match) rsvpId = match.id as string;
+            }
+          }
+        }
+
         const statusMap: Record<string, string> = {
           approve: "going",
           reject: "cancelled",

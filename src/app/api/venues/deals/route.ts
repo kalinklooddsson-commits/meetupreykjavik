@@ -28,15 +28,32 @@ export async function POST(request: NextRequest) {
       validUntil?: string;
     };
 
+    // Also accept frontend aliases: type, tier, note
+    const rawType = dealType ?? (body.type as string | undefined);
+    const rawTier = dealTier ?? (body.tier as string | undefined);
+    const rawDescription = description ?? (body.note as string | undefined);
+
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
 
+    // Map human-readable type labels to DB enum values
+    const typeLabelMap: Record<string, string> = {
+      "free item": "free_item",
+      "% off": "percentage",
+      "fixed discount": "fixed_price",
+      "bundle": "group_package",
+      "happy hour": "happy_hour",
+      "welcome drink": "welcome_drink",
+    };
+
     // deal_type and deal_tier are NOT NULL with CHECK constraints
     const validDealTypes = new Set(["percentage", "fixed_price", "free_item", "happy_hour", "group_package", "welcome_drink"]);
     const validDealTiers = new Set(["bronze", "silver", "gold"]);
-    const resolvedType = dealType && validDealTypes.has(dealType) ? dealType : "happy_hour";
-    const resolvedTier = dealTier && validDealTiers.has(dealTier) ? dealTier : "bronze";
+    const normalizedType = rawType ? (typeLabelMap[rawType.toLowerCase()] ?? rawType.toLowerCase().replace(/\s+/g, "_")) : undefined;
+    const normalizedTier = rawTier?.toLowerCase();
+    const resolvedType = normalizedType && validDealTypes.has(normalizedType) ? normalizedType : "happy_hour";
+    const resolvedTier = normalizedTier && validDealTiers.has(normalizedTier) ? normalizedTier : "bronze";
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
@@ -60,7 +77,7 @@ export async function POST(request: NextRequest) {
     const { error } = await db.from("venue_deals").insert({
       venue_id: venue.id,
       title,
-      description: description ?? null,
+      description: rawDescription ?? null,
       deal_type: resolvedType,
       deal_tier: resolvedTier,
       valid_from: validFrom ?? null,
