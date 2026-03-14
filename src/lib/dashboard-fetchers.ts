@@ -587,7 +587,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
             meta: formatRelativeTime(n.created_at as string),
             tone: (n.is_read ? "sage" : "indigo") as "sage" | "coral" | "indigo",
           }))
-        : mockOrganizerPortalData.notifications,
+        : [],
 
       // ── Real activity feed from notifications ────────────────────
       activityFeed: notifications.length > 0
@@ -598,7 +598,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
             meta: formatRelativeTime(n.created_at as string),
             tone: (n.is_read ? "sage" : "coral") as "sage" | "coral" | "indigo",
           }))
-        : mockOrganizerPortalData.activityFeed,
+        : [],
 
       // ── Real messages ────────────────────────────────────────────
       messages: conversations.length > 0
@@ -616,7 +616,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
               meta: formatRelativeTime(m.created_at as string),
             };
           })
-        : mockOrganizerPortalData.messages,
+        : [],
 
       // ── Real booking pipeline ────────────────────────────────────
       bookingPipeline: organizerBookingsRaw.length > 0
@@ -630,10 +630,16 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
               note: (b.message as string) ?? "",
             };
           })
-        : mockOrganizerPortalData.bookingPipeline,
+        : [],
 
       // Keep bookings for backwards compat (the bookings overview uses bookingPipeline)
       bookings: [],
+
+      // Override remaining mock-data fields to prevent fake names/content from leaking
+      quickActions: mockOrganizerPortalData.quickActions, // generic action labels, not fake data
+      templates: [],
+      venueMatches: [],
+      attendeeIntelligence: null as unknown as typeof mockOrganizerPortalData.attendeeIntelligence,
     } as unknown as OrganizerPortalData;
   } catch (error) {
     console.error("Failed to fetch organizer dashboard data:", error);
@@ -1804,14 +1810,17 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         table: eventsTable,
         calendar: calendarEntries,
         ...(audiencePickerData ? { audiencePicker: audiencePickerData } : {}),
+        audienceStrategy: mockAdminPortalData.events.audienceStrategy, // generic structure, no fake names
       },
       groups: {
         ...mockAdminPortalData.groups,
         table: groupsTable,
+        queue: [], // don't show fake group applications
       },
       venues: {
         ...mockAdminPortalData.venues,
         active: venuesActive,
+        applications: [], // don't show fake venue applications
       },
       revenue: {
         ...mockAdminPortalData.revenue,
