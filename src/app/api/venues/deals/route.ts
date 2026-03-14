@@ -19,16 +19,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title, description, type, validUntil } = body as {
+    const { title, description, dealType, dealTier, validFrom, validUntil } = body as {
       title: string;
       description?: string;
-      type?: string;
+      dealType?: string;
+      dealTier?: string;
+      validFrom?: string;
       validUntil?: string;
     };
 
     if (!title) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
+
+    // deal_type and deal_tier are NOT NULL with CHECK constraints
+    const validDealTypes = new Set(["percentage", "fixed_price", "free_item", "happy_hour", "group_package", "welcome_drink"]);
+    const validDealTiers = new Set(["bronze", "silver", "gold"]);
+    const resolvedType = dealType && validDealTypes.has(dealType) ? dealType : "happy_hour";
+    const resolvedTier = dealTier && validDealTiers.has(dealTier) ? dealTier : "bronze";
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
@@ -53,7 +61,9 @@ export async function POST(request: NextRequest) {
       venue_id: venue.id,
       title,
       description: description ?? null,
-      type: type ?? "perk",
+      deal_type: resolvedType,
+      deal_tier: resolvedTier,
+      valid_from: validFrom ?? null,
       valid_until: validUntil ?? null,
       is_active: true,
     });

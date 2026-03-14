@@ -26,6 +26,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Venue name is required" }, { status: 400 });
     }
 
+    // type and address are NOT NULL in DB
+    const validTypes = new Set(["bar", "restaurant", "club", "cafe", "coworking", "studio", "outdoor", "other"]);
+    if (!type || !validTypes.has(type)) {
+      return NextResponse.json({ error: "Valid venue type is required" }, { status: 400 });
+    }
+
+    if (!address) {
+      return NextResponse.json({ error: "Venue address is required" }, { status: 400 });
+    }
+
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
       return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
@@ -45,9 +55,9 @@ export async function POST(request: NextRequest) {
       slug,
       legal_name: legal_name ?? null,
       kennitala: kennitala ?? null,
-      type: type ?? null,
+      type,
       description: description ?? null,
-      address: address ?? null,
+      address,
       city: city ?? "Reykjavik",
       capacity_seated: capacity_seated ?? null,
       capacity_standing: capacity_standing ?? null,

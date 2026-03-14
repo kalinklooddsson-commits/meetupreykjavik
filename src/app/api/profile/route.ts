@@ -50,9 +50,11 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Standard profile field updates
+    // Profiles columns: display_name, bio, avatar_url, slug, city, languages,
+    // interests, locale, age_range (no location, no social_links)
     const allowedFields = [
       "display_name", "bio", "avatar_url", "slug",
-      "location", "interests", "social_links",
+      "city", "languages", "interests", "locale", "age_range",
     ];
     const update: Record<string, unknown> = {};
     for (const field of allowedFields) {

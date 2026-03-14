@@ -54,12 +54,18 @@ export async function POST(request: NextRequest) {
       venueId = venue?.id ?? null;
     }
 
+    if (!startsAt) {
+      return NextResponse.json({
+        error: "Validation failed",
+        details: { formErrors: ["Event start date/time is required"] },
+      }, { status: 400 });
+    }
+
     const { data, error } = await db.from("events").insert({
       title,
       slug,
       description: description ?? null,
-      summary: summary ?? null,
-      starts_at: startsAt ?? null,
+      starts_at: startsAt,
       ends_at: endsAt ?? null,
       venue_id: venueId,
       venue_name: venueName ?? null,
@@ -73,10 +79,8 @@ export async function POST(request: NextRequest) {
       age_max: ageMax ?? null,
       is_free: isFree ?? true,
       rsvp_mode: rsvpMode ?? "open",
-      visibility: visibility ?? "public",
-      recurrence: recurrence ?? "none",
-      reminder_policy: reminderPolicy ?? null,
-      organizer_id: session.id,
+      recurrence_rule: recurrence ?? null,
+      host_id: session.id,
       status: "draft",
     }).select("id, slug").single();
 
@@ -92,8 +96,8 @@ export async function POST(request: NextRequest) {
           event_id: data.id,
           name: tier.name,
           price_isk: tier.priceIsk ?? 0,
-          price_usd: tier.priceUsd ?? null,
-          quantity: tier.quantity ?? null,
+          price_usd: tier.priceUsd ?? 0,
+          quantity: tier.quantity ?? 0,
         });
       }
     }

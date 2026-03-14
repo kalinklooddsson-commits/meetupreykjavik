@@ -64,7 +64,6 @@ export async function POST(
 
     const isOwner =
       venue?.owner_id === session.id ||
-      session.accountType === "venue" ||
       session.accountType === "admin";
 
     if (!isOwner) {
@@ -75,12 +74,10 @@ export async function POST(
     }
 
     // Update the venue_response column
+    // venue_reviews has no venue_responded_at column — only update venue_response
     const { error } = await db
       .from("venue_reviews")
-      .update({
-        venue_response: responseText.trim(),
-        venue_responded_at: new Date().toISOString(),
-      })
+      .update({ venue_response: responseText.trim() })
       .eq("id", reviewId);
 
     if (error) {
