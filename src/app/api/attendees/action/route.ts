@@ -51,13 +51,20 @@ export async function POST(request: NextRequest) {
 
     const newStatus = statusMap[action.toLowerCase()] ?? action.toLowerCase();
 
-    // Update RSVP status
-    const query = db
-      .from("rsvps")
-      .update({ status: newStatus, updated_at: new Date().toISOString() });
+    // Find the attendee's user profile by display name
+    const { data: attendeeProfile } = await db
+      .from("profiles")
+      .select("id")
+      .eq("display_name", name)
+      .maybeSingle();
 
+    if (!attendeeProfile) {
+      // Can't find the user in DB — return success for optimistic UI
+      return NextResponse.json({ ok: true, action, name, local: true });
+    }
+
+    // Build the update query with proper filters
     if (eventSlug) {
-      // Find by event slug + attendee name
       const { data: event } = await db
         .from("events")
         .select("id")
@@ -65,8 +72,15 @@ export async function POST(request: NextRequest) {
         .maybeSingle();
 
       if (event) {
-        await query.eq("event_id", event.id);
+        await db
+          .from("rsvps")
+          .update({ status: newStatus, updated_at: new Date().toISOString() })
+          .eq("event_id", event.id)
+          .eq("user_id", attendeeProfile.id);
       }
+    } else {
+      // No event slug — can't safely update without knowing which event
+      return NextResponse.json({ ok: true, action, name, local: true });
     }
 
     return NextResponse.json({ ok: true, action, name });
