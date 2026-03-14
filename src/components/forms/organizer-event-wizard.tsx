@@ -217,6 +217,7 @@ export function OrganizerEventWizard({
       commentsEnabled: form.commentsEnabled,
       recurrence: form.recurring ? form.recurrenceRule : null,
       featuredPhotoUrl: form.featuredPhotoUrl || null,
+      category: form.category || null,
       tags: tags.length > 0 ? tags : null,
       // Build single-tier ticketTiers array for paid events
       ticketTiers: form.isFree
