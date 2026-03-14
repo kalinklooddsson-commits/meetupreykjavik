@@ -43,9 +43,9 @@ export async function POST(request: NextRequest) {
     const statusMap: Record<string, string> = {
       approve: "going",
       approved: "going",
-      reject: "rejected",
-      "check-in": "checked_in",
-      "check in": "checked_in",
+      reject: "cancelled",
+      "check-in": "going",
+      "check in": "going",
       waitlist: "waitlisted",
     };
 

@@ -1339,7 +1339,7 @@ async function handleLiveDataRequest(
       }
       case "POST /api/messages": {
         if (!session) return forbiddenResponse("Authentication required.");
-        const msgBody = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        const msgBody = ((await parseValidatedBody(request, key)) ?? await request.json()) as Record<string, unknown>;
         const msgData = await sendMessage({
           sender_id: session.id,
           receiver_id: msgBody.receiverId as string,
@@ -1402,7 +1402,7 @@ async function handleLiveDataRequest(
         };
         const statusMap: Record<string, string> = {
           approve: "going",
-          reject: "rejected",
+          reject: "cancelled",
           waitlist: "waitlisted",
         };
 
@@ -1677,7 +1677,7 @@ async function handleLiveDataRequest(
         if (!supabase) return null;
         const body = await request.json();
         const { sectionKey, items } = body as { sectionKey: string; items: { label: string; value: string }[] };
-        if (!sectionKey) return validationErrorResponse("sectionKey is required");
+        if (!sectionKey) return validationMessage("sectionKey is required", "sectionKey");
         const { data, error } = await supabase
           .from("platform_settings")
           .upsert({ key: sectionKey, value: items }, { onConflict: "key" })
@@ -2078,7 +2078,7 @@ async function handleLiveDataRequest(
         }
         const { data, error } = await supabase
           .from("rsvps")
-          .update({ status: "confirmed" })
+          .update({ status: "going" })
           .eq("event_id", event.id)
           .eq("user_id", match.params.userId)
           .select()
@@ -2097,7 +2097,7 @@ async function handleLiveDataRequest(
         }
         const { data, error } = await supabase
           .from("rsvps")
-          .update({ status: "rejected" })
+          .update({ status: "cancelled" })
           .eq("event_id", event.id)
           .eq("user_id", match.params.userId)
           .select()
@@ -2315,7 +2315,7 @@ async function handleLiveDataRequest(
         }
         const { data, error } = await supabase
           .from("rsvps")
-          .update({ status: "checked_in", checked_in_at: new Date().toISOString() })
+          .update({ checked_in_at: new Date().toISOString(), attended: "attended" })
           .eq("event_id", event.id)
           .eq("user_id", match.params.userId)
           .select()
