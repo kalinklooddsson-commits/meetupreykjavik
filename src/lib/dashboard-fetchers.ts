@@ -669,8 +669,8 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           key: (n.id as string) ?? `notif-${i}`,
           title: (n.title as string) ?? "",
           detail: (n.body as string) ?? (n.message as string) ?? "",
-          channel: (n.channel as string) ?? "General",
-          status: (n.read as boolean) ? "Read" : "Unread",
+          channel: ((n.type as string) ?? "General").replace(/_/g, " ").replace(/^\w/, (c: string) => c.toUpperCase()),
+          status: (n.is_read as boolean) ? "Read" : "Unread",
           meta: (n.created_at as string)?.slice(0, 10) ?? "",
           tone: "indigo" as const,
         }))

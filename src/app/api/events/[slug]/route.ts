@@ -41,7 +41,7 @@ export async function PATCH(
       eventType: "event_type", attendeeLimit: "attendee_limit",
       guestLimit: "guest_limit", ageRestriction: "age_restriction",
       ageMin: "age_min", ageMax: "age_max", isFree: "is_free",
-      rsvpMode: "rsvp_mode", recurrence: "recurrence_rule",
+      rsvpMode: "rsvp_mode", recurrence: "recurrence_rule", recurrenceRule: "recurrence_rule",
     };
 
     const update: Record<string, unknown> = {};
