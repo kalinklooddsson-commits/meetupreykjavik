@@ -491,7 +491,37 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       .order("created_at", { ascending: true })
       .limit(1);
 
-    const venueRow = venueRows?.[0];
+    let venueRow = venueRows?.[0];
+
+    // If user doesn't own a venue (e.g. admin), pick a venue that has events for preview
+    if (!venueRow && session.accountType === "admin") {
+      // Find a venue that has events (most interesting for preview)
+      const { data: venueWithEvents } = await supabase
+        .from("events")
+        .select("venue_id")
+        .not("venue_id", "is", null)
+        .limit(1);
+      const previewVenueId = venueWithEvents?.[0]?.venue_id;
+      if (previewVenueId) {
+        const { data: previewVenue } = await supabase
+          .from("venues")
+          .select("*")
+          .eq("id", previewVenueId as string)
+          .limit(1);
+        venueRow = previewVenue?.[0];
+      }
+      // Final fallback: any active venue
+      if (!venueRow) {
+        const { data: fallbackVenues } = await supabase
+          .from("venues")
+          .select("*")
+          .eq("status", "active")
+          .order("created_at", { ascending: true })
+          .limit(1);
+        venueRow = fallbackVenues?.[0];
+      }
+    }
+
     if (!venueRow) return mockVenuePortalData;
 
     const venueId = venueRow.id as string;
@@ -509,7 +539,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       getVenueBookings(venueId),
       supabase
         .from("events")
-        .select("id, title, slug, starts_at, status, category, host_name")
+        .select("id, title, slug, starts_at, status, category_id, host_id, categories:category_id ( name_en ), host:host_id ( display_name )")
         .eq("venue_id", venueId)
         .order("starts_at", { ascending: true }),
       supabase
@@ -581,7 +611,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       .slice(0, 10)
       .map((e) => ({
         event: { slug: e.slug as string, title: e.title as string },
-        organizer: (e.host_name as string) ?? "Unknown",
+        organizer: ((e.host as Record<string, unknown> | null)?.display_name as string) ?? "Unknown",
         status: (e.status as string) === "draft" ? "Pending review" : "Confirmed",
         note: "",
       }));
@@ -690,7 +720,8 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
 
     const eventTypeCounts: Record<string, number> = {};
     for (const e of events) {
-      const cat = (e.category as string) ?? "Other";
+      const catObj = e.categories as Record<string, unknown> | null;
+      const cat = (catObj?.name_en as string) ?? "Other";
       eventTypeCounts[cat] = (eventTypeCounts[cat] ?? 0) + 1;
     }
 
