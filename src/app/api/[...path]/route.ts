@@ -1762,7 +1762,7 @@ async function handleLiveDataRequest(
         const { key, action: eventAction } = body as { key: string; action: string };
         const updates: Record<string, unknown> = {};
         if (eventAction === "published") updates.status = "published";
-        else if (eventAction === "rejected") updates.status = "rejected";
+        else if (eventAction === "rejected") updates.status = "cancelled";
         else if (eventAction === "featured") { updates.is_featured = true; updates.status = "published"; }
         else if (eventAction === "cancelled") updates.status = "cancelled";
         else return validationMessage(`Unknown event action: ${eventAction}`);

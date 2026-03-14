@@ -749,7 +749,7 @@ export function AdminEventOperationsDesk({
     <div className="space-y-4">
       {confirmKey && (
         <ConfirmDialog
-          message={`Are you sure you want to ${confirmAction.toLowerCase()} this event?`}
+          message={`Are you sure you want to ${confirmAction === "Cancelled" ? "cancel" : confirmAction === "Published" ? "publish" : confirmAction.toLowerCase()} this event?`}
           onConfirm={() => updateEvent(confirmKey, confirmAction)}
           onCancel={() => setConfirmKey(null)}
         />

@@ -820,11 +820,19 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0)
       : Promise.resolve(0);
 
-    const [eventsResult, venuesResult, revenue, profileCount, revenueTrend] = await Promise.all([
+    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend] = await Promise.all([
       getEvents({ limit: 50 }),
       getVenues({ limit: 50 }),
       getPlatformRevenue(),
       profileCountPromise,
+      // Fetch ALL events (any status) for admin events table + calendar
+      supabase
+        ? supabase
+            .from("events")
+            .select("id, slug, title, status, starts_at, venue_name, venues:venue_id ( name ), categories:category_id ( name_en )")
+            .order("starts_at", { ascending: true })
+            .limit(100)
+        : Promise.resolve({ data: null }),
       (async () => {
         // Revenue trend: transaction amounts by day for last 7 days
         try {
@@ -847,6 +855,46 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         }
       })(),
     ]);
+
+    // ── Build admin events table from real data ──
+    const allEvents = (allEventsResult?.data ?? []) as Array<Record<string, unknown>>;
+
+    function formatAdminStatus(status: string): string {
+      if (status === "published") return "Approved";
+      if (status === "draft") return "Pending Review";
+      if (status === "cancelled") return "Cancelled";
+      if (status === "completed") return "Completed";
+      return status;
+    }
+
+    const eventsTable = allEvents.map((e) => {
+      const venue = e.venues as Record<string, unknown> | null;
+      const cat = e.categories as Record<string, unknown> | null;
+      const startsAt = new Date(e.starts_at as string);
+      const day = startsAt.getDate();
+      const month = startsAt.toLocaleString("en", { month: "short" });
+      return {
+        key: e.slug as string,
+        title: e.title as string,
+        status: formatAdminStatus(e.status as string),
+        category: (cat?.name_en as string) ?? "",
+        venue: (venue?.name as string) ?? (e.venue_name as string) ?? "",
+        date: `${day} ${month}`,
+        action: "",
+      };
+    });
+
+    // Calendar entries from real events (current month)
+    const now = new Date();
+    const calendarEntries = allEvents
+      .filter((e) => {
+        const d = new Date(e.starts_at as string);
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      })
+      .map((e) => ({
+        day: String(new Date(e.starts_at as string).getDate()),
+        label: e.title as string,
+      }));
 
     return {
       ...mockAdminPortalData,
@@ -882,6 +930,11 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
           detail: "Platform systems are running normally.",
         },
       ],
+      events: {
+        ...mockAdminPortalData.events,
+        table: eventsTable.length > 0 ? eventsTable : mockAdminPortalData.events.table,
+        calendar: calendarEntries.length > 0 ? calendarEntries : mockAdminPortalData.events.calendar,
+      },
       ...(revenueTrend ? { revenueTrend } : {}),
     } as AdminPortalData;
   } catch (error) {
