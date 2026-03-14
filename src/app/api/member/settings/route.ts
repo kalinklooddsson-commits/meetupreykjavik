@@ -33,24 +33,27 @@ export async function PATCH(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Store settings as JSON in the profile's settings column
-    // First fetch existing settings
-    const { data: profile } = await db
-      .from("profiles")
-      .select("settings")
-      .eq("id", session.id)
+    // The profiles table does not have a "settings" jsonb column yet.
+    // Store per-user settings in platform_settings keyed by user ID.
+    const settingsKey = `user_settings:${session.id}`;
+    const { data: existing } = await db
+      .from("platform_settings")
+      .select("value")
+      .eq("key", settingsKey)
       .maybeSingle();
 
-    const existingSettings = (profile?.settings as Record<string, unknown>) ?? {};
+    const existingSettings = (existing?.value as Record<string, unknown>) ?? {};
     const updatedSettings = {
       ...existingSettings,
       [section]: values,
     };
 
     const { error } = await db
-      .from("profiles")
-      .update({ settings: updatedSettings })
-      .eq("id", session.id);
+      .from("platform_settings")
+      .upsert(
+        { key: settingsKey, value: updatedSettings, updated_by: session.id },
+        { onConflict: "key" },
+      );
 
     if (error) {
       console.error("Member settings update failed:", error);
