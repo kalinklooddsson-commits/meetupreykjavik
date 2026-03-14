@@ -33,10 +33,10 @@ export async function POST(request: NextRequest) {
     const statusMap: Record<string, string> = {
       approve: "published",
       approved: "published",
-      reject: "rejected",
-      rejected: "rejected",
+      reject: "cancelled",
+      rejected: "cancelled",
       unpublish: "draft",
-      archive: "archived",
+      archive: "completed",
       "pending review": "draft",
     };
 
