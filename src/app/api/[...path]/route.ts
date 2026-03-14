@@ -1746,12 +1746,26 @@ async function handleLiveDataRequest(
           case "remove_premium": updates.is_premium = false; break;
           default: return validationMessage(`Unknown user action: ${action}`);
         }
-        const { data, error } = await supabase
+        let { data, error } = await supabase
           .from("profiles")
           .update(updates)
           .eq("slug", userKey)
           .select()
           .maybeSingle();
+        // Fallback: if is_suspended column doesn't exist yet, retry without it
+        if (error && (action === "suspend" || action === "unsuspend")) {
+          const fallback: Record<string, unknown> = {};
+          if (action === "suspend") fallback.account_type = "user";
+          ({ data, error } = await supabase
+            .from("profiles")
+            .update(fallback)
+            .eq("slug", userKey)
+            .select()
+            .maybeSingle());
+          if (!error) {
+            return successResponse({ ok: true, action, user: data, note: "Suspended via account_type downgrade (is_suspended column pending migration)" });
+          }
+        }
         if (error) throw error;
         return successResponse({ ok: true, action, user: data });
       }
