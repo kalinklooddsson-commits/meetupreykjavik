@@ -820,7 +820,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0)
       : Promise.resolve(0);
 
-    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult] = await Promise.all([
+    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult, recentTxnsResult] = await Promise.all([
       getEvents({ limit: 50 }),
       getVenues({ limit: 50 }),
       getPlatformRevenue(),
@@ -877,6 +877,14 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
             .select("id, slug, name, address, city, type, avg_rating, status")
             .order("name", { ascending: true })
             .limit(50)
+        : Promise.resolve({ data: null }),
+      // Fetch recent transactions for admin revenue page
+      supabase
+        ? supabase
+            .from("transactions")
+            .select("id, type, description, amount_isk, status, created_at")
+            .order("created_at", { ascending: false })
+            .limit(20)
         : Promise.resolve({ data: null }),
     ]);
 
@@ -983,6 +991,25 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       note: "",
     }));
 
+    // ── Build admin revenue transactions from real data ──
+    const allTxns = (recentTxnsResult?.data ?? []) as Array<Record<string, unknown>>;
+    const revenueTransactions = allTxns.map((t) => {
+      const createdAt = new Date(t.created_at as string);
+      const diffMs = Date.now() - createdAt.getTime();
+      const when = diffMs < 86400000
+        ? `Today ${createdAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}`
+        : diffMs < 172800000
+          ? "Yesterday"
+          : createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+      return {
+        key: t.id as string,
+        source: (t.description as string) ?? (t.type as string) ?? "Unknown",
+        amount: `${((t.amount_isk as number) ?? 0).toLocaleString()} ISK`,
+        status: ((t.status as string) ?? "pending").charAt(0).toUpperCase() + ((t.status as string) ?? "pending").slice(1),
+        when,
+      };
+    });
+
     return {
       ...mockAdminPortalData,
       metrics: [
@@ -1030,6 +1057,10 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       venues: {
         ...mockAdminPortalData.venues,
         active: venuesActive.length > 0 ? venuesActive : mockAdminPortalData.venues.active,
+      },
+      revenue: {
+        ...mockAdminPortalData.revenue,
+        transactions: revenueTransactions.length > 0 ? revenueTransactions : mockAdminPortalData.revenue.transactions,
       },
       ...(revenueTrend ? { revenueTrend } : {}),
     } as AdminPortalData;
