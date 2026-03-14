@@ -5,7 +5,7 @@ import {
   eventReminder24hEmail,
   eventReminder2hEmail,
 } from "@/lib/email/templates";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,13 +24,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
   if (!supabase) {
     return NextResponse.json(
       { error: "Database unavailable" },
       { status: 503 },
     );
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
 
   const now = new Date();
   const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
@@ -43,7 +46,7 @@ export async function POST(request: Request) {
 
   // 24-hour reminders
   try {
-    const { data: events24h } = await supabase
+    const { data: events24h } = await db
       .from("events")
       .select("*, venues(*)")
       .eq("status", "published")
@@ -51,7 +54,7 @@ export async function POST(request: Request) {
       .lt("starts_at", in25h.toISOString());
 
     for (const event of events24h ?? []) {
-      const { data: rsvps } = await supabase
+      const { data: rsvps } = await db
         .from("rsvps")
         .select("*, profiles(*)")
         .eq("event_id", event.id)
@@ -87,7 +90,7 @@ export async function POST(request: Request) {
 
   // 2-hour reminders
   try {
-    const { data: events2h } = await supabase
+    const { data: events2h } = await db
       .from("events")
       .select("*, venues(*)")
       .eq("status", "published")
@@ -95,7 +98,7 @@ export async function POST(request: Request) {
       .lt("starts_at", in3h.toISOString());
 
     for (const event of events2h ?? []) {
-      const { data: rsvps } = await supabase
+      const { data: rsvps } = await db
         .from("rsvps")
         .select("*, profiles(*)")
         .eq("event_id", event.id)

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { sendEmail } from "@/lib/email/resend";
 import { weeklyDigestEmail } from "@/lib/email/templates";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
   if (!supabase) {
     return NextResponse.json(
       { error: "Database unavailable" },
@@ -29,11 +29,14 @@ export async function POST(request: Request) {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
+
   const now = new Date();
   const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
   // Fetch upcoming events for the next week
-  const { data: events } = await supabase
+  const { data: events } = await db
     .from("events")
     .select("id, title, slug, starts_at")
     .eq("status", "published")
@@ -52,7 +55,7 @@ export async function POST(request: Request) {
 
   // Send digest to all users with verified emails
   // (digest_opt_in column doesn't exist yet — send to all for now)
-  const { data: users } = await supabase
+  const { data: users } = await db
     .from("profiles")
     .select("id, email, display_name, locale")
     .not("email", "is", null);
@@ -64,10 +67,10 @@ export async function POST(request: Request) {
 
     const locale = (user.locale as "en" | "is") ?? "en";
 
-    const eventList = events.map((e) => ({
-      title: e.title,
-      slug: e.slug,
-      date: new Date(e.starts_at).toLocaleDateString(
+    const eventList = events.map((e: Record<string, unknown>) => ({
+      title: e.title as string,
+      slug: e.slug as string,
+      date: new Date(e.starts_at as string).toLocaleDateString(
         locale === "is" ? "is-IS" : "en-US",
         { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" },
       ),

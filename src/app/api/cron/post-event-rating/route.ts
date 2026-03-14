@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { sendEmail } from "@/lib/email/resend";
 import { postEventRatingEmail } from "@/lib/email/templates";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
   if (!supabase) {
     return NextResponse.json(
       { error: "Database unavailable" },
@@ -29,12 +29,15 @@ export async function POST(request: Request) {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
+
   const now = new Date();
   const ago23h = new Date(now.getTime() - 23 * 60 * 60 * 1000);
   const ago25h = new Date(now.getTime() - 25 * 60 * 60 * 1000);
 
   // Find events that ended approximately 24 hours ago
-  const { data: events } = await supabase
+  const { data: events } = await db
     .from("events")
     .select("id, title, slug, ends_at")
     .eq("status", "published")
@@ -45,7 +48,7 @@ export async function POST(request: Request) {
 
   for (const event of events ?? []) {
     // Get confirmed attendees
-    const { data: rsvps } = await supabase
+    const { data: rsvps } = await db
       .from("rsvps")
       .select("*, profiles(*)")
       .eq("event_id", event.id)
