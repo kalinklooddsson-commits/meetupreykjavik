@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

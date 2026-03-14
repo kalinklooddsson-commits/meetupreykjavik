@@ -41,12 +41,38 @@ export async function POST(request: NextRequest) {
       archived: "archived",
     };
 
-    const newStatus = statusMap[action.toLowerCase()] ?? action.toLowerCase();
+    const newStatus = statusMap[action.toLowerCase()];
+    if (!newStatus) {
+      return NextResponse.json({ error: `Invalid action: ${action}` }, { status: 400 });
+    }
+
+    // Look up group by id first, then by slug (avoid raw .or() filter injection)
+    let groupId: string | null = null;
+    const { data: byId } = await db
+      .from("groups")
+      .select("id")
+      .eq("id", key)
+      .maybeSingle();
+
+    if (byId) {
+      groupId = byId.id;
+    } else {
+      const { data: bySlug } = await db
+        .from("groups")
+        .select("id")
+        .eq("slug", key)
+        .maybeSingle();
+      groupId = bySlug?.id ?? null;
+    }
+
+    if (!groupId) {
+      return NextResponse.json({ error: "Group not found" }, { status: 404 });
+    }
 
     const { error } = await db
       .from("groups")
       .update({ status: newStatus })
-      .or(`slug.eq.${key},id.eq.${key}`);
+      .eq("id", groupId);
 
     if (error) {
       console.error("Admin group action failed:", error);

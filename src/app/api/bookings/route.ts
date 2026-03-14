@@ -42,27 +42,32 @@ export async function POST(request: NextRequest) {
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Find venue by slug
+    // Find venue by slug — venue_id is NOT NULL in DB
     const { data: venue } = await db
       .from("venues")
       .select("id")
       .eq("slug", venueSlug)
       .maybeSingle();
 
+    if (!venue) {
+      return NextResponse.json({ error: "Venue not found" }, { status: 404 });
+    }
+
     const { error } = await db.from("venue_bookings").insert({
       organizer_id: session.id,
-      venue_id: venue?.id ?? null,
+      venue_id: venue.id,
       requested_date: requestedDate,
-      requested_time: requestedStart ? `${requestedStart}-${requestedEnd ?? ""}` : null,
+      requested_start: requestedStart ?? "18:00",
+      requested_end: requestedEnd ?? "22:00",
       expected_attendance: expectedAttendance ?? null,
-      event_title: eventTitle ?? null,
-      notes: message ?? null,
+      event_description: eventTitle ?? null,
+      message: message ?? null,
       status: "pending",
     });
 

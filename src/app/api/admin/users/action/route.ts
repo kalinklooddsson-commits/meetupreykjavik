@@ -34,23 +34,32 @@ export async function POST(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    const { data: profile } = await db
+    // Look up user by id first, then by slug (avoid raw .or() filter injection)
+    let userId: string | null = null;
+    const { data: byId } = await db
       .from("profiles")
       .select("id")
-      .or(`slug.eq.${userKey},id.eq.${userKey}`)
+      .eq("id", userKey)
       .maybeSingle();
 
-    const userId = profile?.id ?? userKey;
+    if (byId) {
+      userId = byId.id;
+    } else {
+      const { data: bySlug } = await db
+        .from("profiles")
+        .select("id")
+        .eq("slug", userKey)
+        .maybeSingle();
+      userId = bySlug?.id ?? null;
+    }
+
+    if (!userId) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
     let update: Record<string, unknown> = {};
 
     switch (action) {
-      case "suspend":
-        update = { is_suspended: true };
-        break;
-      case "unsuspend":
-        update = { is_suspended: false };
-        break;
       case "grant_premium":
         update = { is_premium: true, premium_tier: "plus" };
         break;

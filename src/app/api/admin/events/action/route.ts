@@ -40,12 +40,38 @@ export async function POST(request: NextRequest) {
       "pending review": "draft",
     };
 
-    const newStatus = statusMap[action.toLowerCase()] ?? action.toLowerCase();
+    const newStatus = statusMap[action.toLowerCase()];
+    if (!newStatus) {
+      return NextResponse.json({ error: `Invalid action: ${action}` }, { status: 400 });
+    }
+
+    // Look up event by id first, then by slug (avoid raw .or() filter injection)
+    let eventId: string | null = null;
+    const { data: byId } = await db
+      .from("events")
+      .select("id")
+      .eq("id", key)
+      .maybeSingle();
+
+    if (byId) {
+      eventId = byId.id;
+    } else {
+      const { data: bySlug } = await db
+        .from("events")
+        .select("id")
+        .eq("slug", key)
+        .maybeSingle();
+      eventId = bySlug?.id ?? null;
+    }
+
+    if (!eventId) {
+      return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    }
 
     const { error } = await db
       .from("events")
       .update({ status: newStatus })
-      .or(`slug.eq.${key},id.eq.${key}`);
+      .eq("id", eventId);
 
     if (error) {
       console.error("Admin event action failed:", error);

@@ -31,30 +31,49 @@ export async function POST(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    let update: Record<string, unknown> = {};
-    switch (action.toLowerCase()) {
-      case "verify":
-      case "approve":
-      case "approved":
-        update = { status: "active" };
-        break;
-      case "suspend":
-      case "suspended":
-        update = { status: "suspended" };
-        break;
-      case "reject":
-      case "rejected":
-        update = { status: "rejected" };
-        break;
-      default:
-        update = { status: action.toLowerCase() };
+    // Venues CHECK: ('pending', 'active', 'waitlisted', 'suspended', 'rejected')
+    const statusMap: Record<string, string> = {
+      verify: "active",
+      approve: "active",
+      approved: "active",
+      suspend: "suspended",
+      suspended: "suspended",
+      reject: "rejected",
+      rejected: "rejected",
+      waitlist: "waitlisted",
+      waitlisted: "waitlisted",
+    };
+
+    const newStatus = statusMap[action.toLowerCase()];
+    if (!newStatus) {
+      return NextResponse.json({ error: `Invalid action: ${action}` }, { status: 400 });
     }
 
+    const update = { status: newStatus };
+
     for (const k of targetKeys) {
-      await db
+      // Look up venue by id first, then by slug (avoid raw .or() filter injection)
+      let venueId: string | null = null;
+      const { data: byId } = await db
         .from("venues")
-        .update(update)
-        .or(`slug.eq.${k},id.eq.${k}`);
+        .select("id")
+        .eq("id", k)
+        .maybeSingle();
+
+      if (byId) {
+        venueId = byId.id;
+      } else {
+        const { data: bySlug } = await db
+          .from("venues")
+          .select("id")
+          .eq("slug", k)
+          .maybeSingle();
+        venueId = bySlug?.id ?? null;
+      }
+
+      if (venueId) {
+        await db.from("venues").update(update).eq("id", venueId);
+      }
     }
 
     // Audit log

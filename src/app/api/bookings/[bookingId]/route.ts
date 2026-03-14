@@ -20,9 +20,10 @@ export async function PATCH(
 
     const { bookingId } = await params;
     const body = await request.json();
-    const { status, counter_note } = body as {
+    const { status, counterOffer, venueResponse } = body as {
       status: string;
-      counter_note?: string;
+      counterOffer?: Record<string, unknown> | string;
+      venueResponse?: string;
     };
 
     if (!status) {
@@ -48,7 +49,7 @@ export async function PATCH(
     const { data: booking } = await db
       .from("venue_bookings")
       .select("id, venue_id, organizer_id")
-      .or(`id.eq.${bookingId},slug.eq.${bookingId}`)
+      .eq("id", bookingId)
       .maybeSingle();
 
     if (!booking) {
@@ -77,8 +78,14 @@ export async function PATCH(
       updated_at: new Date().toISOString(),
     };
 
-    if (counter_note) {
-      update.counter_note = counter_note;
+    if (counterOffer) {
+      // counter_offer is jsonb in DB — wrap string in object if needed
+      update.counter_offer =
+        typeof counterOffer === "string" ? { note: counterOffer } : counterOffer;
+    }
+
+    if (venueResponse) {
+      update.venue_response = venueResponse;
     }
 
     const { error } = await db
