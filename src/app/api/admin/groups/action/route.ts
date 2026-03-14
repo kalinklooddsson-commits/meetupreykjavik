@@ -33,10 +33,10 @@ export async function POST(request: NextRequest) {
     const statusMap: Record<string, string> = {
       approve: "active",
       approved: "active",
-      suspend: "suspended",
-      suspended: "suspended",
-      feature: "featured",
-      featured: "featured",
+      suspend: "archived",
+      suspended: "archived",
+      feature: "active",
+      featured: "active",
       archive: "archived",
       archived: "archived",
     };
