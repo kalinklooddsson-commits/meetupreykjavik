@@ -761,7 +761,7 @@
     "stats": {
       "upcomingEvents": "Upcoming events",
       "totalAttendees": "Total attendees",
-      "partnerVenues": "Partner venues",
+      "partnerVenues": "Venues",
       "activeGroups": "Active groups"
     },
     "actions": {
@@ -841,7 +841,7 @@
       "description": "Partner venues that host community events, offer member deals, and make every meetup feel at home."
     },
     "stats": {
-      "partnerVenues": "Partner venues",
+      "partnerVenues": "Venues",
       "avgRating": "Avg. rating",
       "totalCapacity": "Total capacity",
       "cityLocations": "City locations"
@@ -863,7 +863,7 @@
       "combinedSeats": "{capacity} combined seats. Best-rated: {topVenue} ({topRating})."
     },
     "grid": {
-      "partnerVenues": "Partner venues",
+      "partnerVenues": "Venues",
       "filterByType": "Type:",
       "filterByArea": "Area:"
     },

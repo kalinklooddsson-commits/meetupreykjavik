@@ -761,7 +761,7 @@
     "stats": {
       "upcomingEvents": "Væntanlegir viðburðir",
       "totalAttendees": "Skráðir þátttakendur",
-      "partnerVenues": "Samstarfsstaðir",
+      "partnerVenues": "Staðir",
       "activeGroups": "Virkir hópar"
     },
     "actions": {
@@ -841,7 +841,7 @@
       "description": "Samstarfsstaðir sem hýsa samfélagsviðburði, bjóða meðlimatilboð og láta hvern fund líða eins og heima."
     },
     "stats": {
-      "partnerVenues": "Samstarfsstaðir",
+      "partnerVenues": "Staðir",
       "avgRating": "Meðaleinkunn",
       "totalCapacity": "Heildarrými",
       "cityLocations": "Staðsetningar í borginni"
@@ -863,7 +863,7 @@
       "combinedSeats": "{capacity} sæti samtals. Hæst metinn: {topVenue} ({topRating})."
     },
     "grid": {
-      "partnerVenues": "Samstarfsstaðir",
+      "partnerVenues": "Staðir",
       "filterByType": "Tegund:",
       "filterByArea": "Svæði:"
     },

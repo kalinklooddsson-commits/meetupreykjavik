@@ -1884,10 +1884,19 @@ export function GroupsIndexScreen({
   const resolvedEventCount = eventCount ?? events.length;
   const nextEventByGroup = new Map<string, string>();
   for (const group of groups) {
+    // Try matching by upcomingEventSlugs first
     if ((group.upcomingEventSlugs ?? []).length > 0) {
       const event = events.find((e) => e.slug === (group.upcomingEventSlugs ?? [])[0]);
-      if (event) nextEventByGroup.set(group.slug, event.title);
+      if (event) {
+        nextEventByGroup.set(group.slug, event.title);
+        continue;
+      }
     }
+    // Fallback: find any event belonging to this group by slug or name
+    const groupEvent = events.find(
+      (e) => e.groupSlug === group.slug || e.groupName === group.name,
+    );
+    if (groupEvent) nextEventByGroup.set(group.slug, groupEvent.title);
   }
 
   /* Activity bar color based on percentage */

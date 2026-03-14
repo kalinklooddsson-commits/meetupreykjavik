@@ -54,7 +54,25 @@ export async function getMemberProfile(): Promise<MemberProfile> {
   const profile = await getProfileById(session.id);
 
   if (!profile) {
-    return mockMemberProfile;
+    // New user with no profile row yet — personalise with session data instead of showing Kari's mock profile
+    const name = session.displayName ?? session.email?.split("@")[0] ?? "Member";
+    const initials = name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+    return {
+      ...mockMemberProfile,
+      name,
+      initials,
+      slug: session.slug ?? name.toLowerCase().replace(/\s+/g, "-"),
+      email: session.email ?? "",
+      tier: "Free",
+      bio: "",
+      completion: 20,
+      memberSince: new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }),
+      stats: { eventsAttended: 0, groupsJoined: 0, memberSinceYear: new Date().getFullYear() },
+      interests: [],
+      badges: [],
+      highlights: [],
+      recentAttendance: [],
+    } as unknown as MemberProfile;
   }
 
   // Build real profile stats from DB
