@@ -12,7 +12,8 @@ import {
   StatCard,
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
-import { adminAuditLog } from "@/lib/dashboard-data";
+import { adminAuditLog as mockAuditLog } from "@/lib/dashboard-data";
+import { getAdminAuditLog } from "@/lib/dashboard-fetchers";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -60,7 +61,8 @@ function formatTimestamp(iso: string): string {
 /* ── Screen ──────────────────────────────────────────────────── */
 
 export async function AdminAuditScreen() {
-  const entries = adminAuditLog;
+  const dbEntries = await getAdminAuditLog();
+  const entries = dbEntries.length > 0 ? dbEntries : mockAuditLog;
 
   const uniqueAdmins = new Set(entries.map((e) => e.admin)).size;
   const targetTypes = new Set(entries.map((e) => e.targetType)).size;

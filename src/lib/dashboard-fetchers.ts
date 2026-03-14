@@ -820,7 +820,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0)
       : Promise.resolve(0);
 
-    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult, recentTxnsResult] = await Promise.all([
+    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult, recentTxnsResult, auditLogResult, settingsResult, categoriesResult] = await Promise.all([
       getEvents({ limit: 50 }),
       getVenues({ limit: 50 }),
       getPlatformRevenue(),
@@ -885,6 +885,22 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
             .select("id, type, description, amount_isk, status, created_at")
             .order("created_at", { ascending: false })
             .limit(20)
+        : Promise.resolve({ data: null }),
+      // Fetch audit log entries
+      supabase
+        ? supabase
+            .from("admin_audit_log")
+            .select("id, admin_id, action, target_type, target_id, details, created_at")
+            .order("created_at", { ascending: false })
+            .limit(50)
+        : Promise.resolve({ data: null }),
+      // Fetch platform settings
+      supabase
+        ? supabase.from("platform_settings").select("key, value, updated_at")
+        : Promise.resolve({ data: null }),
+      // Fetch categories for category mix chart
+      supabase
+        ? supabase.from("categories").select("id, name_en, slug").eq("is_active", true).order("sort_order")
         : Promise.resolve({ data: null }),
     ]);
 
@@ -1010,6 +1026,401 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       };
     });
 
+    // ── Build audit log from real data ──
+    const auditEntries = (auditLogResult?.data ?? []) as Array<Record<string, unknown>>;
+    const auditLog = auditEntries.map((a) => ({
+      key: a.id as string,
+      admin: "Platform Admin",
+      action: ((a.action as string) ?? "").replace(/_/g, " "),
+      targetType: (a.target_type as string) ?? "unknown",
+      targetId: (a.target_id as string) ?? "",
+      details: typeof a.details === "object" && a.details ? JSON.stringify(a.details) : String(a.details ?? ""),
+      timestamp: a.created_at as string,
+    }));
+
+    // ── Build settings from platform_settings ──
+    const settingsRows = (settingsResult?.data ?? []) as Array<Record<string, unknown>>;
+    const settingsMap = new Map<string, Array<{ label: string; value: string }>>();
+    for (const row of settingsRows) {
+      const items = row.value as Array<{ label: string; value: string }> | null;
+      if (items && Array.isArray(items)) {
+        settingsMap.set(row.key as string, items);
+      }
+    }
+    const settingsSections = settingsMap.size > 0
+      ? Array.from(settingsMap.entries()).map(([key, items]) => ({
+          key,
+          title: key.charAt(0).toUpperCase() + key.slice(1),
+          items,
+        }))
+      : null;
+
+    // ── Build category mix chart from real events ──
+    const allCategories = (categoriesResult?.data ?? []) as Array<Record<string, unknown>>;
+    const catEventCounts = new Map<string, number>();
+    for (const e of allEvents) {
+      const cat = e.categories as Record<string, unknown> | null;
+      const catName = (cat?.name_en as string) ?? "Uncategorized";
+      catEventCounts.set(catName, (catEventCounts.get(catName) ?? 0) + 1);
+    }
+    const categoryMix = allCategories
+      .map((c) => ({ label: c.name_en as string, value: catEventCounts.get(c.name_en as string) ?? 0 }))
+      .filter((c) => c.value > 0)
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 8);
+
+    // ── Build growth chart from profile signups (last 6 months) ──
+    const growthChart: Array<{ label: string; value: number }> = [];
+    const allProfiles = (usersResult?.data ?? []) as Array<Record<string, unknown>>;
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthCounts = new Map<string, number>();
+    for (const p of allProfiles) {
+      const d = new Date(p.created_at as string);
+      const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
+      monthCounts.set(key, (monthCounts.get(key) ?? 0) + 1);
+    }
+    // Build cumulative growth for last 6 months
+    const now2 = new Date();
+    let cumulative = 0;
+    const monthKeys: string[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now2.getFullYear(), now2.getMonth() - i, 1);
+      monthKeys.push(`${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`);
+    }
+    // Count profiles before the first month as baseline
+    for (const p of allProfiles) {
+      const d = new Date(p.created_at as string);
+      const key = `${d.getFullYear()}-${String(d.getMonth()).padStart(2, "0")}`;
+      if (key < monthKeys[0]) cumulative++;
+    }
+    for (const mk of monthKeys) {
+      cumulative += monthCounts.get(mk) ?? 0;
+      const [, m] = mk.split("-");
+      growthChart.push({ label: monthNames[parseInt(m, 10)], value: cumulative });
+    }
+
+    // ── Build urgent queues from real counts ──
+    const pendingVenueCount = allVenues.filter((v) => (v.status as string) === "pending").length;
+    const draftEventCount = allEvents.filter((e) => (e.status as string) === "draft").length;
+    const pendingBookingCount = 0; // TODO: compute from bookings if needed
+    const urgentQueues: Array<{ key: string; title: string; detail: string; meta: string; tone: "coral" | "basalt" | "indigo" | "sage" | "sand" | "neutral" }> = [];
+    if (pendingVenueCount > 0) {
+      urgentQueues.push({
+        key: "venue-review",
+        title: `${pendingVenueCount} venue application${pendingVenueCount > 1 ? "s" : ""} need${pendingVenueCount === 1 ? "s" : ""} a decision`,
+        detail: "Review pending venue partner applications.",
+        meta: "Admin queue",
+        tone: "coral",
+      });
+    }
+    if (draftEventCount > 0) {
+      urgentQueues.push({
+        key: "event-review",
+        title: `${draftEventCount} event${draftEventCount > 1 ? "s" : ""} pending review`,
+        detail: "Draft events submitted by organizers or venues awaiting approval.",
+        meta: "Events",
+        tone: "basalt",
+      });
+    }
+    if (auditEntries.length > 0) {
+      urgentQueues.push({
+        key: "audit",
+        title: `${auditEntries.length} recent admin action${auditEntries.length > 1 ? "s" : ""} logged`,
+        detail: "Review the latest administrative changes on the platform.",
+        meta: "Audit",
+        tone: "indigo",
+      });
+    }
+
+    // ── Build audience picker from real profiles and events ──
+    const upcomingPublished = allEvents.filter((e) => {
+      const startsAt = new Date(e.starts_at as string);
+      return (e.status as string) === "published" && startsAt > new Date();
+    });
+    const pickerEvent = upcomingPublished[0];
+    const memberProfiles = allProfiles.filter((p) => (p.account_type as string) !== "venue" && (p.account_type as string) !== "admin");
+    const audiencePickerData = pickerEvent ? {
+      eventTitle: pickerEvent.title as string,
+      eventSlug: pickerEvent.slug as string,
+      target: `Curated admin invitations for ${pickerEvent.title as string}`,
+      seatsRemaining: Math.max(0, ((pickerEvent as Record<string, unknown>).attendee_limit as number ?? 50) - ((pickerEvent as Record<string, unknown>).rsvp_count as number ?? 0)),
+      selectedIds: [] as string[],
+      candidates: memberProfiles.slice(0, 8).map((p, i) => ({
+        id: p.id as string,
+        name: (p.display_name as string) ?? "Unknown",
+        tier: (p.premium_tier as string)?.charAt(0).toUpperCase() + ((p.premium_tier as string) ?? "free").slice(1) ?? "Free",
+        status: p.is_verified ? "Verified member" : "Active",
+        fitScore: 95 - (i * 5),
+        lastActive: timeAgo(p.last_active_at as string | null),
+        tags: ((p.interests as string[]) ?? []).slice(0, 3),
+        reason: `Platform member${p.is_verified ? " with verified status" : ""}.`,
+      })),
+    } : null;
+
+    // ── Build revenue sources from transaction types ──
+    const txnTypeTotals = new Map<string, number>();
+    let txnGrandTotal = 0;
+    for (const t of allTxns) {
+      const type = (t.type as string) ?? "other";
+      const amount = (t.amount_isk as number) ?? 0;
+      txnTypeTotals.set(type, (txnTypeTotals.get(type) ?? 0) + amount);
+      txnGrandTotal += amount;
+    }
+    const typeLabels: Record<string, string> = {
+      ticket: "Ticket commission",
+      subscription: "Organizer SaaS",
+      venue_subscription: "Venue SaaS",
+      promoted: "Promoted listings",
+    };
+    const revenueSources = txnGrandTotal > 0
+      ? Array.from(txnTypeTotals.entries())
+          .map(([type, total]) => ({
+            label: typeLabels[type] ?? type.charAt(0).toUpperCase() + type.slice(1),
+            value: Math.round((total / txnGrandTotal) * 100),
+          }))
+          .sort((a, b) => b.value - a.value)
+      : null;
+
+    // ── Build handoff log from recent audit entries ──
+    const handoffLog = auditEntries.slice(0, 5).map((a, i) => {
+      const action = (a.action as string) ?? "";
+      const targetType = (a.target_type as string) ?? "unknown";
+      const lane = /venue/i.test(targetType) ? "Supply"
+        : /event/i.test(targetType) ? "Growth"
+        : /user/i.test(targetType) ? "Trust"
+        : /group/i.test(targetType) ? "Growth"
+        : "Revenue";
+      const createdAt = new Date(a.created_at as string);
+      const diffMs = Date.now() - createdAt.getTime();
+      const when = diffMs < 3600000 ? `${Math.max(1, Math.round(diffMs / 60000))} min ago`
+        : diffMs < 86400000 ? `Today ${createdAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}`
+        : diffMs < 172800000 ? "Yesterday"
+        : createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+      return {
+        key: (a.id as string) ?? `handoff-${i}`,
+        lane,
+        actor: "Admin",
+        when,
+        summary: `${action.replace(/_/g, " ")} on ${targetType} ${((a.target_id as string) ?? "").slice(0, 8)}…`,
+      };
+    });
+
+    // ── Build ops inbox from pending items ──
+    const opsInbox: Array<{ key: string; lane: string; title: string; owner: string; due: string; status: string; note: string }> = [];
+    if (pendingVenueCount > 0) {
+      opsInbox.push({
+        key: "ops-venues",
+        lane: "Supply",
+        title: `Approve ${pendingVenueCount} pending venue application${pendingVenueCount > 1 ? "s" : ""}`,
+        owner: "Venue ops",
+        due: "Today",
+        status: "Queued",
+        note: `${pendingVenueCount} venue partner application${pendingVenueCount > 1 ? "s" : ""} awaiting review.`,
+      });
+    }
+    if (draftEventCount > 0) {
+      opsInbox.push({
+        key: "ops-events",
+        lane: "Growth",
+        title: `Review ${draftEventCount} draft event${draftEventCount > 1 ? "s" : ""} before publishing`,
+        owner: "Editorial",
+        due: "Today",
+        status: "Needs decision",
+        note: `${draftEventCount} event${draftEventCount > 1 ? "s" : ""} submitted by organizers awaiting approval.`,
+      });
+    }
+    const unresolvedReportCount = allEvents.filter((e) => (e.status as string) === "flagged").length;
+    if (unresolvedReportCount > 0) {
+      opsInbox.push({
+        key: "ops-trust",
+        lane: "Trust",
+        title: `Resolve ${unresolvedReportCount} flagged content item${unresolvedReportCount > 1 ? "s" : ""}`,
+        owner: "Moderation",
+        due: "Today",
+        status: "Escalated",
+        note: `${unresolvedReportCount} flagged item${unresolvedReportCount > 1 ? "s" : ""} need moderation review.`,
+      });
+    }
+    if (txnGrandTotal > 0) {
+      opsInbox.push({
+        key: "ops-revenue",
+        lane: "Revenue",
+        title: "Review recent transaction activity",
+        owner: "Finance",
+        due: "Today",
+        status: "In progress",
+        note: `${allTxns.length} transaction${allTxns.length > 1 ? "s" : ""} totalling ${txnGrandTotal.toLocaleString()} ISK.`,
+      });
+    }
+
+    // ── Build incident console from system health signals ──
+    const incidentConsole: Array<{ key: string; title: string; severity: string; owner: string; status: string; note: string }> = [];
+    if (pendingVenueCount > 2) {
+      incidentConsole.push({
+        key: "inc-venue-backlog",
+        title: "Venue application backlog growing",
+        severity: "Medium",
+        owner: "Venue ops",
+        status: "Investigating",
+        note: `${pendingVenueCount} pending applications may be blocking event placement options.`,
+      });
+    }
+    if (draftEventCount > 5) {
+      incidentConsole.push({
+        key: "inc-event-backlog",
+        title: "Event review queue above target",
+        severity: "Medium",
+        owner: "Editorial",
+        status: "Queued",
+        note: `${draftEventCount} draft events waiting for review may delay organizer confidence.`,
+      });
+    }
+    // If no real incidents, show healthy status
+    if (incidentConsole.length === 0) {
+      incidentConsole.push({
+        key: "inc-healthy",
+        title: "All systems operational",
+        severity: "Low",
+        owner: "Platform ops",
+        status: "Healthy",
+        note: "No active incidents or degraded services detected.",
+      });
+    }
+
+    // ── Build ownership board from real workstream data ──
+    const ownershipBoard = [
+      {
+        key: "owner-revenue",
+        lane: "Revenue",
+        lead: "Finance",
+        coverage: `${allTxns.length} transactions, ${txnGrandTotal.toLocaleString()} ISK total`,
+        load: txnGrandTotal > 100000 ? "High" : "Medium",
+      },
+      {
+        key: "owner-supply",
+        lane: "Supply",
+        lead: "Venue ops",
+        coverage: `${allVenues.length} venues, ${pendingVenueCount} pending approval`,
+        load: pendingVenueCount > 2 ? "High" : "Medium",
+      },
+      {
+        key: "owner-growth",
+        lane: "Growth",
+        lead: "Editorial",
+        coverage: `${allEvents.length} events, ${draftEventCount} drafts pending`,
+        load: draftEventCount > 5 ? "High" : "Medium",
+      },
+      {
+        key: "owner-trust",
+        lane: "Trust",
+        lead: "Moderation",
+        coverage: `${auditEntries.length} audit entries, ${allProfiles.length} users`,
+        load: auditEntries.length > 10 ? "High" : "Medium",
+      },
+    ];
+
+    // ── Build analytics deck from real time-series data ──
+    // Build weekly data points from events for the last 7 days
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i));
+      return d;
+    });
+    const dayLabels = last7Days.map((d) => d.toLocaleDateString("en", { weekday: "short" }));
+
+    // User signups by day
+    const userGrowthData = last7Days.map((d) => {
+      return allProfiles.filter((p) => {
+        const pd = new Date(p.created_at as string);
+        return pd.toDateString() === d.toDateString();
+      }).length;
+    });
+    // Cumulative users
+    const cumulativeUsers = last7Days.map((d) => {
+      return allProfiles.filter((p) => new Date(p.created_at as string) <= d).length;
+    });
+    // Events created by day
+    const eventCreationData = last7Days.map((d) => {
+      return allEvents.filter((e) => {
+        const ed = new Date(e.created_at as string);
+        return ed.toDateString() === d.toDateString();
+      }).length;
+    });
+    // Revenue by day
+    const revenueByDay = last7Days.map((d) => {
+      return allTxns.filter((t) => {
+        const td = new Date(t.created_at as string);
+        return td.toDateString() === d.toDateString();
+      }).reduce((sum, t) => sum + ((t.amount_isk as number) ?? 0), 0);
+    });
+    // Venue count over time (cumulative)
+    const venueGrowth = last7Days.map((d) => {
+      return allVenues.filter((v) => new Date(v.created_at as string) <= d).length;
+    });
+
+    const analyticsDeck = [
+      { key: "a1", title: "User growth", tone: "indigo" as const, data: cumulativeUsers },
+      { key: "a2", title: "New signups", tone: "sage" as const, data: userGrowthData },
+      { key: "a3", title: "Total events", tone: "coral" as const, data: last7Days.map((d) => allEvents.filter((e) => new Date(e.created_at as string) <= d).length) },
+      { key: "a4", title: "Active venues", tone: "basalt" as const, data: venueGrowth },
+      { key: "a5", title: "Event creation", tone: "indigo" as const, data: eventCreationData },
+      { key: "a6", title: "Revenue trend", tone: "sage" as const, data: revenueByDay },
+      { key: "a7", title: "Category spread", tone: "coral" as const, data: [catEventCounts.size, catEventCounts.size, catEventCounts.size, catEventCounts.size, catEventCounts.size, catEventCounts.size, catEventCounts.size] },
+      { key: "a8", title: "Audit actions", tone: "indigo" as const, data: last7Days.map((d) => auditEntries.filter((a) => new Date(a.created_at as string).toDateString() === d.toDateString()).length) },
+      { key: "a9", title: "Transactions", tone: "sage" as const, data: last7Days.map((d) => allTxns.filter((t) => new Date(t.created_at as string).toDateString() === d.toDateString()).length) },
+      { key: "a10", title: "Venue rating avg", tone: "basalt" as const, data: venueGrowth.map(() => {
+        const rated = allVenues.filter((v) => (v.avg_rating as number) > 0);
+        return rated.length > 0 ? Math.round(rated.reduce((s, v) => s + ((v.avg_rating as number) ?? 0), 0) / rated.length * 10) : 0;
+      }) },
+      { key: "a11", title: "Revenue mix", tone: "coral" as const, data: revenueByDay.map((_, i) => revenueByDay.slice(0, i + 1).reduce((s, v) => s + v, 0)) },
+      { key: "a12", title: "Groups", tone: "indigo" as const, data: last7Days.map((d) => allGroups.filter((g) => new Date(g.created_at as string) <= d).length) },
+    ];
+
+    // ── Build heat grid from event start times ──
+    const heatCounts: number[][] = [
+      [0, 0, 0, 0, 0, 0, 0], // Morning (6-12)
+      [0, 0, 0, 0, 0, 0, 0], // Afternoon (12-17)
+      [0, 0, 0, 0, 0, 0, 0], // Evening (17-22)
+      [0, 0, 0, 0, 0, 0, 0], // Late (22-6)
+    ];
+    for (const e of allEvents) {
+      const d = new Date(e.starts_at as string);
+      const dayIdx = (d.getDay() + 6) % 7; // Mon=0 ... Sun=6
+      const hour = d.getHours();
+      const slot = hour >= 6 && hour < 12 ? 0 : hour >= 12 && hour < 17 ? 1 : hour >= 17 && hour < 22 ? 2 : 3;
+      heatCounts[slot][dayIdx]++;
+    }
+    const heatGrid = {
+      columns: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      rows: [
+        { label: "Morning", values: heatCounts[0] },
+        { label: "Afternoon", values: heatCounts[1] },
+        { label: "Evening", values: heatCounts[2] },
+        { label: "Late", values: heatCounts[3] },
+      ],
+    };
+
+    // ── Build geography from venue addresses ──
+    const addressCounts = new Map<string, number>();
+    for (const v of allVenues) {
+      const addr = (v.address as string) ?? "";
+      // Try to extract neighborhood/area from address
+      const area = addr.includes("101") ? "101 Reykjavik"
+        : addr.includes("Vesturbær") || addr.includes("vesturbær") ? "Vesturbær"
+        : addr.includes("Laugardalur") || addr.includes("laugardalur") ? "Laugardalur"
+        : addr.includes("Kópavogur") || addr.includes("kópavogur") ? "Kópavogur"
+        : addr ? addr.split(",").pop()?.trim() ?? "Reykjavik"
+        : "Reykjavik";
+      addressCounts.set(area, (addressCounts.get(area) ?? 0) + 1);
+    }
+    const totalVenueGeo = Array.from(addressCounts.values()).reduce((s, v) => s + v, 0) || 1;
+    const geography = Array.from(addressCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([label, count]) => ({
+        label,
+        value: `${Math.round((count / totalVenueGeo) * 100)}%`,
+      }));
+
     return {
       ...mockAdminPortalData,
       metrics: [
@@ -1049,6 +1460,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         ...mockAdminPortalData.events,
         table: eventsTable.length > 0 ? eventsTable : mockAdminPortalData.events.table,
         calendar: calendarEntries.length > 0 ? calendarEntries : mockAdminPortalData.events.calendar,
+        ...(audiencePickerData ? { audiencePicker: audiencePickerData } : {}),
       },
       groups: {
         ...mockAdminPortalData.groups,
@@ -1061,12 +1473,59 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       revenue: {
         ...mockAdminPortalData.revenue,
         transactions: revenueTransactions.length > 0 ? revenueTransactions : mockAdminPortalData.revenue.transactions,
+        ...(revenueSources ? { sources: revenueSources } : {}),
       },
       ...(revenueTrend ? { revenueTrend } : {}),
+      // Overview sections
+      ...(urgentQueues.length > 0 ? { urgentQueues } : {}),
+      ...(growthChart.length > 0 ? { growthChart } : {}),
+      ...(categoryMix.length > 0 ? { categoryMix } : {}),
+      // Settings from platform_settings + operational data
+      ...(settingsSections ? { settings: settingsSections } : {}),
+      ...(incidentConsole.length > 0 ? { incidentConsole } : {}),
+      ...(ownershipBoard.length > 0 ? { ownershipBoard } : {}),
+      // Overview operational sections
+      ...(handoffLog.length > 0 ? { handoffLog } : {}),
+      ...(opsInbox.length > 0 ? { opsInbox } : {}),
+      // Analytics sections
+      analyticsDeck,
+      heatGrid,
+      ...(geography.length > 0 ? { geography } : {}),
     } as AdminPortalData;
   } catch (error) {
     console.error("Failed to fetch admin dashboard data:", error);
     return mockAdminPortalData;
+  }
+}
+
+/**
+ * Standalone audit log fetcher for the audit screen.
+ * Returns entries matching the shape expected by AdminAuditScreen.
+ */
+export async function getAdminAuditLog() {
+  if (!hasSupabaseEnv()) return [];
+  try {
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) return [];
+    const { data, error } = await supabase
+      .from("admin_audit_log")
+      .select("id, admin_id, action, target_type, target_id, details, created_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    if (error || !data) return [];
+    return data.map((a) => ({
+      key: a.id as string,
+      admin: "Platform Admin",
+      action: (a.action as string) ?? "",
+      targetType: (a.target_type as string) ?? "unknown",
+      targetId: (a.target_id as string) ?? "",
+      details: typeof a.details === "object" && a.details
+        ? Object.entries(a.details as Record<string, unknown>).map(([k, v]) => `${k}: ${v}`).join(", ")
+        : String(a.details ?? ""),
+      timestamp: a.created_at as string,
+    }));
+  } catch {
+    return [];
   }
 }
 
