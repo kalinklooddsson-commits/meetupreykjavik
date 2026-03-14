@@ -1767,7 +1767,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
               </h3>
               <div className="space-y-3">
                 {[
-                  { label: t("labels.hostContact"), value: event.hostContact },
+                  { label: t("labels.hostContact"), value: event.hostName ? `${event.hostName} via event inbox` : "Event organizer" },
                   { label: t("labels.shareFlow"), value: event.shareLabel },
                   { label: t("labels.roomPolicy"), value: event.approvalLabel },
                 ].map((item) => (
