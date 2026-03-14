@@ -144,7 +144,8 @@ export async function getEventsByHost(
   hostId: string,
   options: { status?: string; limit?: number } = {},
 ) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — admin users may view another organizer's events
+  const supabase = (createSupabaseAdminClient() ?? await createSupabaseServerClient()) as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) return [];
 
   const { status, limit = 50 } = options;
@@ -172,7 +173,8 @@ export async function getEventsByHost(
 
 // ─── Recurring Events ────────────────────────────────────
 export async function createRecurringInstances(parentEventId: string) {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client — needs to read parent event and insert children
+  const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
   if (!supabase) throw new Error("Database unavailable");
 
   const { data: parent, error } = await supabase
