@@ -1067,11 +1067,13 @@ async function handleLiveDataRequest(
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
+        if (!body.eventId) return validationMessage("Event ID is required for venue reviews.", "eventId");
         const { data, error } = await supabase
           .from("venue_reviews")
           .insert({
             venue_id: venue.id,
             reviewer_id: session.id,
+            event_id: body.eventId as string,
             rating: body.rating as number,
             text: (body.text as string) ?? null,
             reviewer_type: (body.reviewerType as string) ?? "attendee",
@@ -1728,9 +1730,9 @@ async function handleLiveDataRequest(
             await supabase.from("admin_audit_log").insert({
               admin_id: session.id,
               action: "note_added",
-              resource_type: "user",
-              resource_id: key,
-              changes: { note },
+              target_type: "user",
+              target_id: key,
+              details: { note },
             });
           } catch (err) { if (hasSupabaseEnv()) throw err; }
         }
@@ -1748,9 +1750,9 @@ async function handleLiveDataRequest(
           await supabase
             .from("admin_audit_log")
             .delete()
-            .eq("resource_id", key)
+            .eq("target_id", key)
             .eq("action", "note_added")
-            .eq("changes->>note", note);
+            .eq("details->>note", note);
         } catch (err) { if (hasSupabaseEnv()) throw err; }
         return successResponse({ ok: true, action: "remove" });
       }
@@ -2056,15 +2058,8 @@ async function handleLiveDataRequest(
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
         const body = await request.json();
-        if (!body.status) return validationMessage("status is required.", "status");
-        const { data, error } = await supabase
-          .from("profiles")
-          .update({ status: body.status })
-          .eq("id", match.params.id)
-          .select()
-          .single();
-        if (error) throw error;
-        return successResponse(data);
+        // profiles table has no 'status' column — this endpoint is non-functional
+        return validationMessage("User status updates are not supported (no status column in profiles schema).");
       }
 
       // ── RSVP management ──
@@ -2218,7 +2213,7 @@ async function handleLiveDataRequest(
           .from("blocked_users")
           .insert({
             blocked_by: session.id,
-            blocked_user_id: match.params.userId,
+            user_id: match.params.userId,
             scope: "group",
             scope_id: group.id,
           })
@@ -2349,7 +2344,7 @@ async function handleLiveDataRequest(
           .from("blocked_users")
           .insert({
             blocked_by: session.id,
-            blocked_user_id: match.params.id,
+            user_id: match.params.id,
             scope: (body.scope as string) ?? "platform",
             scope_id: (body.scopeId as string) ?? null,
             reason: (body.reason as string) ?? null,
@@ -2367,7 +2362,7 @@ async function handleLiveDataRequest(
           .from("blocked_users")
           .delete()
           .eq("blocked_by", session.id)
-          .eq("blocked_user_id", match.params.id);
+          .eq("user_id", match.params.id);
         if (error) throw error;
         return successResponse({ unblocked: true });
       }
@@ -2400,7 +2395,7 @@ async function handleLiveDataRequest(
           .from("blocked_users")
           .insert({
             blocked_by: session.id,
-            blocked_user_id: match.params.userId,
+            user_id: match.params.userId,
             scope: "venue",
             scope_id: venue.id,
             reason: (body as Record<string, string>).reason ?? null,
