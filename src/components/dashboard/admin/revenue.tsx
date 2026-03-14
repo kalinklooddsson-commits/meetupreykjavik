@@ -124,7 +124,7 @@ export async function AdminAnalyticsScreen() {
       eyebrow="Admin portal"
       title="Analytics"
       description="Deep-dive analytics across user engagement, event performance, revenue trends, and geographic reach."
-      links={adminLinks("revenue")}
+      links={adminLinks("analytics")}
       variant="admin"
       roleMode="admin"
     >

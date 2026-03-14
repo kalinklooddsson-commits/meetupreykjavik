@@ -1118,7 +1118,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sun", open: "09:00-17:00" }
     ],
     deal: "10% off group orders for MeetupReykjavik morning sessions",
-    upcomingEventSlugs: ["morning-yoga-flow"],
+    upcomingEventSlugs: [],
     gallery: [
       "url('/place-images/reykjavik/venues/reykjavik-roasters.jpg')"
     ],
@@ -1148,7 +1148,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sun", open: "11:30-22:00" }
     ],
     deal: "Complimentary welcome cocktail for premium MeetupReykjavik dinner events",
-    upcomingEventSlugs: ["wine-tasting-volcanic-terroir"],
+    upcomingEventSlugs: [],
     gallery: [
       "url('/place-images/reykjavik/venues/apotek.jpg')"
     ],
@@ -1210,7 +1210,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sun", open: "12:00-22:00" }
     ],
     deal: "Reserved group table for MeetupReykjavik dinner socials, pre-order available",
-    upcomingEventSlugs: ["friday-dinner-social"],
+    upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(60,90,120,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/messinn.svg')"
     ],
@@ -1360,7 +1360,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sun", open: "14:00-23:00" }
     ],
     deal: "Guided beer flight for MeetupReykjavik tasting events at a group rate",
-    upcomingEventSlugs: ["craft-beer-tasting-vesturgata"],
+    upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(180,140,40,0.2), rgba(30,27,46,0.15)), url('/place-images/reykjavik/generated/skuli-craft-bar.svg')"
     ],
@@ -1510,7 +1510,7 @@ export const publicVenues: PublicVenue[] = [
       { day: "Sun", open: "08:00-21:00" }
     ],
     deal: "Group breakfast platter for MeetupReykjavik morning sessions",
-    upcomingEventSlugs: ["startup-pitch-night"],
+    upcomingEventSlugs: [],
     gallery: [
       "linear-gradient(135deg, rgba(245,240,232,0.2), rgba(124,154,130,0.15)), url('/place-images/reykjavik/generated/bergsson-mathus.svg')"
     ],

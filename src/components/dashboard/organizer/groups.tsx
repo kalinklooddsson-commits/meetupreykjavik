@@ -49,54 +49,60 @@ export async function OrganizerGroupsScreen() {
           title="Managed groups"
           description="Groups you organize or co-host. Each group can have its own join mode, event cadence, and moderation rules."
         >
-          <DashboardTable
-            columns={[
-              "Group",
-              "Join mode",
-              "Status",
-              "Pending members",
-              "Health",
-              "Next event",
-            ]}
-            rows={data.groups.map((g) => ({
-              key: g.group.slug,
-              cells: [
-                <div key="name">
-                  <div className="font-medium text-brand-text">
-                    {g.group.name}
-                  </div>
-                  <div className="mt-0.5 text-xs text-brand-text-muted">
-                    {g.coHosts} co-host{g.coHosts !== 1 ? "s" : ""}
-                  </div>
-                </div>,
-                <ToneBadge
-                  key="join"
-                  tone={g.joinMode === "Approval" ? "sand" : "sage"}
-                >
-                  {g.joinMode}
-                </ToneBadge>,
-                <ToneBadge key="status" tone={statusTone(g.status)}>
-                  {g.status}
-                </ToneBadge>,
-                <span key="pending" className="tabular-nums">
-                  {g.pendingMembers > 0 ? (
-                    <span className="font-medium text-brand-coral">
-                      {g.pendingMembers} pending
-                    </span>
-                  ) : (
-                    <span className="text-brand-text-muted">None</span>
-                  )}
-                </span>,
-                <ToneBadge key="health" tone={statusTone(g.health)}>
-                  {g.health}
-                </ToneBadge>,
-                <span key="next" className="text-sm text-brand-text-muted">
-                  {g.nextEvent}
-                </span>,
-              ],
-            }))}
-            caption="Groups you manage"
-          />
+          {data.groups.length > 0 ? (
+            <DashboardTable
+              columns={[
+                "Group",
+                "Join mode",
+                "Status",
+                "Pending members",
+                "Health",
+                "Next event",
+              ]}
+              rows={data.groups.map((g) => ({
+                key: g.group.slug,
+                cells: [
+                  <div key="name">
+                    <div className="font-medium text-brand-text">
+                      {g.group.name}
+                    </div>
+                    <div className="mt-0.5 text-xs text-brand-text-muted">
+                      {g.coHosts} co-host{g.coHosts !== 1 ? "s" : ""}
+                    </div>
+                  </div>,
+                  <ToneBadge
+                    key="join"
+                    tone={g.joinMode === "Approval" ? "sand" : "sage"}
+                  >
+                    {g.joinMode}
+                  </ToneBadge>,
+                  <ToneBadge key="status" tone={statusTone(g.status)}>
+                    {g.status}
+                  </ToneBadge>,
+                  <span key="pending" className="tabular-nums">
+                    {g.pendingMembers > 0 ? (
+                      <span className="font-medium text-brand-coral">
+                        {g.pendingMembers} pending
+                      </span>
+                    ) : (
+                      <span className="text-brand-text-muted">None</span>
+                    )}
+                  </span>,
+                  <ToneBadge key="health" tone={statusTone(g.health)}>
+                    {g.health}
+                  </ToneBadge>,
+                  <span key="next" className="text-sm text-brand-text-muted">
+                    {g.nextEvent}
+                  </span>,
+                ],
+              }))}
+              caption="Groups you manage"
+            />
+          ) : (
+            <p className="py-8 text-center text-sm text-gray-500">
+              No groups yet. Browse existing groups or create your own to get started.
+            </p>
+          )}
         </Surface>
 
         {/* Group management tips */}

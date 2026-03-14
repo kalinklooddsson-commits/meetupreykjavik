@@ -94,27 +94,33 @@ export async function VenueDashboardScreen() {
         actionLabel="All bookings"
         actionHref={"/venue/bookings" as Route}
       >
-        <DashboardTable
-          columns={["Organizer", "Event", "Date", "Attendance", "Status"]}
-          rows={data.bookings.incoming
-            .filter((b) => !/accepted/i.test(b.status))
-            .map((b) => ({
-              key: b.key,
-              cells: [
-                <div key="org" className="flex items-center gap-2">
-                  <AvatarStamp name={b.organizer} size="sm" />
-                  <span className="font-medium">{b.organizer}</span>
-                </div>,
-                b.event,
-                b.date,
-                b.attendance,
-                <ToneBadge key="status" tone={statusTone(b.status)}>
-                  {b.status}
-                </ToneBadge>,
-              ],
-            }))}
-          caption="Pending booking requests"
-        />
+        {data.bookings.incoming.filter((b) => !/accepted/i.test(b.status)).length > 0 ? (
+          <DashboardTable
+            columns={["Organizer", "Event", "Date", "Attendance", "Status"]}
+            rows={data.bookings.incoming
+              .filter((b) => !/accepted/i.test(b.status))
+              .map((b) => ({
+                key: b.key,
+                cells: [
+                  <div key="org" className="flex items-center gap-2">
+                    <AvatarStamp name={b.organizer} size="sm" />
+                    <span className="font-medium">{b.organizer}</span>
+                  </div>,
+                  b.event,
+                  b.date,
+                  b.attendance,
+                  <ToneBadge key="status" tone={statusTone(b.status)}>
+                    {b.status}
+                  </ToneBadge>,
+                ],
+              }))}
+            caption="Pending booking requests"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No pending booking requests at this time.
+          </p>
+        )}
       </Surface>
 
       {/* ── Upcoming events ───────────────────────────────── */}
@@ -125,27 +131,33 @@ export async function VenueDashboardScreen() {
         actionLabel="All events"
         actionHref={"/venue/events" as Route}
       >
-        <DashboardTable
-          columns={["Event", "Organizer", "Status", "Note"]}
-          rows={data.upcomingEvents.map((e) => ({
-            key: e.event.slug,
-            cells: [
-              <Link
-                key="title"
-                href={`/events/${e.event.slug}` as Route}
-                className="font-medium text-brand-indigo hover:underline"
-              >
-                {e.event.title}
-              </Link>,
-              e.organizer,
-              <ToneBadge key="status" tone={statusTone(e.status)}>
-                {e.status}
-              </ToneBadge>,
-              <span key="note" className="text-brand-text-muted">{e.note}</span>,
-            ],
-          }))}
-          caption="Upcoming events"
-        />
+        {data.upcomingEvents.length > 0 ? (
+          <DashboardTable
+            columns={["Event", "Organizer", "Status", "Note"]}
+            rows={data.upcomingEvents.map((e) => ({
+              key: e.event.slug,
+              cells: [
+                <Link
+                  key="title"
+                  href={`/events/${e.event.slug}` as Route}
+                  className="font-medium text-brand-indigo hover:underline"
+                >
+                  {e.event.title}
+                </Link>,
+                e.organizer,
+                <ToneBadge key="status" tone={statusTone(e.status)}>
+                  {e.status}
+                </ToneBadge>,
+                <span key="note" className="text-brand-text-muted">{e.note}</span>,
+              ],
+            }))}
+            caption="Upcoming events"
+          />
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No upcoming events scheduled yet.
+          </p>
+        )}
       </Surface>
 
       {/* ── Analytics preview ─────────────────────────────── */}

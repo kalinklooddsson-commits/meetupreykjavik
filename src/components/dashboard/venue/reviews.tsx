@@ -83,7 +83,7 @@ export async function VenueReviewsScreen() {
         <StatCard
           label="5-star reviews"
           value={String(venueReviews.filter((r) => r.rating === 5).length)}
-          detail={`${Math.round((venueReviews.filter((r) => r.rating === 5).length / venueReviews.length) * 100)}% of all reviews`}
+          detail={`${venueReviews.length > 0 ? Math.round((venueReviews.filter((r) => r.rating === 5).length / venueReviews.length) * 100) : 0}% of all reviews`}
           icon={Star}
           tone="sage"
         />

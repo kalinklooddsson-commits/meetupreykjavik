@@ -70,25 +70,31 @@ export async function OrganizerBookingsScreen() {
           title="Booking pipeline"
           description="All your venue booking requests and their current status."
         >
-          <DashboardTable
-            columns={["Venue", "Status", "Date", "Note"]}
-            rows={data.bookingPipeline.map((b) => ({
-              key: b.key,
-              cells: [
-                <span key="venue" className="font-medium text-brand-text">
-                  {b.venue}
-                </span>,
-                <ToneBadge key="status" tone={statusTone(b.status)}>
-                  {b.status}
-                </ToneBadge>,
-                b.date,
-                <span key="note" className="text-brand-text-muted">
-                  {b.note}
-                </span>,
-              ],
-            }))}
-            caption="Booking pipeline"
-          />
+          {data.bookingPipeline.length > 0 ? (
+            <DashboardTable
+              columns={["Venue", "Status", "Date", "Note"]}
+              rows={data.bookingPipeline.map((b) => ({
+                key: b.key,
+                cells: [
+                  <span key="venue" className="font-medium text-brand-text">
+                    {b.venue}
+                  </span>,
+                  <ToneBadge key="status" tone={statusTone(b.status)}>
+                    {b.status}
+                  </ToneBadge>,
+                  b.date,
+                  <span key="note" className="text-brand-text-muted">
+                    {b.note}
+                  </span>,
+                ],
+              }))}
+              caption="Booking pipeline"
+            />
+          ) : (
+            <p className="py-8 text-center text-sm text-gray-500">
+              No booking requests yet. Browse venue matches below to get started.
+            </p>
+          )}
         </Surface>
       </div>
     </PortalShell>
