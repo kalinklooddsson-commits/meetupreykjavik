@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   const rl = checkRateLimit(rlKey, CONTACT_RATE_LIMIT);
   if (!rl.allowed) {
     return NextResponse.json(
-      { ok: false, error: "Too many requests. Please try again later." },
+      { error: "Too many requests. Please try again later." },
       {
         status: 429,
         headers: {
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { ok: false, error: "Please enter a valid email address." },
+        { error: "Please enter a valid email address." },
         { status: 400 },
       );
     }
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         if (error) {
           console.error("[Newsletter] DB insert failed:", error.message);
           return NextResponse.json(
-            { ok: false, error: "Subscription failed. Please try again." },
+            { error: "Subscription failed. Please try again." },
             { status: 500 },
           );
         }
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     });
   } catch {
     return NextResponse.json(
-      { ok: false, error: "Server error" },
+      { error: "Server error" },
       { status: 500 },
     );
   }

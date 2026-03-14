@@ -1232,7 +1232,7 @@ async function handleLiveDataRequest(
           .single();
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         if (!bookingToUpdate) {
-          if (hasSupabaseEnv()) return NextResponse.json({ ok: false, error: "Booking not found." }, { status: 404 });
+          if (hasSupabaseEnv()) return NextResponse.json({ error: "Booking not found." }, { status: 404 });
           // Mock mode — acknowledge without DB write
           return successResponse({ ok: true, id: match.params.id, ...body });
         }
@@ -2011,9 +2011,8 @@ async function handleLiveDataRequest(
           .select("*")
           .order("created_at", { ascending: false })
           .range(offset, offset + limit - 1);
-        const statusFilter = url.searchParams.get("status");
-        if (statusFilter) query = query.eq("status", statusFilter);
-        const typeFilter = url.searchParams.get("account_type");
+        // profiles table has no "status" column — filter by account_type instead
+        const typeFilter = url.searchParams.get("account_type") ?? url.searchParams.get("status");
         if (typeFilter) query = query.eq("account_type", typeFilter);
         const search = url.searchParams.get("q");
         if (search) query = query.ilike("display_name", `%${search}%`);
@@ -2545,7 +2544,7 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
       // Supabase is configured but handler returned null (client init failed)
       // Return error instead of silently falling back to mock data
       return NextResponse.json(
-        { ok: false, error: "Service temporarily unavailable. Please try again." },
+        { error: "Service temporarily unavailable. Please try again." },
         { status: 503 },
       );
     }

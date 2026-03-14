@@ -21,17 +21,17 @@ export async function PATCH(
     const body = await request.json();
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
     const allowedFields = [
-      "title", "description", "summary", "starts_at", "ends_at",
+      "title", "description", "starts_at", "ends_at",
       "venue_name", "venue_address", "online_link", "event_type",
       "attendee_limit", "guest_limit", "age_restriction", "age_min", "age_max",
-      "is_free", "rsvp_mode", "visibility", "recurrence", "reminder_policy", "status",
+      "is_free", "rsvp_mode", "recurrence_rule", "status",
     ];
 
     // Map camelCase from frontend to snake_case
@@ -41,7 +41,7 @@ export async function PATCH(
       eventType: "event_type", attendeeLimit: "attendee_limit",
       guestLimit: "guest_limit", ageRestriction: "age_restriction",
       ageMin: "age_min", ageMax: "age_max", isFree: "is_free",
-      rsvpMode: "rsvp_mode", reminderPolicy: "reminder_policy",
+      rsvpMode: "rsvp_mode", recurrence: "recurrence_rule",
     };
 
     const update: Record<string, unknown> = {};
@@ -97,7 +97,7 @@ export async function DELETE(
     const { slug } = await params;
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

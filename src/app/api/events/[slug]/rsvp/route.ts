@@ -55,7 +55,7 @@ export async function POST(
       // Already RSVPed — update status to going
       await db
         .from("rsvps")
-        .update({ status: "going", updated_at: new Date().toISOString() })
+        .update({ status: "going" })
         .eq("id", existing.id);
       return NextResponse.json({ ok: true, action: "confirmed" });
     }
@@ -70,7 +70,7 @@ export async function POST(
     if (error) {
       console.error("RSVP creation failed:", error);
       return NextResponse.json(
-        { ok: false, error: "Could not create RSVP. Please try again." },
+        { error: "Could not create RSVP. Please try again." },
         { status: 500 },
       );
     }
@@ -95,7 +95,7 @@ export async function DELETE(
     const { slug } = await params;
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,7 +116,7 @@ export async function DELETE(
     // Cancel RSVP
     const { error } = await db
       .from("rsvps")
-      .update({ status: "cancelled", updated_at: new Date().toISOString() })
+      .update({ status: "cancelled" })
       .eq("event_id", event.id)
       .eq("user_id", session.id);
 
