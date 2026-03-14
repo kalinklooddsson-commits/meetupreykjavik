@@ -272,8 +272,8 @@ export const memberPortalData = {
       score: "88%",
     },
     {
-      event: wineTasting,
-      reason: "Premium small-group experiences map well to your saved venue preferences.",
+      event: saturdayHike,
+      reason: "Outdoor group events match your activity profile and weekend availability.",
       score: "84%",
     },
   ],
@@ -368,7 +368,7 @@ export const memberPortalData = {
     { day: 16 },
     { day: 17 },
     { day: 18 },
-    { day: 19, emphasis: true, items: [reactWorkshop.title, wineTasting.title] },
+    { day: 19, emphasis: true, items: [reactWorkshop.title] },
     { day: 20, emphasis: true, items: [newcomersNight.title] },
     { day: 21, emphasis: true, items: [saturdayHike.title] },
     { day: 22 },
@@ -1071,14 +1071,12 @@ export const venuePortalData = {
 
 export const adminPortalData = {
   metrics: [
-    { label: "Users", value: "8,412", delta: "+4.8% MoM", detail: "Verified members and premium tiers continue to grow steadily." },
-    { label: "Active users", value: "3,924", delta: "46.6% active", detail: "DAU/WAU ratio is strongest in the expat and tech segments." },
-    { label: "Events", value: "1,284", delta: "+96 this month", detail: "Most growth came from recurring organizer templates going live." },
-    { label: "RSVPs", value: "19,882", delta: "+12.1% MoM", detail: "Approval-mode events are still converting slightly better than open RSVP formats." },
-    { label: "Revenue", value: "12.4M ISK", delta: "$85.4k USD eq.", detail: "Mix includes subscriptions, ticket commission, and promoted placements." },
-    { label: "Venues", value: String(publicVenues.length + 17), delta: "34 verified", detail: "Application volume remains healthy across nightlife and workshop spaces." },
-    { label: "Pending queues", value: "23", delta: "Needs triage", detail: "Venue applications and flagged reports are the biggest queue contributors." },
-    { label: "System health", value: "99.96%", delta: "2 degraded checks", detail: "Reminder cron latency is slightly elevated but within tolerance." },
+    { label: "Users", value: String(publicEvents.reduce((s, e) => s + (e.attendees ?? 0), 0)), delta: "Registered", detail: "Total registered members on the platform." },
+    { label: "Total events", value: String(publicEvents.length), delta: "All time", detail: "Total published events on the platform." },
+    { label: "Active venues", value: String(publicVenues.length), delta: "Partners", detail: "Venues currently in the partner network." },
+    { label: "Revenue", value: "0 ISK", delta: "All time", detail: "Total platform revenue (mock mode — no transactions)." },
+    { label: "Pending queues", value: "0", delta: "Clear", detail: "No pending items in mock mode." },
+    { label: "System health", value: "Operational", delta: "All checks passing", detail: "Platform systems are running normally." },
   ],
   growthChart: [
     { label: "Oct", value: 980 },
@@ -1243,7 +1241,7 @@ export const adminPortalData = {
       lastActive: "8 min ago",
       groups: "8",
       events: "41",
-      revenue: "Plus",
+      plan: "Plus",
     },
     {
       key: "u2",
@@ -1255,7 +1253,7 @@ export const adminPortalData = {
       lastActive: "23 min ago",
       groups: "3",
       events: "27",
-      revenue: "Pro",
+      plan: "Pro",
     },
     {
       key: "u3",
@@ -1267,7 +1265,7 @@ export const adminPortalData = {
       lastActive: "1 h ago",
       groups: "2",
       events: "18",
-      revenue: "Free",
+      plan: "Free",
     },
     {
       key: "u4",
@@ -1279,7 +1277,7 @@ export const adminPortalData = {
       lastActive: "Today",
       groups: "0",
       events: "31",
-      revenue: "Premium",
+      plan: "Premium",
     },
     {
       key: "u5",
@@ -1291,7 +1289,7 @@ export const adminPortalData = {
       lastActive: "Yesterday",
       groups: "5",
       events: "14",
-      revenue: "Free",
+      plan: "Free",
     },
   ],
   selectedUser: {

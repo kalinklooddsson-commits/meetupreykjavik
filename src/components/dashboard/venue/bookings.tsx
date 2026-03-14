@@ -168,7 +168,7 @@ export async function VenueBookingsScreen() {
                     className="rounded-lg border border-brand-border-light bg-white px-3 py-2"
                   >
                     <div className="text-xs font-medium text-brand-text-muted">{signal.label}</div>
-                    <div className="mt-0.5 text-sm font-semibold text-brand-text">{signal.score}/10</div>
+                    <div className="mt-0.5 text-sm font-semibold text-brand-text">{signal.score}%</div>
                     <div className="mt-0.5 text-xs text-brand-text-muted">{signal.note}</div>
                   </div>
                 ))}

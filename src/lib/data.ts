@@ -400,9 +400,13 @@ export async function fetchEvents(options?: {
         status: "published",
       });
       if (result.data.length > 0) {
-        return result.data.map((row) =>
+        const dbEvents = result.data.map((row) =>
           mapDbEventToPublic(row as unknown as Record<string, unknown>),
         );
+        // Merge in mock events that aren't in the DB (e.g. demo/seed events)
+        const dbSlugs = new Set(dbEvents.map((e) => e.slug));
+        const missingMocks = publicEvents.filter((e) => !dbSlugs.has(e.slug));
+        return [...dbEvents, ...missingMocks].slice(0, options?.limit ?? 50);
       }
     } catch {
       // Fall through to mock data

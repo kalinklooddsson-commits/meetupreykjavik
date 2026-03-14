@@ -655,11 +655,11 @@ export function TrendChart({
                 className="absolute inset-x-1 bottom-1 rounded"
                 style={{ height: barHeight, background: barColor, opacity: 0.8 }}
               />
-              <div className="tabular-nums absolute inset-x-0 top-1 text-center text-[11px] font-medium text-brand-text-muted">
+              <div className="tabular-nums absolute inset-x-0 top-1 z-10 text-center text-[11px] font-medium text-brand-text-muted">
                 {formatValue(item.value)}
               </div>
             </div>
-            <div className="text-center text-[10px] font-medium uppercase tracking-wider text-brand-text-light">
+            <div className="truncate text-center text-[10px] font-medium uppercase tracking-wider text-brand-text-light" title={item.label}>
               {item.label}
             </div>
           </div>

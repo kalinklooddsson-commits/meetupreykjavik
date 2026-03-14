@@ -136,10 +136,11 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
   }
 
   try {
-    const [rsvps, notifications, conversations] = await Promise.all([
+    const [rsvps, notifications, conversations, realProfile] = await Promise.all([
       getUserRsvps(session.id),
       getUserNotifications(session.id),
       getUserConversations(session.id),
+      getMemberProfile(),
     ]);
 
     // Count groups from DB
@@ -175,10 +176,9 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
     }));
 
     const mappedMessages = conversations.slice(0, 5).map((m: Record<string, unknown>) => {
-      const sender = m.profiles as Record<string, string> | null;
       return {
         key: m.id as string,
-        counterpart: sender?.display_name ?? "Unknown",
+        counterpart: (m.other_display_name as string) ?? "Unknown",
         role: "Member",
         subject: ((m.body as string) ?? "").slice(0, 60),
         preview: (m.body as string) ?? "",
@@ -232,11 +232,12 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
         },
         mockMemberPortalData.metrics[3],
       ],
+      profile: realProfile,
       upcomingEvents,
       inbox,
       notifications: mappedNotifications,
       messages: mappedMessages,
-    } as MemberPortalData;
+    } as unknown as MemberPortalData;
   } catch (error) {
     console.error("Failed to fetch member dashboard data:", error);
     return mockMemberPortalData;
@@ -756,7 +757,16 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
         items: [
           { label: "Public summary", value: (venueObj.summary as string) ?? (venueObj.description as string) ?? "" },
           { label: "Address", value: (venueObj.address as string) ?? "" },
-          { label: "Capacity", value: `${(venueObj.capacity as number) ?? "?"} standing / mixed` },
+          { label: "Capacity", value: (() => {
+            const total = (venueObj.capacity_total as number | null) ?? (venueObj.capacity as number | null);
+            const standing = (venueObj.capacity_standing as number | null);
+            const seated = (venueObj.capacity_seated as number | null);
+            if (total) return `${total} total${seated ? ` (${seated} seated)` : ""}${standing ? ` / ${standing} standing` : ""}`;
+            if (standing && seated) return `${seated} seated / ${standing} standing`;
+            if (standing) return `${standing} standing`;
+            if (seated) return `${seated} seated`;
+            return "Not specified";
+          })() },
         ],
       },
       {
@@ -1010,7 +1020,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       lastActive: timeAgo(u.last_active_at as string | null),
       groups: "—",
       events: "—",
-      revenue: deriveTier(u),
+      plan: deriveTier(u),
     }));
 
     // ── Build admin groups table from real data ──
@@ -1199,14 +1209,19 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
     }
     const typeLabels: Record<string, string> = {
       ticket: "Ticket commission",
+      ticket_commission: "Ticket commission",
       subscription: "Organizer SaaS",
+      organizer_saas: "Organizer SaaS",
       venue_subscription: "Venue SaaS",
+      venue_partnership: "Venue partnership",
       promoted: "Promoted listings",
+      payout: "Payout",
+      refund: "Refund",
     };
     const revenueSources = txnGrandTotal > 0
       ? Array.from(txnTypeTotals.entries())
           .map(([type, total]) => ({
-            label: typeLabels[type] ?? type.charAt(0).toUpperCase() + type.slice(1),
+            label: typeLabels[type] ?? type.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
             value: Math.round((total / txnGrandTotal) * 100),
           }))
           .sort((a, b) => b.value - a.value)
@@ -1479,7 +1494,13 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
           delta: "All time",
           detail: "Total platform revenue.",
         },
-        mockAdminPortalData.metrics[4] ?? {
+        {
+          label: "Pending queues",
+          value: String(pendingVenueCount + draftEventCount),
+          delta: pendingVenueCount + draftEventCount > 0 ? "Needs triage" : "Clear",
+          detail: `${pendingVenueCount} venue application${pendingVenueCount !== 1 ? "s" : ""} and ${draftEventCount} draft event${draftEventCount !== 1 ? "s" : ""} awaiting review.`,
+        },
+        {
           label: "System health",
           value: "Operational",
           delta: "All checks passing",

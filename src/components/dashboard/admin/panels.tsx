@@ -119,7 +119,7 @@ type UserRow = {
   lastActive: string;
   groups: string;
   events: string;
-  revenue: string;
+  plan: string;
 };
 
 export function AdminUserCommandCenter({
@@ -176,7 +176,7 @@ export function AdminUserCommandCenter({
       <div className="grid gap-4 xl:grid-cols-[1fr_360px]">
         {/* Users table */}
         <DashboardTable
-          columns={["User", "Role", "Status", "Joined", "Revenue", ""]}
+          columns={["User", "Role", "Status", "Joined", "Plan", ""]}
           rows={filtered.map((u) => ({
             key: u.key,
             cells: [
@@ -192,7 +192,7 @@ export function AdminUserCommandCenter({
               </ToneBadge>,
               <ToneBadge key="s" tone={toneForStatus(u.status)}>{u.status}</ToneBadge>,
               u.joined,
-              u.revenue,
+              u.plan,
               <button key="a" type="button" onClick={() => setSelectedKey(u.key)} className={btnGhost}>
                 <Eye className="h-3.5 w-3.5" /> Details
               </button>,
@@ -215,7 +215,7 @@ export function AdminUserCommandCenter({
                   { key: "lastActive", label: "Last active", value: selected.lastActive },
                   { key: "groups", label: "Groups", value: selected.groups },
                   { key: "events", label: "Events", value: selected.events },
-                  { key: "revenue", label: "Revenue", value: selected.revenue },
+                  { key: "plan", label: "Plan", value: selected.plan },
                 ]}
               />
 
@@ -277,18 +277,20 @@ export function AdminUserCommandCenter({
                   type="button"
                   className={btnOutline}
                   onClick={async () => {
-                    const action = selected.type === "Premium" ? "remove_premium" : "grant_premium";
-                    const msg = selected.type === "Premium" ? "Premium removed" : "Premium granted";
+                    const isPremium = selected.plan === "Premium" || selected.plan === "Plus";
+                    const action = isPremium ? "remove_premium" : "grant_premium";
+                    const msg = isPremium ? "Premium removed" : "Premium granted";
+                    const newPlan = isPremium ? "Free" : "Plus";
                     try {
                       await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                      updateUser(selected.key, { type: selected.type === "Premium" ? "User" : "Premium" });
+                      updateUser(selected.key, { plan: newPlan });
                       toast("success", msg);
                     } catch {
-                      updateUser(selected.key, { type: selected.type === "Premium" ? "User" : "Premium" });
+                      updateUser(selected.key, { plan: newPlan });
                       toast("info", `${msg} (offline)`);
                     }
                   }}

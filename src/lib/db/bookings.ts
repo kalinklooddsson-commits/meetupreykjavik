@@ -51,7 +51,8 @@ export async function getAllBookings() {
     .select(`
       *,
       organizer:organizer_id ( display_name ),
-      venue:venue_id ( name )
+      venue:venue_id ( name ),
+      events:event_id ( title, starts_at )
     `)
     .order("requested_date", { ascending: false });
 
