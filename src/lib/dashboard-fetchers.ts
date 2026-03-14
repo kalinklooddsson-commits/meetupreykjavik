@@ -1269,7 +1269,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r: any) => r.count ?? 0)
       : Promise.resolve(0);
 
-    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult, recentTxnsResult, auditLogResult, settingsResult, categoriesResult] = await Promise.all([
+    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult, recentTxnsResult, auditLogResult, settingsResult, categoriesResult, pendingBookingsResult] = await Promise.all([
       getEvents({ limit: 50 }),
       getVenues({ limit: 50 }),
       getPlatformRevenue(),
@@ -1351,6 +1351,10 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       supabase
         ? supabase.from("categories").select("id, name_en, slug").eq("is_active", true).order("sort_order")
         : Promise.resolve({ data: null }),
+      // Count pending bookings
+      supabase
+        ? supabase.from("venue_bookings").select("*", { count: "exact", head: true }).eq("status", "pending")
+        : Promise.resolve({ count: null }),
     ]);
 
     // ── Build admin events table from real data ──
@@ -1559,7 +1563,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
     // ── Build urgent queues from real counts ──
     const pendingVenueCount = allVenues.filter((v) => (v.status as string) === "pending").length;
     const draftEventCount = allEvents.filter((e) => (e.status as string) === "draft").length;
-    const pendingBookingCount = 0; // TODO: compute from bookings if needed
+    const pendingBookingCount = (pendingBookingsResult as { count: number | null })?.count ?? 0;
     const urgentQueues: Array<{ key: string; title: string; detail: string; meta: string; tone: "coral" | "basalt" | "indigo" | "sage" | "sand" | "neutral" }> = [];
     if (pendingVenueCount > 0) {
       urgentQueues.push({

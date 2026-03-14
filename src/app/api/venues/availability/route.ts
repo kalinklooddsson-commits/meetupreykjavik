@@ -75,13 +75,11 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "No venue found" }, { status: 404 });
     }
 
-    // Delete existing availability and replace
-    await db.from("venue_availability").delete().eq("venue_id", venue.id);
-
     const dayMap: Record<string, number> = {
       Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0,
     };
 
+    // Build rows BEFORE deleting to avoid data loss on malformed input
     const rows = [];
     for (const dayEntry of schedule) {
       const dayOfWeek = dayMap[dayEntry.day] ?? 0;
@@ -100,6 +98,9 @@ export async function PATCH(request: NextRequest) {
         }
       }
     }
+
+    // Delete existing availability then insert new rows
+    await db.from("venue_availability").delete().eq("venue_id", venue.id);
 
     if (rows.length > 0) {
       const { error } = await db.from("venue_availability").insert(rows);
