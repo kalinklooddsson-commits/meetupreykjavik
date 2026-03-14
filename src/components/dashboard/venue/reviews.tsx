@@ -9,7 +9,6 @@ import {
   AvatarStamp,
 } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
-import { venueReviews } from "@/lib/dashboard-data";
 import { VenueReviewReply } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
@@ -48,11 +47,12 @@ function renderStars(rating: number) {
 
 export async function VenueReviewsScreen() {
   const data = await getVenuePortalData();
+  const venueReviews = data.reviews ?? [];
 
   const avgRating =
     venueReviews.length > 0
       ? (
-          venueReviews.reduce((sum, r) => sum + r.rating, 0) / venueReviews.length
+          venueReviews.reduce((sum: number, r: { rating: number }) => sum + r.rating, 0) / venueReviews.length
         ).toFixed(1)
       : "0";
 

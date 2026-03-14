@@ -54,6 +54,16 @@ export const eventInputSchema = z.object({
   recurrenceEnd: dateSchema.optional(),
 });
 
+/** Schema for event creation — slug, hostId, categoryId are generated server-side */
+export const eventCreateSchema = eventInputSchema
+  .extend({
+    slug: slugSchema.optional(),
+    hostId: z.uuid().optional(),
+    categoryId: z.uuid().optional(),
+    startsAt: isoDateTimeSchema.optional(),
+  })
+  .passthrough();
+
 export const eventSchema = eventInputSchema
   .refine(
     (value) => !value.endsAt || value.endsAt > value.startsAt,

@@ -6,13 +6,20 @@ import type { Route } from "next";
 import {
   CalendarDays,
   Clock,
+  DollarSign,
   Globe,
   Loader2,
   MapPin,
+  MessageCircle,
+  Plus,
+  Repeat,
   Send,
   Shield,
   Tag,
+  Ticket,
+  Trash2,
   UserCheck,
+  UserPlus,
   Users,
 } from "lucide-react";
 import { categories } from "@/lib/home-data";
@@ -28,6 +35,13 @@ type VenueEventFormProps = {
   eventSlug?: string;
 };
 
+type TicketTier = {
+  name: string;
+  priceIsk: string;
+  priceUsd: string;
+  quantity: string;
+};
+
 type FormState = {
   title: string;
   category: string;
@@ -39,6 +53,7 @@ type FormState = {
   attendeeLimit: string;
   guestLimit: string;
   isFree: boolean;
+  ticketTiers: TicketTier[];
   rsvpMode: "open" | "approval" | "invite_only";
   visibilityMode: "public" | "approval" | "members_only" | "invite_only";
   ageRestriction: string;
@@ -49,6 +64,12 @@ type FormState = {
   commentsEnabled: boolean;
   description: string;
   featuredPhotoUrl: string;
+  venueAddress: string;
+  guestQuestion: string;
+  coHosts: string;
+  recurrenceRule: string;
+  recurrenceEnd: string;
+  reminderPolicy: string;
 };
 
 const defaultForm: FormState = {
@@ -62,6 +83,7 @@ const defaultForm: FormState = {
   attendeeLimit: "50",
   guestLimit: "0",
   isFree: true,
+  ticketTiers: [{ name: "General", priceIsk: "", priceUsd: "", quantity: "50" }],
   rsvpMode: "open",
   visibilityMode: "public",
   ageRestriction: "none",
@@ -72,6 +94,12 @@ const defaultForm: FormState = {
   commentsEnabled: true,
   description: "",
   featuredPhotoUrl: "",
+  venueAddress: "",
+  guestQuestion: "",
+  coHosts: "",
+  recurrenceRule: "",
+  recurrenceEnd: "",
+  reminderPolicy: "24h and 2h before start",
 };
 
 const eventTypeLabels: Record<string, string> = {
@@ -100,6 +128,21 @@ const ageOptions = [
   { value: "custom", label: "Custom range" },
 ];
 
+const recurrenceOptions = [
+  { value: "", label: "Does not repeat" },
+  { value: "FREQ=WEEKLY;INTERVAL=1", label: "Weekly" },
+  { value: "FREQ=WEEKLY;INTERVAL=2", label: "Every 2 weeks" },
+  { value: "FREQ=MONTHLY;INTERVAL=1", label: "Monthly" },
+];
+
+const reminderOptions = [
+  { value: "24h and 2h before start", label: "24 hours + 2 hours before" },
+  { value: "24h before start", label: "24 hours before" },
+  { value: "2h before start", label: "2 hours before" },
+  { value: "1h before start", label: "1 hour before" },
+  { value: "none", label: "No reminders" },
+];
+
 export function VenueEventForm({
   venueSlug,
   venueName,
@@ -108,7 +151,14 @@ export function VenueEventForm({
   eventSlug,
 }: VenueEventFormProps) {
   const isEdit = mode === "edit";
-  const [form, setForm] = useState<FormState>({ ...defaultForm, ...initialData });
+  const [form, setForm] = useState<FormState>(() => {
+    const merged = { ...defaultForm, ...initialData };
+    // Ensure ticketTiers is always an array (guards against stale HMR state)
+    if (!Array.isArray(merged.ticketTiers) || merged.ticketTiers.length === 0) {
+      merged.ticketTiers = [{ name: "General", priceIsk: "", priceUsd: "", quantity: "50" }];
+    }
+    return merged;
+  });
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("success");
@@ -118,42 +168,82 @@ export function VenueEventForm({
     setMessage("");
   }
 
+  // Safe accessor for ticketTiers (guards against stale HMR state)
+  const tiers: TicketTier[] = Array.isArray((form as Record<string, unknown>).ticketTiers)
+    ? (form as Record<string, unknown>).ticketTiers as TicketTier[]
+    : [{ name: "General", priceIsk: "", priceUsd: "", quantity: "50" }];
+
+  function updateTier(index: number, field: keyof TicketTier, value: string) {
+    setForm((prev) => {
+      const tiers = [...(prev.ticketTiers ?? [])];
+      tiers[index] = { ...tiers[index], [field]: value };
+      return { ...prev, ticketTiers: tiers };
+    });
+  }
+
+  function addTier() {
+    setForm((prev) => ({
+      ...prev,
+      ticketTiers: [...(prev.ticketTiers ?? []), { name: "", priceIsk: "", priceUsd: "", quantity: "" }],
+    }));
+  }
+
+  function removeTier(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      ticketTiers: (prev.ticketTiers ?? []).filter((_, i) => i !== index),
+    }));
+  }
+
   function buildPayload() {
     return {
       title: form.title,
-      description: form.description,
+      description: form.description || "Event description",
       status: "pending_review",
-      group_slug: null,
-      category_id: null,
-      event_type: form.eventType,
-      starts_at:
+      eventType: form.eventType,
+      startsAt:
         form.startsOn && form.startTime
           ? new Date(`${form.startsOn}T${form.startTime}`).toISOString()
-          : null,
-      ends_at:
+          : undefined,
+      endsAt:
         form.startsOn && form.endTime
           ? new Date(`${form.startsOn}T${form.endTime}`).toISOString()
-          : null,
-      venue_slug: venueSlug,
-      venue_name: venueName,
-      venue_address: null,
-      online_link: form.onlineLink || null,
-      attendee_limit: form.attendeeLimit ? Number(form.attendeeLimit) : null,
-      guest_limit: form.guestLimit ? Number(form.guestLimit) : 0,
-      age_restriction: form.ageRestriction,
-      age_min: form.ageMin ? Number(form.ageMin) : null,
-      age_max: form.ageMax ? Number(form.ageMax) : null,
-      is_free: form.isFree,
-      rsvp_mode: form.rsvpMode,
-      visibility_mode: form.visibilityMode,
-      comments_enabled: form.commentsEnabled,
-      host_contact: form.hostContact || null,
-      recurrence_rule: null,
-      recurrence_end: null,
-      featured_photo_url: form.featuredPhotoUrl || null,
+          : undefined,
+      venueName: venueName,
+      venueAddress: form.venueAddress || undefined,
+      venueSlug: venueSlug,
+      onlineLink: form.onlineLink || undefined,
+      attendeeLimit: form.attendeeLimit ? Number(form.attendeeLimit) : undefined,
+      guestLimit: form.guestLimit ? Number(form.guestLimit) : 0,
+      ageRestriction: form.ageRestriction,
+      ageMin: form.ageMin ? Number(form.ageMin) : undefined,
+      ageMax: form.ageMax ? Number(form.ageMax) : undefined,
+      isFree: form.isFree,
+      ticketTiers: form.isFree
+        ? []
+        : tiers
+            .filter((t) => t.name && t.priceIsk)
+            .map((t) => ({
+              name: t.name,
+              priceIsk: Number(t.priceIsk),
+              priceUsd: t.priceUsd ? Number(t.priceUsd) : Math.round(Number(t.priceIsk) / 140),
+              quantity: t.quantity ? Number(t.quantity) : undefined,
+            })),
+      rsvpMode: form.rsvpMode,
+      visibilityMode: form.visibilityMode,
+      commentsEnabled: form.commentsEnabled,
+      hostContact: form.hostContact || undefined,
+      guestQuestion: form.guestQuestion || undefined,
+      coHostNames: form.coHosts
+        ? form.coHosts.split(",").map((n) => n.trim()).filter(Boolean)
+        : [],
+      recurrenceRule: form.recurrenceRule || undefined,
+      recurrenceEnd: form.recurrenceEnd || undefined,
+      reminderPolicy: form.reminderPolicy,
+      featuredPhotoUrl: form.featuredPhotoUrl || undefined,
       tags: form.tags
         ? form.tags.split(",").map((t) => t.trim()).filter(Boolean)
-        : null,
+        : undefined,
     };
   }
 
@@ -166,6 +256,14 @@ export function VenueEventForm({
       return "Description must be at least 20 characters.";
     if ((form.eventType === "online" || form.eventType === "hybrid") && !form.onlineLink.trim())
       return "Please provide an online meeting link.";
+    if (!form.isFree) {
+      const validTiers = tiers.filter((t) => t.name && t.priceIsk);
+      if (validTiers.length === 0)
+        return "Please add at least one ticket tier with a name and price.";
+      for (const tier of validTiers) {
+        if (Number(tier.priceIsk) <= 0) return `Ticket "${tier.name}" must have a positive price.`;
+      }
+    }
     return null;
   }
 
@@ -224,6 +322,8 @@ export function VenueEventForm({
 
   const sectionClass = "space-y-6 rounded-xl border border-gray-200 bg-white p-6";
   const sectionTitle = "text-sm font-bold uppercase tracking-wider text-gray-400";
+  const inputClass = "mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20";
+  const labelClass = "block text-sm font-semibold text-gray-900";
 
   return (
     <div className="space-y-8">
@@ -232,7 +332,7 @@ export function VenueEventForm({
         <h3 className={sectionTitle}>Basics</h3>
 
         <fieldset>
-          <label htmlFor="event-title" className="block text-sm font-semibold text-gray-900">
+          <label htmlFor="event-title" className={labelClass}>
             Event title <span className="text-red-500">*</span>
           </label>
           <input
@@ -242,21 +342,21 @@ export function VenueEventForm({
             onChange={(e) => update("title", e.target.value)}
             placeholder="e.g. Friday Jazz Night, Wine Tasting Evening"
             maxLength={160}
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20"
+            className={inputClass}
           />
           <p className="mt-1 text-xs text-gray-400">{form.title.length}/160</p>
         </fieldset>
 
         <div className="grid gap-6 sm:grid-cols-2">
           <fieldset>
-            <label htmlFor="event-category" className="block text-sm font-semibold text-gray-900">
+            <label htmlFor="event-category" className={labelClass}>
               Category
             </label>
             <select
               id="event-category"
               value={form.category}
               onChange={(e) => update("category", e.target.value)}
-              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20"
+              className={inputClass}
             >
               <option value="">Select a category</option>
               {categories.map((c) => (
@@ -266,14 +366,14 @@ export function VenueEventForm({
           </fieldset>
 
           <fieldset>
-            <label htmlFor="event-type" className="block text-sm font-semibold text-gray-900">
+            <label htmlFor="event-type" className={labelClass}>
               Event format
             </label>
             <select
               id="event-type"
               value={form.eventType}
               onChange={(e) => update("eventType", e.target.value as FormState["eventType"])}
-              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20"
+              className={inputClass}
             >
               {Object.entries(eventTypeLabels).map(([v, l]) => (
                 <option key={v} value={v}>{l}</option>
@@ -293,7 +393,7 @@ export function VenueEventForm({
             value={form.tags}
             onChange={(e) => update("tags", e.target.value)}
             placeholder="e.g. jazz, live-music, friday-night"
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20"
+            className={inputClass}
           />
           <p className="mt-1 text-xs text-gray-400">Comma-separated. Helps people discover your event.</p>
         </fieldset>
@@ -305,7 +405,7 @@ export function VenueEventForm({
 
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
-            <label htmlFor="event-date" className="block text-sm font-semibold text-gray-900">
+            <label htmlFor="event-date" className={labelClass}>
               Date <span className="text-red-500">*</span>
             </label>
             <div className="relative mt-2">
@@ -321,7 +421,7 @@ export function VenueEventForm({
             </div>
           </div>
           <div>
-            <label htmlFor="event-start" className="block text-sm font-semibold text-gray-900">
+            <label htmlFor="event-start" className={labelClass}>
               Start time <span className="text-red-500">*</span>
             </label>
             <div className="relative mt-2">
@@ -336,7 +436,7 @@ export function VenueEventForm({
             </div>
           </div>
           <div>
-            <label htmlFor="event-end" className="block text-sm font-semibold text-gray-900">
+            <label htmlFor="event-end" className={labelClass}>
               End time
             </label>
             <div className="relative mt-2">
@@ -351,6 +451,59 @@ export function VenueEventForm({
             </div>
           </div>
         </div>
+
+        {/* Recurrence */}
+        <div className="grid gap-6 sm:grid-cols-2">
+          <fieldset>
+            <label htmlFor="event-recurrence" className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+              <Repeat className="h-4 w-4 text-gray-400" />
+              Repeat
+            </label>
+            <select
+              id="event-recurrence"
+              value={form.recurrenceRule}
+              onChange={(e) => update("recurrenceRule", e.target.value)}
+              className={inputClass}
+            >
+              {recurrenceOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </fieldset>
+
+          {form.recurrenceRule && (
+            <fieldset>
+              <label htmlFor="event-recurrence-end" className={labelClass}>
+                Repeat until
+              </label>
+              <input
+                id="event-recurrence-end"
+                type="date"
+                value={form.recurrenceEnd}
+                min={form.startsOn || minDate}
+                onChange={(e) => update("recurrenceEnd", e.target.value)}
+                className={inputClass}
+              />
+            </fieldset>
+          )}
+        </div>
+
+        {/* Reminder policy */}
+        <fieldset>
+          <label htmlFor="event-reminder" className={labelClass}>
+            Reminder emails
+          </label>
+          <select
+            id="event-reminder"
+            value={form.reminderPolicy}
+            onChange={(e) => update("reminderPolicy", e.target.value)}
+            className={cn(inputClass, "sm:max-w-md")}
+          >
+            {reminderOptions.map((opt) => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </fieldset>
       </section>
 
       {/* ── Online link (for online/hybrid) ──── */}
@@ -368,11 +521,108 @@ export function VenueEventForm({
               value={form.onlineLink}
               onChange={(e) => update("onlineLink", e.target.value)}
               placeholder="https://zoom.us/j/... or Google Meet link"
-              className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20"
+              className={inputClass}
             />
           </fieldset>
         </section>
       )}
+
+      {/* ── Pricing & tickets ────────────────── */}
+      <section className={sectionClass}>
+        <h3 className={sectionTitle}>
+          <span className="flex items-center gap-2">
+            <Ticket className="h-4 w-4" />
+            Pricing & tickets
+          </span>
+        </h3>
+
+        <label className="flex cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            checked={form.isFree}
+            onChange={(e) => update("isFree", e.target.checked)}
+            className="h-5 w-5 rounded border-gray-300 text-brand-indigo focus:ring-brand-indigo"
+          />
+          <span className="text-sm font-semibold text-gray-900">Free event</span>
+          <span className="text-xs text-gray-400">No ticket purchase required</span>
+        </label>
+
+        {!form.isFree && (
+          <div className="space-y-4 rounded-lg border border-gray-100 bg-gray-50 p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-semibold text-gray-700">Ticket tiers</p>
+              {tiers.length < 5 && (
+                <button
+                  type="button"
+                  onClick={addTier}
+                  className="inline-flex cursor-pointer items-center gap-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Add tier
+                </button>
+              )}
+            </div>
+
+            {tiers.map((tier, i) => (
+              <div key={i} className="grid gap-3 rounded-lg border border-gray-200 bg-white p-4 sm:grid-cols-5">
+                <fieldset className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-gray-500">Tier name</label>
+                  <input
+                    type="text"
+                    value={tier.name}
+                    onChange={(e) => updateTier(i, "name", e.target.value)}
+                    placeholder="e.g. General, VIP, Early Bird"
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo/20"
+                  />
+                </fieldset>
+                <fieldset>
+                  <label className="block text-xs font-medium text-gray-500">Price (ISK)</label>
+                  <div className="relative mt-1">
+                    <DollarSign className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="number"
+                      min={0}
+                      step={100}
+                      value={tier.priceIsk}
+                      onChange={(e) => updateTier(i, "priceIsk", e.target.value)}
+                      placeholder="0"
+                      className="w-full rounded-md border border-gray-300 py-2 pl-8 pr-3 text-sm text-gray-900 focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo/20"
+                    />
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <label className="block text-xs font-medium text-gray-500">Quantity</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={tier.quantity}
+                    onChange={(e) => updateTier(i, "quantity", e.target.value)}
+                    placeholder="∞"
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo/20"
+                  />
+                </fieldset>
+                <div className="flex items-end">
+                  {tiers.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeTier(i)}
+                      className="inline-flex cursor-pointer items-center gap-1 rounded-md px-2 py-2 text-xs font-medium text-red-500 transition-colors hover:bg-red-50"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Remove
+                    </button>
+                  )}
+                </div>
+                {tier.priceIsk && Number(tier.priceIsk) > 0 && (
+                  <p className="text-xs text-gray-400 sm:col-span-5">
+                    ≈ ${Math.round(Number(tier.priceIsk) / 140)} USD (auto-converted)
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* ── Capacity & access ────────────────── */}
       <section className={sectionClass}>
@@ -413,58 +663,77 @@ export function VenueEventForm({
           </fieldset>
         </div>
 
-        <fieldset>
-          <label htmlFor="event-rsvp-mode" className="block text-sm font-semibold text-gray-900">
-            RSVP mode
-          </label>
-          <select
-            id="event-rsvp-mode"
-            value={form.rsvpMode}
-            onChange={(e) => update("rsvpMode", e.target.value as FormState["rsvpMode"])}
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20 sm:max-w-md"
-          >
-            {Object.entries(rsvpModeLabels).map(([v, l]) => (
-              <option key={v} value={v}>{l}</option>
-            ))}
-          </select>
-        </fieldset>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <fieldset>
+            <label htmlFor="event-rsvp-mode" className={labelClass}>
+              RSVP mode
+            </label>
+            <select
+              id="event-rsvp-mode"
+              value={form.rsvpMode}
+              onChange={(e) => update("rsvpMode", e.target.value as FormState["rsvpMode"])}
+              className={cn(inputClass, "sm:max-w-md")}
+            >
+              {Object.entries(rsvpModeLabels).map(([v, l]) => (
+                <option key={v} value={v}>{l}</option>
+              ))}
+            </select>
+          </fieldset>
 
-        <fieldset>
-          <label htmlFor="event-visibility" className="block text-sm font-semibold text-gray-900">
-            Visibility
-          </label>
-          <select
-            id="event-visibility"
-            value={form.visibilityMode}
-            onChange={(e) => update("visibilityMode", e.target.value as FormState["visibilityMode"])}
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20 sm:max-w-md"
-          >
-            {Object.entries(visibilityLabels).map(([v, l]) => (
-              <option key={v} value={v}>{l}</option>
-            ))}
-          </select>
-        </fieldset>
-
-        <div className="flex flex-col gap-3 sm:flex-row sm:gap-8">
-          <label className="flex cursor-pointer items-center gap-3">
-            <input
-              type="checkbox"
-              checked={form.isFree}
-              onChange={(e) => update("isFree", e.target.checked)}
-              className="h-5 w-5 rounded border-gray-300 text-brand-indigo focus:ring-brand-indigo"
-            />
-            <span className="text-sm font-semibold text-gray-900">Free event</span>
-          </label>
-          <label className="flex cursor-pointer items-center gap-3">
-            <input
-              type="checkbox"
-              checked={form.commentsEnabled}
-              onChange={(e) => update("commentsEnabled", e.target.checked)}
-              className="h-5 w-5 rounded border-gray-300 text-brand-indigo focus:ring-brand-indigo"
-            />
-            <span className="text-sm font-semibold text-gray-900">Allow comments</span>
-          </label>
+          <fieldset>
+            <label htmlFor="event-visibility" className={labelClass}>
+              Visibility
+            </label>
+            <select
+              id="event-visibility"
+              value={form.visibilityMode}
+              onChange={(e) => update("visibilityMode", e.target.value as FormState["visibilityMode"])}
+              className={cn(inputClass, "sm:max-w-md")}
+            >
+              {Object.entries(visibilityLabels).map(([v, l]) => (
+                <option key={v} value={v}>{l}</option>
+              ))}
+            </select>
+          </fieldset>
         </div>
+
+        <label className="flex cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            checked={form.commentsEnabled}
+            onChange={(e) => update("commentsEnabled", e.target.checked)}
+            className="h-5 w-5 rounded border-gray-300 text-brand-indigo focus:ring-brand-indigo"
+          />
+          <span className="text-sm font-semibold text-gray-900">Allow comments</span>
+        </label>
+      </section>
+
+      {/* ── Guest question ──────────────────────── */}
+      <section className={sectionClass}>
+        <h3 className={sectionTitle}>
+          <span className="flex items-center gap-2">
+            <MessageCircle className="h-4 w-4" />
+            RSVP question
+          </span>
+        </h3>
+
+        <fieldset>
+          <label htmlFor="event-guest-question" className={labelClass}>
+            Question for attendees (optional)
+          </label>
+          <input
+            id="event-guest-question"
+            type="text"
+            value={form.guestQuestion}
+            onChange={(e) => update("guestQuestion", e.target.value)}
+            placeholder="e.g. Any dietary requirements? What topics interest you?"
+            maxLength={255}
+            className={inputClass}
+          />
+          <p className="mt-1 text-xs text-gray-400">
+            Shown during RSVP. Attendees can respond with a short answer.
+          </p>
+        </fieldset>
       </section>
 
       {/* ── Age restriction ───────────────────── */}
@@ -531,7 +800,7 @@ export function VenueEventForm({
         <h3 className={sectionTitle}>Media & description</h3>
 
         <fieldset>
-          <label className="block text-sm font-semibold text-gray-900">
+          <label className={labelClass}>
             Event photo
           </label>
           <div className="mt-2">
@@ -546,7 +815,7 @@ export function VenueEventForm({
         </fieldset>
 
         <fieldset>
-          <label className="block text-sm font-semibold text-gray-900">
+          <label className={labelClass}>
             Description <span className="text-red-500">*</span>
           </label>
           <p className="mt-1 text-xs text-gray-500">
@@ -562,12 +831,12 @@ export function VenueEventForm({
         </fieldset>
       </section>
 
-      {/* ── Contact info ──────────────────────── */}
+      {/* ── Contact & co-hosts ──────────────────── */}
       <section className={sectionClass}>
-        <h3 className={sectionTitle}>Contact</h3>
+        <h3 className={sectionTitle}>Contact & co-hosts</h3>
 
         <fieldset>
-          <label htmlFor="event-host-contact" className="block text-sm font-semibold text-gray-900">
+          <label htmlFor="event-host-contact" className={labelClass}>
             Host contact (visible to attendees)
           </label>
           <input
@@ -577,23 +846,56 @@ export function VenueEventForm({
             onChange={(e) => update("hostContact", e.target.value)}
             placeholder="e.g. info@lebowskibar.is or a phone number"
             maxLength={120}
-            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-2 focus:ring-brand-indigo/20 sm:max-w-md"
+            className={cn(inputClass, "sm:max-w-md")}
           />
           <p className="mt-1 text-xs text-gray-400">So attendees can reach out with questions.</p>
         </fieldset>
+
+        <fieldset>
+          <label htmlFor="event-cohosts" className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+            <UserPlus className="h-4 w-4 text-gray-400" />
+            Co-hosts (optional)
+          </label>
+          <input
+            id="event-cohosts"
+            type="text"
+            value={form.coHosts}
+            onChange={(e) => update("coHosts", e.target.value)}
+            placeholder="e.g. DJ Magni, Bryggjuhusid"
+            maxLength={400}
+            className={inputClass}
+          />
+          <p className="mt-1 text-xs text-gray-400">Comma-separated names. Up to 8 co-hosts.</p>
+        </fieldset>
       </section>
 
-      {/* ── Venue info badge ───────────────────── */}
-      <div className="rounded-lg border border-brand-indigo/10 bg-brand-indigo/5 p-4">
-        <div className="flex items-center gap-3">
-          <MapPin className="h-5 w-5 text-brand-indigo" />
-          <div>
-            <p className="text-sm font-semibold text-gray-900">
-              Location: {venueName}
-            </p>
-            <p className="text-xs text-gray-500">
-              This event will be listed at your venue automatically.
-            </p>
+      {/* ── Venue info ───────────────────────── */}
+      <div className="rounded-lg border border-brand-indigo/10 bg-brand-indigo/5 p-5">
+        <div className="flex items-start gap-3">
+          <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-brand-indigo" />
+          <div className="flex-1 space-y-3">
+            <div>
+              <p className="text-sm font-semibold text-gray-900">
+                Location: {venueName}
+              </p>
+              <p className="text-xs text-gray-500">
+                This event will be listed at your venue automatically.
+              </p>
+            </div>
+            <fieldset>
+              <label htmlFor="event-venue-address" className="block text-xs font-medium text-gray-600">
+                Specific location / room (optional)
+              </label>
+              <input
+                id="event-venue-address"
+                type="text"
+                value={form.venueAddress}
+                onChange={(e) => update("venueAddress", e.target.value)}
+                placeholder="e.g. Main hall, Rooftop terrace, Room 2B"
+                maxLength={200}
+                className="mt-1 w-full rounded-md border border-brand-indigo/20 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo/20"
+              />
+            </fieldset>
           </div>
         </div>
       </div>

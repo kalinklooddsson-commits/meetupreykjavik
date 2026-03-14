@@ -28,7 +28,8 @@ export async function getVenueBookings(venueId: string) {
     .from("venue_bookings")
     .select(`
       *,
-      profiles:organizer_id (*)
+      profiles:organizer_id (*),
+      events:event_id ( title, slug )
     `)
     .eq("venue_id", venueId)
     .order("requested_date", { ascending: true });

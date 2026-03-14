@@ -926,6 +926,117 @@ async function seed() {
   }
   console.log(`  ✓ ${auditEntries.length} audit entries`);
 
+  /* ── 15. Venue Reviews ────────────────────────────────────── */
+  console.log("\nCreating venue reviews...");
+
+  const reviewData = [
+    { venue: "lebowski-bar", reviewer: "member1", event: "singles-night-25-35", rating: 5, text: "Amazing atmosphere and perfect for our group event.", venueResponse: "Thank you! We loved hosting your group." },
+    { venue: "lebowski-bar", reviewer: "member2", event: "react-server-components-workshop", rating: 4, text: "Great space, sound system could be better for larger groups." },
+    { venue: "lebowski-bar", reviewer: "member3", event: "wine-tasting-volcanic-terroir", rating: 5, text: "The staff were incredibly accommodating for our wine event.", venueResponse: "Glad you enjoyed it!" },
+    { venue: "lebowski-bar", reviewer: "kari", event: "saturday-hike-mt-esja", rating: 3, text: "Decent venue but parking was tricky and the entrance was hard to find." },
+    { venue: "lebowski-bar", reviewer: "member1", event: "speed-friending-newcomers", rating: 4, text: "Cozy and warm. Perfect for our small creative gathering." },
+    { venue: "kex-hostel", reviewer: "member2", event: "singles-night-25-35", rating: 5, text: "Loved the vibe. The communal seating really helps break the ice." },
+    { venue: "kex-hostel", reviewer: "member3", event: "react-server-components-workshop", rating: 4, text: "Good space for workshops, though wifi could be faster." },
+  ];
+
+  for (const rv of reviewData) {
+    const reviewerId = userIds[rv.reviewer];
+    const venId = venueIds[rv.venue];
+    const evtId = eventIds[rv.event];
+    if (!reviewerId || !venId || !evtId) {
+      console.error(`  ✗ review skip: missing IDs for ${rv.venue}/${rv.event}/${rv.reviewer}`);
+      continue;
+    }
+    const id = deterministicUuid(`review-${rv.venue}-${rv.reviewer}-${rv.event}`);
+    const { error } = await sb.from("venue_reviews").upsert(
+      {
+        id,
+        venue_id: venId,
+        reviewer_id: reviewerId,
+        event_id: evtId,
+        reviewer_type: "attendee",
+        rating: rv.rating,
+        text: rv.text,
+        venue_response: rv.venueResponse ?? null,
+      },
+      { onConflict: "id" },
+    );
+    if (error) console.error(`  ✗ review: ${error.message}`);
+  }
+  console.log(`  ✓ ${reviewData.length} venue reviews`);
+
+  /* ── 16. Venue Availability ──────────────────────────────── */
+  console.log("\nCreating venue availability...");
+
+  const availData = [
+    { venue: "lebowski-bar", dayOfWeek: 0, start: "17:00", end: "22:00", notes: "Workshops and tastings", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 1, start: "18:00", end: "22:00", notes: "Open for events", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 2, start: "18:00", end: "23:00", notes: "Community formats preferred", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 3, start: "18:00", end: "23:30", notes: "Open for events", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 4, start: "15:00", end: "19:00", notes: "Small formats only", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 4, start: "19:00", end: "23:59", notes: "Premium pricing", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 5, start: "15:00", end: "19:00", notes: "Open", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 5, start: "20:00", end: "23:59", notes: "Limited event fit", recurring: true },
+    { venue: "lebowski-bar", dayOfWeek: 6, start: "19:00", end: "23:30", notes: "Hosted social slot", recurring: true },
+    { venue: "kex-hostel", dayOfWeek: 0, start: "16:00", end: "22:00", notes: "Workshops", recurring: true },
+    { venue: "kex-hostel", dayOfWeek: 2, start: "18:00", end: "23:00", notes: "Community nights", recurring: true },
+    { venue: "kex-hostel", dayOfWeek: 4, start: "17:00", end: "23:59", notes: "Open for events", recurring: true },
+    { venue: "kex-hostel", dayOfWeek: 5, start: "17:00", end: "23:59", notes: "Open for events", recurring: true },
+    { venue: "kex-hostel", dayOfWeek: 6, start: "14:00", end: "22:00", notes: "Afternoon + evening", recurring: true },
+  ];
+
+  for (const av of availData) {
+    const venId = venueIds[av.venue];
+    if (!venId) continue;
+    const id = deterministicUuid(`avail-${av.venue}-${av.dayOfWeek}-${av.start}`);
+    const { error } = await sb.from("venue_availability").upsert(
+      {
+        id,
+        venue_id: venId,
+        day_of_week: av.dayOfWeek,
+        start_time: av.start,
+        end_time: av.end,
+        notes: av.notes,
+        is_recurring: av.recurring,
+        is_blocked: false,
+      },
+      { onConflict: "id" },
+    );
+    if (error) console.error(`  ✗ availability: ${error.message}`);
+  }
+  console.log(`  ✓ ${availData.length} availability slots`);
+
+  /* ── 17. Venue Deals ─────────────────────────────────────── */
+  console.log("\nCreating venue deals...");
+
+  const dealData = [
+    { venue: "lebowski-bar", title: "Host welcome drink", type: "welcome_drink", tier: "gold", desc: "Complimentary drink for event hosts on arrival.", active: true, value: "Free" },
+    { venue: "lebowski-bar", title: "2-for-1 arrival round", type: "happy_hour", tier: "silver", desc: "First round 2-for-1 for social event attendees before 21:00.", active: true, value: "50%" },
+    { venue: "lebowski-bar", title: "Group platter bundle", type: "group_package", tier: "bronze", desc: "Shared platter discount for groups of 10+.", active: false, value: "20% off" },
+    { venue: "kex-hostel", title: "Workshop coffee package", type: "group_package", tier: "silver", desc: "Coffee and pastries for workshop attendees.", active: true, value: "1500 ISK pp" },
+  ];
+
+  for (const dl of dealData) {
+    const venId = venueIds[dl.venue];
+    if (!venId) continue;
+    const id = deterministicUuid(`deal-${dl.venue}-${dl.title}`);
+    const { error } = await sb.from("venue_deals").upsert(
+      {
+        id,
+        venue_id: venId,
+        title: dl.title,
+        description: dl.desc,
+        deal_type: dl.type,
+        deal_tier: dl.tier,
+        discount_value: dl.value,
+        is_active: dl.active,
+      },
+      { onConflict: "id" },
+    );
+    if (error) console.error(`  ✗ deal: ${error.message}`);
+  }
+  console.log(`  ✓ ${dealData.length} venue deals`);
+
   /* ── Done ──────────────────────────────────────────────────── */
   console.log("\n✅ Seed complete!");
   console.log("\nDemo accounts:");

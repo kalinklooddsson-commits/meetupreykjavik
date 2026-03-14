@@ -771,6 +771,14 @@ export function getManagedOrganizerEvent(slug: string) {
   return organizerManagedEvents.find((event) => event.slug === slug);
 }
 
+export const venueReviews = [
+  { key: "vr-1", reviewer: "Anna Sigurdsson", rating: 5, text: "Amazing atmosphere and perfect for our group event.", date: "2026-03-02", eventName: "Singles Night 25–35", venueResponse: "Thank you, Anna! We loved hosting your group." },
+  { key: "vr-2", reviewer: "Jón Árnason", rating: 4, text: "Great space, sound system could be better for larger groups.", date: "2026-02-20", eventName: "React Workshop" },
+  { key: "vr-3", reviewer: "Helga Björnsdóttir", rating: 5, text: "The staff were incredibly accommodating for our wine event.", date: "2026-02-14", eventName: "Wine Tasting", venueResponse: "Glad you enjoyed it, Helga!" },
+  { key: "vr-4", reviewer: "Sigurdur Ólafsson", rating: 3, text: "Decent venue but parking was tricky and the entrance was hard to find.", date: "2026-01-30", eventName: "Saturday Hike Meetup" },
+  { key: "vr-5", reviewer: "María Jónsdóttir", rating: 4, text: "Cozy and warm. Perfect for our small creative gathering.", date: "2026-01-15", eventName: "Creative Workshop" },
+];
+
 export const venuePortalData = {
   venue: lebowski,
   partnershipTier: "premium",
@@ -1058,6 +1066,7 @@ export const venuePortalData = {
       ],
     },
   ],
+  reviews: venueReviews.map((r) => ({ ...r })),
 };
 
 export const adminPortalData = {
@@ -1757,14 +1766,6 @@ export const memberTransactions = [
   { key: "tx-3", type: "subscription", description: "Plus membership — monthly", amount: "1 990 ISK", status: "completed", date: "2026-03-01" },
   { key: "tx-4", type: "refund", description: "Saturday Hike — cancelled", amount: "-2 500 ISK", status: "pending", date: "2026-03-05", eventSlug: "saturday-hike-mt-esja" },
   { key: "tx-5", type: "ticket", description: "React Workshop — Early Bird", amount: "4 500 ISK", status: "completed", date: "2026-01-20", eventSlug: "react-server-components-workshop" },
-] as const;
-
-export const venueReviews = [
-  { key: "vr-1", reviewer: "Anna Sigurdsson", rating: 5, text: "Amazing atmosphere and perfect for our group event.", date: "2026-03-02", eventName: "Singles Night 25–35", venueResponse: "Thank you, Anna! We loved hosting your group." },
-  { key: "vr-2", reviewer: "Jón Árnason", rating: 4, text: "Great space, sound system could be better for larger groups.", date: "2026-02-20", eventName: "React Workshop" },
-  { key: "vr-3", reviewer: "Helga Björnsdóttir", rating: 5, text: "The staff were incredibly accommodating for our wine event.", date: "2026-02-14", eventName: "Wine Tasting", venueResponse: "Glad you enjoyed it, Helga!" },
-  { key: "vr-4", reviewer: "Sigurdur Ólafsson", rating: 3, text: "Decent venue but parking was tricky and the entrance was hard to find.", date: "2026-01-30", eventName: "Saturday Hike Meetup" },
-  { key: "vr-5", reviewer: "María Jónsdóttir", rating: 4, text: "Cozy and warm. Perfect for our small creative gathering.", date: "2026-01-15", eventName: "Creative Workshop" },
 ] as const;
 
 export const adminBookings = [

@@ -21,6 +21,7 @@ import {
 import { loginSchema, forgotPasswordSchema, resetPasswordSchema, signupSchema } from "@/lib/validators/auth";
 import {
   eventCommentSchema,
+  eventCreateSchema,
   eventInputSchema,
   eventRatingSchema,
   eventSchema,
@@ -49,6 +50,7 @@ import {
   AUTH_RATE_LIMIT,
 } from "@/lib/security/rate-limit";
 import { createSupabaseRouteClient } from "@/lib/supabase/route";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   notFoundResponse,
   scaffoldResponse,
@@ -78,7 +80,7 @@ const bodySchemaMap: Record<string, ZodType> = {
   "PATCH /api/users/[id]": profileSchema.partial(),
   "POST /api/groups": groupSchema,
   "PATCH /api/groups/[slug]": groupSchema.partial(),
-  "POST /api/events": eventSchema,
+  "POST /api/events": eventCreateSchema,
   "PATCH /api/events/[slug]": eventInputSchema.partial(),
   "POST /api/events/[slug]/rsvp": rsvpSchema,
   "POST /api/events/[slug]/comments": eventCommentSchema,
@@ -703,16 +705,73 @@ async function handleLiveDataRequest(
         }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
         const slug = `${String(body.title ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${Date.now().toString(36)}`;
-        // Respect client-supplied status if valid, default to "published"
         const requestedStatus = String(body.status ?? "published");
-        const validStatuses = ["draft", "published", "cancelled"];
-        const status = validStatuses.includes(requestedStatus) ? requestedStatus : "published";
-        const data = await createEvent({
-          ...body,
+        // DB CHECK constraint only allows: draft, published, cancelled, completed
+        // Map pending_review → draft until DB migration adds the status
+        const statusMap: Record<string, string> = { pending_review: "draft" };
+        const validStatuses = ["draft", "published", "cancelled", "completed"];
+        const mapped = statusMap[requestedStatus] ?? requestedStatus;
+        const status = validStatuses.includes(mapped) ? mapped : "published";
+        // Map camelCase validator fields to snake_case DB columns
+        const eventPayload = {
+          title: body.title as string,
           slug,
+          description: (body.description as string) ?? "",
           host_id: session.id,
           status,
-        } as Parameters<typeof createEvent>[0]);
+          event_type: (body.eventType as string) ?? "in_person",
+          starts_at: (body.startsAt as string) ?? new Date().toISOString(),
+          ends_at: (body.endsAt as string) ?? null,
+          venue_name: (body.venueName as string) ?? null,
+          venue_address: (body.venueAddress as string) ?? null,
+          online_link: (body.onlineLink as string) ?? null,
+          featured_photo_url: (body.featuredPhotoUrl as string) ?? null,
+          attendee_limit: (body.attendeeLimit as number) ?? null,
+          guest_limit: (body.guestLimit as number) ?? 0,
+          age_restriction: (body.ageRestriction as string) ?? "none",
+          age_min: (body.ageMin as number) ?? null,
+          age_max: (body.ageMax as number) ?? null,
+          is_free: (body.isFree as boolean) ?? true,
+          comments_enabled: (body.commentsEnabled as boolean) ?? true,
+          rsvp_mode: (body.rsvpMode as string) ?? "open",
+          recurrence_rule: (body.recurrenceRule as string) ?? null,
+          recurrence_end: (body.recurrenceEnd as string) ?? null,
+        };
+
+        // Venue accounts need admin client to bypass RLS (policy only allows organizer/admin)
+        let data;
+        if (session.accountType === "venue") {
+          const adminClient = createSupabaseAdminClient();
+          if (!adminClient) throw new Error("Database unavailable");
+          const { data: inserted, error: insertErr } = await adminClient
+            .from("events")
+            .insert(eventPayload)
+            .select()
+            .single();
+          if (insertErr) throw insertErr;
+          data = inserted;
+        } else {
+          data = await createEvent(eventPayload as Parameters<typeof createEvent>[0]);
+        }
+
+        // Insert ticket tiers if provided
+        const tiers = body.ticketTiers as Array<{ name: string; priceIsk: number; priceUsd: number; quantity: number }> | undefined;
+        if (tiers && tiers.length > 0 && data?.id) {
+          const supabaseForTiers = await createSupabaseServerClient();
+          if (supabaseForTiers) {
+            await supabaseForTiers.from("ticket_tiers").insert(
+              tiers.map((t, i) => ({
+                event_id: data.id,
+                name: t.name,
+                price_isk: t.priceIsk ?? 0,
+                price_usd: t.priceUsd ?? 0,
+                quantity: t.quantity ?? 50,
+                sort_order: i,
+              }))
+            );
+          }
+        }
+
         return successResponse(data, { status: 201 });
       }
       case "PATCH /api/events/[slug]": {

@@ -478,48 +478,285 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
   }
 
   try {
-    const venues = await getVenues({ limit: 10 });
-    const ownedVenue = venues.data.find(
-      (v: Record<string, unknown>) => v.owner_id === session.id,
-    );
+    const supabase = await createSupabaseServerClient();
+    if (!supabase) return mockVenuePortalData;
 
-    if (!ownedVenue) {
-      return mockVenuePortalData;
-    }
+    // ── 2A: Find owned venue directly by owner_id ──
+    // Use .limit(1) + array access instead of .maybeSingle() to avoid
+    // error when user owns multiple venues (picks first by default order)
+    const { data: venueRows } = await supabase
+      .from("venues")
+      .select("*")
+      .eq("owner_id", session.id)
+      .order("created_at", { ascending: true })
+      .limit(1);
 
-    const bookings = await getVenueBookings(ownedVenue.id as string);
+    const venueRow = venueRows?.[0];
+    if (!venueRow) return mockVenuePortalData;
 
-    const pendingCount = bookings.filter((b: Record<string, unknown>) => b.status === "pending").length;
+    const venueId = venueRow.id as string;
 
-    const venueBookingsList = bookings.slice(0, 10).map((b: Record<string, unknown>) => {
+    // ── Parallel queries for all portal data ──
+    const [
+      bookingsRaw,
+      eventsResult,
+      reviewsResult,
+      dealsResult,
+      availResult,
+      notificationsResult,
+      messagesResult,
+    ] = await Promise.all([
+      getVenueBookings(venueId),
+      supabase
+        .from("events")
+        .select("id, title, slug, starts_at, status, category, host_name")
+        .eq("venue_id", venueId)
+        .order("starts_at", { ascending: true }),
+      supabase
+        .from("venue_reviews")
+        .select("*, profiles:reviewer_id ( display_name ), events:event_id ( title )")
+        .eq("venue_id", venueId)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("venue_deals")
+        .select("*")
+        .eq("venue_id", venueId)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("venue_availability")
+        .select("*")
+        .eq("venue_id", venueId)
+        .order("day_of_week", { ascending: true }),
+      getUserNotifications(session.id),
+      getUserConversations(session.id),
+    ]);
+
+    const bookings = bookingsRaw ?? [];
+    const events = eventsResult.data ?? [];
+    const reviews = reviewsResult.data ?? [];
+    const deals = dealsResult.data ?? [];
+    const availability = availResult.data ?? [];
+    const notifications = notificationsResult ?? [];
+    const messages = messagesResult ?? [];
+
+    // ── 2B + 2C: Structure bookings as {incoming, history, guestFit} ──
+    const pendingStatuses = new Set(["pending", "counter_offered"]);
+    const doneStatuses = new Set(["completed", "declined", "cancelled"]);
+
+    const mapBooking = (b: Record<string, unknown>) => {
       const organizer = b.profiles as Record<string, unknown> | null;
+      const event = b.events as Record<string, unknown> | null;
       return {
         key: b.id as string,
         organizer: (organizer?.display_name as string) ?? "Unknown",
-        event: (b.event_title as string) ?? "Booking request",
+        event: (event?.title as string) ?? "Booking request",
         date: (b.requested_date as string) ?? "",
-        attendance: String((b.expected_attendance as number) ?? 0),
+        attendance: `${(b.expected_attendance as number) ?? 0} expected`,
         message: (b.message as string) ?? "",
         status: (b.status as string) ?? "pending",
       };
+    };
+
+    const incoming = bookings
+      .filter((b: Record<string, unknown>) => pendingStatuses.has(b.status as string) || b.status === "accepted")
+      .map(mapBooking);
+
+    const history = bookings
+      .filter((b: Record<string, unknown>) => doneStatuses.has(b.status as string))
+      .map((b: Record<string, unknown>) => {
+        const organizer = b.profiles as Record<string, unknown> | null;
+        return {
+          key: b.id as string,
+          venue: (venueRow.name as string) ?? "",
+          organizer: (organizer?.display_name as string) ?? "Unknown",
+          result: ((b.status as string) ?? "").charAt(0).toUpperCase() + ((b.status as string) ?? "").slice(1),
+          note: (b.message as string) ?? "",
+        };
+      });
+
+    // ── 2D: Events list ──
+    const now = new Date();
+    const upcomingEvents = events
+      .filter((e) => e.status !== "cancelled" && new Date(e.starts_at as string) >= now)
+      .slice(0, 10)
+      .map((e) => ({
+        event: { slug: e.slug as string, title: e.title as string },
+        organizer: (e.host_name as string) ?? "Unknown",
+        status: (e.status as string) === "draft" ? "Pending review" : "Confirmed",
+        note: "",
+      }));
+
+    // ── 2E: Reviews ──
+    const avgRating =
+      reviews.length > 0
+        ? Math.round(reviews.reduce((s, r) => s + ((r.rating as number) ?? 0), 0) / reviews.length * 10) / 10
+        : 0;
+
+    const mappedReviews = reviews.map((r, i) => {
+      const profile = r.profiles as Record<string, unknown> | null;
+      const event = r.events as Record<string, unknown> | null;
+      return {
+        key: (r.id as string) ?? `vr-${i}`,
+        reviewer: (profile?.display_name as string) ?? "Anonymous",
+        rating: (r.rating as number) ?? 0,
+        text: (r.text as string) ?? "",
+        date: (r.created_at as string)?.slice(0, 10) ?? "",
+        eventName: (event?.title as string) ?? "",
+        ...(r.venue_response ? { venueResponse: r.venue_response as string } : {}),
+      };
     });
 
-    // Count events at this venue and compute rating
-    const supabase = await createSupabaseServerClient();
-    let eventCount = 0;
-    let avgRating = 0;
-    if (supabase) {
-      const { count: evtCount } = await supabase.from("events").select("id", { count: "exact", head: true }).eq("venue_id", ownedVenue.id as string);
-      eventCount = evtCount ?? 0;
-      const { data: reviews } = await supabase.from("venue_reviews").select("rating").eq("venue_id", ownedVenue.id as string);
-      if (reviews && reviews.length > 0) {
-        avgRating = Math.round(reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length * 10) / 10;
-      }
+    // ── 2F: Notifications ──
+    const mappedNotifications = Array.isArray(notifications)
+      ? notifications.slice(0, 10).map((n: Record<string, unknown>, i: number) => ({
+          key: (n.id as string) ?? `notif-${i}`,
+          title: (n.title as string) ?? "",
+          detail: (n.body as string) ?? (n.message as string) ?? "",
+          channel: (n.channel as string) ?? "General",
+          status: (n.read as boolean) ? "Read" : "Unread",
+          meta: (n.created_at as string)?.slice(0, 10) ?? "",
+          tone: "indigo" as const,
+        }))
+      : mockVenuePortalData.notifications;
+
+    // ── 2G: Messages ──
+    const mappedMessages = Array.isArray(messages)
+      ? messages.slice(0, 10).map((m: Record<string, unknown>, i: number) => ({
+          key: (m.id as string) ?? `msg-${i}`,
+          counterpart: (m.other_display_name as string) ?? (m.counterpart as string) ?? "Unknown",
+          role: "Organizer",
+          subject: (m.subject as string) ?? (m.last_message as string)?.slice(0, 40) ?? "Message",
+          preview: (m.last_message as string) ?? (m.preview as string) ?? "",
+          channel: "Booking thread",
+          status: (m.unread_count as number) > 0 ? "Needs reply" : "Read",
+          meta: (m.updated_at as string)?.slice(0, 10) ?? "",
+        }))
+      : mockVenuePortalData.messages;
+
+    // ── 2H: Deals ──
+    const mappedDeals = deals.length > 0
+      ? deals.map((d, i) => ({
+          key: (d.id as string) ?? `deal-${i}`,
+          title: (d.title as string) ?? "",
+          type: (d.deal_type as string) ?? "Discount",
+          tier: (d.deal_tier as string) ?? "All",
+          status: (d.is_active as boolean) ? "Active" : "Draft",
+          redemption: `${(d.discount_value as string) ?? "0"} value`,
+          note: (d.description as string) ?? "",
+        }))
+      : mockVenuePortalData.deals;
+
+    // ── 2I: Availability ──
+    const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const weeklyGrid = availability.length > 0
+      ? dayNames.map((day, i) => {
+          const daySlots = availability.filter(
+            (a) => (a.day_of_week as number) === i,
+          );
+          return {
+            day,
+            blocks: daySlots.length > 0
+              ? daySlots.map(
+                  (s) =>
+                    `${(s.start_time as string) ?? "?"}-${(s.end_time as string) ?? "?"} ${(s.notes as string) ?? "Open"}`,
+                )
+              : ["No slots set"],
+          };
+        })
+      : mockVenuePortalData.availability.weeklyGrid;
+
+    const mappedAvailability = {
+      recurring: availability.length > 0
+        ? availability
+            .filter((a) => a.is_recurring)
+            .map(
+              (a) =>
+                `${dayNames[(a.day_of_week as number) ?? 0]} ${(a.start_time as string) ?? ""}-${(a.end_time as string) ?? ""} ${(a.notes as string) ?? ""}`.trim(),
+            )
+        : mockVenuePortalData.availability.recurring,
+      exceptions: mockVenuePortalData.availability.exceptions,
+      weeklyGrid,
+    };
+
+    // ── 2J: Analytics (computed from real data) ──
+    const confirmedBookings = bookings.filter(
+      (b: Record<string, unknown>) => b.status === "accepted" || b.status === "completed",
+    ).length;
+    const uniqueOrganizers = new Set(
+      bookings
+        .filter((b: Record<string, unknown>) => b.status === "accepted" || b.status === "completed")
+        .map((b: Record<string, unknown>) => b.organizer_id as string),
+    ).size;
+
+    const eventTypeCounts: Record<string, number> = {};
+    for (const e of events) {
+      const cat = (e.category as string) ?? "Other";
+      eventTypeCounts[cat] = (eventTypeCounts[cat] ?? 0) + 1;
     }
+
+    const analytics = {
+      funnel: [
+        { label: "Profile views", value: 0 },
+        { label: "Booking inquiries", value: bookings.length },
+        { label: "Confirmed bookings", value: confirmedBookings },
+        { label: "Repeat organizers", value: uniqueOrganizers },
+        { label: "Public reviews", value: reviews.length },
+      ],
+      eventTypes: Object.entries(eventTypeCounts).map(([label, value]) => ({
+        label,
+        value,
+      })),
+      topReferrers: mockVenuePortalData.analytics.topReferrers,
+    };
+
+    // ── 2K: Profile sections from venue data ──
+    const venueObj = venueRow as Record<string, unknown>;
+    const amenities = Array.isArray(venueObj.amenities)
+      ? (venueObj.amenities as string[])
+      : [];
+    const hours = Array.isArray(venueObj.hours)
+      ? (venueObj.hours as Array<{ day: string; open: string }>)
+      : [];
+
+    const profileSections = [
+      {
+        key: "general",
+        title: "General info",
+        items: [
+          { label: "Public summary", value: (venueObj.summary as string) ?? (venueObj.description as string) ?? "" },
+          { label: "Address", value: (venueObj.address as string) ?? "" },
+          { label: "Capacity", value: `${(venueObj.capacity as number) ?? "?"} standing / mixed` },
+        ],
+      },
+      {
+        key: "amenities",
+        title: "Amenities",
+        items: amenities.map((a) => ({ label: a, value: "Included" })),
+      },
+      {
+        key: "hours",
+        title: "Hours",
+        items: hours.map((h) => ({ label: h.day, value: h.open })),
+      },
+      {
+        key: "socials",
+        title: "Social links",
+        items: [
+          { label: "Website", value: (venueObj.website as string) ?? "" },
+          { label: "Phone", value: (venueObj.phone as string) ?? "" },
+        ].filter((item) => item.value),
+      },
+    ];
+
+    // ── 2C: Pending count for metrics ──
+    const pendingCount = bookings.filter(
+      (b: Record<string, unknown>) => b.status === "pending",
+    ).length;
+    const eventCount = events.length;
 
     return {
       ...mockVenuePortalData,
-      venue: ownedVenue,
+      venue: venueRow,
       metrics: [
         {
           label: "Active bookings",
@@ -546,7 +783,19 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           detail: "Booking requests awaiting your response.",
         },
       ],
-      bookings: venueBookingsList,
+      upcomingEvents: upcomingEvents.length > 0 ? upcomingEvents : mockVenuePortalData.upcomingEvents,
+      messages: mappedMessages.length > 0 ? mappedMessages : mockVenuePortalData.messages,
+      notifications: mappedNotifications.length > 0 ? mappedNotifications : mockVenuePortalData.notifications,
+      bookings: {
+        incoming,
+        history,
+        guestFit: mockVenuePortalData.bookings.guestFit,
+      },
+      availability: mappedAvailability,
+      deals: mappedDeals,
+      analytics,
+      profileSections,
+      reviews: mappedReviews.length > 0 ? mappedReviews : mockVenuePortalData.reviews,
     } as unknown as VenuePortalData;
   } catch (error) {
     console.error("Failed to fetch venue dashboard data:", error);
