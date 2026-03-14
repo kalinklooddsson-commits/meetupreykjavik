@@ -302,7 +302,7 @@ export function OrganizerVenueRequestStudio({
       if (result.ok) {
         toast("success", "Booking request sent successfully");
       } else {
-        toast("info", "Booking request saved locally");
+        toast("error", result.error ?? "Could not send booking request. Please try again.");
       }
     } catch {
       toast("error", "Could not send booking request. Please try again.");

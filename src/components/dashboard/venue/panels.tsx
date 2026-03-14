@@ -299,7 +299,7 @@ export function VenueAvailabilityStudio({
               if (result.ok) {
                 toast("success", "Schedule saved successfully");
               } else {
-                toast("info", "Schedule saved locally");
+                toast("error", result.error ?? "Could not save schedule. Please try again.");
               }
             } catch {
               toast("error", "Could not save schedule. Please try again.");
@@ -456,7 +456,7 @@ export function VenueDealStudio({
                   if (result.ok) {
                     toast("success", "Deal created successfully");
                   } else {
-                    toast("info", "Deal saved locally");
+                    toast("error", result.error ?? "Could not create deal. Please try again.");
                   }
                   setShowForm(false);
                   setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
@@ -607,7 +607,7 @@ export function VenueProfileSectionEditor({
               if (result.ok) {
                 toast("success", "Profile saved successfully");
               } else {
-                toast("info", "Profile saved locally");
+                toast("error", result.error ?? "Could not save profile. Please try again.");
               }
             } catch {
               toast("error", "Could not save profile. Please try again.");
@@ -654,10 +654,10 @@ export function VenueReviewReply({
       if (result.ok) {
         toast("success", "Reply saved");
       } else {
-        toast("info", "Reply saved locally");
+        toast("error", result.error ?? "Could not save reply. Please try again.");
       }
     } catch {
-      toast("info", "Reply saved locally");
+      toast("error", "Could not save reply. Please try again.");
     }
     setSavedText(text.trim());
     setMode("done");
@@ -765,7 +765,7 @@ export function VenueImageEditor({
       if (result) {
         toast("success", "Hero image saved");
       } else {
-        toast("info", "Hero image saved locally");
+        toast("error", "Could not save hero image. Please try again.");
       }
     } catch {
       toast("error", "Could not save hero image. Please try again.");
@@ -781,7 +781,7 @@ export function VenueImageEditor({
       if (result) {
         toast("success", "Gallery saved");
       } else {
-        toast("info", "Gallery saved locally");
+        toast("error", "Could not save gallery. Please try again.");
       }
     } catch {
       toast("error", "Could not save gallery. Please try again.");
