@@ -24,8 +24,10 @@ import {
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { resolveVenueTier, venueHasFeature } from "@/lib/entitlements";
-import { MessageActions, ComposeMessageButton } from "../member/message-actions";
+import { MessageActions, MessageStatusBadge, ComposeMessageButton } from "../member/message-actions";
 import { MarkAllReadButton } from "../notification-actions";
+import { getUserConversations } from "@/lib/db/messages";
+import { getUser } from "@/lib/auth/guards";
 
 /* ── Shared helpers ──────────────────────────────────────────── */
 
@@ -272,7 +274,41 @@ export async function VenueDashboardScreen() {
 /* ── Messages Screen ─────────────────────────────────────────── */
 
 export async function VenueMessagesScreen() {
-  const data = await getVenuePortalData();
+  const session = await getUser().catch(() => null);
+
+  // Fetch real messages from the database
+  let messages: Array<{
+    key: string;
+    counterpart: string;
+    role: string;
+    subject: string;
+    preview: string;
+    channel: string;
+    status: string;
+  }> = [];
+
+  if (session?.id) {
+    try {
+      const dbMessages = await getUserConversations(session.id);
+      messages = dbMessages.map((m: Record<string, unknown>) => ({
+        key: (m.id as string) ?? "",
+        counterpart: (m.other_display_name as string) ?? "Unknown",
+        role: "Organizer",
+        subject: (m.subject as string) ?? "No subject",
+        preview: ((m.body as string) ?? "").slice(0, 100),
+        channel: "Direct",
+        status: m.is_read ? "Read" : "Unread",
+      }));
+    } catch {
+      // Fall back to mock data
+    }
+  }
+
+  // If no real messages, use mock data
+  if (messages.length === 0) {
+    const data = await getVenuePortalData();
+    messages = data.messages;
+  }
 
   return (
     <PortalShell
@@ -290,23 +326,25 @@ export async function VenueMessagesScreen() {
         title="All messages"
         description="Booking threads, compliance notices, and organizer conversations."
       >
-        {data.messages.length > 0 ? (
+        {messages.length > 0 ? (
           <DashboardTable
-            columns={["From", "Role", "Subject", "Preview", "Channel", "Status", "Action"]}
-            rows={data.messages.map((m) => ({
+            columns={["From", "Subject", "Channel", "Status", "Action"]}
+            rows={messages.map((m) => ({
               key: m.key,
               cells: [
                 <div key="from" className="flex items-center gap-2">
                   <AvatarStamp name={m.counterpart} size="sm" />
-                  <span className="font-medium">{m.counterpart}</span>
+                  <div>
+                    <span className="font-medium text-brand-text">{m.counterpart}</span>
+                    <div className="text-xs text-brand-text-muted">{m.role}</div>
+                  </div>
                 </div>,
-                <ToneBadge key="role" tone="neutral">{m.role}</ToneBadge>,
-                <span key="subject" className="font-medium">{m.subject}</span>,
-                <span key="preview" className="text-brand-text-muted line-clamp-1">{m.preview}</span>,
-                m.channel,
-                <ToneBadge key="status" tone={statusTone(m.status)}>
-                  {m.status}
-                </ToneBadge>,
+                <div key="subject">
+                  <div className="font-medium">{m.subject}</div>
+                  <div className="mt-0.5 text-xs text-brand-text-muted line-clamp-1">{m.preview}</div>
+                </div>,
+                <ToneBadge key="channel" tone="neutral">{m.channel}</ToneBadge>,
+                <MessageStatusBadge key="status" messageKey={m.key} serverStatus={m.status} />,
                 <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
               ],
             }))}
