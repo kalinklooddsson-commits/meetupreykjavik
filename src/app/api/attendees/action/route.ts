@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
-      return NextResponse.json({ ok: false, error: "Database unavailable" }, { status: 503 });
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,7 +48,10 @@ export async function POST(request: NextRequest) {
       waitlist: "waitlisted",
     };
 
-    const newStatus = statusMap[action.toLowerCase()] ?? action.toLowerCase();
+    const newStatus = statusMap[action.toLowerCase()];
+    if (!newStatus) {
+      return NextResponse.json({ error: `Invalid action: ${action}` }, { status: 400 });
+    }
 
     // Find the attendee's user profile by display name
     const { data: attendeeProfile } = await db
@@ -58,7 +61,7 @@ export async function POST(request: NextRequest) {
       .maybeSingle();
 
     if (!attendeeProfile) {
-      return NextResponse.json({ ok: false, error: `Attendee "${name}" not found` }, { status: 404 });
+      return NextResponse.json({ error: `Attendee "${name}" not found` }, { status: 404 });
     }
 
     // Build the update query with proper filters
@@ -72,13 +75,13 @@ export async function POST(request: NextRequest) {
       if (event) {
         await db
           .from("rsvps")
-          .update({ status: newStatus, updated_at: new Date().toISOString() })
+          .update({ status: newStatus })
           .eq("event_id", event.id)
           .eq("user_id", attendeeProfile.id);
       }
     } else {
       // No event slug — can't safely update without knowing which event
-      return NextResponse.json({ ok: false, error: "Event slug is required to update attendee status" }, { status: 400 });
+      return NextResponse.json({ error: "Event slug is required to update attendee status" }, { status: 400 });
     }
 
     return NextResponse.json({ ok: true, action, name });

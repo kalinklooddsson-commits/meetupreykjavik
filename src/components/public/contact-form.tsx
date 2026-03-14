@@ -115,8 +115,8 @@ export function ContactForm() {
         toast("error", result.error ?? tCommon("messageFailed"));
       }
     } catch {
-      setStatus(t("status.saved"));
-      toast("info", tCommon("messageSavedOffline"));
+      setStatus(tCommon("messageFailed"));
+      toast("error", tCommon("messageFailed"));
     } finally {
       setSubmitting(false);
     }

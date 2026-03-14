@@ -267,7 +267,7 @@ export function OrganizerEventWizard({
       } catch {
         setMessage(isEdit
           ? "Could not reach the server. Changes were not saved."
-          : "Could not reach the server. Event saved locally as a draft.");
+          : "Could not reach the server. Please try again later.");
       }
     } else {
       setMessage("Event draft saved locally. Nothing has been published or deployed.");

@@ -35,14 +35,14 @@ export async function POST(request: NextRequest) {
       approved: "active",
       suspend: "archived",
       suspended: "archived",
-      feature: "active",
-      featured: "active",
       archive: "archived",
       archived: "archived",
     };
 
+    const isFeatureAction = action.toLowerCase() === "feature" || action.toLowerCase() === "featured";
     const newStatus = statusMap[action.toLowerCase()];
-    if (!newStatus) {
+
+    if (!newStatus && !isFeatureAction) {
       return NextResponse.json({ error: `Invalid action: ${action}` }, { status: 400 });
     }
 
@@ -69,9 +69,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Group not found" }, { status: 404 });
     }
 
+    const update: Record<string, unknown> = {};
+    if (isFeatureAction) {
+      update.is_featured = true;
+      update.status = "active"; // featured groups should be active
+    } else {
+      update.status = newStatus;
+      // Unfeaturing when archiving/suspending
+      if (newStatus === "archived") {
+        update.is_featured = false;
+      }
+    }
+
     const { error } = await db
       .from("groups")
-      .update({ status: newStatus })
+      .update(update)
       .eq("id", groupId);
 
     if (error) {

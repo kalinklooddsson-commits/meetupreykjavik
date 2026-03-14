@@ -115,7 +115,7 @@ export function OrganizerGroupForm({
           setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
         }
       } catch {
-        setMessage("Could not reach the server. Group saved locally as a draft.");
+        setMessage("Could not reach the server. Please try again later.");
       }
     } else {
       setMessage("Group draft saved locally. Accept the checklist when you are ready to submit.");

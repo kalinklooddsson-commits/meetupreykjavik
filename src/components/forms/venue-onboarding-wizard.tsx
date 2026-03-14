@@ -193,7 +193,7 @@ export function VenueOnboardingWizard({
           setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
         }
       } catch {
-        setMessage("Could not reach the server. Application saved locally.");
+        setMessage("Could not reach the server. Please try again later.");
       }
     } else {
       setMessage("Venue onboarding draft saved locally. Nothing has been submitted or deployed.");
