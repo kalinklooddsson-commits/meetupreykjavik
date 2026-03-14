@@ -745,7 +745,7 @@ async function handleLiveDataRequest(
           if (!adminClient) throw new Error("Database unavailable");
           const { data: inserted, error: insertErr } = await adminClient
             .from("events")
-            .insert(eventPayload)
+            .insert(eventPayload as Record<string, unknown>)
             .select()
             .single();
           if (insertErr) throw insertErr;
