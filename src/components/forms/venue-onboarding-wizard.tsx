@@ -188,7 +188,8 @@ export function VenueOnboardingWizard({
         });
         const result = await response.json();
         if (result.ok) {
-          setMessage("Venue application submitted! Our team will review it shortly.");
+          setMessage("Venue application submitted! Redirecting…");
+          setTimeout(() => { window.location.href = result.slug ? `/venues/${result.slug}` : "/venues"; }, 1200);
         } else {
           setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
         }

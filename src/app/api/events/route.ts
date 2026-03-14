@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       venueAddress, onlineLink, eventType, attendeeLimit, guestLimit,
       ageRestriction, ageMin, ageMax, isFree, ticketTiers,
       rsvpMode, recurrence, recurrenceRule, groupSlug,
-      commentsEnabled, featuredPhotoUrl, category,
+      commentsEnabled, featuredPhotoUrl, category, status,
     } = body;
 
     if (!title) {
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
       comments_enabled: commentsEnabled ?? true,
       featured_photo_url: featuredPhotoUrl ?? null,
       host_id: session.id,
-      status: "draft",
+      status: status === "published" ? "published" : "draft",
     }).select("id, slug").single();
 
     if (error) {

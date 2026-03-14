@@ -336,7 +336,8 @@ async function fetchCategoryCounts(
     const { data, error } = await supabase
       .from("events")
       .select("category_id, categories ( name_en )")
-      .eq("status", "published");
+      .eq("status", "published")
+      .gte("starts_at", new Date().toISOString());
 
     if (error || !data) return [];
 

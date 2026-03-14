@@ -110,7 +110,8 @@ export function OrganizerGroupForm({
         });
         const result = await response.json();
         if (result.ok) {
-          setMessage("Group submitted for review! You'll be notified when it's approved.");
+          setMessage("Group submitted for review! Redirecting…");
+          setTimeout(() => { window.location.href = result.slug ? `/groups/${result.slug}` : "/organizer/groups"; }, 1200);
         } else {
           setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
         }
