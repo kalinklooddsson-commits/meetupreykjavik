@@ -6,7 +6,6 @@ import { getTranslations } from "next-intl/server";
 import { getCurrentSession } from "@/lib/auth/guards";
 import {
   SiteHeaderClient,
-  SiteHeaderMobileNav,
 } from "@/components/layout/site-header-client";
 
 export async function SiteHeader() {
@@ -83,10 +82,6 @@ export async function SiteHeader() {
           }}
         />
       </div>
-      <SiteHeaderMobileNav
-        navigation={navigation}
-        secondaryNavigation={secondaryNavigation}
-      />
     </header>
   );
 }

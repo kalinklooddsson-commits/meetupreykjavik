@@ -435,7 +435,7 @@ function PageHeader({
         <span className="text-xs font-semibold uppercase tracking-widest text-brand-indigo">
           {eyebrow}
         </span>
-        <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
+        <h1 className="font-editorial mt-3 max-w-3xl text-3xl tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
           {title}
         </h1>
         {description ? (
@@ -511,7 +511,7 @@ function DetailHero({
         <span className="text-xs font-semibold uppercase tracking-widest text-white/85">
           {eyebrow}
         </span>
-        <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+        <h1 className="font-editorial mt-3 max-w-3xl text-3xl tracking-tight sm:text-4xl md:text-5xl">
           {title}
         </h1>
         <p className="mt-4 max-w-2xl text-base text-white/85 sm:text-lg">{description}</p>
@@ -1214,7 +1214,7 @@ function IndexHero({
         <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">
           {eyebrow}
         </span>
-        <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1 className="font-editorial mt-3 max-w-3xl text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           {title}
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
@@ -1419,7 +1419,7 @@ export function EventsIndexScreen({
       {/* Filters + grid */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-10">
-          <h2 className="mb-2 text-2xl font-bold text-gray-900">{t("grid.allEvents")}</h2>
+          <h2 className="font-editorial mb-2 text-2xl text-gray-900">{t("grid.allEvents")}</h2>
           <p className="mb-6 text-sm text-gray-500">{t("grid.filterByCategory")}</p>
 
           {/* Category filter chips — interactive links */}
@@ -1511,7 +1511,7 @@ export function EventsIndexScreen({
 
           {/* CTA */}
           <div className="mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-indigo via-indigo-700 to-indigo-900 p-8 text-center text-white sm:p-10 md:p-14">
-            <h3 className="text-3xl font-bold sm:text-4xl">{t("cta.title")}</h3>
+            <h3 className="font-editorial text-3xl sm:text-4xl">{t("cta.title")}</h3>
             <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/85">
               {t("cta.description")}
             </p>
@@ -1964,7 +1964,7 @@ export function GroupsIndexScreen({
           )}
 
           {/* Strongest groups showcase */}
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("showcase.topGroups")}</h2>
+          <h2 className="font-editorial mb-6 text-2xl text-gray-900">{t("showcase.topGroups")}</h2>
           <div className="mb-10 grid gap-4 lg:grid-cols-3">
             {strongestGroups.map((group) => {
               const nextEvent = nextEventByGroup.get(group.slug);
@@ -2047,7 +2047,7 @@ export function GroupsIndexScreen({
             })}
           </div>
 
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("grid.activeGroups")}</h2>
+          <h2 className="font-editorial mb-6 text-2xl text-gray-900">{t("grid.activeGroups")}</h2>
           <div className="reveal-group grid gap-6 md:grid-cols-2">
             {groups.map((group) => (
               <GroupCard key={group.slug} group={group} upcomingTitle={nextEventByGroup.get(group.slug)} />
@@ -2522,7 +2522,7 @@ export function VenuesIndexScreen({
             })}
           </div>
 
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">{t("grid.partnerVenues")}</h2>
+          <h2 className="font-editorial mb-6 text-2xl text-gray-900">{t("grid.partnerVenues")}</h2>
           <div className="reveal-group grid gap-6 md:grid-cols-2">
             {venues.map((venue) => (
               <VenueCard key={venue.slug} venue={venue} />
@@ -2535,7 +2535,7 @@ export function VenuesIndexScreen({
       <section className="border-y border-gray-200 bg-white">
         <div className="section-shell py-10">
           <div className="mb-6 text-center">
-            <h2 className="text-2xl font-bold text-gray-900">{t("map.title")}</h2>
+            <h2 className="font-editorial text-2xl text-gray-900">{t("map.title")}</h2>
             <p className="mt-1 text-sm text-gray-600">{t("map.description")}</p>
           </div>
           <div className="h-[400px] overflow-hidden rounded-2xl border border-brand-border-light shadow-sm">
@@ -2558,7 +2558,7 @@ export function VenuesIndexScreen({
             </div>
             <div className="mb-8 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">{t("sourced.title")}</h2>
+                <h2 className="font-editorial text-2xl text-gray-900">{t("sourced.title")}</h2>
                 <p className="mt-1 text-sm text-gray-600">{t("sourced.description")}</p>
               </div>
               <span className="text-sm text-gray-500">{sourcedPlaces.length} places</span>
@@ -2587,7 +2587,7 @@ export function VenuesIndexScreen({
         <div className="pointer-events-none absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative py-16 text-center text-white sm:py-20">
           <div className="mx-auto max-w-xl">
-            <h3 className="text-3xl font-bold tracking-tight">{t("cta.title")}</h3>
+            <h3 className="font-editorial text-3xl tracking-tight">{t("cta.title")}</h3>
             <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/85">
               {t("cta.description")}
             </p>
@@ -2907,7 +2907,7 @@ export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place:
         ) : null}
         <div className="section-shell relative z-10 py-10 text-white sm:py-14 md:py-20">
           <span className="text-xs font-semibold uppercase tracking-widest text-white/85">{t("eyebrow")}</span>
-          <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{place.name}</h1>
+          <h1 className="font-editorial mt-3 max-w-3xl text-3xl tracking-tight sm:text-4xl md:text-5xl">{place.name}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{displaySummary}</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
@@ -3060,7 +3060,7 @@ export function BlogIndexScreen() {
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/90" />
         <div className="section-shell relative z-10 py-16 text-white sm:py-24">
           <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
-          <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{t("hero.title")}</h1>
+          <h1 className="font-editorial mt-3 max-w-3xl text-3xl tracking-tight sm:text-4xl md:text-5xl">{t("hero.title")}</h1>
           <p className="mt-5 max-w-2xl text-base text-white/85 sm:text-lg">{t("hero.description")}</p>
         </div>
       </section>
@@ -3090,7 +3090,7 @@ export function BlogIndexScreen() {
                   {featured.readTime}
                 </span>
               </div>
-              <h2 className="mt-4 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{featured.title}</h2>
+              <h2 className="font-editorial mt-4 text-2xl tracking-tight text-gray-900 sm:text-3xl">{featured.title}</h2>
               <p className="mt-3 text-sm leading-relaxed text-gray-600">{featured.excerpt}</p>
               <div className="mt-4 text-sm text-gray-500">{featured.publishedAt}</div>
               <Link
@@ -3109,7 +3109,7 @@ export function BlogIndexScreen() {
       {rest.length > 0 ? (
         <section className="border-t border-gray-200 bg-brand-sand">
           <div className="section-shell py-12">
-            <h2 className="mb-8 text-2xl font-bold text-gray-900">{t("moreArticles")}</h2>
+            <h2 className="font-editorial mb-8 text-2xl text-gray-900">{t("moreArticles")}</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {rest.map((post) => (
                 <BlogCard key={post.slug} post={post} />
@@ -3151,7 +3151,7 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
             <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium">{post.category}</span>
             <span className="text-sm text-white/80">{post.readTime}</span>
           </div>
-          <h1 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <h1 className="font-editorial mt-4 max-w-3xl text-3xl tracking-tight sm:text-4xl md:text-5xl">
             {post.title}
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-white/80">{post.excerpt}</p>
@@ -3204,7 +3204,7 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
 
           {post.sections.map((section) => (
             <div key={section.heading}>
-              <h2 className="text-xl font-bold text-gray-900">{section.heading}</h2>
+              <h2 className="font-editorial text-xl text-gray-900">{section.heading}</h2>
               <p className="mt-3 text-base leading-relaxed text-gray-600">{section.body}</p>
             </div>
           ))}
@@ -3255,7 +3255,7 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
         <div className="absolute inset-0 bg-gradient-to-b from-brand-indigo/40 to-[#312e81]/80" />
         <div className="section-shell relative z-10 py-20 text-center text-white sm:py-28 md:py-36">
           <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
-          <h1 className="mx-auto mt-4 max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">{t("hero.title")}</h1>
+          <h1 className="font-editorial mx-auto mt-4 max-w-4xl text-4xl tracking-tight sm:text-5xl md:text-6xl">{t("hero.title")}</h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85">{t("hero.description")}</p>
           <div className="mt-10 flex flex-wrap justify-center gap-4">
             <Link
@@ -3304,7 +3304,7 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
       {/* How it works */}
       <section className="border-t border-gray-200 bg-white">
         <div className="section-shell py-16">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t("howItWorks.title")}</h2>
+          <h2 className="font-editorial mb-12 text-center text-3xl text-gray-900">{t("howItWorks.title")}</h2>
           <div className="grid gap-8 md:grid-cols-3">
             {[
               { icon: UsersRound, title: t("howItWorks.membersTitle"), text: t("howItWorks.membersText"), color: "bg-brand-indigo-soft text-brand-indigo" },
@@ -3326,7 +3326,7 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
       {/* Team */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-16">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t("team.title")}</h2>
+          <h2 className="font-editorial mb-12 text-center text-3xl text-gray-900">{t("team.title")}</h2>
           <div className="grid gap-8 md:grid-cols-3">
             {aboutTeam.map((member, i) => {
               const colors = ["bg-brand-indigo !text-white", "bg-brand-coral !text-white", "bg-brand-sage text-white"];
@@ -3348,7 +3348,7 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
       {/* Values */}
       <section className="border-t border-gray-200 bg-white">
         <div className="section-shell py-16">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">{t("values.heading")}</h2>
+          <h2 className="font-editorial mb-12 text-center text-3xl text-gray-900">{t("values.heading")}</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {values.map((item) => (
               <div key={item.title} className="rounded-2xl border border-gray-200 bg-white p-7 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
@@ -3367,7 +3367,7 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
-          <h3 className="text-3xl font-bold">{t("cta.title")}</h3>
+          <h3 className="font-editorial text-3xl">{t("cta.title")}</h3>
           <p className="mx-auto mt-4 max-w-lg text-base text-white/85">{t("cta.description")}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90" style={{ color: "var(--color-brand-indigo-light)" }}>
@@ -3401,7 +3401,7 @@ export function PricingScreen() {
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         <div className="section-shell relative z-10 py-16 text-center text-white sm:py-24">
           <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">{t("hero.title")}</h1>
+          <h1 className="font-editorial mt-3 text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">{t("hero.title")}</h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-white/85 sm:text-lg">{t("hero.description", { commission: ticketCommissionRate })}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90" style={{ color: "var(--color-brand-indigo-light)" }}>
@@ -3419,7 +3419,7 @@ export function PricingScreen() {
       <section className="bg-white">
         <div className="section-shell py-12">
           <div className="mx-auto max-w-3xl rounded-2xl border border-brand-border-light bg-brand-sand-light p-8">
-            <h2 className="mb-6 text-center text-lg font-bold text-gray-900">{t("allPlans.heading")}</h2>
+            <h2 className="font-editorial mb-6 text-center text-lg text-gray-900">{t("allPlans.heading")}</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               {allPlansFeatures.map((feature) => (
                 <div key={feature} className="flex items-center gap-3">
@@ -3440,7 +3440,7 @@ export function PricingScreen() {
               <UsersRound className="h-3.5 w-3.5" />
               {t("members.badge")}
             </span>
-            <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("members.title")}</h2>
+            <h2 className="font-editorial mt-4 text-2xl text-gray-900">{t("members.title")}</h2>
             <p className="mt-2 text-sm text-gray-600">{t("members.description")}</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
@@ -3479,7 +3479,7 @@ export function PricingScreen() {
               <CalendarDays className="h-3.5 w-3.5" />
               {t("organizers.badge")}
             </span>
-            <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("organizers.title")}</h2>
+            <h2 className="font-editorial mt-4 text-2xl text-gray-900">{t("organizers.title")}</h2>
             <p className="mt-2 text-sm text-gray-600">{t("organizers.description", { commission: ticketCommissionRate })}</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
@@ -3518,7 +3518,7 @@ export function PricingScreen() {
               <Building2 className="h-3.5 w-3.5" />
               {t("venues.badge")}
             </span>
-            <h2 className="mt-4 text-2xl font-bold text-gray-900">{t("venues.title")}</h2>
+            <h2 className="font-editorial mt-4 text-2xl text-gray-900">{t("venues.title")}</h2>
             <p className="mt-2 text-sm text-gray-600">{t("venues.description")}</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
@@ -3552,7 +3552,7 @@ export function PricingScreen() {
       {/* Feature comparison */}
       <section className="overflow-hidden border-t border-gray-200 bg-brand-basalt">
         <div className="section-shell py-12">
-          <h2 className="mb-2 text-center text-2xl font-bold !text-white">{t("comparison.title")}</h2>
+          <h2 className="font-editorial mb-2 text-center text-2xl !text-white">{t("comparison.title")}</h2>
           <p className="mb-8 text-center text-sm text-gray-400">{t("comparison.description")}</p>
           <div className="mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.memberPlans")}</h3>
@@ -3599,7 +3599,7 @@ export function PricingScreen() {
       {/* FAQ with accordion */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-14">
-          <h2 className="mb-10 text-center text-2xl font-bold text-gray-900">{t("faq.title")}</h2>
+          <h2 className="font-editorial mb-10 text-center text-2xl text-gray-900">{t("faq.title")}</h2>
           <div className="mx-auto max-w-3xl space-y-3">
             {pricingFaq.map((item) => (
               <details key={item.question} className="group rounded-2xl border border-gray-200 bg-white transition-all [&[open]]:shadow-md">
@@ -3792,7 +3792,7 @@ export function ContactScreen() {
 
       {/* Channel cards */}
       <section className="section-shell py-10">
-        <h2 className="mb-6 text-xl font-bold text-gray-900">{t("channelsTitle")}</h2>
+        <h2 className="font-editorial mb-6 text-xl text-gray-900">{t("channelsTitle")}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {channels.map((channel) => {
             const Icon = channel.icon;
@@ -3820,7 +3820,7 @@ export function ContactScreen() {
       <section className="border-t border-gray-200 bg-brand-sand-light">
         <div className="section-shell grid gap-10 py-12 lg:grid-cols-2">
           <div>
-            <h2 className="mb-2 text-xl font-bold text-gray-900">{t("expectationsTitle")}</h2>
+            <h2 className="font-editorial mb-2 text-xl text-gray-900">{t("expectationsTitle")}</h2>
             <p className="mb-6 text-sm text-gray-600">{t("expectationsDescription")}</p>
             <div className="space-y-3">
               {expectations.map((item, i) => (
@@ -4088,7 +4088,7 @@ export function FaqScreen() {
       {/* CTA */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-14 text-center">
-          <h2 className="text-2xl font-bold text-gray-900">{t("cta.heading")}</h2>
+          <h2 className="font-editorial text-2xl text-gray-900">{t("cta.heading")}</h2>
           <p className="mx-auto mt-3 max-w-lg text-sm text-gray-600">{t("cta.description")}</p>
           <Link
             href="/contact"
@@ -4139,7 +4139,7 @@ export function ForOrganizersScreen() {
         <div className="section-shell py-16">
           <div className="mx-auto mb-12 max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-widest text-brand-indigo">{t("features.eyebrow")}</span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900">{t("features.heading")}</h2>
+            <h2 className="font-editorial mt-3 text-3xl tracking-tight text-gray-900">{t("features.heading")}</h2>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((item) => (
@@ -4159,7 +4159,7 @@ export function ForOrganizersScreen() {
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-16">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900">{t("steps.heading")}</h2>
+            <h2 className="font-editorial text-3xl tracking-tight text-gray-900">{t("steps.heading")}</h2>
             <p className="mt-4 text-base text-gray-600">{t("steps.subtitle")}</p>
           </div>
           <div className="mx-auto grid max-w-3xl gap-8 md:grid-cols-3">
@@ -4179,7 +4179,7 @@ export function ForOrganizersScreen() {
       {/* Testimonials */}
       <section className="border-t border-gray-200 bg-white">
         <div className="section-shell py-16">
-          <h2 className="mb-10 text-center text-2xl font-bold tracking-tight text-gray-900">{t("testimonial.heading")}</h2>
+          <h2 className="font-editorial mb-10 text-center text-2xl tracking-tight text-gray-900">{t("testimonial.heading")}</h2>
           <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
             {[
               { quote: t("testimonial.quote"), name: t("testimonial.name"), role: t("testimonial.role") },
@@ -4205,7 +4205,7 @@ export function ForOrganizersScreen() {
       {/* Pricing */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-16">
-          <h2 className="mb-2 text-center text-2xl font-bold text-gray-900">{t("pricing.heading")}</h2>
+          <h2 className="font-editorial mb-2 text-center text-2xl text-gray-900">{t("pricing.heading")}</h2>
           <p className="mb-10 text-center text-sm text-gray-600">{t("pricing.commission", { rate: ticketCommissionRate })}</p>
           <div className="grid gap-6 md:grid-cols-3">
             {organizerTiers.map((tier, i) => (
@@ -4312,7 +4312,7 @@ export function ForVenuesScreen() {
         <div className="section-shell py-16">
           <div className="mx-auto mb-12 max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-widest text-brand-indigo">{t("benefits.eyebrow")}</span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900">{t("features.heading")}</h2>
+            <h2 className="font-editorial mt-3 text-3xl tracking-tight text-gray-900">{t("features.heading")}</h2>
             <p className="mt-4 text-base text-gray-600">{t("benefits.subtitle")}</p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -4336,7 +4336,7 @@ export function ForVenuesScreen() {
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-16">
           <div className="mx-auto mb-12 max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900">{t("steps.heading")}</h2>
+            <h2 className="font-editorial text-3xl tracking-tight text-gray-900">{t("steps.heading")}</h2>
             <p className="mt-4 text-base text-gray-600">{t("steps.subtitle")}</p>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
@@ -4356,7 +4356,7 @@ export function ForVenuesScreen() {
       {/* Pricing */}
       <section className="border-t border-gray-200 bg-white">
         <div className="section-shell py-16">
-          <h2 className="mb-10 text-center text-2xl font-bold text-gray-900">{t("pricing.heading")}</h2>
+          <h2 className="font-editorial mb-10 text-center text-2xl text-gray-900">{t("pricing.heading")}</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {venueTiers.map((tier, i) => (
               <article
@@ -4408,7 +4408,7 @@ export function ForVenuesScreen() {
       {/* Testimonials */}
       <section className="border-t border-gray-200 bg-brand-sand">
         <div className="section-shell py-16">
-          <h2 className="mb-10 text-center text-2xl font-bold tracking-tight text-gray-900">{t("testimonial.heading")}</h2>
+          <h2 className="font-editorial mb-10 text-center text-2xl tracking-tight text-gray-900">{t("testimonial.heading")}</h2>
           <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
             {[
               { quote: t("testimonial.quote"), name: t("testimonial.name"), role: t("testimonial.role") },

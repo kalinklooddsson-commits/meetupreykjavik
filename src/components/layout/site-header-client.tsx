@@ -755,15 +755,25 @@ export function SiteHeaderClient({
         </div>
       </div>
 
-      {/* ──────────────── Mobile hamburger button ──────────────── */}
-      <button
-        type="button"
-        onClick={() => setDrawerOpen(true)}
-        aria-label={menuLabel}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200 lg:hidden"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
+      {/* ──────────────── Mobile search + hamburger buttons ──────────────── */}
+      <div className="flex items-center gap-2 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          aria-label="Search"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200"
+        >
+          <Search className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          aria-label={menuLabel}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      </div>
 
       {/* Mobile drawer */}
       <MobileDrawer
@@ -787,70 +797,3 @@ export function SiteHeaderClient({
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Mobile sub-header pills                                                   */
-/* -------------------------------------------------------------------------- */
-
-export function SiteHeaderMobileNav({
-  navigation,
-  secondaryNavigation,
-}: {
-  navigation: readonly NavigationItem[];
-  secondaryNavigation: readonly NavigationItem[];
-}) {
-  const pathname = usePathname();
-  const activePath = pathname ?? "/";
-  const allItems = [...navigation, ...secondaryNavigation];
-
-  return (
-    <div className="section-shell pb-2 lg:hidden">
-      <div className="relative">
-        {/* Left fade */}
-        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-[var(--brand-sand-light)] to-transparent" />
-        {/* Right fade */}
-        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-[var(--brand-sand-light)] to-transparent" />
-        <nav
-          className="flex gap-2 overflow-x-auto scrollbar-hide px-2"
-          role="tablist"
-          aria-label="Site navigation"
-          onKeyDown={(e) => {
-            if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-              const links = Array.from(e.currentTarget.querySelectorAll<HTMLAnchorElement>("a"));
-              const idx = links.indexOf(e.target as HTMLAnchorElement);
-              if (idx < 0) return;
-              const next = e.key === "ArrowRight"
-                ? links[(idx + 1) % links.length]
-                : links[(idx - 1 + links.length) % links.length];
-              next?.focus();
-              next?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
-              e.preventDefault();
-            }
-          }}
-        >
-          {allItems.map((item) => {
-            const active = isActivePath(activePath, item.href);
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                role="tab"
-                tabIndex={active ? 0 : -1}
-                aria-selected={active}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "shrink-0 rounded-full px-3.5 py-1.5 text-[0.8125rem] font-semibold transition",
-                  active
-                    ? "bg-brand-indigo !text-white shadow-sm"
-                    : "bg-white text-gray-600 shadow-sm ring-1 ring-gray-200 hover:ring-brand-indigo/30 hover:text-gray-900",
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-    </div>
-  );
-}
