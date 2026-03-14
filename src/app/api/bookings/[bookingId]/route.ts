@@ -46,7 +46,7 @@ export async function PATCH(
 
     // Verify the user has permission (venue owner or admin)
     const { data: booking } = await db
-      .from("bookings")
+      .from("venue_bookings")
       .select("id, venue_id, organizer_id")
       .or(`id.eq.${bookingId},slug.eq.${bookingId}`)
       .maybeSingle();
@@ -82,7 +82,7 @@ export async function PATCH(
     }
 
     const { error } = await db
-      .from("bookings")
+      .from("venue_bookings")
       .update(update)
       .eq("id", booking.id);
 

@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       .eq("slug", venueSlug)
       .maybeSingle();
 
-    const { error } = await db.from("bookings").insert({
+    const { error } = await db.from("venue_bookings").insert({
       organizer_id: session.id,
       venue_id: venue?.id ?? null,
       requested_date: requestedDate,
