@@ -747,6 +747,7 @@ export async function getEventFormData(slug: string) {
 
 type VenuePortalData = typeof mockVenuePortalData;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getVenuePortalData(): Promise<VenuePortalData> {
   const session = await getUser();
 
@@ -755,7 +756,8 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
   }
 
   try {
-    const supabase = await createSupabaseServerClient();
+    // Use admin client to bypass RLS — venue_bookings has admin-only RLS
+    const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
     if (!supabase) return mockVenuePortalData;
 
     // ── 2A: Find owned venue directly by owner_id ──
@@ -896,10 +898,10 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
     // ── 2E: Reviews ──
     const avgRating =
       reviews.length > 0
-        ? Math.round(reviews.reduce((s, r) => s + ((r.rating as number) ?? 0), 0) / reviews.length * 10) / 10
+        ? Math.round(reviews.reduce((s: number, r: Record<string, unknown>) => s + ((r.rating as number) ?? 0), 0) / reviews.length * 10) / 10
         : 0;
 
-    const mappedReviews = reviews.map((r, i) => {
+    const mappedReviews = reviews.map((r: Record<string, unknown>, i: number) => {
       const profile = r.profiles as Record<string, unknown> | null;
       const event = r.events as Record<string, unknown> | null;
       return {
