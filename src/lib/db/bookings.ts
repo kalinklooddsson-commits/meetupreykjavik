@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database, Json } from "@/types/database";
 import { bookingStatuses, type BookingStatus } from "@/types/domain";
 
@@ -43,10 +44,14 @@ export async function getVenueBookings(venueId: string) {
 }
 
 export async function getAllBookings() {
-  const supabase = await createSupabaseServerClient();
+  // Use admin client (service role) to bypass RLS — this is called from the
+  // admin dashboard which needs to see ALL bookings across all venues/organizers
+  const supabase = createSupabaseAdminClient();
   if (!supabase) return [];
 
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
+  const { data, error } = await db
     .from("venue_bookings")
     .select(`
       *,
