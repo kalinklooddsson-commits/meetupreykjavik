@@ -820,7 +820,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       ? supabase.from("profiles").select("*", { count: "exact", head: true }).then((r) => r.count ?? 0)
       : Promise.resolve(0);
 
-    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend] = await Promise.all([
+    const [eventsResult, venuesResult, revenue, profileCount, allEventsResult, revenueTrend, usersResult, groupsResult, venuesFullResult] = await Promise.all([
       getEvents({ limit: 50 }),
       getVenues({ limit: 50 }),
       getPlatformRevenue(),
@@ -854,6 +854,30 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
           return null;
         }
       })(),
+      // Fetch all profiles for admin users table
+      supabase
+        ? supabase
+            .from("profiles")
+            .select("id, display_name, email, account_type, is_verified, is_premium, premium_tier, created_at, last_active_at")
+            .order("created_at", { ascending: false })
+            .limit(100)
+        : Promise.resolve({ data: null }),
+      // Fetch all groups for admin groups table
+      supabase
+        ? supabase
+            .from("groups")
+            .select("id, slug, name, member_count, status, organizer:organizer_id ( display_name )")
+            .order("member_count", { ascending: false })
+            .limit(50)
+        : Promise.resolve({ data: null }),
+      // Fetch all venues for admin venues table
+      supabase
+        ? supabase
+            .from("venues")
+            .select("id, slug, name, address, city, type, avg_rating, status")
+            .order("name", { ascending: true })
+            .limit(50)
+        : Promise.resolve({ data: null }),
     ]);
 
     // ── Build admin events table from real data ──
@@ -896,6 +920,69 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         label: e.title as string,
       }));
 
+    // ── Build admin users table from real profiles ──
+    const allUsers = (usersResult?.data ?? []) as Array<Record<string, unknown>>;
+    function formatAccountType(t: string): string {
+      if (t === "organizer") return "Organizer";
+      if (t === "venue") return "Venue";
+      if (t === "admin") return "Admin";
+      return "User";
+    }
+    function deriveUserStatus(u: Record<string, unknown>): string {
+      if (u.is_verified) return "Verified";
+      return "Active";
+    }
+    function timeAgo(dateStr: string | null): string {
+      if (!dateStr) return "Never";
+      const diff = Date.now() - new Date(dateStr).getTime();
+      if (diff < 3600000) return `${Math.max(1, Math.round(diff / 60000))} min ago`;
+      if (diff < 86400000) return `${Math.round(diff / 3600000)} h ago`;
+      if (diff < 172800000) return "Yesterday";
+      return new Date(dateStr).toLocaleDateString("en", { month: "short", year: "numeric" });
+    }
+    function deriveTier(u: Record<string, unknown>): string {
+      if (u.premium_tier) return String(u.premium_tier).charAt(0).toUpperCase() + String(u.premium_tier).slice(1);
+      if (u.is_premium) return "Premium";
+      return "Free";
+    }
+    const usersTable = allUsers.map((u) => ({
+      key: u.id as string,
+      name: (u.display_name as string) ?? "Unknown",
+      email: (u.email as string) ?? "",
+      type: formatAccountType((u.account_type as string) ?? "member"),
+      status: deriveUserStatus(u),
+      joined: new Date(u.created_at as string).toLocaleDateString("en", { month: "short", year: "numeric" }),
+      lastActive: timeAgo(u.last_active_at as string | null),
+      groups: "—",
+      events: "—",
+      revenue: deriveTier(u),
+    }));
+
+    // ── Build admin groups table from real data ──
+    const allGroups = (groupsResult?.data ?? []) as Array<Record<string, unknown>>;
+    const groupsTable = allGroups.map((g) => {
+      const org = g.organizer as Record<string, unknown> | null;
+      return {
+        key: (g.slug as string) ?? (g.id as string),
+        name: g.name as string,
+        members: (g.member_count as number) ?? 0,
+        status: ((g.status as string) ?? "active").charAt(0).toUpperCase() + ((g.status as string) ?? "active").slice(1),
+        health: "Healthy",
+        action: "",
+      };
+    });
+
+    // ── Build admin venues table from real data ──
+    const allVenues = (venuesFullResult?.data ?? []) as Array<Record<string, unknown>>;
+    const venuesActive = allVenues.map((v) => ({
+      key: (v.slug as string) ?? (v.id as string),
+      name: v.name as string,
+      area: (v.address as string) ?? (v.city as string) ?? "",
+      type: (v.type as string) ?? "",
+      rating: (v.avg_rating as number) ?? 0,
+      note: "",
+    }));
+
     return {
       ...mockAdminPortalData,
       metrics: [
@@ -930,10 +1017,19 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
           detail: "Platform systems are running normally.",
         },
       ],
+      users: usersTable.length > 0 ? usersTable : mockAdminPortalData.users,
       events: {
         ...mockAdminPortalData.events,
         table: eventsTable.length > 0 ? eventsTable : mockAdminPortalData.events.table,
         calendar: calendarEntries.length > 0 ? calendarEntries : mockAdminPortalData.events.calendar,
+      },
+      groups: {
+        ...mockAdminPortalData.groups,
+        table: groupsTable.length > 0 ? groupsTable : mockAdminPortalData.groups.table,
+      },
+      venues: {
+        ...mockAdminPortalData.venues,
+        active: venuesActive.length > 0 ? venuesActive : mockAdminPortalData.venues.active,
       },
       ...(revenueTrend ? { revenueTrend } : {}),
     } as AdminPortalData;
