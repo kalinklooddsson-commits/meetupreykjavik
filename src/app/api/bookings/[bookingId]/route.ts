@@ -29,6 +29,13 @@ export async function PATCH(
       return NextResponse.json({ error: "Missing status" }, { status: 400 });
     }
 
+    // Validate status against allowed booking statuses
+    const validStatuses = new Set(["pending", "accepted", "declined", "counter_offered", "cancelled", "completed"]);
+    const normalizedStatus = status.toLowerCase();
+    if (!validStatuses.has(normalizedStatus)) {
+      return NextResponse.json({ error: `Invalid booking status: ${status}` }, { status: 400 });
+    }
+
     const supabase = createSupabaseAdminClient();
     if (!supabase) {
       return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
@@ -37,8 +44,36 @@ export async function PATCH(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
+    // Verify the user has permission (venue owner or admin)
+    const { data: booking } = await db
+      .from("bookings")
+      .select("id, venue_id, organizer_id")
+      .or(`id.eq.${bookingId},slug.eq.${bookingId}`)
+      .maybeSingle();
+
+    if (!booking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    // Check authorization: must be the organizer, venue owner, or admin
+    if (session.accountType !== "admin") {
+      const isOrganizer = booking.organizer_id === session.id;
+      let isVenueOwner = false;
+      if (booking.venue_id) {
+        const { data: venue } = await db
+          .from("venues")
+          .select("owner_id")
+          .eq("id", booking.venue_id)
+          .maybeSingle();
+        isVenueOwner = venue?.owner_id === session.id;
+      }
+      if (!isOrganizer && !isVenueOwner) {
+        return NextResponse.json({ error: "Not authorized to update this booking" }, { status: 403 });
+      }
+    }
+
     const update: Record<string, unknown> = {
-      status: status.toLowerCase(),
+      status: normalizedStatus,
       updated_at: new Date().toISOString(),
     };
 
@@ -49,7 +84,7 @@ export async function PATCH(
     const { error } = await db
       .from("bookings")
       .update(update)
-      .or(`id.eq.${bookingId},slug.eq.${bookingId}`);
+      .eq("id", booking.id);
 
     if (error) {
       console.error("Booking update failed:", error);

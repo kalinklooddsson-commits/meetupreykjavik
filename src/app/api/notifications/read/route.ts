@@ -32,7 +32,7 @@ export async function PATCH(request: NextRequest) {
 
     const { error } = await db
       .from("notifications")
-      .update({ is_read: true, read_at: new Date().toISOString() })
+      .update({ is_read: true })
       .in("id", ids)
       .eq("user_id", session.id);
 
