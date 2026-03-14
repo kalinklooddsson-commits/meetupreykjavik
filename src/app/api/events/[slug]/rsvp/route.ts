@@ -52,10 +52,10 @@ export async function POST(
       .maybeSingle();
 
     if (existing) {
-      // Already RSVPed — update status to confirmed
+      // Already RSVPed — update status to going
       await db
         .from("rsvps")
-        .update({ status: "confirmed", updated_at: new Date().toISOString() })
+        .update({ status: "going", updated_at: new Date().toISOString() })
         .eq("id", existing.id);
       return NextResponse.json({ ok: true, action: "confirmed" });
     }
@@ -64,7 +64,7 @@ export async function POST(
     const { error } = await db.from("rsvps").insert({
       event_id: event.id,
       user_id: session.id,
-      status: "confirmed",
+      status: "going",
     });
 
     if (error) {

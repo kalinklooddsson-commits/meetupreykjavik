@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
     const db = supabase as any;
 
     const statusMap: Record<string, string> = {
-      approve: "confirmed",
-      approved: "confirmed",
+      approve: "going",
+      approved: "going",
       reject: "rejected",
       "check-in": "checked_in",
       "check in": "checked_in",
