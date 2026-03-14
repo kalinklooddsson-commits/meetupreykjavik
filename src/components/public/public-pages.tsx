@@ -6,6 +6,7 @@ import Image from "next/image";
 import type { Route } from "next";
 import { useTranslations } from "next-intl";
 import { RsvpButton, AttendeeCount } from "@/components/public/rsvp-button";
+import { JoinGroupButton } from "@/components/public/join-group-button";
 import { ShareButton } from "@/components/ui/share-button";
 import {
   ArrowRight,
@@ -2132,10 +2133,17 @@ export function GroupDetailScreen({ group, events: eventsProp }: { group: Public
         title={group.name}
         description={group.summary}
         art={group.banner}
-        actions={[
-          { href: "/signup", label: t("actions.joinThisGroup"), primary: true },
-        ]}
-        rsvpSlot={<ShareButton title={group.name} text={group.summary} />}
+        rsvpSlot={
+          <div className="flex items-center gap-3">
+            <JoinGroupButton
+              slug={group.slug}
+              label={t("actions.joinThisGroup")}
+              showArrow
+              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90 disabled:opacity-60"
+            />
+            <ShareButton title={group.name} text={group.summary} />
+          </div>
+        }
       >
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
           <div>
@@ -2324,13 +2332,12 @@ export function GroupDetailScreen({ group, events: eventsProp }: { group: Public
                   </div>
                 ))}
               </div>
-              <Link
-                href="/signup"
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
-              >
-                {t("actions.joinThisGroup")}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              <JoinGroupButton
+                slug={group.slug}
+                label={t("actions.joinThisGroup")}
+                showArrow
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90 disabled:opacity-60"
+              />
             </div>
           </div>
         </div>

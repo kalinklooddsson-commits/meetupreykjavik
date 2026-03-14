@@ -31,8 +31,10 @@ export async function PATCH(
     }
 
     // Validate status against allowed booking statuses
+    // DB CHECK allows: pending, accepted, declined, counter_offered, cancelled, completed
+    const statusAliases: Record<string, string> = { countered: "counter_offered" };
+    const normalizedStatus = statusAliases[status.toLowerCase()] ?? status.toLowerCase();
     const validStatuses = new Set(["pending", "accepted", "declined", "counter_offered", "cancelled", "completed"]);
-    const normalizedStatus = status.toLowerCase();
     if (!validStatuses.has(normalizedStatus)) {
       return NextResponse.json({ error: `Invalid booking status: ${status}` }, { status: 400 });
     }

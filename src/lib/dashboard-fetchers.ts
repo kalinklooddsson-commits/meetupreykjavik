@@ -230,10 +230,18 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
           delta: recommendationCount > 0 ? "Events you might like" : "Check back soon",
           detail: "Upcoming events you haven't RSVP'd to.",
         },
-        mockMemberPortalData.metrics[3],
+        {
+          label: "Profile strength",
+          value: realProfile?.completion ?? "—",
+          delta: "Complete your profile",
+          detail: "A complete profile helps organizers and groups connect with you.",
+        },
       ],
       profile: realProfile,
       upcomingEvents,
+      // Override mock events/groups so fake data doesn't leak
+      events: [],
+      groups: [],
       inbox,
       notifications: mappedNotifications,
       messages: mappedMessages,
@@ -302,6 +310,17 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       0,
     );
 
+    // Build per-event revenue from transactions (ticket_revenue/ticket_count don't exist on events table)
+    const revenueByEvent = new Map<string, { count: number; amount: number }>();
+    for (const t of transactions) {
+      const eid = (t as Record<string, unknown>).event_id as string | undefined;
+      if (!eid) continue;
+      const entry = revenueByEvent.get(eid) ?? { count: 0, amount: 0 };
+      entry.count++;
+      entry.amount += ((t as Record<string, unknown>).amount_isk as number) ?? 0;
+      revenueByEvent.set(eid, entry);
+    }
+
     const nextEvents = managedEvents.slice(0, 10).map((e: Record<string, unknown>) => {
       const venue = e.venues as Record<string, unknown> | null;
       const group = e.groups as Record<string, unknown> | null;
@@ -310,6 +329,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
         weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
         hour12: false, timeZone: "Atlantic/Reykjavik",
       });
+      const eventRevenue = revenueByEvent.get(e.id as string);
       return {
         slug: e.slug as string,
         title: e.title as string,
@@ -321,8 +341,8 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
         rsvps: (e.rsvp_count as number) ?? 0,
         capacity: (e.attendee_limit as number) ?? 50,
         waitlist: 0,
-        ticketsSold: (e.ticket_count as number) ?? 0,
-        revenue: `${((e.ticket_revenue as number) ?? 0).toLocaleString()} ISK`,
+        ticketsSold: eventRevenue?.count ?? 0,
+        revenue: `${(eventRevenue?.amount ?? 0).toLocaleString()} ISK`,
         checkIns: `0 / ${(e.rsvp_count as number) ?? 0}`,
         notes: "",
         timeline: [] as { time: string; label: string }[],
@@ -332,6 +352,8 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       };
     });
 
+    // Use mock data as base for type shape, but override ALL data fields
+    // so that real DB data (or empty states) are shown instead of fake data.
     return {
       ...mockOrganizerPortalData,
       metrics: [
@@ -362,6 +384,10 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
           detail: "Total ticket and membership revenue.",
         },
       ],
+      // Override mock events/groups/bookings with empty arrays so fake data doesn't leak
+      events: [],
+      groups: [],
+      bookings: [],
       nextEvents,
       ...(rsvpTrendData ? { rsvpTrend: rsvpTrendData } : {}),
     } as unknown as OrganizerPortalData;
@@ -648,7 +674,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           meta: (n.created_at as string)?.slice(0, 10) ?? "",
           tone: "indigo" as const,
         }))
-      : mockVenuePortalData.notifications;
+      : [];
 
     // ── 2G: Messages ──
     const mappedMessages = Array.isArray(messages)
@@ -662,7 +688,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           status: (m.unread_count as number) > 0 ? "Needs reply" : "Read",
           meta: (m.updated_at as string)?.slice(0, 10) ?? "",
         }))
-      : mockVenuePortalData.messages;
+      : [];
 
     // ── 2H: Deals ──
     const mappedDeals = deals.length > 0
@@ -675,7 +701,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           redemption: `${(d.discount_value as string) ?? "0"} value`,
           note: (d.description as string) ?? "",
         }))
-      : mockVenuePortalData.deals;
+      : [];
 
     // ── 2I: Availability ──
     const trimTime = (t: string) => t?.replace(/:00$/, "") ?? t; // "19:00:00" → "19:00"
@@ -695,7 +721,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
               : ["No slots set"],
           };
         })
-      : mockVenuePortalData.availability.weeklyGrid;
+      : dayNames.map((day) => ({ day, blocks: ["No slots set"] }));
 
     const mappedAvailability = {
       recurring: availability.length > 0
@@ -705,8 +731,8 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
               (a) =>
                 `${dayNames[(a.day_of_week as number) ?? 0]} ${trimTime((a.start_time as string) ?? "")}-${trimTime((a.end_time as string) ?? "")} ${(a.notes as string) ?? ""}`.trim(),
             )
-        : mockVenuePortalData.availability.recurring,
-      exceptions: mockVenuePortalData.availability.exceptions,
+        : [],
+      exceptions: [],
       weeklyGrid,
     };
 
@@ -825,19 +851,19 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           detail: "Booking requests awaiting your response.",
         },
       ],
-      upcomingEvents: upcomingEvents.length > 0 ? upcomingEvents : mockVenuePortalData.upcomingEvents,
-      messages: mappedMessages.length > 0 ? mappedMessages : mockVenuePortalData.messages,
-      notifications: mappedNotifications.length > 0 ? mappedNotifications : mockVenuePortalData.notifications,
+      upcomingEvents,
+      messages: mappedMessages,
+      notifications: mappedNotifications,
       bookings: {
         incoming,
         history,
         guestFit: mockVenuePortalData.bookings.guestFit,
       },
       availability: mappedAvailability,
-      deals: mappedDeals,
+      deals: mappedDeals.length > 0 ? mappedDeals : [],
       analytics,
       profileSections,
-      reviews: mappedReviews.length > 0 ? mappedReviews : mockVenuePortalData.reviews,
+      reviews: mappedReviews,
     } as unknown as VenuePortalData;
   } catch (error) {
     console.error("Failed to fetch venue dashboard data:", error);
