@@ -46,10 +46,10 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case "suspend":
-        update = { is_verified: false };
+        update = { is_suspended: true };
         break;
       case "unsuspend":
-        update = { is_verified: true };
+        update = { is_suspended: false };
         break;
       case "grant_premium":
         update = { is_premium: true, premium_tier: "plus" };
@@ -63,6 +63,7 @@ export async function POST(request: NextRequest) {
       case "unverify":
         update = { is_verified: false };
         break;
+      case "role":
       case "change_role": {
         const newRole = body.value;
         if (!["user", "organizer", "venue", "admin"].includes(newRole)) {
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
       // Non-critical — don't fail the request if audit logging fails
     }
 
-    return NextResponse.json({ success: true, action, userKey: userId });
+    return NextResponse.json({ ok: true, action, userKey: userId });
   } catch (error) {
     console.error("Admin user action error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
