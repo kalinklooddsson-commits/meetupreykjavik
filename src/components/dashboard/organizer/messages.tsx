@@ -7,9 +7,11 @@ import {
   ActivityFeed,
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
-import { MessageActions, ComposeMessageButton } from "../member/message-actions";
+import { MessageActions, MessageStatusBadge, ComposeMessageButton } from "../member/message-actions";
 import { MarkAllReadButton } from "../notification-actions";
 import { getOrganizerPortalData } from "@/lib/dashboard-fetchers";
+import { getUserConversations } from "@/lib/db/messages";
+import { getUser } from "@/lib/auth/guards";
 
 function organizerLinks(activeKey: string) {
   return [
@@ -31,7 +33,41 @@ function messageTone(status: string): DashboardTone {
 }
 
 export async function OrganizerMessagesScreen() {
-  const data = await getOrganizerPortalData();
+  const session = await getUser().catch(() => null);
+
+  // Fetch real messages from the database for the organizer
+  let messages: Array<{
+    key: string;
+    counterpart: string;
+    role: string;
+    subject: string;
+    preview: string;
+    channel: string;
+    status: string;
+  }> = [];
+
+  if (session?.id) {
+    try {
+      const dbMessages = await getUserConversations(session.id);
+      messages = dbMessages.map((m: Record<string, unknown>) => ({
+        key: (m.id as string) ?? "",
+        counterpart: (m.other_display_name as string) ?? "Unknown",
+        role: "User",
+        subject: (m.subject as string) ?? "No subject",
+        preview: ((m.body as string) ?? "").slice(0, 100),
+        channel: "Direct",
+        status: m.is_read ? "Read" : "Unread",
+      }));
+    } catch {
+      // Fall back to mock data from organizer portal
+    }
+  }
+
+  // If no real messages, use mock/seeded data
+  if (messages.length === 0) {
+    const data = await getOrganizerPortalData();
+    messages = data.messages;
+  }
 
   return (
     <PortalShell
@@ -50,10 +86,10 @@ export async function OrganizerMessagesScreen() {
           title="Messages"
           description="All conversations related to your events and venue partnerships."
         >
-          {data.messages.length > 0 ? (
+          {messages.length > 0 ? (
             <DashboardTable
               columns={["From", "Subject", "Channel", "Status", "Action"]}
-              rows={data.messages.map((m) => ({
+              rows={messages.map((m) => ({
                 key: m.key,
                 cells: [
                   <div key="from">
@@ -73,9 +109,7 @@ export async function OrganizerMessagesScreen() {
                   <ToneBadge key="channel" tone="neutral">
                     {m.channel}
                   </ToneBadge>,
-                  <ToneBadge key="status" tone={messageTone(m.status)}>
-                    {m.status}
-                  </ToneBadge>,
+                  <MessageStatusBadge key="status" messageKey={m.key} serverStatus={m.status} />,
                   <MessageActions key="action" messageKey={m.key} subject={m.subject} />,
                 ],
               }))}

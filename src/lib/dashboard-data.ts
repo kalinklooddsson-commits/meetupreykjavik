@@ -1025,11 +1025,11 @@ export const venuePortalData = {
       { label: "Other", value: 8 },
     ],
     topReferrers: [
-      "MeetupReykjavik homepage feature",
-      "Organizer direct links",
-      "Venue detail page recommendations",
-      "Weekly digest",
-    ],
+      { label: "MeetupReykjavik homepage feature", value: 24 },
+      { label: "Organizer direct links", value: 18 },
+      { label: "Venue detail page recommendations", value: 12 },
+      { label: "Weekly digest", value: 6 },
+    ] as Array<string | { label: string; value: number }>,
   },
   profileSections: [
     {

@@ -438,17 +438,30 @@ export async function VenueAnalyticsScreen() {
         description="Where your booking inquiries are coming from."
       >
         <div className="space-y-2">
-          {data.analytics.topReferrers.map((ref, i) => (
-            <div
-              key={ref}
-              className="flex items-center gap-3 rounded-lg border border-brand-border-light bg-white p-3"
-            >
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(55,48,163,0.08)] text-xs font-semibold text-brand-indigo">
-                {i + 1}
-              </span>
-              <span className="text-sm font-medium text-brand-text">{ref}</span>
-            </div>
-          ))}
+          {data.analytics.topReferrers.length > 0 ? (
+            data.analytics.topReferrers.map((ref, i) => (
+              <div
+                key={typeof ref === "string" ? ref : ref.label}
+                className="flex items-center gap-3 rounded-lg border border-brand-border-light bg-white p-3"
+              >
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[rgba(55,48,163,0.08)] text-xs font-semibold text-brand-indigo">
+                  {i + 1}
+                </span>
+                <span className="flex-1 text-sm font-medium text-brand-text">
+                  {typeof ref === "string" ? ref : ref.label}
+                </span>
+                {typeof ref !== "string" && ref.value > 0 && (
+                  <span className="text-xs tabular-nums text-brand-text-muted">
+                    {ref.value} inquiries
+                  </span>
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="py-6 text-center text-sm text-brand-text-muted">
+              Referrer data will appear here once your venue receives booking inquiries.
+            </p>
+          )}
         </div>
       </Surface>
     </PortalShell>
