@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { GroupDetailScreen } from "@/components/public/public-pages";
 import { fetchGroupBySlug, fetchEvents } from "@/lib/data";
+import { getUser } from "@/lib/auth/guards";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({
   params,
@@ -51,14 +53,35 @@ export default async function GroupDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [group, events] = await Promise.all([
+  const [group, events, session] = await Promise.all([
     fetchGroupBySlug(slug),
     fetchEvents(),
+    getUser().catch(() => null),
   ]);
 
   if (!group) {
     notFound();
   }
 
-  return <GroupDetailScreen group={group} events={events} />;
+  // Check if current user is a member of this group
+  let isMember = false;
+  if (session?.id) {
+    try {
+      const supabase = await createSupabaseServerClient();
+      if (supabase) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const db = supabase as any;
+        const { data: membership } = await db
+          .from("group_members")
+          .select("id")
+          .eq("user_id", session.id)
+          .maybeSingle();
+        isMember = !!membership;
+      }
+    } catch {
+      // Non-critical — default to not a member
+    }
+  }
+
+  return <GroupDetailScreen group={group} events={events} isMember={isMember} />;
 }

@@ -10,6 +10,8 @@ interface JoinGroupButtonProps {
   className?: string;
   /** Show ArrowRight icon after label */
   showArrow?: boolean;
+  /** Pre-set membership state from server */
+  isMember?: boolean;
 }
 
 /**
@@ -21,9 +23,10 @@ export function JoinGroupButton({
   label,
   className,
   showArrow = false,
+  isMember = false,
 }: JoinGroupButtonProps) {
   const router = useRouter();
-  const [state, setState] = useState<"idle" | "loading" | "joined" | "error">("idle");
+  const [state, setState] = useState<"idle" | "loading" | "joined" | "error">(isMember ? "joined" : "idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   async function handleJoin() {

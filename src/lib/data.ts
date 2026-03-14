@@ -32,8 +32,26 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
   const group = row.groups as Record<string, unknown> | null;
 
   const isFree = row.is_free !== false;
+  // Enrich with mock data when DB has sparse/placeholder content
+  const eventSlug = row.slug as string;
+  const mockEvent = getMockEvent(eventSlug);
+
   const ageRaw = row.age_restriction as string | null;
-  const ageLabel = !ageRaw || ageRaw === "none" ? "All ages" : ageRaw;
+  const ageMin = row.age_min as number | null;
+  const ageMax = row.age_max as number | null;
+  // Derive age label: DB fields → age_min/max → mock fallback → "All ages"
+  let ageLabel: string;
+  if (ageRaw && ageRaw !== "none") {
+    ageLabel = ageRaw;
+  } else if (ageMin && ageMax) {
+    ageLabel = `${ageMin}–${ageMax}`;
+  } else if (ageMin) {
+    ageLabel = `${ageMin}+`;
+  } else if (mockEvent?.ageLabel && mockEvent.ageLabel !== "All ages") {
+    ageLabel = mockEvent.ageLabel;
+  } else {
+    ageLabel = "All ages";
+  }
 
   // Map event_ratings / venue_reviews joined data if present
   const rawRatings = Array.isArray(row.event_ratings) ? row.event_ratings : [];
@@ -49,10 +67,6 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     text: (c.text as string) ?? "",
     postedAt: (c.created_at as string) ?? new Date().toISOString(),
   }));
-
-  // Enrich with mock data when DB has sparse/placeholder content
-  const eventSlug = row.slug as string;
-  const mockEvent = getMockEvent(eventSlug);
   const dbDesc = (row.description as string) ?? "";
   const isGenericEventDesc = !dbDesc || dbDesc.length < 30;
 

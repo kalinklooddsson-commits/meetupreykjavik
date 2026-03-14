@@ -370,13 +370,13 @@
         "value": "Handled through support and moderation channels."
       }
     },
-    "remindersEyebrow": "Practical reminder",
-    "remindersTitle": "Current build state",
-    "remindersDescription": "This local build contains the full product structure, but not all live integrations.",
+    "remindersEyebrow": "Good to know",
+    "remindersTitle": "Platform policies",
+    "remindersDescription": "Key points to keep in mind while using MeetupReykjavik.",
     "reminders": {
-      "one": "Account, payment, and communication providers are not yet wired to production.",
-      "two": "Local dashboards and control panels simulate the full operating shape before deployment.",
-      "three": "Some live commercial and legal details will be finalized when provider setup is complete."
+      "one": "Your account, events, and community interactions are governed by these terms.",
+      "two": "Organizers and venues operate within the guidelines outlined above.",
+      "three": "Commercial terms, refund policies, and payout schedules follow the arrangements agreed with each provider."
     }
   },
   "aboutPage": {

@@ -52,10 +52,14 @@ export async function getGroupBySlug(slug: string) {
       group_members (*)
     `)
     .eq("slug", slug)
+    .eq("status", "active")
     .single();
 
   if (error) {
-    console.error("Failed to fetch group by slug:", error);
+    // PGRST116 = no rows found → return null to trigger mock fallback
+    if (error.code !== "PGRST116") {
+      console.error("Failed to fetch group by slug:", error);
+    }
     return null;
   }
 

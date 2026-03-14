@@ -299,7 +299,7 @@ function groupOperatingSignals(group: PublicGroup, upcomingEvents: PublicEvent[]
     },
     {
       label: t("upcomingRhythm"),
-      value: upcomingEvents.length ? t("upcomingValue", { count: upcomingEvents.length }) : t("buildingNext"),
+      value: upcomingEvents.length ? `${upcomingEvents.length} upcoming event${upcomingEvents.length !== 1 ? "s" : ""}` : t("buildingNext"),
       detail: t("upcomingRhythmDetail"),
     },
   ];
@@ -1187,6 +1187,7 @@ function IndexHero({
   actions,
   searchAction,
   searchPlaceholder,
+  searchDefault,
 }: {
   eyebrow: string;
   title: string;
@@ -1196,6 +1197,7 @@ function IndexHero({
   actions?: Array<{ href: Route; label: string; primary?: boolean }>;
   searchAction?: string;
   searchPlaceholder?: string;
+  searchDefault?: string;
 }) {
   return (
     <section className="relative overflow-hidden bg-gray-900">
@@ -1229,6 +1231,7 @@ function IndexHero({
               <input
                 type="text"
                 name="q"
+                defaultValue={searchDefault}
                 placeholder={searchPlaceholder ?? "Search..."}
                 className="w-full rounded-l-full border-0 bg-white py-3.5 pl-12 pr-4 text-sm text-gray-900 shadow-lg placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-coral"
               />
@@ -1330,6 +1333,7 @@ export function EventsIndexScreen({
         imageSrc="/place-images/reykjavik/reykjavik-871-2-78434189.jpg"
         searchAction="/events"
         searchPlaceholder={tCards("searchEvents")}
+        searchDefault={searchQuery}
         stats={[
           { label: t("stats.upcomingEvents"), value: String(events.length) },
           { label: t("stats.totalAttendees"), value: totalAttendees.toLocaleString() },
@@ -1902,6 +1906,7 @@ export function GroupsIndexScreen({
         imageSrc="/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg"
         searchAction="/groups"
         searchPlaceholder={tCards("searchGroups")}
+        searchDefault={searchQuery}
         stats={[
           { label: t("stats.activeGroups"), value: String(groups.length) },
           { label: t("stats.totalMembers"), value: totalMembers.toLocaleString() },
@@ -2108,7 +2113,7 @@ export function GroupsIndexScreen({
 }
 
 
-export function GroupDetailScreen({ group, events: eventsProp }: { group: PublicGroup; events?: PublicEvent[] }) {
+export function GroupDetailScreen({ group, events: eventsProp, isMember = false }: { group: PublicGroup; events?: PublicEvent[]; isMember?: boolean }) {
   const t = useTranslations("groupDetailPage");
   const tNav = useTranslations("nav");
   const tSignals = useTranslations("signals");
@@ -2139,6 +2144,7 @@ export function GroupDetailScreen({ group, events: eventsProp }: { group: Public
               slug={group.slug}
               label={t("actions.joinThisGroup")}
               showArrow
+              isMember={isMember}
               className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90 disabled:opacity-60"
             />
             <ShareButton title={group.name} text={group.summary} />

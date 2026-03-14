@@ -370,13 +370,13 @@
         "value": "Meðhöndlaðar í aðstoðar- og umsjónarleiðum."
       }
     },
-    "remindersEyebrow": "Hagnýt áminning",
-    "remindersTitle": "Staða byggingarinnar",
-    "remindersDescription": "Þessi staðbundna smíði inniheldur heildarform vörunnar en ekki allar virkar tengingar.",
+    "remindersEyebrow": "Gott að vita",
+    "remindersTitle": "Stefna vettvangsins",
+    "remindersDescription": "Lykilatriði sem vert er að hafa í huga við notkun MeetupReykjavik.",
     "reminders": {
-      "one": "Reiknings-, greiðslu- og samskiptaveitendur eru ekki enn tengdir framleiðslu.",
-      "two": "Staðbundin stjórnborð líkja eftir heildarrekstrarforminu fyrir dreifingu.",
-      "three": "Sum viðskiptaleg og lagaleg atriði verða kláruð þegar veitendauppsetning er lokið."
+      "one": "Reikningur þinn, viðburðir og samfélagssamskipti falla undir þessa skilmála.",
+      "two": "Skipuleggjendur og staðir starfa innan leiðbeininganna sem lýst er hér að ofan.",
+      "three": "Viðskiptaskilmálar, endurgreiðslustefna og útborgunartímaáætlanir fylgja samningum hvers þjónustuaðila."
     }
   },
   "aboutPage": {
