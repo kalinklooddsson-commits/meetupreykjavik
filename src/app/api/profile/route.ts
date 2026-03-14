@@ -74,9 +74,12 @@ export async function PATCH(request: NextRequest) {
         await db.from("profiles").update(profileUpdate).eq("id", session.id);
       }
 
-      // Save venue fields (find venue owned by this user)
+      // Save venue fields (find venue owned by this user, fallback to slug for demo accounts)
       if (Object.keys(venueUpdate).length > 0) {
-        await db.from("venues").update(venueUpdate).eq("owner_id", session.id);
+        const { count } = await db.from("venues").update(venueUpdate).eq("owner_id", session.id);
+        if (!count && session.slug) {
+          await db.from("venues").update(venueUpdate).eq("slug", session.slug);
+        }
       }
 
       return NextResponse.json({ ok: true });

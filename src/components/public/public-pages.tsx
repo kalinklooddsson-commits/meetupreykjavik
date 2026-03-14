@@ -348,6 +348,10 @@ function blogSignals(posts: BlogPost[], t: (key: string, values?: Record<string,
 /** Extract image URL from gradient+url art strings or plain URLs */
 function extractImageUrl(art: string | undefined | null): string | null {
   if (!art) return null;
+  // Reject data URLs — they cause double-encoding with Next.js Image optimization
+  if (art.startsWith("data:")) return null;
+  // Reject bare hash references (e.g. "#bg" from SVG gradients)
+  if (art.startsWith("#")) return null;
   // Plain URL (Supabase storage, external images)
   if (art.startsWith("http://") || art.startsWith("https://") || art.startsWith("/")) {
     // Reject malformed Wikipedia thumbnail URLs (contain nested paths like .jpg/1200px-)

@@ -36,12 +36,23 @@ export async function PATCH(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Find venue owned by this user
-    const { data: venue } = await db
+    // Find venue owned by this user (try owner_id, then slug for demo accounts)
+    let venue: { id: string } | null = null;
+    const { data: venueByOwner } = await db
       .from("venues")
       .select("id")
       .eq("owner_id", session.id)
       .maybeSingle();
+    venue = venueByOwner;
+
+    if (!venue && session.slug) {
+      const { data: venueBySlug } = await db
+        .from("venues")
+        .select("id")
+        .eq("slug", session.slug)
+        .maybeSingle();
+      venue = venueBySlug;
+    }
 
     if (!venue) {
       return NextResponse.json({ error: "No venue found" }, { status: 404 });

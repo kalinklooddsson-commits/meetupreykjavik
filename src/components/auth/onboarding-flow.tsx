@@ -213,13 +213,13 @@ export function OnboardingFlow({
                 Start strong, {displayName.split(" ")[0]}.
               </h1>
               <p className="mt-4 max-w-md text-sm leading-7 text-white/72">
-                This route closes the auth surface the spec calls for: language, interests,
-                and optional profile warmth before dropping into the product.
+                Pick your language, choose your interests, and personalize your profile
+                so we can show you the best events and groups in Reykjavik.
               </p>
 
               <div className="mt-8 rounded-[1.3rem] border border-white/10 bg-white/7 p-5">
                 <div className="text-xs font-bold uppercase tracking-[0.22em] text-white/52">
-                  Destination after onboarding
+                  Your dashboard
                 </div>
                 <div className="mt-3 flex items-start gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-[1rem] bg-white/10 text-white">
@@ -231,7 +231,7 @@ export function OnboardingFlow({
                       {currentRole.description}
                     </p>
                     <div className="mt-3 text-sm font-semibold text-white/86">
-                      Landing route: {currentRole.destination}
+                      You&apos;ll start at: {currentRole.destination}
                     </div>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {currentRole.highlights.map((highlight) => (

@@ -4,6 +4,32 @@ import { getGroups, getGroupBySlug } from "@/lib/db/groups";
 import { getVenues, getVenueBySlug } from "@/lib/db/venues";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSceneCoverDataUrl } from "@/lib/visuals";
+
+/**
+ * Strip HTML tags from rich-text content and split into paragraphs.
+ * TipTap stores descriptions as HTML (e.g. "<p>Hello</p><p>World</p>").
+ * This converts them to a clean text array: ["Hello", "World"].
+ */
+function htmlToTextParagraphs(html: string): string[] {
+  // Split on closing paragraph/div/br tags to preserve paragraph structure
+  const chunks = html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n\n")
+    .replace(/<\/div>/gi, "\n\n")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<li[^>]*>/gi, "• ")
+    .replace(/<[^>]+>/g, "") // strip remaining tags
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  return chunks.length > 0 ? chunks : [html.replace(/<[^>]+>/g, "").trim()].filter(Boolean);
+}
 import {
   publicEvents,
   publicGroups,
@@ -20,6 +46,10 @@ import {
 function realPhoto(url: unknown): string | null {
   if (typeof url !== "string" || !url) return null;
   if (url.includes("hallgrimskirkja")) return null;
+  // Reject data URLs / SVG data strings — they break Next.js Image optimization
+  if (url.startsWith("data:")) return null;
+  // Reject bare fragments or hash-only values
+  if (url.startsWith("#")) return null;
   return url;
 }
 
@@ -84,8 +114,8 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     groupSlug: (group?.slug as string) ?? mockEvent?.groupSlug ?? "",
     hostName: (host?.display_name as string) ?? mockEvent?.hostName ?? "",
     area: (venue?.city as string) ?? mockEvent?.area ?? "Reykjavik",
-    summary: isGenericEventDesc && mockEvent ? mockEvent.summary : dbDesc.slice(0, 200),
-    description: isGenericEventDesc && mockEvent ? mockEvent.description : (dbDesc ? [dbDesc] : []),
+    summary: isGenericEventDesc && mockEvent ? mockEvent.summary : dbDesc.replace(/<[^>]+>/g, "").slice(0, 200),
+    description: isGenericEventDesc && mockEvent ? mockEvent.description : (dbDesc ? htmlToTextParagraphs(dbDesc) : []),
     attendees: (row.rsvp_count as number) ?? mockEvent?.attendees ?? 0,
     capacity: (row.attendee_limit as number) ?? mockEvent?.capacity ?? 50,
     priceLabel: isFree ? (mockEvent?.priceLabel ?? "Free") : (mockEvent?.priceLabel ?? "Paid"),
@@ -143,8 +173,8 @@ function mapDbGroupToPublic(
       "Social",
     members: (row.member_count as number) ?? mockFallback?.members ?? 0,
     activity: (row.activity_score as number) ?? 50,
-    summary: isGenericDesc && mockFallback ? mockFallback.summary : dbDesc.slice(0, 200),
-    description: isGenericDesc && mockFallback ? mockFallback.description : (dbDesc ? [dbDesc] : []),
+    summary: isGenericDesc && mockFallback ? mockFallback.summary : dbDesc.replace(/<[^>]+>/g, "").slice(0, 200),
+    description: isGenericDesc && mockFallback ? mockFallback.description : (dbDesc ? htmlToTextParagraphs(dbDesc) : []),
     organizer: (organizer?.display_name as string) ?? mockFallback?.organizer ?? "",
     banner:
       realPhoto(row.banner_url) ??
@@ -385,10 +415,14 @@ async function getEventBySlugWithRatings(slug: string) {
       event_comments ( id, text, created_at, profiles:user_id ( display_name ) )
     `)
     .eq("slug", slug)
+    .eq("status", "published")
     .single();
 
   if (error) {
-    console.error("Failed to fetch event with ratings:", error);
+    // PGRST116 = no rows found (event not published or doesn't exist)
+    if (error.code !== "PGRST116") {
+      console.error("Failed to fetch event with ratings:", error);
+    }
     return null;
   }
 
@@ -430,8 +464,12 @@ export async function fetchEvents(options?: {
           mapDbEventToPublic(row as unknown as Record<string, unknown>),
         );
         // Merge in mock events that aren't in the DB (e.g. demo/seed events)
+        // but exclude any mock whose slug exists in DB with non-published status
         const dbSlugs = new Set(dbEvents.map((e) => e.slug));
-        const missingMocks = publicEvents.filter((e) => !dbSlugs.has(e.slug));
+        // Also fetch slugs of non-published events to suppress their mock versions
+        const allResult = await getEvents({ limit: 200 });
+        const allDbSlugs = new Set(allResult.data.map((r) => (r as unknown as Record<string, unknown>).slug as string));
+        const missingMocks = publicEvents.filter((e) => !dbSlugs.has(e.slug) && !allDbSlugs.has(e.slug));
         return [...dbEvents, ...missingMocks].slice(0, options?.limit ?? 50);
       }
     } catch {

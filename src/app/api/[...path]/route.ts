@@ -725,7 +725,7 @@ async function handleLiveDataRequest(
           venue_name: (body.venueName as string) ?? null,
           venue_address: (body.venueAddress as string) ?? null,
           online_link: (body.onlineLink as string) ?? null,
-          featured_photo_url: (body.featuredPhotoUrl as string) ?? null,
+          featured_photo_url: ((body.featuredPhotoUrl as string)?.startsWith("data:") ? null : (body.featuredPhotoUrl as string)) ?? null,
           attendee_limit: (body.attendeeLimit as number) ?? null,
           guest_limit: (body.guestLimit as number) ?? 0,
           age_restriction: (body.ageRestriction as string) ?? "none",
@@ -1219,12 +1219,19 @@ async function handleLiveDataRequest(
           .select("*, profiles:organizer_id (*), venues:venue_id (*)")
           .eq("organizer_id", session.id)
           .order("requested_date", { ascending: false });
-        // Fetch bookings for venues the user owns
+        // Fetch bookings for venues the user owns (try owner_id, then slug for demo accounts)
         const { data: ownedVenues } = await supabase
           .from("venues")
           .select("id")
           .eq("owner_id", session.id);
-        const ownedVenueIds = (ownedVenues ?? []).map((v) => v.id);
+        let ownedVenueIds = (ownedVenues ?? []).map((v) => v.id);
+        if (ownedVenueIds.length === 0 && session.slug) {
+          const { data: venueBySlug } = await supabase
+            .from("venues")
+            .select("id")
+            .eq("slug", session.slug);
+          ownedVenueIds = (venueBySlug ?? []).map((v) => v.id);
+        }
         let asVenueOwner: typeof asOrganizer = [];
         if (ownedVenueIds.length > 0) {
           const { data } = await supabase
@@ -1519,13 +1526,24 @@ async function handleLiveDataRequest(
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
-        // Find venue owned by current user
-        const { data: ownedVenue } = await supabase
+        // Find venue owned by current user (try owner_id, then slug for demo accounts)
+        let ownedVenue: { id: string } | null = null;
+        const { data: ownedVenueByOwner } = await supabase
           .from("venues")
           .select("id")
           .eq("owner_id", session.id)
           .limit(1)
           .maybeSingle();
+        ownedVenue = ownedVenueByOwner;
+        if (!ownedVenue && session.slug) {
+          const { data: ownedVenueBySlug } = await supabase
+            .from("venues")
+            .select("id")
+            .eq("slug", session.slug)
+            .limit(1)
+            .maybeSingle();
+          ownedVenue = ownedVenueBySlug;
+        }
         const body = await request.json();
         const { schedule } = body as { schedule: { day: string; open_time: string; close_time: string; is_available: boolean }[] };
         if (!ownedVenue) {
@@ -1560,13 +1578,24 @@ async function handleLiveDataRequest(
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
-        // Find venue owned by current user
-        const { data: dealVenue } = await supabase
+        // Find venue owned by current user (try owner_id, then slug for demo accounts)
+        let dealVenue: { id: string } | null = null;
+        const { data: dealVenueByOwner } = await supabase
           .from("venues")
           .select("id")
           .eq("owner_id", session.id)
           .limit(1)
           .maybeSingle();
+        dealVenue = dealVenueByOwner;
+        if (!dealVenue && session.slug) {
+          const { data: dealVenueBySlug } = await supabase
+            .from("venues")
+            .select("id")
+            .eq("slug", session.slug)
+            .limit(1)
+            .maybeSingle();
+          dealVenue = dealVenueBySlug;
+        }
         const body = await request.json();
         const { title, type: dealType, tier, note } = body as {
           title: string; type: string; tier: string; note: string;
@@ -2648,12 +2677,7 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
     if (hasSupabaseEnv()) {
       const liveResult = await handleLiveDataRequest(request, key, match);
       if (liveResult) return liveResult;
-      // Supabase is configured but handler returned null (client init failed)
-      // Return error instead of silently falling back to mock data
-      return NextResponse.json(
-        { error: "Service temporarily unavailable. Please try again." },
-        { status: 503 },
-      );
+      // Route not handled in live handler — fall through to scaffold response
     }
 
     const validatedBody = await parseValidatedBody(request, key);
