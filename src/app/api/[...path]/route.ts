@@ -1027,6 +1027,7 @@ async function handleLiveDataRequest(
             legalName: "legal_name",
             ownerId: "owner_id",
             galleryUrls: "gallery_urls",
+            photos: "gallery_urls",
           };
           const converted: Record<string, unknown> = {};
           for (const [k, v] of Object.entries(venueBody as Record<string, unknown>)) {
