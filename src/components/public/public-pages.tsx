@@ -1116,10 +1116,12 @@ function TimeFilterBar({
   items,
   activeValue,
   activeCategory,
+  searchQuery,
 }: {
   items: Array<{ label: string; value: string }>;
   activeValue?: string;
   activeCategory?: string;
+  searchQuery?: string;
 }) {
   return (
     <div className="flex flex-wrap gap-2" role="group" aria-label="Time filters">
@@ -1128,6 +1130,7 @@ function TimeFilterBar({
         const params = new URLSearchParams();
         if (!isActive) params.set("when", item.value);
         if (activeCategory) params.set("category", activeCategory);
+        if (searchQuery) params.set("q", searchQuery);
         const qs = params.toString();
         const href = (qs ? `/events?${qs}` : "/events") as Route;
         return (
@@ -1493,6 +1496,7 @@ export function EventsIndexScreen({
             ]}
             activeValue={activeWhen}
             activeCategory={activeCategory}
+            searchQuery={searchQuery}
           />
 
           {/* Discovery lanes */}
