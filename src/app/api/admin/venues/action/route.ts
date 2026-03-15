@@ -10,7 +10,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
-  const { key, action } = (await request.json()) as { key: string; action: string };
+  let body: { key: string; action: string };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid or missing JSON body" }, { status: 400 });
+  }
+  const { key, action } = body;
   if (!key || !action) {
     return NextResponse.json({ error: "Missing key or action" }, { status: 400 });
   }

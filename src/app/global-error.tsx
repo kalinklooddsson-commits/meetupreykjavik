@@ -1,47 +1,56 @@
 "use client";
 
-import Link from "next/link";
-import { AlertTriangle } from "lucide-react";
-
 /**
  * Global error boundary — last resort when root layout itself fails.
  * Cannot use next-intl because the provider may not be available.
+ * Uses inline styles because Tailwind CSS may not be loaded.
  * Shows bilingual EN/IS content inline.
  */
-export default function GlobalError() {
+export default function GlobalError({
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   return (
     <html lang="en">
-      <body className="font-sans" style={{ margin: 0 }}>
-        <div className="grid min-h-screen place-items-center bg-brand-sand p-4 text-brand-text sm:p-8">
-          <div className="w-full max-w-[680px] rounded-2xl border border-gray-200 bg-white px-6 py-10 text-center shadow-sm sm:px-10 sm:py-14">
-            <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-coral text-white">
-              <AlertTriangle className="h-7 w-7" />
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Error — MeetupReykjavik</title>
+      </head>
+      <body style={{ margin: 0, fontFamily: "system-ui, -apple-system, sans-serif", backgroundColor: "#faf9f6", color: "#1a1a1a" }}>
+        <div style={{ display: "grid", minHeight: "100vh", placeItems: "center", padding: "2rem" }}>
+          <div style={{ width: "100%", maxWidth: 680, borderRadius: 16, border: "1px solid #e5e5e5", backgroundColor: "#fff", padding: "2.5rem", textAlign: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" }}>
+            <div style={{ margin: "0 auto 1.5rem", width: 56, height: 56, borderRadius: 16, backgroundColor: "#e8614d", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28 }}>
+              ⚠
             </div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-coral">
+            <p style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.2em", color: "#e8614d" }}>
               System error / Kerfisvilla
             </p>
-            <h1 className="font-editorial mt-4 text-3xl leading-tight tracking-tight text-gray-900 sm:text-4xl">
+            <h1 style={{ marginTop: 16, fontSize: 28, fontWeight: 700, color: "#1a1a1a" }}>
               Something went wrong
             </h1>
-            <p className="mx-auto mt-3 max-w-md text-base leading-relaxed text-gray-500">
+            <p style={{ marginTop: 12, fontSize: 16, color: "#666", lineHeight: 1.6, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
               An unexpected error occurred. Please try again or return to the home page.
             </p>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-gray-400">
+            <p style={{ marginTop: 8, fontSize: 14, color: "#999", lineHeight: 1.6, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
               Óvænt villa kom upp. Reyndu aftur eða farðu á forsíðu.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link
+            <div style={{ marginTop: 32, display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
+              <button
+                type="button"
+                onClick={() => reset()}
+                style={{ borderRadius: 999, backgroundColor: "#e8614d", color: "#fff", padding: "12px 24px", fontSize: 14, fontWeight: 700, border: "none", cursor: "pointer" }}
+              >
+                Try again / Reyna aftur
+              </button>
+              <a
                 href="/"
-                className="rounded-full bg-brand-coral px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ borderRadius: 999, backgroundColor: "#fff", color: "#333", padding: "12px 24px", fontSize: 14, fontWeight: 600, border: "1px solid #e5e5e5", textDecoration: "none" }}
               >
                 Go home / Fara heim
-              </Link>
-              <Link
-                href="/events"
-                className="rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-gray-700 transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                Browse events / Skoða viðburði
-              </Link>
+              </a>
             </div>
           </div>
         </div>

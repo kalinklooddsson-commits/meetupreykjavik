@@ -121,6 +121,7 @@ export function ImageUpload({
           <button
             type="button"
             onClick={removeImage}
+            aria-label="Remove image"
             className="absolute right-2 top-2 rounded-full bg-black/60 p-1.5 text-white opacity-0 transition group-hover:opacity-100"
           >
             <X className="h-4 w-4" />
@@ -133,6 +134,9 @@ export function ImageUpload({
         </div>
       ) : (
         <div
+          role="button"
+          tabIndex={0}
+          aria-label={label}
           onDragOver={(e) => {
             e.preventDefault();
             setDragOver(true);
@@ -140,6 +144,7 @@ export function ImageUpload({
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inputRef.current?.click(); } }}
           className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 transition ${
             dragOver
               ? "border-brand-coral bg-brand-coral/5"

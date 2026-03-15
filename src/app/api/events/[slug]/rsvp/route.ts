@@ -62,7 +62,7 @@ export async function POST(
   try {
     const session = await getUser();
     if (!session) {
-      return NextResponse.json({ error: "Login required" }, { status: 403 });
+      return NextResponse.json({ error: "Login required" }, { status: 401 });
     }
 
     const { slug } = await params;
@@ -82,11 +82,9 @@ export async function POST(
       .maybeSingle();
 
     if (!event) {
-      // Graceful fallback: event exists in static/mock data but not in DB.
-      // Return a local RSVP so the UI can update optimistically.
       return NextResponse.json(
-        { ok: true, action: "created", id: `local-rsvp-${Date.now()}`, local: true },
-        { status: 201 },
+        { error: "Event not found" },
+        { status: 404 },
       );
     }
 
@@ -164,7 +162,7 @@ export async function DELETE(
   try {
     const session = await getUser();
     if (!session) {
-      return NextResponse.json({ error: "Login required" }, { status: 403 });
+      return NextResponse.json({ error: "Login required" }, { status: 401 });
     }
 
     const { slug } = await params;
