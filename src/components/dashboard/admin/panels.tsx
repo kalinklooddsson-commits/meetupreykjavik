@@ -740,9 +740,28 @@ export function AdminEventOperationsDesk({
   events: readonly EventRow[];
 }) {
   const [localEvents, setLocalEvents] = useState<EventRow[]>([...events]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [confirmKey, setConfirmKey] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState("");
   const { toast } = useToast();
+
+  const statusChips = [
+    { key: "all", label: "All", active: statusFilter === "all" },
+    { key: "pending", label: "Pending", active: statusFilter === "pending", tone: "sand" as DashboardTone },
+    { key: "published", label: "Published", active: statusFilter === "published", tone: "sage" as DashboardTone },
+    { key: "cancelled", label: "Cancelled", active: statusFilter === "cancelled", tone: "coral" as DashboardTone },
+  ];
+
+  const filtered = localEvents.filter((e) => {
+    const matchStatus = statusFilter === "all" || e.status.toLowerCase().includes(statusFilter);
+    const matchSearch =
+      !search ||
+      e.title.toLowerCase().includes(search.toLowerCase()) ||
+      e.venue.toLowerCase().includes(search.toLowerCase()) ||
+      e.category.toLowerCase().includes(search.toLowerCase());
+    return matchStatus && matchSearch;
+  });
 
   async function updateEvent(key: string, status: string) {
     try {
@@ -766,6 +785,24 @@ export function AdminEventOperationsDesk({
 
   return (
     <div className="space-y-4">
+      {/* Search + filters */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-text-muted" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search events by title, venue, or category..."
+            className={cn(inputClass, "pl-9")}
+          />
+        </div>
+        <span className="text-xs text-brand-text-muted">
+          {filtered.length} of {localEvents.length} events
+        </span>
+      </div>
+      <FilterChips items={statusChips} onSelect={(k) => setStatusFilter(k)} />
+
       {confirmKey && (
         <ConfirmDialog
           message={`Are you sure you want to ${confirmAction === "Cancelled" ? "cancel" : confirmAction === "Published" ? "approve and publish" : confirmAction === "Rejected" ? "decline" : confirmAction.toLowerCase()} this event?`}
@@ -775,7 +812,7 @@ export function AdminEventOperationsDesk({
       )}
       <DashboardTable
         columns={["Event", "Category", "Venue", "Date", "Status", "Actions"]}
-        rows={localEvents.map((e) => ({
+        rows={filtered.map((e) => ({
           key: e.key,
           cells: [
             <a key="t" href={`/events/${e.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-primary hover:underline">{e.title}</a>,
@@ -794,12 +831,12 @@ export function AdminEventOperationsDesk({
                   </button>
                 </>
               )}
-              {e.status !== "Published" && e.status !== "Pending Review" && (
+              {e.status === "Draft" && (
                 <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Published")}>
                   <Send className="h-3.5 w-3.5 text-brand-sage" /> Publish
                 </button>
               )}
-              {e.status !== "Featured" && e.status !== "Pending Review" && (
+              {e.status !== "Cancelled" && e.status !== "Rejected" && e.status !== "Pending Review" && (
                 <button type="button" className={btnGhost} onClick={() => updateEvent(e.key, "Featured")}>
                   <Star className="h-3.5 w-3.5 text-brand-coral" /> Feature
                 </button>
@@ -1212,17 +1249,44 @@ export function AdminVenueOperationsDesk({
   venues: readonly VenueRow[];
 }) {
   const [localVenues, setLocalVenues] = useState<VenueRow[]>([...venues]);
+  const [search, setSearch] = useState("");
   const { toast } = useToast();
 
   function updateVenue(key: string, patch: Partial<VenueRow>) {
     setLocalVenues((prev) => prev.map((v) => (v.key === key ? { ...v, ...patch } : v)));
   }
 
+  const filtered = localVenues.filter((v) => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      v.name.toLowerCase().includes(q) ||
+      v.area.toLowerCase().includes(q) ||
+      v.type.toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="space-y-4">
+      {/* Search */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-text-muted" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search venues by name, area, or type..."
+            className={cn(inputClass, "pl-9")}
+          />
+        </div>
+        <span className="text-xs text-brand-text-muted">
+          {filtered.length} of {localVenues.length} venues
+        </span>
+      </div>
       <DashboardTable
         columns={["Venue", "Area", "Type", "Rating", "Actions"]}
-        rows={localVenues.map((v) => ({
+        rows={filtered.map((v) => ({
           key: v.key,
           cells: [
             <div key="n" className="flex items-center gap-2">
