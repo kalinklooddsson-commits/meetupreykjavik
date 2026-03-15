@@ -13,6 +13,14 @@ import { getUser } from "@/lib/auth/guards";
 import { getUserRsvps } from "@/lib/db/rsvps";
 import { getUserNotifications } from "@/lib/db/notifications";
 import { getUserConversations } from "@/lib/db/messages";
+
+/** Extract live RSVP count from PostgREST join `rsvps ( count )`.
+ *  Falls back to denormalized `rsvp_count` column, then 0. */
+function liveRsvpCount(event: Record<string, unknown>): number {
+  const rsvps = event.rsvps as Array<{ count: number }> | undefined;
+  if (Array.isArray(rsvps) && rsvps.length > 0) return rsvps[0].count;
+  return (event.rsvp_count as number) ?? 0;
+}
 import { getProfileById } from "@/lib/db/profiles";
 import { getEvents, getEventsByHost } from "@/lib/db/events";
 import { getUserTransactions, getPlatformRevenue } from "@/lib/db/transactions";
@@ -577,7 +585,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
 
     const totalRsvps = managedEvents.reduce(
       (sum: number, e: Record<string, unknown>) =>
-        sum + ((e.rsvp_count as number) ?? 0),
+        sum + liveRsvpCount(e),
       0,
     );
 
@@ -609,12 +617,12 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
         venueName: (venue?.name as string) ?? (e.venue_name as string) ?? "TBA",
         status: ((e.status as string) ?? "draft").replace(/^\w/, (c: string) => c.toUpperCase()),
         approvalMode: (e.rsvp_mode as string) ?? "open",
-        rsvps: (e.rsvp_count as number) ?? 0,
+        rsvps: liveRsvpCount(e),
         capacity: (e.attendee_limit as number) ?? 50,
         waitlist: 0,
         ticketsSold: eventRevenue?.count ?? 0,
         revenue: `${(eventRevenue?.amount ?? 0).toLocaleString()} ISK`,
-        checkIns: `0 / ${(e.rsvp_count as number) ?? 0}`,
+        checkIns: `0 / ${liveRsvpCount(e)}`,
         notes: "",
         timeline: [] as { time: string; label: string }[],
         attendees: [] as { name: string; status: string; ticket: string; checkedIn: string; note: string }[],
@@ -643,7 +651,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
         {
           label: "Avg. fill rate",
           value: managedEvents.length > 0
-            ? `${Math.round(managedEvents.reduce((sum: number, e: Record<string, unknown>) => sum + ((e.rsvp_count as number ?? 0) / Math.max(e.attendee_limit as number ?? 50, 1)) * 100, 0) / managedEvents.length)}%`
+            ? `${Math.round(managedEvents.reduce((sum: number, e: Record<string, unknown>) => sum + (liveRsvpCount(e) / Math.max(e.attendee_limit as number ?? 50, 1)) * 100, 0) / managedEvents.length)}%`
             : "—",
           delta: managedEvents.length > 0 ? "Across events" : "No events yet",
           detail: "Average attendance vs. capacity.",
@@ -788,12 +796,12 @@ export async function getManagedOrganizerEvent(slug: string) {
       venueName: (venue?.name as string) ?? row.venue_name ?? "TBA",
       status: (row.status ?? "draft").replace(/^\w/, (c: string) => c.toUpperCase()),
       approvalMode: row.rsvp_mode ?? "open",
-      rsvps: row.rsvp_count ?? 0,
+      rsvps: liveRsvpCount(row as unknown as Record<string, unknown>),
       capacity: row.attendee_limit ?? 50,
       waitlist: 0,
       ticketsSold: 0,
       revenue: "0 ISK",
-      checkIns: `0 / ${row.rsvp_count ?? 0}`,
+      checkIns: `0 / ${liveRsvpCount(row as unknown as Record<string, unknown>)}`,
       notes: row.description ?? "",
       timeline: [] as { time: string; label: string }[],
       attendees: [] as { name: string; status: string; ticket: string; checkedIn: string; note: string }[],
@@ -1686,7 +1694,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       eventTitle: pickerEvent.title as string,
       eventSlug: pickerEvent.slug as string,
       target: `Curated admin invitations for ${pickerEvent.title as string}`,
-      seatsRemaining: Math.max(0, ((pickerEvent as Record<string, unknown>).attendee_limit as number ?? 50) - ((pickerEvent as Record<string, unknown>).rsvp_count as number ?? 0)),
+      seatsRemaining: Math.max(0, ((pickerEvent as Record<string, unknown>).attendee_limit as number ?? 50) - liveRsvpCount(pickerEvent as Record<string, unknown>)),
       selectedIds: [] as string[],
       candidates: memberProfiles.slice(0, 8).map((p, i) => ({
         id: p.id as string,

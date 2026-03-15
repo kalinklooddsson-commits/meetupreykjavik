@@ -66,7 +66,8 @@ export async function getEventBySlug(slug: string) {
       venues (*),
       profiles:host_id (*),
       categories (*),
-      ticket_tiers (*)
+      ticket_tiers (*),
+      rsvps ( count )
     `)
     .eq("slug", slug)
     .single();
