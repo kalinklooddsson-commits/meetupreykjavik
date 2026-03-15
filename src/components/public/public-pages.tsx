@@ -704,9 +704,9 @@ function EventCard({ event }: { event: PublicEvent }) {
         {/* Attendee avatars + going count */}
         <div className="mt-4 flex items-center gap-3">
           <div className="flex -space-x-2">
-            {AVATAR_COLORS.slice(0, Math.min(event.attendees, 4)).map((color, i) => (
+            {AVATAR_COLORS.slice(0, Math.min(event.attendees, 4)).map((color) => (
               <div
-                key={i}
+                key={color}
                 className="h-7 w-7 rounded-full border-2 border-white"
                 style={{ background: color }}
               />
@@ -1632,8 +1632,8 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                 {t("sections.aboutThisEvent")}
               </h2>
               <div className="space-y-5">
-                {event.description.map((paragraph, i) => (
-                  <p key={i} className="leading-8 text-gray-700">
+                {event.description.map((paragraph) => (
+                  <p key={paragraph} className="leading-8 text-gray-700">
                     {paragraph}
                   </p>
                 ))}
@@ -1748,7 +1748,7 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                         <div className="flex items-center gap-0.5">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
-                              key={i}
+                              key={`star-${i}`}
                               className={cn(
                                 "h-4 w-4",
                                 i < rating.rating ? "fill-amber-500 text-amber-500" : "text-gray-200",
@@ -2224,8 +2224,8 @@ export function GroupDetailScreen({ group, events: eventsProp, isMember = false 
                 {t("sections.about")}
               </h2>
               <div className="space-y-5">
-                {group.description.map((paragraph, i) => (
-                  <p key={i} className="leading-8 text-gray-700">{paragraph}</p>
+                {group.description.map((paragraph) => (
+                  <p key={paragraph} className="leading-8 text-gray-700">{paragraph}</p>
                 ))}
               </div>
               <div className="mt-5 flex flex-wrap gap-2">
@@ -2742,8 +2742,8 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                 {t("sections.about")}
               </h2>
               <div className="space-y-5">
-                {venue.description.map((paragraph, i) => (
-                  <p key={i} className="leading-8 text-gray-700">{paragraph}</p>
+                {venue.description.map((paragraph) => (
+                  <p key={paragraph} className="leading-8 text-gray-700">{paragraph}</p>
                 ))}
               </div>
             </div>
@@ -3855,7 +3855,7 @@ export function ContactScreen() {
             <p className="mb-6 text-sm text-gray-600">{t("expectationsDescription")}</p>
             <div className="space-y-3">
               {expectations.map((item, i) => (
-                <div key={i} className="flex items-start gap-3 rounded-xl bg-white p-4">
+                <div key={item} className="flex items-start gap-3 rounded-xl bg-white p-4">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-indigo text-xs font-bold !text-white">
                     {i + 1}
                   </div>

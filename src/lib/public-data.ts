@@ -1632,9 +1632,9 @@ export const publicVenues: PublicVenue[] = [
     deal: "",
     upcomingEventSlugs: [],
     gallery: [
-      "linear-gradient(135deg, rgba(180,140,80,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/stofan-cafe.svg')"
+      "url('/place-images/reykjavik/venues/stofan-cafe.jpg')"
     ],
-    art: "linear-gradient(135deg, rgba(180,140,80,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/stofan-cafe.svg')",
+    art: "url('/place-images/reykjavik/venues/stofan-cafe.jpg')",
     latitude: 64.1483,
     longitude: -21.9420,
   },
