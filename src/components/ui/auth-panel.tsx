@@ -89,6 +89,20 @@ export function AuthPanel({
   }
 
   async function submitForm() {
+    // Client-side validation before sending
+    if (!form.email.trim()) {
+      setError(tErrors("generic"));
+      return;
+    }
+    if (!isForgot && !isReset && !form.password) {
+      setError(tErrors("generic"));
+      return;
+    }
+    if (isForgot && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      setError(tErrors("generic"));
+      return;
+    }
+
     const endpoint =
       mode === "signup"
         ? "/api/auth/signup"

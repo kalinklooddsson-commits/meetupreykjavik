@@ -134,6 +134,7 @@
     "newsletter": "Stay in the loop",
     "newsletterPlaceholder": "your@email.com",
     "newsletterButton": "Subscribe",
+    "newsletterSuccess": "Subscribed! We'll keep you posted.",
     "followUs": "Follow us",
     "socialInstagram": "Follow us on Instagram",
     "socialFacebook": "Follow us on Facebook",
@@ -635,6 +636,12 @@
       "privacy": "Privacy or moderation"
     },
     "submit": "Send message",
+    "errors": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "messageRequired": "Message is required"
+    },
     "status": {
       "incomplete": "Please fill in your name, email, and message before sending.",
       "sending": "Sending\u2026",

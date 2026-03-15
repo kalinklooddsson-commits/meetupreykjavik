@@ -6,9 +6,11 @@ import { useToast } from "@/components/ui/toast";
 export function NewsletterForm({
   placeholder,
   buttonLabel,
+  successMessage,
 }: {
   placeholder: string;
   buttonLabel: string;
+  successMessage?: string;
 }) {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -44,7 +46,7 @@ export function NewsletterForm({
   if (subscribed) {
     return (
       <p className="mt-2 text-sm text-emerald-400">
-        Subscribed! We&apos;ll keep you posted.
+        {successMessage ?? "Subscribed! We'll keep you posted."}
       </p>
     );
   }

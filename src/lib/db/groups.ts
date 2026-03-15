@@ -20,7 +20,8 @@ export async function getGroups(options: GetGroupsOptions = {}) {
     .select(`
       *,
       profiles:organizer_id (*),
-      categories (*)
+      categories (*),
+      group_members ( count )
     `)
     .eq("status", "active")
     .order("member_count", { ascending: false })

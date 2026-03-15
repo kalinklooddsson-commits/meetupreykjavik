@@ -78,13 +78,21 @@ export function extractOgImageUrl(art: string | undefined | null): string | null
 
 // ── Mappers: DB rows with joins → public presentation types ──
 
-/** Extract live RSVP count from Supabase `rsvps(count)` join. */
-function extractRsvpCount(row: Record<string, unknown>): number | null {
-  const rsvps = row.rsvps;
-  if (Array.isArray(rsvps) && rsvps.length > 0 && typeof rsvps[0]?.count === "number") {
-    return rsvps[0].count;
+/** Extract live count from a Supabase `table(count)` join. */
+function extractJoinCount(row: Record<string, unknown>, key: string): number | null {
+  const joined = row[key];
+  if (Array.isArray(joined) && joined.length > 0 && typeof joined[0]?.count === "number") {
+    return joined[0].count;
   }
   return null;
+}
+
+function extractRsvpCount(row: Record<string, unknown>): number | null {
+  return extractJoinCount(row, "rsvps");
+}
+
+function extractGroupMemberCount(row: Record<string, unknown>): number | null {
+  return extractJoinCount(row, "group_members");
 }
 
 function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
@@ -203,7 +211,7 @@ function mapDbGroupToPublic(
       ((row.categories as Record<string, unknown> | null)?.name_en as string) ??
       mockFallback?.category ??
       "Social",
-    members: (row.member_count as number) ?? mockFallback?.members ?? 0,
+    members: extractGroupMemberCount(row) ?? (row.member_count as number) ?? mockFallback?.members ?? 0,
     activity: (row.activity_score as number) ?? 50,
     summary: isGenericDesc && mockFallback ? mockFallback.summary : dbDesc.replace(/<[^>]+>/g, "").slice(0, 200),
     description: isGenericDesc && mockFallback ? mockFallback.description : (dbDesc ? htmlToTextParagraphs(dbDesc) : []),

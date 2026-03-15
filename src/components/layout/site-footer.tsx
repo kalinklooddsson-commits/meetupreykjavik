@@ -69,6 +69,7 @@ export async function SiteFooter() {
             <NewsletterForm
               placeholder={tFooter("newsletterPlaceholder")}
               buttonLabel={tFooter("newsletterButton")}
+              successMessage={tFooter("newsletterSuccess")}
             />
           </div>
 

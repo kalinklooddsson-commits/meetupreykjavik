@@ -3,7 +3,7 @@ import { CategoryDetailScreen } from "@/components/public/public-pages";
 import { categories } from "@/lib/home-data";
 
 function slugify(value: string) {
-  return value.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return value.toLowerCase().replace(/æ/g, "ae").replace(/ð/g, "d").replace(/þ/g, "th").replace(/&/g, "and").normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 }
 
 export async function generateMetadata({

@@ -134,6 +134,7 @@
     "newsletter": "Fylgstu með",
     "newsletterPlaceholder": "netfang@postur.is",
     "newsletterButton": "Gerast áskrifandi",
+    "newsletterSuccess": "Skráð! Við höldum þér upplýst(um).",
     "followUs": "Fylgdu okkur",
     "socialInstagram": "Fylgdu okkur á Instagram",
     "socialFacebook": "Fylgdu okkur á Facebook",
@@ -635,6 +636,12 @@
       "privacy": "Persónuvernd eða umsjón"
     },
     "submit": "Senda skilaboð",
+    "errors": {
+      "nameRequired": "Nafn er nauðsynlegt",
+      "emailRequired": "Netfang er nauðsynlegt",
+      "emailInvalid": "Vinsamlegast sláðu inn gilt netfang",
+      "messageRequired": "Skilaboð eru nauðsynleg"
+    },
     "status": {
       "incomplete": "Vinsamlegast fylltu inn nafn, netfang og skilaboð áður en þú sendir.",
       "sending": "Sendi\u2026",

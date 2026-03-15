@@ -56,7 +56,12 @@ const STEP_ICONS = [Search, Zap, Users] as const;
 function slugify(value: string) {
   return value
     .toLowerCase()
+    .replace(/æ/g, "ae")
+    .replace(/ð/g, "d")
+    .replace(/þ/g, "th")
     .replace(/&/g, "and")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
