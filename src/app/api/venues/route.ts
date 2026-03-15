@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 /**
  * POST /api/venues
@@ -9,6 +10,9 @@ import { getUser } from "@/lib/auth/guards";
  * Creates venue with "pending" status for admin review.
  */
 export async function POST(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {
@@ -44,11 +48,21 @@ export async function POST(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Generate slug from name
-    const slug = name
+    // Generate slug from name with collision avoidance
+    let slug = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
+
+    const { data: existingSlug } = await db
+      .from("venues")
+      .select("slug")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (existingSlug) {
+      const suffix = Date.now().toString(36).slice(-4);
+      slug = `${slug}-${suffix}`;
+    }
 
     const { data, error } = await db.from("venues").insert({
       name,

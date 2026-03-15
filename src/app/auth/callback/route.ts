@@ -19,7 +19,12 @@ import { portalPathForRole } from "@/lib/auth/mock-auth-config";
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = request.nextUrl;
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? searchParams.get("redirect") ?? "/";
+  const rawNext = searchParams.get("next") ?? searchParams.get("redirect") ?? "/";
+  // Validate redirect is a safe relative path (prevent open redirect attacks)
+  const next =
+    rawNext.startsWith("/") && !rawNext.startsWith("//") && !rawNext.includes("://")
+      ? rawNext
+      : "/";
   const type = searchParams.get("type"); // e.g. "recovery", "signup", "magiclink"
 
   if (!code) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 /**
  * POST /api/venues/deals
@@ -8,6 +9,9 @@ import { getUser } from "@/lib/auth/guards";
  * Create a new venue deal/perk.
  */
 export async function POST(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {
@@ -146,6 +150,9 @@ export async function POST(request: NextRequest) {
  * Accepts { key: string, venue_id?: string, venue_slug?: string }
  */
 export async function DELETE(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {

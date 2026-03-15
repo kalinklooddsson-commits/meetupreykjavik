@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 /* ── Shared: resolve venue for the authenticated user ─────── */
 
@@ -63,6 +64,9 @@ async function resolveVenue(session: any, body: any, db: any): Promise<{ id: str
  * Accepts { schedule: Array<{ day: string; blocks: string[] }> }
  */
 export async function PATCH(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {
@@ -145,6 +149,9 @@ export async function PATCH(request: NextRequest) {
  * Accepts { blocked_date: string, reason?: string }
  */
 export async function POST(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {
@@ -207,6 +214,9 @@ export async function POST(request: NextRequest) {
  * Accepts { id: string }
  */
 export async function DELETE(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {
