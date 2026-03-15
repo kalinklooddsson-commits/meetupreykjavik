@@ -57,11 +57,9 @@ export function PayPalCheckout({
     );
 
     if (existingScript) {
-      existingScript.addEventListener("load", () => {
-        setSdkReady(true);
-        setLoading(false);
-      });
-      return;
+      const handleLoad = () => { setSdkReady(true); setLoading(false); };
+      existingScript.addEventListener("load", handleLoad, { once: true });
+      return () => existingScript.removeEventListener("load", handleLoad);
     }
 
     const script = document.createElement("script");

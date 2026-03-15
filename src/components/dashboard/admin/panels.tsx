@@ -626,7 +626,7 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
           {notes.map((n, i) => (
             <div key={i} className="flex items-start justify-between gap-3 rounded-lg border border-brand-border-light bg-white p-3">
               <p className="text-sm text-brand-text">{n}</p>
-              <button type="button" onClick={() => removeNote(i)} className={btnGhost}>
+              <button type="button" onClick={() => removeNote(i)} aria-label="Remove note" className={btnGhost}>
                 <X className="h-3.5 w-3.5" />
               </button>
             </div>
