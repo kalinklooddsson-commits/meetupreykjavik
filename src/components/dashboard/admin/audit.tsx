@@ -67,7 +67,16 @@ function formatTimestamp(iso: string): string {
 
 export async function AdminAuditScreen() {
   const dbEntries = await getAdminAuditLog();
-  const entries = dbEntries.length > 0 ? dbEntries : mockAuditLog;
+  const rawEntries = dbEntries.length > 0 ? dbEntries : [...mockAuditLog];
+
+  // Deduplicate audit entries by key, falling back to action+targetId+timestamp
+  const seen = new Set<string>();
+  const entries = rawEntries.filter((e) => {
+    const dedupeKey = e.key || `${e.action}:${e.targetId}:${e.timestamp}`;
+    if (seen.has(dedupeKey)) return false;
+    seen.add(dedupeKey);
+    return true;
+  });
 
   const uniqueAdmins = new Set(entries.map((e) => e.admin)).size;
   const targetTypes = new Set(entries.map((e) => e.targetType)).size;

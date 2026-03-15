@@ -319,6 +319,181 @@ export function VenueAvailabilityStudio({
   );
 }
 
+/* ── Blocked Dates Manager ───────────────────────────────────── */
+
+type BlockedDate = {
+  readonly id: string;
+  readonly date: string;
+  readonly reason: string;
+};
+
+export function VenueBlockedDatesManager({
+  blockedDates: initialDates,
+  venueId,
+}: {
+  blockedDates: readonly BlockedDate[];
+  venueId?: string;
+}) {
+  const [dates, setDates] = useState<BlockedDate[]>(
+    initialDates.map((d) => ({ ...d })),
+  );
+  const [showForm, setShowForm] = useState(false);
+  const [newDate, setNewDate] = useState("");
+  const [newReason, setNewReason] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [removing, setRemoving] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  async function handleAdd() {
+    if (!newDate) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/venues/availability", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          blocked_date: newDate,
+          reason: newReason.trim() || null,
+          ...(venueId ? { venue_id: venueId } : {}),
+        }),
+      });
+      const result = await res.json();
+      if (result.ok) {
+        setDates((prev) => [
+          ...prev,
+          { id: result.id ?? newDate, date: newDate, reason: newReason.trim() },
+        ]);
+        toast("success", "Blocked date added");
+        setNewDate("");
+        setNewReason("");
+        setShowForm(false);
+      } else {
+        toast("error", result.error ?? "Could not add blocked date.");
+      }
+    } catch {
+      toast("error", "Could not add blocked date. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleRemove(id: string) {
+    setRemoving(id);
+    try {
+      const res = await fetch("/api/venues/availability", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const result = await res.json();
+      if (result.ok) {
+        setDates((prev) => prev.filter((d) => d.id !== id));
+        toast("success", "Blocked date removed");
+      } else {
+        toast("error", result.error ?? "Could not remove blocked date.");
+      }
+    } catch {
+      toast("error", "Could not remove blocked date. Please try again.");
+    } finally {
+      setRemoving(null);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      {dates.map((d) => (
+        <div
+          key={d.id}
+          className="flex items-center justify-between gap-3 rounded-lg border border-brand-border-light bg-white p-3"
+        >
+          <div className="flex items-center gap-3">
+            <Clock className="h-4 w-4 shrink-0 text-brand-coral" />
+            <div>
+              <span className="text-sm font-medium text-brand-text">{d.date}</span>
+              {d.reason && (
+                <span className="ml-2 text-sm text-brand-text-muted">— {d.reason}</span>
+              )}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleRemove(d.id)}
+            disabled={removing === d.id}
+            className="inline-flex h-7 w-7 items-center justify-center rounded text-brand-text-muted transition hover:text-brand-coral disabled:opacity-50"
+            title="Remove blocked date"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      ))}
+
+      {dates.length === 0 && !showForm && (
+        <p className="text-sm text-brand-text-muted">No blocked dates set.</p>
+      )}
+
+      {showForm ? (
+        <div className="rounded-xl border border-brand-indigo/20 bg-white p-4">
+          <h4 className="text-sm font-semibold text-brand-text">Add blocked date</h4>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div>
+              <label htmlFor="blocked-date" className="block text-xs font-medium text-brand-text-muted">
+                Date
+              </label>
+              <input
+                id="blocked-date"
+                type="date"
+                value={newDate}
+                onChange={(e) => setNewDate(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-brand-border-light bg-white px-3 py-2 text-sm text-brand-text focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo"
+              />
+            </div>
+            <div>
+              <label htmlFor="blocked-reason" className="block text-xs font-medium text-brand-text-muted">
+                Reason (optional)
+              </label>
+              <input
+                id="blocked-reason"
+                type="text"
+                value={newReason}
+                onChange={(e) => setNewReason(e.target.value)}
+                placeholder="e.g. Private event, Maintenance"
+                className="mt-1 w-full rounded-lg border border-brand-border-light bg-white px-3 py-2 text-sm text-brand-text placeholder:text-brand-text-light focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo"
+              />
+            </div>
+          </div>
+          <div className="mt-3 flex gap-2">
+            <button
+              type="button"
+              disabled={saving || !newDate}
+              onClick={handleAdd}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-indigo-dark disabled:opacity-50"
+            >
+              <Save className="h-3.5 w-3.5" />
+              {saving ? "Saving..." : "Add blocked date"}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowForm(false); setNewDate(""); setNewReason(""); }}
+              className="inline-flex items-center rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-medium text-brand-text transition hover:border-brand-coral hover:text-brand-coral"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setShowForm(true)}
+          className="relative z-10 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-brand-border bg-brand-sand-light p-4 text-sm font-medium text-brand-text-muted transition hover:border-brand-indigo hover:text-brand-indigo"
+        >
+          <Plus className="h-4 w-4" />
+          Add blocked date
+        </button>
+      )}
+    </div>
+  );
+}
+
 /* ── Deal Studio ─────────────────────────────────────────────── */
 
 type DealItem = {
@@ -340,6 +515,7 @@ export function VenueDealStudio({
 }) {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [localDeals, setLocalDeals] = useState<DealItem[]>([...deals]);
   const { toast } = useToast();
   const [formData, setFormData] = useState({
     title: "",
@@ -348,11 +524,31 @@ export function VenueDealStudio({
     note: "",
   });
 
+  async function deleteDeal(key: string) {
+    if (!window.confirm("Are you sure you want to delete this deal?")) return;
+    try {
+      const res = await fetch("/api/venues/deals", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, venue_id: venueId }),
+      });
+      const result = await res.json();
+      if (result.ok) {
+        setLocalDeals((prev) => prev.filter((d) => d.key !== key));
+        toast("success", "Deal deleted");
+      } else {
+        toast("error", result.error ?? "Could not delete deal.");
+      }
+    } catch {
+      toast("error", "Could not delete deal. Please try again.");
+    }
+  }
+
   return (
     <div className="space-y-4">
       {/* Existing deals */}
       <div className="space-y-3">
-        {deals.map((d) => (
+        {localDeals.map((d) => (
           <article
             key={d.key}
             className="rounded-lg border border-brand-border-light bg-white p-4"
@@ -364,15 +560,24 @@ export function VenueDealStudio({
                   {d.type} &middot; {d.tier} tier &middot; {d.redemption}
                 </p>
               </div>
-              <span
-                className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${
-                  /active/i.test(d.status)
-                    ? "border-[rgba(124,154,130,0.24)] bg-[rgba(124,154,130,0.12)] text-brand-sage"
-                    : "border-[rgba(245,240,232,0.95)] bg-[rgba(245,240,232,0.96)] text-brand-text"
-                }`}
-              >
-                {d.status}
-              </span>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${
+                    /active/i.test(d.status)
+                      ? "border-[rgba(124,154,130,0.24)] bg-[rgba(124,154,130,0.12)] text-brand-sage"
+                      : "border-[rgba(245,240,232,0.95)] bg-[rgba(245,240,232,0.96)] text-brand-text"
+                  }`}
+                >
+                  {d.status}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => deleteDeal(d.key)}
+                  className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50"
+                >
+                  <Trash2 className="h-3 w-3" /> Delete
+                </button>
+              </div>
             </div>
             {d.note && (
               <p className="mt-2 text-sm text-brand-text-muted">{d.note}</p>

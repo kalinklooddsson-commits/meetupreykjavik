@@ -83,7 +83,8 @@ export async function POST(request: NextRequest) {
       ok: true,
       message: "You're subscribed! We'll keep you posted.",
     });
-  } catch {
+  } catch (err) {
+    console.error("[Newsletter] Unexpected error:", err);
     return NextResponse.json(
       { error: "Server error" },
       { status: 500 },

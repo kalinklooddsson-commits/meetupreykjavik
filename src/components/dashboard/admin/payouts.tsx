@@ -1,4 +1,7 @@
+"use client";
+
 import type { Route } from "next";
+import { useEffect, useState, useTransition } from "react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
@@ -7,7 +10,6 @@ import {
   ToneBadge,
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
-import { getAdminPortalData } from "@/lib/dashboard-fetchers";
 import { DollarSign, Users, TrendingUp } from "lucide-react";
 
 function adminLinks(activeKey: string) {
@@ -30,42 +32,103 @@ function adminLinks(activeKey: string) {
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
-function statusTone(s: string): DashboardTone {
-  if (/paid|completed|captured/i.test(s)) return "sage";
-  if (/pending|processing/i.test(s)) return "sand";
+function payoutStatusTone(s: string): DashboardTone {
+  if (/paid/i.test(s)) return "sage";
+  if (/pending|unpaid/i.test(s)) return "sand";
   if (/failed|overdue/i.test(s)) return "coral";
   return "neutral";
 }
 
-export async function AdminPayoutsScreen() {
-  const data = await getAdminPortalData();
+/* ── Types for payout entries ──────────────────────────────── */
 
-  // Use the actual revenue metric from the admin dashboard
-  const revenueMetric = data.metrics?.find((m) => m.label === "Revenue");
-  const revenueValue = revenueMetric?.value ?? "0 ISK";
+interface PayoutEntry {
+  key: string;
+  organizer: string;
+  eventCount: number;
+  grossEarnings: string;
+  commission: string;
+  netPayout: string;
+  status: string;
+}
 
-  // Use real transaction data from revenue section
-  const transactions = data.revenue?.transactions ?? [];
-  const completedTxns = transactions.filter(
-    (t) => /completed/i.test(t.status),
+/* ── Mark-as-paid button (client component) ────────────────── */
+
+function MarkAsPaidButton({
+  payoutKey,
+  currentStatus,
+  onMarked,
+}: {
+  payoutKey: string;
+  currentStatus: string;
+  onMarked: (key: string) => void;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  if (/paid/i.test(currentStatus)) {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs text-green-700">
+        Paid
+      </span>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={isPending}
+      onClick={() => {
+        startTransition(() => {
+          // TODO: call API route POST /api/admin/payouts/mark-paid { payoutKey }
+          onMarked(payoutKey);
+        });
+      }}
+      className="rounded bg-brand-primary px-3 py-1 text-xs font-medium text-white transition hover:bg-brand-primary/90 disabled:opacity-50"
+    >
+      {isPending ? "Processing..." : "Mark as Paid"}
+    </button>
   );
+}
 
-  // Calculate total payout amounts from completed transactions
-  const totalAmount = completedTxns.reduce((sum, t) => {
-    const numericStr = t.amount.replace(/[^\d]/g, "");
-    return sum + (parseInt(numericStr, 10) || 0);
-  }, 0);
+/* ── Screen (client) ───────────────────────────────────────── */
 
-  // Build payout rows from transactions
-  const payoutRows = transactions.map((t, idx) => ({
-    key: t.key ?? `payout-${idx}`,
+export function AdminPayoutsScreen({
+  initialPayouts,
+  totalGross,
+  totalCommission,
+  totalNet,
+}: {
+  initialPayouts: PayoutEntry[];
+  totalGross: string;
+  totalCommission: string;
+  totalNet: string;
+}) {
+  const [payouts, setPayouts] = useState(initialPayouts);
+
+  const unpaidCount = payouts.filter((p) => !/paid/i.test(p.status)).length;
+
+  function handleMarked(key: string) {
+    setPayouts((prev) =>
+      prev.map((p) => (p.key === key ? { ...p, status: "paid" } : p)),
+    );
+  }
+
+  const payoutRows = payouts.map((p) => ({
+    key: p.key,
     cells: [
-      <span key="src" className="font-medium">{t.source}</span>,
-      t.amount,
-      <ToneBadge key="status" tone={statusTone(t.status)}>
-        {t.status}
+      <span key="org" className="font-medium">{p.organizer}</span>,
+      <span key="events" className="tabular-nums">{p.eventCount}</span>,
+      <span key="gross" className="tabular-nums">{p.grossEarnings}</span>,
+      <span key="comm" className="tabular-nums text-brand-text-muted">{p.commission}</span>,
+      <span key="net" className="tabular-nums font-semibold">{p.netPayout}</span>,
+      <ToneBadge key="status" tone={payoutStatusTone(p.status)}>
+        {p.status}
       </ToneBadge>,
-      t.when,
+      <MarkAsPaidButton
+        key="action"
+        payoutKey={p.key}
+        currentStatus={p.status}
+        onMarked={handleMarked}
+      />,
     ] as React.ReactNode[],
   }));
 
@@ -73,46 +136,46 @@ export async function AdminPayoutsScreen() {
     <PortalShell
       eyebrow="Admin portal"
       title="Payouts"
-      description="Track organizer earnings and manage commission payouts."
+      description="Manage organizer earnings, commission deductions, and payout status."
       links={adminLinks("payouts")}
       variant="admin"
       roleMode="admin"
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard
-          label="Platform Revenue"
-          value={revenueValue}
-          detail="Total from all transactions"
+          label="Total Gross Earnings"
+          value={totalGross}
+          detail="Organizer earnings before commission"
           icon={DollarSign}
           tone="indigo"
         />
         <StatCard
-          label="Commission Rate"
-          value="5%"
-          detail="Applied to all ticket sales"
+          label="Platform Commission"
+          value={totalCommission}
+          detail="5% commission retained"
           icon={TrendingUp}
           tone="sage"
         />
         <StatCard
-          label="Transactions"
-          value={String(transactions.length)}
-          detail={`${completedTxns.length} completed`}
+          label="Pending Payouts"
+          value={String(unpaidCount)}
+          detail={`of ${payouts.length} organizers`}
           icon={Users}
-          tone="neutral"
+          tone={unpaidCount > 0 ? "sand" : "neutral"}
         />
       </div>
 
       <Surface
-        eyebrow="Transactions"
-        title="Payout Ledger"
-        description="All platform transactions contributing to organizer payouts and commission tracking."
+        eyebrow="Organizer payouts"
+        title="Earnings Ledger"
+        description="Organizer earnings with commission breakdown. Mark payouts as completed once funds are transferred."
         className="mt-6"
       >
         {payoutRows.length > 0 ? (
           <DashboardTable
-            columns={["Description", "Amount", "Status", "Date"]}
+            columns={["Organizer", "Events", "Gross", "Commission (5%)", "Net Payout", "Status", "Action"]}
             rows={payoutRows}
-            caption="Transaction history"
+            caption="Organizer payout ledger"
           />
         ) : (
           <p className="py-8 text-center text-sm text-gray-500">

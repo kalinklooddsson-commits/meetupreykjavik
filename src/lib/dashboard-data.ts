@@ -271,11 +271,6 @@ export const memberPortalData = {
       reason: "Your expat-community activity and reliable RSVP history push this to the top of the queue.",
       score: "88%",
     },
-    {
-      event: saturdayHike,
-      reason: "Outdoor group events match your activity profile and weekend availability.",
-      score: "84%",
-    },
   ],
   inbox: [
     {
@@ -380,6 +375,13 @@ export const memberPortalData = {
     { day: 30 }, { day: 31 },
     { day: 1, outside: true }, { day: 2, outside: true }, { day: 3, outside: true },
     { day: 4, outside: true }, { day: 5, outside: true },
+  ],
+  calendarEvents: [
+    { startsAt: singlesNight.startsAt, title: singlesNight.title },
+    { startsAt: reactWorkshop.startsAt, title: reactWorkshop.title },
+    { startsAt: wineTasting.startsAt, title: wineTasting.title },
+    { startsAt: newcomersNight.startsAt, title: newcomersNight.title },
+    { startsAt: saturdayHike.startsAt, title: saturdayHike.title },
   ],
   settingsSections: [
     {

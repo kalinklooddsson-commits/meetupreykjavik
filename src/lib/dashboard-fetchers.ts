@@ -421,9 +421,19 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       );
     }
 
+    // Build calendarEvents from RSVP data for client-side month navigation
+    const calendarEvents = rsvps.map((rsvp: Record<string, unknown>) => {
+      const event = rsvp.events as Record<string, unknown> | null;
+      return {
+        startsAt: String(event?.starts_at ?? ""),
+        title: String(event?.title ?? "Event"),
+      };
+    }).filter((e: { startsAt: string }) => e.startsAt !== "");
+
     return {
       ...mockMemberPortalData,
       calendarDays,
+      calendarEvents,
       settingsSections: savedSettingsSections,
       recommendations: realRecommendations.length > 0 ? realRecommendations : mockMemberPortalData.recommendations,
       metrics: [
@@ -1123,7 +1133,19 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
                 `${dayNames[(a.day_of_week as number) ?? 0]} ${trimTime((a.start_time as string) ?? "")}-${trimTime((a.end_time as string) ?? "")} ${(a.notes as string) ?? ""}`.trim(),
             )
         : [],
-      exceptions: [],
+      exceptions: availability
+        .filter((a: Record<string, unknown>) => a.is_blocked === true)
+        .map(
+          (a: Record<string, unknown>) =>
+            `${(a.specific_date as string) ?? "Unknown date"} — ${(a.notes as string) ?? "Blocked"}`,
+        ),
+      blockedDates: availability
+        .filter((a: Record<string, unknown>) => a.is_blocked === true)
+        .map((a: Record<string, unknown>) => ({
+          id: a.id as string,
+          date: (a.specific_date as string) ?? "",
+          reason: (a.notes as string) ?? "",
+        })),
       weeklyGrid,
     };
 
@@ -2009,23 +2031,29 @@ export async function getAdminAuditLog() {
   try {
     const supabase = await createSupabaseServerClient();
     if (!supabase) return [];
+    // Join profiles to resolve admin_id → display name
     const { data, error } = await supabase
       .from("admin_audit_log")
-      .select("id, admin_id, action, target_type, target_id, details, created_at")
+      .select("id, admin_id, action, target_type, target_id, details, created_at, profiles:admin_id(display_name)")
       .order("created_at", { ascending: false })
       .limit(50);
     if (error || !data) return [];
-    return data.map((a) => ({
-      key: a.id as string,
-      admin: "Platform Admin",
-      action: (a.action as string) ?? "",
-      targetType: (a.target_type as string) ?? "unknown",
-      targetId: (a.target_id as string) ?? "",
-      details: typeof a.details === "object" && a.details
-        ? Object.entries(a.details as Record<string, unknown>).map(([k, v]) => `${k}: ${v}`).join(", ")
-        : String(a.details ?? ""),
-      timestamp: a.created_at as string,
-    }));
+    return data.map((a) => {
+      // profiles comes back as an object (single FK) or null
+      const profile = a.profiles as { display_name?: string } | null;
+      const adminName = profile?.display_name || "Platform Admin";
+      return {
+        key: a.id as string,
+        admin: adminName,
+        action: (a.action as string) ?? "",
+        targetType: (a.target_type as string) ?? "unknown",
+        targetId: (a.target_id as string) ?? "",
+        details: typeof a.details === "object" && a.details
+          ? Object.entries(a.details as Record<string, unknown>).map(([k, v]) => `${k}: ${v}`).join(", ")
+          : String(a.details ?? ""),
+        timestamp: a.created_at as string,
+      };
+    });
   } catch {
     return [];
   }

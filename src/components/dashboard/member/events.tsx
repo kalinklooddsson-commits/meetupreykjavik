@@ -3,13 +3,13 @@ import type { Route } from "next";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
-  CalendarMatrix,
   DashboardTable,
   ToneBadge,
 } from "@/components/dashboard/primitives";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getMemberPortalData } from "@/lib/dashboard-fetchers";
 import { EventsFilterBar } from "./events-filter-bar";
+import { MemberCalendarNav } from "./calendar-nav";
 import { RsvpButton } from "@/components/public/rsvp-button";
 
 /* Re-export the statusTone for recommendations table below */
@@ -40,7 +40,7 @@ function statusTone(s: string): DashboardTone {
 export async function MemberCalendarScreen() {
   const data = await getMemberPortalData();
 
-  const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const now = new Date();
 
   return (
     <PortalShell
@@ -57,18 +57,13 @@ export async function MemberCalendarScreen() {
         seat: e.seat,
       }))} />
 
-      {/* ── Calendar view ───────────────────────────────────── */}
-      <Surface
-        eyebrow="Calendar"
-        title="March 2026"
-        description="Days with your RSVPs are highlighted. Tap a day to see event details."
-      >
-        <CalendarMatrix
-          monthLabel="March 2026"
-          weekdays={weekdays}
-          days={data.calendarDays}
-        />
-      </Surface>
+      {/* ── Calendar view with month navigation ──────────── */}
+      <MemberCalendarNav
+        initialYear={now.getFullYear()}
+        initialMonth={now.getMonth()}
+        events={data.calendarEvents}
+        serverDays={data.calendarDays}
+      />
 
       {/* ── Recommendations ─────────────────────────────────── */}
       <Surface

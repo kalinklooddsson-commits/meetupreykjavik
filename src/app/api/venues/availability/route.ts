@@ -2,6 +2,60 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
 
+/* ── Shared: resolve venue for the authenticated user ─────── */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function resolveVenue(session: any, body: any, db: any): Promise<{ id: string } | null> {
+  let venue: { id: string } | null = null;
+
+  if (session.accountType === "admin" && body.venue_id) {
+    venue = { id: body.venue_id };
+  } else if (session.accountType === "admin" && body.venue_slug) {
+    const { data: venueBySlug } = await db
+      .from("venues")
+      .select("id")
+      .eq("slug", body.venue_slug)
+      .maybeSingle();
+    venue = venueBySlug;
+  }
+
+  if (!venue) {
+    const { data: venueByOwner } = await db
+      .from("venues")
+      .select("id")
+      .eq("owner_id", session.id)
+      .maybeSingle();
+    venue = venueByOwner;
+  }
+
+  if (!venue && session.email) {
+    const { data: profile } = await db
+      .from("profiles")
+      .select("id")
+      .eq("email", session.email)
+      .maybeSingle();
+    if (profile) {
+      const { data: venueByProfile } = await db
+        .from("venues")
+        .select("id")
+        .eq("owner_id", profile.id)
+        .maybeSingle();
+      venue = venueByProfile;
+    }
+  }
+
+  if (!venue && session.slug) {
+    const { data: venueBySlug } = await db
+      .from("venues")
+      .select("id")
+      .eq("slug", session.slug)
+      .maybeSingle();
+    venue = venueBySlug;
+  }
+
+  return venue;
+}
+
 /**
  * PATCH /api/venues/availability
  *
@@ -36,54 +90,7 @@ export async function PATCH(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Admin users can specify venue_id or venue_slug directly in the request body
-    let venue: { id: string } | null = null;
-    if (session.accountType === "admin" && body.venue_id) {
-      venue = { id: body.venue_id };
-    } else if (session.accountType === "admin" && body.venue_slug) {
-      const { data: venueBySlug } = await db
-        .from("venues")
-        .select("id")
-        .eq("slug", body.venue_slug)
-        .maybeSingle();
-      venue = venueBySlug;
-    }
-
-    // Find venue owned by this user (try owner_id, then slug for demo accounts)
-    if (!venue) {
-      const { data: venueByOwner } = await db
-        .from("venues")
-        .select("id")
-        .eq("owner_id", session.id)
-        .maybeSingle();
-      venue = venueByOwner;
-    }
-
-    // Try looking up venue via the user's email → profile → owner_id chain
-    if (!venue && session.email) {
-      const { data: profile } = await db
-        .from("profiles")
-        .select("id")
-        .eq("email", session.email)
-        .maybeSingle();
-      if (profile) {
-        const { data: venueByProfile } = await db
-          .from("venues")
-          .select("id")
-          .eq("owner_id", profile.id)
-          .maybeSingle();
-        venue = venueByProfile;
-      }
-    }
-
-    if (!venue && session.slug) {
-      const { data: venueBySlug } = await db
-        .from("venues")
-        .select("id")
-        .eq("slug", session.slug)
-        .maybeSingle();
-      venue = venueBySlug;
-    }
+    const venue = await resolveVenue(session, body, db);
 
     if (!venue) {
       return NextResponse.json({ error: "No venue found" }, { status: 404 });
@@ -113,8 +120,8 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    // Delete existing availability then insert new rows
-    await db.from("venue_availability").delete().eq("venue_id", venue.id);
+    // Delete existing non-blocked availability then insert new rows
+    await db.from("venue_availability").delete().eq("venue_id", venue.id).eq("is_blocked", false);
 
     if (rows.length > 0) {
       const { error } = await db.from("venue_availability").insert(rows);

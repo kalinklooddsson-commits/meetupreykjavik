@@ -7,7 +7,7 @@ import {
 } from "@/components/dashboard/primitives";
 import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 import { venueHasFeature } from "@/lib/entitlements";
-import { VenueAvailabilityStudio } from "./panels";
+import { VenueAvailabilityStudio, VenueBlockedDatesManager } from "./panels";
 
 /* ── Helpers ─────────────────────────────────────────────────── */
 
@@ -100,17 +100,10 @@ export async function VenueAvailabilityScreen() {
         title="Blocked dates and overrides"
         description="Dates where normal availability does not apply."
       >
-        <div className="space-y-2">
-          {data.availability.exceptions.map((exception, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 rounded-lg border border-brand-border-light bg-white p-3"
-            >
-              <AlertTriangle className="h-4 w-4 shrink-0 text-brand-coral" />
-              <span className="text-sm text-brand-text">{exception}</span>
-            </div>
-          ))}
-        </div>
+        <VenueBlockedDatesManager
+          blockedDates={data.availability.blockedDates ?? []}
+          venueId={(data.venue as Record<string, unknown>)?.id as string | undefined}
+        />
       </Surface>
     </PortalShell>
   );

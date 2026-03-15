@@ -102,6 +102,7 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
   const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
   const [message, setMessage] = useState("");
   const [showCheckout, setShowCheckout] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const syncFromStorage = useCallback(() => {
     const isGoing = getStoredRsvps().has(eventSlug);
@@ -262,6 +263,8 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
       <button
         type="button"
         onClick={handleRsvp}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         disabled={state === "loading"}
         className={`inline-flex min-h-12 items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition hover:-translate-y-0.5 disabled:opacity-60 ${
           state === "going"
@@ -277,10 +280,17 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
             {t("processing")}
           </>
         ) : state === "going" ? (
-          <>
-            <Check className="h-4 w-4" />
-            {t("youreGoing")}
-          </>
+          hovered ? (
+            <>
+              <X className="h-4 w-4" />
+              {t("cancelRsvp") || "Cancel RSVP"}
+            </>
+          ) : (
+            <>
+              <Check className="h-4 w-4" />
+              {t("youreGoing")}
+            </>
+          )
         ) : (
           <>
             {isPaid ? <Ticket className="h-4 w-4" /> : <Calendar className="h-4 w-4" />}

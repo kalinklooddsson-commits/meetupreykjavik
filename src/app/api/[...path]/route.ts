@@ -784,6 +784,10 @@ async function handleLiveDataRequest(
 
         return successResponse(data, { status: 201 });
       }
+      // NOTE: PATCH and DELETE for /api/events/[slug] are handled by the exact
+      // route at src/app/api/events/[slug]/route.ts. Next.js prioritises exact
+      // route segments over catch-all routes, so these cases are unreachable.
+      // They are kept here as fallback documentation of the expected behaviour.
       case "PATCH /api/events/[slug]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const eventToUpdate = await getEventBySlug(match.params.slug);
@@ -1335,6 +1339,10 @@ async function handleLiveDataRequest(
           return successResponse({ ok: true, id: match.params.id, ...body });
         }
       }
+      // NOTE: PATCH /api/profile is handled by the exact route at
+      // src/app/api/profile/route.ts. Next.js prioritises exact route segments
+      // over catch-all routes, so this case is unreachable. Kept as fallback
+      // documentation.
       case "PATCH /api/profile": {
         if (!session) return forbiddenResponse("Authentication required.");
         const profileBody = await request.json().catch(() => ({})) as Record<string, unknown>;

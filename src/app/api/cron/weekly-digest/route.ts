@@ -53,8 +53,11 @@ export async function POST(request: Request) {
     });
   }
 
-  // Send digest to all users with verified emails
-  // (digest_opt_in column doesn't exist yet — send to all for now)
+  // STUB: digest preferences are not wired yet.
+  // The profiles table lacks a `digest_opt_in` column, so this sends to ALL
+  // users with an email address. Once the column is added via migration,
+  // filter with `.eq("digest_opt_in", true)` and add an unsubscribe link
+  // to the email template so users can manage their preference.
   const { data: users } = await db
     .from("profiles")
     .select("id, email, display_name, locale")
