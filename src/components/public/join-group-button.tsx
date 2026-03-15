@@ -66,6 +66,7 @@ export function JoinGroupButton({
   return (
     <div>
       <button
+        type="button"
         onClick={handleJoin}
         disabled={state === "loading" || state === "joined"}
         className={className}

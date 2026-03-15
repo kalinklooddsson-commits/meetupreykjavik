@@ -1542,7 +1542,11 @@ async function handleLiveDataRequest(
             .eq("id", rsvpId);
           return successResponse({ ok: true, action: attAction, attendeeName, status: newStatus });
         }
-        return successResponse({ ok: true, action: attAction, attendeeName });
+        // No matching RSVP found — return error instead of false success
+        return NextResponse.json(
+          { ok: false, error: "Attendee RSVP not found", attendeeName },
+          { status: 404 },
+        );
       }
 
       // ── Venue availability (session-inferred owner) ──

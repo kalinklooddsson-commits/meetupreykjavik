@@ -49,13 +49,17 @@ export async function POST(request: NextRequest) {
 
     const { name, email, topic, message } = parsed.data;
 
+    // HTML-escape user inputs to prevent XSS in email body
+    const esc = (s: string) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
     // Send via Resend if configured, otherwise acknowledge in mock mode
     if (hasResendEnv()) {
       const contactEmail = process.env.CONTACT_EMAIL ?? "hello@meetupreykjavik.com";
       await sendEmail({
         to: contactEmail,
-        subject: `[Contact] ${topic} — from ${name}`,
-        html: `<p><strong>From:</strong> ${name} (${email})</p><p><strong>Topic:</strong> ${topic}</p><hr/><p>${message.replace(/\n/g, "<br/>")}</p>`,
+        subject: `[Contact] ${esc(topic)} — from ${esc(name)}`,
+        html: `<p><strong>From:</strong> ${esc(name)} (${esc(email)})</p><p><strong>Topic:</strong> ${esc(topic)}</p><hr/><p>${esc(message).replace(/\n/g, "<br/>")}</p>`,
       });
     } else {
       // Mock mode: log and acknowledge

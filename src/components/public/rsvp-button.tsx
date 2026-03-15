@@ -219,10 +219,16 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
       // Cancel RSVP
       setState("loading");
       try {
-        await fetch(`/api/events/${eventSlug}/rsvp`, { method: "DELETE" });
-        cancelRsvp();
+        const res = await fetch(`/api/events/${eventSlug}/rsvp`, { method: "DELETE" });
+        if (res.ok) {
+          cancelRsvp();
+        } else {
+          // Server rejected cancellation — revert to "going"
+          setState("going");
+        }
       } catch {
-        cancelRsvp();
+        // Network error — revert to "going" state
+        setState("going");
       }
       return;
     }
