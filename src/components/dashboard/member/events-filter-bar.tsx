@@ -14,7 +14,6 @@ import { RsvpButton } from "@/components/public/rsvp-button";
 type EventRow = {
   event: { slug: string; title: string; venueName: string };
   status: string;
-  seat: string;
 };
 
 const filters = ["All", "Confirmed", "Waitlist", "Past", "Cancelled"];
@@ -62,7 +61,7 @@ export function EventsFilterBar({ events = [] }: { events?: EventRow[] }) {
         </div>
       ) : (
         <DashboardTable
-          columns={["Event", "Venue", "Status", "Seat / Position", "Action"]}
+          columns={["Event", "Venue", "Status", "Action"]}
           rows={filtered.map((e) => ({
             key: e.event.slug,
             cells: [
@@ -77,7 +76,6 @@ export function EventsFilterBar({ events = [] }: { events?: EventRow[] }) {
               <ToneBadge key="status" tone={statusTone(e.status)}>
                 {e.status}
               </ToneBadge>,
-              e.seat,
               <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
             ],
           }))}

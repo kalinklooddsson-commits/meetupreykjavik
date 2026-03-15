@@ -73,11 +73,6 @@ export async function AdminOverviewScreen() {
       links={adminLinks("overview")}
       variant="admin"
       roleMode="admin"
-      signalCards={data.metrics.slice(0, 4).map((m) => ({
-        label: m.label,
-        value: m.value,
-        detail: m.detail,
-      }))}
     >
       {/* ── Decision strip ─────────────────────────────────── */}
       <DecisionStrip
@@ -130,6 +125,7 @@ export async function AdminOverviewScreen() {
               groups: "/admin/groups",
               bookings: "/admin/bookings",
               moderation: "/admin/moderation",
+              audit: "/admin/audit",
             };
             const lane = q.key.split("-")[0] || "events";
             const href = laneRoutes[lane] || "/admin/events";

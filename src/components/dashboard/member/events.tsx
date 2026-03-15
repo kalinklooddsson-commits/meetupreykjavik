@@ -54,7 +54,6 @@ export async function MemberCalendarScreen() {
       <EventsFilterBar events={data.upcomingEvents.map((e) => ({
         event: { slug: e.event.slug, title: e.event.title, venueName: e.event.venueName },
         status: e.status,
-        seat: e.seat,
       }))} />
 
       {/* ── Calendar view with month navigation ──────────── */}

@@ -514,6 +514,7 @@ export function VenueDealStudio({
   venueId?: string;
 }) {
   const [showForm, setShowForm] = useState(false);
+  const [editingKey, setEditingKey] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [localDeals, setLocalDeals] = useState<DealItem[]>([...deals]);
   const { toast } = useToast();
@@ -523,6 +524,12 @@ export function VenueDealStudio({
     tier: "Bronze",
     note: "",
   });
+
+  function startEdit(d: DealItem) {
+    setFormData({ title: d.title, type: d.type, tier: d.tier, note: d.note ?? "" });
+    setEditingKey(d.key);
+    setShowForm(true);
+  }
 
   async function deleteDeal(key: string) {
     if (!window.confirm("Are you sure you want to delete this deal?")) return;
@@ -572,6 +579,13 @@ export function VenueDealStudio({
                 </span>
                 <button
                   type="button"
+                  onClick={() => startEdit(d)}
+                  className="inline-flex items-center gap-1 rounded-lg border border-brand-border-light px-2 py-1 text-xs font-medium text-brand-text transition hover:bg-brand-sand-light"
+                >
+                  <Pencil className="h-3 w-3" /> Edit
+                </button>
+                <button
+                  type="button"
                   onClick={() => deleteDeal(d.key)}
                   className="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2 py-1 text-xs font-medium text-red-600 transition hover:bg-red-50"
                 >
@@ -589,7 +603,7 @@ export function VenueDealStudio({
       {/* New deal form */}
       {showForm ? (
         <div className="rounded-xl border border-brand-indigo/20 bg-white p-5">
-          <h3 className="text-sm font-semibold text-brand-text">New deal</h3>
+          <h3 className="text-sm font-semibold text-brand-text">{editingKey ? "Edit deal" : "New deal"}</h3>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="deal-title" className="block text-xs font-medium text-brand-text-muted">
@@ -656,18 +670,27 @@ export function VenueDealStudio({
               onClick={async () => {
                 setSaving(true);
                 try {
+                  const payload = { ...formData, ...(venueId ? { venue_id: venueId } : {}), ...(editingKey ? { key: editingKey } : {}) };
                   const res = await fetch("/api/venues/deals", {
-                    method: "POST",
+                    method: editingKey ? "PATCH" : "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ ...formData, ...(venueId ? { venue_id: venueId } : {}) }),
+                    body: JSON.stringify(payload),
                   });
                   const result = await res.json();
                   if (result.ok) {
-                    toast("success", "Deal created successfully");
+                    if (editingKey) {
+                      setLocalDeals((prev) => prev.map((d) =>
+                        d.key === editingKey ? { ...d, ...formData } : d
+                      ));
+                      toast("success", "Deal updated");
+                    } else {
+                      toast("success", "Deal created successfully");
+                    }
                     setShowForm(false);
+                    setEditingKey(null);
                     setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                   } else {
-                    toast("error", result.error ?? "Could not create deal. Please try again.");
+                    toast("error", result.error ?? `Could not ${editingKey ? "update" : "create"} deal. Please try again.`);
                   }
                 } catch {
                   toast("error", "Could not save deal. Please try again.");
@@ -678,11 +701,11 @@ export function VenueDealStudio({
               className="inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-indigo-dark disabled:opacity-50"
             >
               <Save className="h-3.5 w-3.5" />
-              {saving ? "Saving..." : "Save deal"}
+              {saving ? "Saving..." : editingKey ? "Update deal" : "Save deal"}
             </button>
             <button
               type="button"
-              onClick={() => setShowForm(false)}
+              onClick={() => { setShowForm(false); setEditingKey(null); setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" }); }}
               className="inline-flex items-center rounded-lg border border-brand-border bg-white px-4 py-2 text-sm font-medium text-brand-text transition hover:border-brand-coral hover:text-brand-coral"
             >
               Cancel

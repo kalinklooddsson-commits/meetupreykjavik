@@ -69,11 +69,6 @@ export async function VenueDashboardScreen() {
       description="Manage your venue, bookings, and organizer relationships."
       links={venueLinks("overview")}
       roleMode="venue"
-      signalCards={data.metrics.map((m) => ({
-        label: m.label,
-        value: m.value,
-        detail: m.detail,
-      }))}
       primaryAction={{ href: "/venue/bookings" as Route, label: "Review bookings" }}
     >
       {/* ── Stat cards ──────────────────────────────────────── */}

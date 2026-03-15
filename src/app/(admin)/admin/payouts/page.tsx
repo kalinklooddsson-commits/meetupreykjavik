@@ -6,14 +6,15 @@ export default async function AdminPayoutsPage() {
   const transactions = data.revenue?.transactions ?? [];
 
   // Derive organizer payout entries from transactions.
-  // Group by source (organizer/venue name) and compute earnings + commission.
+  // Group by organizer name (resolved from profile) and compute earnings + commission.
   const byOrganizer = new Map<
     string,
     { grossCents: number; eventCount: number; keys: string[] }
   >();
 
   for (const t of transactions) {
-    const name = t.source ?? "Unknown";
+    const txn = t as Record<string, unknown>;
+    const name = (txn.organizer as string) ?? t.source ?? "Unknown";
     const existing = byOrganizer.get(name) ?? {
       grossCents: 0,
       eventCount: 0,

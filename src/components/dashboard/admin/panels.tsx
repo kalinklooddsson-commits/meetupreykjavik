@@ -1305,6 +1305,8 @@ type VenueRow = {
   note: string;
 };
 
+const VENUES_PER_PAGE = 25;
+
 export function AdminVenueOperationsDesk({
   venues,
 }: {
@@ -1312,6 +1314,7 @@ export function AdminVenueOperationsDesk({
 }) {
   const [localVenues, setLocalVenues] = useState<VenueRow[]>([...venues]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
   const { toast } = useToast();
 
   function updateVenue(key: string, patch: Partial<VenueRow>) {
@@ -1328,6 +1331,10 @@ export function AdminVenueOperationsDesk({
     );
   });
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / VENUES_PER_PAGE));
+  const safePage = Math.min(page, totalPages - 1);
+  const paged = filtered.slice(safePage * VENUES_PER_PAGE, (safePage + 1) * VENUES_PER_PAGE);
+
   return (
     <div className="space-y-4">
       {/* Search */}
@@ -1337,7 +1344,7 @@ export function AdminVenueOperationsDesk({
           <input
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => { setSearch(e.target.value); setPage(0); }}
             placeholder="Search venues by name, area, or type..."
             className={cn(inputClass, "pl-9")}
           />
@@ -1348,7 +1355,7 @@ export function AdminVenueOperationsDesk({
       </div>
       <DashboardTable
         columns={["Venue", "Area", "Type", "Rating", "Actions"]}
-        rows={filtered.map((v) => ({
+        rows={paged.map((v) => ({
           key: v.key,
           cells: [
             <div key="n" className="flex items-center gap-2">
@@ -1416,6 +1423,32 @@ export function AdminVenueOperationsDesk({
         dense
         caption="Venue operations"
       />
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between border-t border-brand-border-light pt-3">
+          <span className="text-xs text-brand-text-muted">
+            Page {safePage + 1} of {totalPages}
+          </span>
+          <div className="flex gap-1.5">
+            <button
+              type="button"
+              disabled={safePage === 0}
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+              className={cn(btnGhost, "disabled:opacity-40")}
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              disabled={safePage >= totalPages - 1}
+              onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+              className={cn(btnGhost, "disabled:opacity-40")}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

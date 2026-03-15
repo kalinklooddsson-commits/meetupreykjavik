@@ -99,7 +99,9 @@ export async function getMemberProfile(): Promise<MemberProfile> {
       .join("")
       .slice(0, 2)
       .toUpperCase(),
-    tier: ((profile as unknown as Record<string, unknown>).subscription_tier as string) ?? (profile.account_type === "user" ? "Free" : "Plus"),
+    tier: (profile as unknown as Record<string, unknown>).is_premium
+      ? ((profile as unknown as Record<string, unknown>).premium_tier as string) ?? "Free"
+      : "Free",
     city: profile.city ?? "Reykjavik",
     memberSince: new Date(profile.created_at).toLocaleDateString("en-US", {
       month: "long",
@@ -395,7 +397,7 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
               ...section,
               items: section.items.map((item: { label: string; value: string }) => {
                 if (item.label === "Primary email") return { ...item, value: session.email ?? item.value };
-                if (item.label === "Account tier") return { ...item, value: isPremium ? (tier ?? "Plus") : "Free" };
+                if (item.label === "Account tier") return { ...item, value: isPremium ? (tier ?? "Free") : "Free" };
                 return item;
               }),
             };
@@ -407,7 +409,7 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
               items: section.items.map((item: { label: string; value: string }) => {
                 if (item.label === "Current plan") {
                   const rawTier = (realProfile as Record<string, unknown>)?.premium_tier as string | undefined;
-                  const displayTier = rawTier === "plus" ? "Plus" : rawTier === "pro" ? "Pro" : rawTier === "supporter" ? "Plus" : rawTier ?? "Plus";
+                  const displayTier = rawTier === "plus" ? "Plus" : rawTier === "pro" ? "Pro" : rawTier === "supporter" ? "Plus" : rawTier ?? "Free";
                   return { ...item, value: isPremium ? displayTier : "Free" };
                 }
                 if (item.label === "Renewal date") return { ...item, value: isPremium ? item.value : "—" };
@@ -435,7 +437,7 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       calendarDays,
       calendarEvents,
       settingsSections: savedSettingsSections,
-      recommendations: realRecommendations.length > 0 ? realRecommendations : mockMemberPortalData.recommendations,
+      recommendations: realRecommendations,
       metrics: [
         {
           label: "Upcoming RSVPs",
@@ -1192,8 +1194,8 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
     const amenities = Array.isArray(venueObj.amenities)
       ? (venueObj.amenities as string[])
       : [];
-    const hours = Array.isArray(venueObj.hours)
-      ? (venueObj.hours as Array<{ day: string; open: string }>)
+    const hours = Array.isArray(venueObj.opening_hours)
+      ? (venueObj.opening_hours as Array<{ day: string; open: string }>)
       : [];
 
     const profileSections = [
@@ -1377,7 +1379,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       supabase
         ? supabase
             .from("transactions")
-            .select("id, type, description, amount_isk, status, created_at")
+            .select("id, type, description, amount_isk, status, created_at, user_id, profiles:user_id(display_name)")
             .order("created_at", { ascending: false })
             .limit(20)
         : Promise.resolve({ data: null }),
@@ -1493,14 +1495,22 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
     // ── Build admin groups table from real data ──
     const allGroups = (groupsResult?.data ?? []) as Array<Record<string, unknown>>;
     const groupsTable = allGroups.map((g) => {
-      const org = g.organizer as Record<string, unknown> | null;
+      const status = ((g.status as string) ?? "active").toLowerCase();
+      const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+      const members = (g.member_count as number) ?? 0;
+      // Assign meaningful admin actions based on group status and size
+      const action = status === "pending" ? "Approve"
+        : status === "suspended" ? "Reinstate"
+        : members >= 20 ? "Feature"
+        : members < 3 ? "Prompt organizer"
+        : "Monitor";
       return {
         key: (g.slug as string) ?? (g.id as string),
         name: g.name as string,
-        members: (g.member_count as number) ?? 0,
-        status: ((g.status as string) ?? "active").charAt(0).toUpperCase() + ((g.status as string) ?? "active").slice(1),
-        health: "Healthy",
-        action: "",
+        members,
+        status: statusLabel,
+        health: members >= 5 ? "Healthy" : members >= 2 ? "Growing" : "New",
+        action,
       };
     });
 
@@ -1525,9 +1535,11 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         : diffMs < 172800000
           ? "Yesterday"
           : createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+      const profile = t.profiles as Record<string, unknown> | null;
       return {
         key: t.id as string,
         source: (t.description as string) ?? (t.type as string) ?? "Unknown",
+        organizer: (profile?.display_name as string) ?? "Unknown",
         amount: `${((t.amount_isk as number) ?? 0).toLocaleString()} ISK`,
         status: ((t.status as string) ?? "pending").charAt(0).toUpperCase() + ((t.status as string) ?? "pending").slice(1),
         when,
