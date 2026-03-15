@@ -50,6 +50,8 @@ function realPhoto(url: unknown): string | null {
   if (url.startsWith("data:")) return null;
   // Reject bare fragments or hash-only values
   if (url.startsWith("#")) return null;
+  // Reject Supabase storage URLs — they often require auth or don't exist publicly
+  if (url.includes("supabase.co/storage")) return null;
   return url;
 }
 

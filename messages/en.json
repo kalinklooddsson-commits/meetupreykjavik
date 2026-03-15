@@ -1069,33 +1069,33 @@
     },
     "signals": {
       "editorialFocus": {
-        "label": "Editorial focus",
-        "value": "Product, venues, and city community",
-        "detail": "The current writing lane stays close to the core marketplace thesis."
+        "label": "Topics we cover",
+        "value": "Venues, events, and city community",
+        "detail": "Articles about Reykjavik's social scene, gathering spaces, and local culture."
       },
       "publishedPieces": {
-        "label": "Published pieces",
-        "detail": "How much editorial context exists across the public brand surface."
+        "label": "Articles",
+        "detail": "Stories and guides published on the blog."
       },
       "averageDepth": {
-        "label": "Average depth",
+        "label": "Average length",
         "sections": "{count} sections",
-        "detail": "The current article depth across the blog library."
+        "detail": "Typical article depth across the blog."
       }
     },
     "latestEyebrow": "Latest",
     "readArticle": "Read article",
     "moreArticles": "More articles",
     "detail": {
-      "editorialAngle": "Editorial angle",
+      "editorialAngle": "About this article",
       "category": "Category",
-      "categoryDetail": "The main lane this article supports in the broader public brand.",
+      "categoryDetail": "The topic area this article covers.",
       "readTime": "Read time",
-      "readTimeDetail": "Approximate depth for someone arriving from discovery surfaces.",
+      "readTimeDetail": "Estimated time to read this article.",
       "published": "Published",
-      "publishedDetail": "How current this point of view is within the product story.",
+      "publishedDetail": "When this article was published.",
       "whyMatters": "Why this matters",
-      "whyMattersBody": "The editorial layer exists to make the marketplace easier to trust. It gives members, organizers, and venues a clearer lens on what MeetupReykjavik is actually trying to reward in the city: stronger hosts, better-fit rooms, and more durable recurring communities.",
+      "whyMattersBody": "Our blog shares stories about Reykjavik's social scene — the hosts, the venues, and the communities that make this city a great place to connect.",
       "continueReading": "Continue reading"
     }
   },

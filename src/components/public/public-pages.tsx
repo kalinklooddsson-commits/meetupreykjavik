@@ -236,11 +236,13 @@ function discoveryLanes(events: PublicEvent[], t: (key: string, values?: Record<
   const newcomer = [...events].find((event) =>
     `${event.summary} ${event.approvalLabel} ${event.visibilityLabel}`.toLowerCase().includes("new"),
   );
-  const fillingFast = [...events].sort(
-    (left, right) =>
-      occupancyPercent(right.attendees, right.capacity) -
-      occupancyPercent(left.attendees, left.capacity),
-  )[0];
+  const fillingFast = [...events]
+    .filter((event) => occupancyPercent(event.attendees, event.capacity) >= 70)
+    .sort(
+      (left, right) =>
+        occupancyPercent(right.attendees, right.capacity) -
+        occupancyPercent(left.attendees, left.capacity),
+    )[0];
 
   return [
     premium
@@ -3231,41 +3233,6 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
 
       <section className="section-shell py-8">
         <div className="mx-auto max-w-3xl space-y-8">
-          <Section title={t("detail.editorialAngle")}>
-            <div className="grid gap-4 md:grid-cols-3">
-              {[
-                {
-                  label: t("detail.category"),
-                  value: post.category,
-                  detail: t("detail.categoryDetail"),
-                },
-                {
-                  label: t("detail.readTime"),
-                  value: post.readTime,
-                  detail: t("detail.readTimeDetail"),
-                },
-                {
-                  label: t("detail.published"),
-                  value: post.publishedAt,
-                  detail: t("detail.publishedDetail"),
-                },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-xl border border-brand-border-light bg-brand-sand-light p-4"
-                >
-                  <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-gray-500">
-                    {item.label}
-                  </div>
-                  <div className="mt-3 text-sm font-semibold leading-6 text-gray-900">
-                    {item.value}
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{item.detail}</p>
-                </div>
-              ))}
-            </div>
-          </Section>
-
           {post.sections.map((section) => (
             <div key={section.heading}>
               <h2 className="font-editorial text-xl text-gray-900">{section.heading}</h2>

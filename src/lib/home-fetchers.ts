@@ -53,10 +53,14 @@ function pickPhoto(slug: string, photos: readonly string[]): string {
   return photos[hash % photos.length];
 }
 
-/** Returns the photo if it's a real unique image, otherwise null. */
+/** Returns the photo if it's a real, accessible image, otherwise null. */
 function realPhoto(url: string | null | undefined): string | null {
   if (!url) return null;
   if (url.includes("hallgrimskirkja")) return null;
+  if (url.startsWith("data:")) return null;
+  if (url.startsWith("#")) return null;
+  // Reject Supabase storage URLs — they often require auth or don't exist publicly
+  if (url.includes("supabase.co/storage")) return null;
   return url;
 }
 
@@ -317,7 +321,7 @@ async function fetchVenues(
       rating: Number(row.avg_rating) || 0,
       events: row.events_hosted ?? 0,
       deal: undefined,
-      photo: realPhoto(row.hero_photo_url) ?? VENUE_PHOTOS[row.slug] ?? pickPhoto(row.slug, PLACE_PHOTOS),
+      photo: realPhoto(row.hero_photo_url) ?? VENUE_PHOTOS[row.slug] ?? `/place-images/reykjavik/generated/${row.slug}.svg`,
     }));
   } catch {
     return [...fallbackVenues];

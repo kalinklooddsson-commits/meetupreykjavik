@@ -613,7 +613,7 @@ export const publicGroups: PublicGroup[] = [
     summary: "A broad social landing place for newcomers building a real life in Reykjavik.",
     description: [
       "The group works because it balances practical life and social life. New members discover events, ask local questions, and get a first sense of rhythm in the city without needing three separate communities.",
-      "As a platform anchor, this group demonstrates how onboarding, recurring events, and profile identity can work together."
+      "The group connects newcomers with local knowledge, recurring social events, and an established community that makes settling in feel less isolating."
     ],
     organizer: "Marta Polak",
     banner: "/place-images/reykjavik/venues/lebowski-bar.jpg",
@@ -1605,6 +1605,70 @@ export const publicVenues: PublicVenue[] = [
     art: "linear-gradient(135deg, rgba(91,33,182,0.2), rgba(30,27,46,0.4)), url('/place-images/reykjavik/generated/gaukurinn.svg')",
     latitude: 64.1488,
     longitude: -21.9408,
+  },
+  {
+    slug: "stofan-cafe",
+    name: "Stofan Café",
+    type: "Café & Lounge",
+    area: "Vesturgata",
+    capacity: 50,
+    rating: 4.7,
+    summary: "A cozy living-room-style café with vintage furniture and board games. Perfect for relaxed meetups.",
+    description: [
+      "Stofan feels like someone's well-loved living room. Mismatched vintage furniture, warm lighting, and shelves of board games create an atmosphere that makes strangers comfortable with each other quickly.",
+      "The café is a natural fit for language exchanges, book clubs, and low-key social gatherings where conversation matters more than cocktails."
+    ],
+    address: "Vesturgata 3, 101 Reykjavik",
+    amenities: ["Board games", "Cozy seating", "Coffee & cake", "Wi-Fi"],
+    hours: [
+      { day: "Mon", open: "10:00-22:00" },
+      { day: "Tue", open: "10:00-22:00" },
+      { day: "Wed", open: "10:00-22:00" },
+      { day: "Thu", open: "10:00-22:00" },
+      { day: "Fri", open: "10:00-23:00", highlighted: true },
+      { day: "Sat", open: "10:00-23:00" },
+      { day: "Sun", open: "11:00-22:00" }
+    ],
+    deal: "",
+    upcomingEventSlugs: [],
+    gallery: [
+      "linear-gradient(135deg, rgba(180,140,80,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/stofan-cafe.svg')"
+    ],
+    art: "linear-gradient(135deg, rgba(180,140,80,0.2), rgba(245,240,232,0.15)), url('/place-images/reykjavik/generated/stofan-cafe.svg')",
+    latitude: 64.1483,
+    longitude: -21.9420,
+  },
+  {
+    slug: "catalina",
+    name: "Catalina",
+    type: "Bar & Restaurant",
+    area: "Hverfisgata",
+    capacity: 70,
+    rating: 4.5,
+    summary: "A vibrant downtown bar and restaurant with a social atmosphere and weekend DJ sets.",
+    description: [
+      "Catalina brings energy to Hverfisgata with a menu that balances comfort food and creative cocktails. The space works for both sit-down dinners and standing-room social nights.",
+      "Weekend DJ sets make it a natural choice for social meetups and networking nights that want to carry energy into the late evening."
+    ],
+    address: "Hverfisgata 12, 101 Reykjavik",
+    amenities: ["DJ nights", "Cocktail menu", "Group tables", "Central location"],
+    hours: [
+      { day: "Mon", open: "Closed" },
+      { day: "Tue", open: "17:00-23:00" },
+      { day: "Wed", open: "17:00-23:00" },
+      { day: "Thu", open: "17:00-00:00" },
+      { day: "Fri", open: "17:00-01:00", highlighted: true },
+      { day: "Sat", open: "17:00-01:00" },
+      { day: "Sun", open: "Closed" }
+    ],
+    deal: "",
+    upcomingEventSlugs: [],
+    gallery: [
+      "linear-gradient(135deg, rgba(232,97,77,0.2), rgba(30,27,46,0.3)), url('/place-images/reykjavik/generated/catalina.svg')"
+    ],
+    art: "linear-gradient(135deg, rgba(232,97,77,0.2), rgba(30,27,46,0.3)), url('/place-images/reykjavik/generated/catalina.svg')",
+    latitude: 64.1475,
+    longitude: -21.9335,
   }
 ] as const;
 

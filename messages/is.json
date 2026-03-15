@@ -1069,33 +1069,33 @@
     },
     "signals": {
       "editorialFocus": {
-        "label": "Ritstjórnarfókus",
-        "value": "Vara, staðir og samfélag borgarinnar",
-        "detail": "Núverandi skrifleiðin helst nálægt kjarnakenningunni um markaðstorgið."
+        "label": "Efni sem við fjöllum um",
+        "value": "Staðir, viðburðir og samfélag borgarinnar",
+        "detail": "Greinar um félagslíf Reykjavíkur, samkomustaði og menningarlíf."
       },
       "publishedPieces": {
-        "label": "Útgefnar greinar",
-        "detail": "Hversu mikið ritstjórnarsamhengi er til staðar á opinberum vörumerkjaflötum."
+        "label": "Greinar",
+        "detail": "Sögur og leiðbeiningar birtar á blogginu."
       },
       "averageDepth": {
-        "label": "Meðaldýpt",
+        "label": "Meðallengd",
         "sections": "{count} kaflar",
-        "detail": "Núverandi greiningardýpt í bloggbókasafninu."
+        "detail": "Dæmigerð greiningardýpt á blogginu."
       }
     },
     "latestEyebrow": "Nýjast",
     "readArticle": "Lesa grein",
     "moreArticles": "Fleiri greinar",
     "detail": {
-      "editorialAngle": "Ritstjórnarsjónarhorn",
+      "editorialAngle": "Um þessa grein",
       "category": "Flokkur",
-      "categoryDetail": "Aðalleiðin sem þessi grein styður í víðara opinbera vörumerkinu.",
+      "categoryDetail": "Efnisflokkur greinarinnar.",
       "readTime": "Lestrartími",
-      "readTimeDetail": "Áætluð dýpt fyrir þá sem koma af uppgötvunarflötum.",
+      "readTimeDetail": "Áætlaður tími til að lesa þessa grein.",
       "published": "Birt",
-      "publishedDetail": "Hversu nýlegt þetta sjónarhorn er innan vörusögunnar.",
+      "publishedDetail": "Hvenær greinin var birt.",
       "whyMatters": "Af hverju þetta skiptir máli",
-      "whyMattersBody": "Ritstjórnarlagið er til þess að gera markaðstorgið auðveldara að treysta. Það gefur meðlimum, skipuleggjendum og stöðum skýrari linsu á hvað MeetupReykjavik er í raun að reyna að verðlauna í borginni: sterkari gestgjafa, betur passandi herbergi og varanlegri endurtekin samfélög.",
+      "whyMattersBody": "Bloggið okkar deilir sögum af félagslífi Reykjavíkur — gestgjöfunum, stöðunum og samfélögunum sem gera þessa borg frábæran stað til að tengjast.",
       "continueReading": "Halda áfram að lesa"
     }
   },
