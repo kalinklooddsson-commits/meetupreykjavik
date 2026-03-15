@@ -71,11 +71,20 @@ export default async function GroupDetailPage({
       if (supabase) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const db = supabase as any;
-        const { data: membership } = await db
-          .from("group_members")
+        // Get the group UUID from slug, then check membership
+        const { data: groupRow } = await db
+          .from("groups")
           .select("id")
-          .eq("user_id", session.id)
+          .eq("slug", slug)
           .maybeSingle();
+        const { data: membership } = groupRow
+          ? await db
+              .from("group_members")
+              .select("id")
+              .eq("user_id", session.id)
+              .eq("group_id", groupRow.id)
+              .maybeSingle()
+          : { data: null };
         isMember = !!membership;
       }
     } catch {
