@@ -183,7 +183,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "Hands-on workshop covering data flow, streaming, and real app tradeoffs in modern React.",
     description: [
       "The session moves beyond slides and into implementation patterns. Participants work through a guided app slice, compare server and client boundaries, and walk away with a mental model rather than just a buzzword recap.",
-      "This format also fits the broader platform vision: serious organizers, strong partner venues, and events that feel useful enough to justify a recurring community around them."
+      "The format reflects what makes the best community events work: serious organizers, welcoming venues, and sessions useful enough to bring people back week after week."
     ],
     attendees: 61,
     capacity: 80,
@@ -220,7 +220,7 @@ export const publicEvents: PublicEvent[] = [
     groupName: "Reykjavik Foodies",
     groupSlug: "reykjavik-foodies",
     hostName: "Sara Magnusdottir",
-    area: "Bankastraeti",
+    area: "Vesturgata",
     summary: "A guided tasting focused on volcanic soils, storytelling, and a premium seated format.",
     description: [
       "The evening combines education and atmosphere. Each pour is paired with a short story, and the layout keeps the room intimate enough for questions without making it feel formal.",
@@ -305,7 +305,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A live jazz night with a hosted social layer and a streamed first set for remote members.",
     description: [
       "The event blends scene discovery with community hosting. Members can attend live for the full atmosphere or join the first set remotely before deciding to come to the next edition in person.",
-      "The hybrid format shows how the product can support different event shapes without flattening everything into the same RSVP experience."
+      "The hybrid format gives members the flexibility to experience different event shapes — join live for the full atmosphere, or tune in remotely before committing to the next edition in person."
     ],
     attendees: 34,
     capacity: 90,
@@ -467,7 +467,7 @@ export const publicEvents: PublicEvent[] = [
     groupName: "Creative Reykjavik",
     groupSlug: "creative-reykjavik",
     hostName: "Elin Thors",
-    area: "Klapparstígur",
+    area: "Vesturgata",
     summary: "An open mic night for poetry, spoken word, and short prose in a live music cafe with warm acoustics and attentive listeners.",
     description: [
       "The format alternates between featured readers and open slots. Sign-up happens at the door and each performer gets five minutes. The host keeps the pacing warm and the transitions smooth, so even first-time readers feel supported.",
@@ -655,7 +655,7 @@ export const publicGroups: PublicGroup[] = [
     summary: "Art nights, gallery walks, and small format culture events with a social core.",
     description: [
       "The group makes the arts scene feel approachable. Events are designed to reduce the barrier to entry, whether you come from the creative industries or simply want better ways to experience the city.",
-      "Its events also show how venue partnerships can serve culture without making the product feel corporate or generic."
+      "Its events show how venue partnerships can serve culture while keeping the atmosphere intimate, local, and genuinely creative."
     ],
     organizer: "Elin Thors",
     banner: "/place-images/reykjavik/venues/kex-hostel.jpg",
@@ -854,7 +854,7 @@ export const publicVenues: PublicVenue[] = [
     slug: "bryggjuhusid",
     name: "Bryggjuhusid",
     type: "Wine Bar",
-    area: "Bankastraeti",
+    area: "Vesturgata",
     capacity: 40,
     rating: 4.9,
     summary: "A premium small-format wine venue suited to guided tastings and intimate hosted events.",
@@ -1096,7 +1096,7 @@ export const publicVenues: PublicVenue[] = [
     slug: "messinn",
     name: "Messinn",
     type: "Restaurant",
-    area: "Lækjargata",
+    area: "Miðborg",
     capacity: 60,
     rating: 4.8,
     summary: "Famous for sizzling fish pans. A seafood institution perfect for group dining events.",
@@ -1544,7 +1544,7 @@ export const publicVenues: PublicVenue[] = [
   },
   {
     slug: "esja-trailhead",
-    name: "Esja Trailhead Basecamp",
+    name: "Esja Trailhead",
     type: "Outdoor Venue",
     area: "Mosfellsbaer",
     capacity: 50,
@@ -1619,8 +1619,8 @@ export const blogPosts: BlogPost[] = [
     hero: "/place-images/reykjavik/venues/kex-hostel.jpg",
     sections: [
       {
-        heading: "The problem with generic event products",
-        body: "Most products flatten the experience into a feed. Discovery becomes noisy, quality becomes inconsistent, and the burden shifts to users to work out which hosts and venues are actually trustworthy.",
+        heading: "The problem with generic event platforms",
+        body: "Most platforms flatten the experience into a feed. Discovery becomes noisy, quality becomes inconsistent, and the burden shifts to users to work out which hosts and venues are actually trustworthy.",
       },
       {
         heading: "Why local venues matter",
@@ -1642,7 +1642,7 @@ export const blogPosts: BlogPost[] = [
     hero: "/place-images/reykjavik/venues/mokka.jpg",
     sections: [
       {
-        heading: "Arrival is the product",
+        heading: "Arrival is the experience",
         body: "For new attendees, the emotional journey starts before the event itself. Clear instructions, visible hosts, and simple first steps change retention more than flashy branding.",
       },
       {
@@ -1666,7 +1666,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "Partnerships can benefit everyone",
-        body: "When venues get better visibility and organizers get better tooling, members get a better night out. The best marketplace products align those incentives instead of forcing them apart.",
+        body: "When venues get better visibility and organizers get better tools, members get a better night out. The best community platforms align those incentives instead of forcing them apart.",
       }
     ],
   },
@@ -1741,7 +1741,7 @@ export const aboutTeam = [
   {
     name: "Meetup Reykjavik",
     role: "Platform team",
-    note: "Setting the product direction, partnerships, and community tone.",
+    note: "Setting the direction, partnerships, and community tone.",
   },
   {
     name: "Community hosts",
@@ -1802,11 +1802,11 @@ export const organizerTiers = [
   {
     name: "Organizer Studio",
     price: "19,900 ISK / mo",
-    description: "Built for serious hosts running premium formats, sponsor inventory, and multiple recurring series.",
+    description: "Built for serious hosts running premium formats, sponsor partnerships, and multiple recurring series.",
     features: [
       "Priority support and launch reviews",
       "Featured placement eligibility",
-      "Sponsor and partner inventory",
+      "Sponsor and partner management",
       "Advanced audience segmentation"
     ],
   }
@@ -1816,7 +1816,7 @@ export const venueTiers = [
   {
     name: "Venue Listing",
     price: "0 ISK",
-    description: "Basic listing visibility and review access before a venue starts using the workflow product.",
+    description: "Basic listing visibility and review access for venues getting started on the platform.",
     features: ["Basic public listing", "Application review", "No booking workflow"],
   },
   {
@@ -1833,12 +1833,12 @@ export const venueTiers = [
   {
     name: "Venue Premium",
     price: "19,900 ISK / mo",
-    description: "Featured placement, premium analytics, and higher-leverage inventory for serious venue operators.",
+    description: "Featured placement, premium analytics, and advanced tools for serious venue operators.",
     features: [
       "Featured placement",
       "Premium analytics and trend views",
       "Priority venue matching",
-      "Sponsored inventory support"
+      "Sponsored listing support"
     ],
   }
 ] as const;
@@ -1854,7 +1854,7 @@ export const pricingFaq = [
   },
   {
     question: "What do venues pay?",
-    answer: "Venues can start as a basic listing, but the actual booking, deal, and analytics product is paid. Serious partner venues move onto monthly plans because the workflow value is part of the business, not free exposure.",
+    answer: "Venues can start with a free listing, but booking tools, deal management, and analytics are part of paid plans. Serious partner venues move onto monthly plans because the tools become part of how they run their business.",
   },
   {
     question: "How are tickets and commission handled?",
