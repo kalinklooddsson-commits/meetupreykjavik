@@ -975,6 +975,11 @@ export const venuePortalData = {
       "Sat 21 Mar half capacity due to live sports setup",
       "Sun 29 Mar unavailable after 21:00 for staff training",
     ],
+    blockedDates: [
+      { id: "bd-1", date: "2026-03-13", reason: "Private corporate booking" },
+      { id: "bd-2", date: "2026-03-21", reason: "Half capacity — live sports setup" },
+      { id: "bd-3", date: "2026-03-29", reason: "Staff training after 21:00" },
+    ],
     weeklyGrid: [
       { day: "Mon", blocks: ["17:00-22:00 Open", "22:00-00:00 Service only"] },
       { day: "Tue", blocks: ["18:00-22:00 Open", "Private dining possible"] },

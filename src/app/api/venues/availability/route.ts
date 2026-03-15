@@ -137,3 +137,121 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+
+/**
+ * POST /api/venues/availability
+ *
+ * Add a blocked date.
+ * Accepts { blocked_date: string, reason?: string }
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getUser();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.accountType !== "venue" && session.accountType !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const body = await request.json();
+    const { blocked_date, reason } = body as {
+      blocked_date: string;
+      reason?: string | null;
+    };
+
+    if (!blocked_date) {
+      return NextResponse.json({ error: "Missing blocked_date" }, { status: 400 });
+    }
+
+    const supabase = createSupabaseAdminClient();
+    if (!supabase) {
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+    const venue = await resolveVenue(session, body, db);
+
+    if (!venue) {
+      return NextResponse.json({ error: "No venue found" }, { status: 404 });
+    }
+
+    const { data, error } = await db.from("venue_availability").insert({
+      venue_id: venue.id,
+      specific_date: blocked_date,
+      start_time: "00:00",
+      end_time: "23:59",
+      is_blocked: true,
+      is_recurring: false,
+      notes: reason || "Blocked",
+    }).select("id").maybeSingle();
+
+    if (error) {
+      console.error("Blocked date insert failed:", error);
+      return NextResponse.json({ error: "Insert failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true, id: data?.id });
+  } catch (error) {
+    console.error("Venue blocked date error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+/**
+ * DELETE /api/venues/availability
+ *
+ * Remove a blocked date by id.
+ * Accepts { id: string }
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getUser();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.accountType !== "venue" && session.accountType !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const body = await request.json();
+    const { id } = body as { id: string };
+
+    if (!id) {
+      return NextResponse.json({ error: "Missing id" }, { status: 400 });
+    }
+
+    const supabase = createSupabaseAdminClient();
+    if (!supabase) {
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+    const venue = await resolveVenue(session, body, db);
+
+    if (!venue) {
+      return NextResponse.json({ error: "No venue found" }, { status: 404 });
+    }
+
+    const { error } = await db
+      .from("venue_availability")
+      .delete()
+      .eq("id", id)
+      .eq("venue_id", venue.id)
+      .eq("is_blocked", true);
+
+    if (error) {
+      console.error("Blocked date delete failed:", error);
+      return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("Venue blocked date delete error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}

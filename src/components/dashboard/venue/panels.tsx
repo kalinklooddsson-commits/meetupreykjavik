@@ -260,7 +260,7 @@ export function VenueAvailabilityStudio({
             </div>
 
             {editingDay === day.day && (
-              <div className="mt-3 flex gap-2">
+              <div className="relative z-10 mt-3 flex gap-2">
                 <input
                   type="text"
                   value={newBlock}
