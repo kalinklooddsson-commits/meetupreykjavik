@@ -116,7 +116,7 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     area: (venue?.city as string) ?? mockEvent?.area ?? "Reykjavik",
     summary: isGenericEventDesc && mockEvent ? mockEvent.summary : dbDesc.replace(/<[^>]+>/g, "").slice(0, 200),
     description: isGenericEventDesc && mockEvent ? mockEvent.description : (dbDesc ? htmlToTextParagraphs(dbDesc) : []),
-    attendees: (row.rsvp_count as number) ?? mockEvent?.attendees ?? 0,
+    attendees: (row.rsvp_count as number) ?? 0,
     capacity: (row.attendee_limit as number) ?? mockEvent?.capacity ?? 50,
     priceLabel: isFree ? (mockEvent?.priceLabel ?? "Free") : (mockEvent?.priceLabel ?? "Paid"),
     ageLabel,
@@ -469,7 +469,9 @@ export async function fetchEvents(options?: {
         // Also fetch slugs of non-published events to suppress their mock versions
         const allResult = await getEvents({ limit: 200 });
         const allDbSlugs = new Set(allResult.data.map((r) => (r as unknown as Record<string, unknown>).slug as string));
-        const missingMocks = publicEvents.filter((e) => !dbSlugs.has(e.slug) && !allDbSlugs.has(e.slug));
+        const missingMocks = publicEvents
+          .filter((e) => !dbSlugs.has(e.slug) && !allDbSlugs.has(e.slug))
+          .map((e) => ({ ...e, attendees: 0 })); // Zero out fake attendee counts on mock fillers
         return [...dbEvents, ...missingMocks].slice(0, options?.limit ?? 50);
       }
     } catch {

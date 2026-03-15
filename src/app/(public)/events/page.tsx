@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { fetchEvents, fetchGroups, fetchVenues } from "@/lib/data";
+import { fetchEvents, fetchGroups } from "@/lib/data";
 import { EventsIndexScreen } from "@/components/public/public-pages";
 import { categories as homepageCategories } from "@/lib/home-data";
 
@@ -30,11 +30,14 @@ export default async function EventsPage({
   searchParams: Promise<{ q?: string; category?: string; when?: string }>;
 }) {
   const { q, category, when } = await searchParams;
-  const [events, groups, venues] = await Promise.all([
+  const [events, groups] = await Promise.all([
     fetchEvents(),
     fetchGroups(),
-    fetchVenues(),
   ]);
+
+  // Count unique venues referenced by events (honest number, same approach as homepage)
+  const uniqueVenueSlugs = new Set(events.map((e) => e.venueSlug).filter(Boolean));
+  const venueCount = uniqueVenueSlugs.size;
 
   let filteredEvents = events;
 
@@ -98,7 +101,7 @@ export default async function EventsPage({
     <EventsIndexScreen
       events={filteredEvents}
       groupCount={groups.length}
-      venueCount={venues.length}
+      venueCount={venueCount}
       searchQuery={q}
       activeCategory={category}
       activeWhen={when}

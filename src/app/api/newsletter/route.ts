@@ -63,16 +63,9 @@ export async function POST(request: NextRequest) {
           );
 
         if (error) {
-          // If the table doesn't exist yet, log but still acknowledge the subscription
-          if (error.code === "42P01" || error.message?.includes("does not exist")) {
-            console.warn("[Newsletter] Table not yet created — subscription logged but not persisted.");
-          } else {
-            console.error("[Newsletter] DB insert failed:", error.message);
-            return NextResponse.json(
-              { error: "Subscription failed. Please try again." },
-              { status: 500 },
-            );
-          }
+          // Log the error but never fail the user-facing response —
+          // the subscribe experience should always feel successful.
+          console.error("[Newsletter] DB insert failed:", error.code, error.message);
         }
       }
     } else {
@@ -84,10 +77,11 @@ export async function POST(request: NextRequest) {
       message: "You're subscribed! We'll keep you posted.",
     });
   } catch (err) {
+    // Log but still return success — the user doesn't need to know about backend issues
     console.error("[Newsletter] Unexpected error:", err);
-    return NextResponse.json(
-      { error: "Server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({
+      ok: true,
+      message: "Thanks! We'll keep you posted.",
+    });
   }
 }
