@@ -96,7 +96,11 @@ export default async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (isProtectedRoute(pathname) && !user) {
-      return redirectToLogin(request, pathname);
+      // Fallback: check mock session cookie for demo/mock accounts
+      const hasMockSession = request.cookies.has(MOCK_SESSION_COOKIE);
+      if (!hasMockSession) {
+        return redirectToLogin(request, pathname);
+      }
     }
   } else if (supabaseUrl && supabaseAnonKey) {
     // Supabase is configured but ENABLE_SUPABASE_AUTH is not "true" — still

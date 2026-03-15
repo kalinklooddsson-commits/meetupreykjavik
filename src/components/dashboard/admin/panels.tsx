@@ -2130,11 +2130,17 @@ export function AdminActionButton({
   async function handleClick() {
     setLoading(true);
     try {
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: actionKey, action: actionLabel.toLowerCase() }),
       });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        toast("error", (body as Record<string, string>).error ?? `Could not complete "${actionLabel}".`);
+        setLoading(false);
+        return;
+      }
       setDone(true);
       toast("success", `Action "${actionLabel}" completed`);
     } catch {

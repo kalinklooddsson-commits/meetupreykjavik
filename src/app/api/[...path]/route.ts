@@ -611,12 +611,14 @@ async function handleLiveAuthRequest(request: NextRequest, key: string) {
         return validationMessage(error.message);
       }
 
-      return routeClient.applyCookies(
-        successResponse({
-          user: null,
-          accountType: null,
-          redirectTo: "/login",
-        }),
+      return clearMockSessionCookie(
+        routeClient.applyCookies(
+          successResponse({
+            user: null,
+            accountType: null,
+            redirectTo: "/login",
+          }),
+        ),
       );
     }
 

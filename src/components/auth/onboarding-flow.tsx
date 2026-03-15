@@ -136,7 +136,7 @@ export function OnboardingFlow({
     startTransition(async () => {
       // Persist to database
       try {
-        await fetch("/api/onboarding/complete", {
+        const res = await fetch("/api/onboarding/complete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -145,6 +145,9 @@ export function OnboardingFlow({
             avatarUrl: photoUrl || undefined,
           }),
         });
+        if (!res.ok) {
+          console.warn("Onboarding save failed:", res.status);
+        }
       } catch {
         // Best-effort: save locally even if API call fails
       }

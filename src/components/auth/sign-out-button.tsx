@@ -19,7 +19,10 @@ export function SignOutButton({ className }: { className?: string } = {}) {
       disabled={isPending}
       onClick={() =>
         startTransition(async () => {
-          await fetch("/api/auth/logout", { method: "POST" });
+          const res = await fetch("/api/auth/logout", { method: "POST" });
+          if (!res.ok) {
+            console.error("Logout failed:", res.status);
+          }
           clearUser();
           router.push("/login");
           router.refresh();

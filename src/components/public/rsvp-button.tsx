@@ -119,8 +119,8 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel, 
     if (userLoading) return;
 
     if (!user) {
-      // Not logged in — use localStorage as fallback
-      syncFromStorage();
+      // Not logged in — always show idle state (no stale localStorage "going")
+      setState("idle");
       return;
     }
 

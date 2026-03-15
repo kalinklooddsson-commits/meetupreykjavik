@@ -78,6 +78,15 @@ export function extractOgImageUrl(art: string | undefined | null): string | null
 
 // ── Mappers: DB rows with joins → public presentation types ──
 
+/** Extract live RSVP count from Supabase `rsvps(count)` join. */
+function extractRsvpCount(row: Record<string, unknown>): number | null {
+  const rsvps = row.rsvps;
+  if (Array.isArray(rsvps) && rsvps.length > 0 && typeof rsvps[0]?.count === "number") {
+    return rsvps[0].count;
+  }
+  return null;
+}
+
 function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
   const venue = row.venues as Record<string, unknown> | null;
   const host = row.profiles as Record<string, unknown> | null;
@@ -139,7 +148,7 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     area: (venue?.city as string) ?? mockEvent?.area ?? "Reykjavik",
     summary: isGenericEventDesc && mockEvent ? mockEvent.summary : dbDesc.replace(/<[^>]+>/g, "").slice(0, 200),
     description: isGenericEventDesc && mockEvent ? mockEvent.description : (dbDesc ? htmlToTextParagraphs(dbDesc) : []),
-    attendees: (row.rsvp_count as number) ?? 0,
+    attendees: extractRsvpCount(row) ?? (row.rsvp_count as number) ?? 0,
     capacity: (row.attendee_limit as number) ?? mockEvent?.capacity ?? 50,
     priceLabel: isFree ? (mockEvent?.priceLabel ?? "Free") : (mockEvent?.priceLabel ?? "Paid"),
     ageLabel,
@@ -434,6 +443,7 @@ async function getEventBySlugWithRatings(slug: string) {
       profiles:host_id (*),
       categories (*),
       ticket_tiers (*),
+      rsvps ( count ),
       event_ratings ( id, rating, text, created_at, profiles:user_id ( display_name ) ),
       event_comments ( id, text, created_at, profiles:user_id ( display_name ) )
     `)
