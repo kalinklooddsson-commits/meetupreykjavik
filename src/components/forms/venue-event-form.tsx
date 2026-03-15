@@ -204,11 +204,11 @@ export function VenueEventForm({
       eventType: form.eventType,
       startsAt:
         form.startsOn && form.startTime
-          ? new Date(`${form.startsOn}T${form.startTime}`).toISOString()
+          ? new Date(`${form.startsOn}T${form.startTime}:00+00:00`).toISOString()
           : undefined,
       endsAt:
         form.startsOn && form.endTime
-          ? new Date(`${form.startsOn}T${form.endTime}`).toISOString()
+          ? new Date(`${form.startsOn}T${form.endTime}:00+00:00`).toISOString()
           : undefined,
       venueName: venueName,
       venueAddress: form.venueAddress || undefined,

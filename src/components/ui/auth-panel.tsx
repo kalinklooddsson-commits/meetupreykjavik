@@ -150,7 +150,13 @@ export function AuthPanel({
     if (payload.data?.redirectTo) {
       refreshUser();
       const redirectParam = searchParams.get("redirect");
-      const target = redirectParam || payload.data.redirectTo;
+      // Validate redirect is a safe relative path (prevent open redirect attacks)
+      const isSafeRedirect =
+        redirectParam &&
+        redirectParam.startsWith("/") &&
+        !redirectParam.startsWith("//") &&
+        !redirectParam.includes("://");
+      const target = isSafeRedirect ? redirectParam : payload.data.redirectTo;
       router.push(target as Route);
       router.refresh();
     }

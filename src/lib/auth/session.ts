@@ -125,7 +125,7 @@ async function ensureSupabaseProfile(seed: SupabaseProfileSeed) {
 
   const { data: existing, error: existingError } = await admin
     .from("profiles")
-    .select("id, display_name, slug, email, locale, account_type")
+    .select("id, display_name, slug, email, locale, account_type, is_premium, premium_tier")
     .eq("id", seed.id)
     .maybeSingle();
 
@@ -155,7 +155,7 @@ async function ensureSupabaseProfile(seed: SupabaseProfileSeed) {
   const { data, error } = await admin
     .from("profiles")
     .insert(insertPayload as never)
-    .select("id, display_name, slug, email, locale, account_type")
+    .select("id, display_name, slug, email, locale, account_type, is_premium, premium_tier")
     .single();
 
   if (error) {

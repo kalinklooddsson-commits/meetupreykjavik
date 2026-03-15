@@ -196,10 +196,10 @@ export function OrganizerEventWizard({
       groupSlug: form.groupSlug || null,
       eventType: form.locationMode === "online" ? "online" : "in_person",
       startsAt: form.startsOn && form.startTime
-        ? new Date(`${form.startsOn}T${form.startTime}`).toISOString()
+        ? new Date(`${form.startsOn}T${form.startTime}:00+00:00`).toISOString()
         : null,
       endsAt: form.startsOn && form.endTime
-        ? new Date(`${form.startsOn}T${form.endTime}`).toISOString()
+        ? new Date(`${form.startsOn}T${form.endTime}:00+00:00`).toISOString()
         : null,
       venueSlug: form.venueSlug || null,
       venueName: selectedVenue?.name ?? form.venueAddress ?? null,
@@ -231,7 +231,10 @@ export function OrganizerEventWizard({
     };
   }
 
+  const [submitting, setSubmitting] = useState(false);
+
   async function saveDraft(action: "draft" | "publish-ready") {
+    if (submitting) return;
     // Always save locally first
     if (!isEdit) {
       writeSessionDraft(
@@ -250,6 +253,7 @@ export function OrganizerEventWizard({
 
     if (action === "publish-ready") {
       // Submit to API
+      setSubmitting(true);
       setMessage(isEdit ? "Saving changes..." : "Submitting event to server...");
       try {
         const url = isEdit ? `/api/events/${eventSlug}` : "/api/events";
@@ -278,6 +282,8 @@ export function OrganizerEventWizard({
         setMessage(isEdit
           ? "Could not reach the server. Changes were not saved."
           : "Could not reach the server. Please try again later.");
+      } finally {
+        setSubmitting(false);
       }
     } else {
       setMessage("Event draft saved locally. Nothing has been published or deployed.");
@@ -887,10 +893,10 @@ export function OrganizerEventWizard({
                 <button
                   type="button"
                   onClick={() => saveDraft("publish-ready")}
-                  disabled={!steps.every((_, i) => stepIsReady(i, form))}
+                  disabled={submitting || !steps.every((_, i) => stepIsReady(i, form))}
                   className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
-                  {isEdit ? "Save changes" : "Mark ready for review"}
+                  {submitting ? "Submitting…" : isEdit ? "Save changes" : "Mark ready for review"}
                   <CheckCheck className="h-4 w-4" />
                 </button>
               </div>

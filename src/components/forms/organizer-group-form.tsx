@@ -81,19 +81,23 @@ export function OrganizerGroupForm({
     setForm((current) => ({ ...current, [field]: value }));
   }
 
+  const [submitting, setSubmitting] = useState(false);
+
   async function saveDraft() {
+    if (submitting) return;
     const payload = {
       ...form,
       slug,
       tags,
       organizerName,
-      status: form.accepted ? "pending" : "pending",
+      status: form.accepted ? "pending_review" : "draft",
     };
 
     writeSessionDraft("meetupreykjavik-group-draft", payload);
     setSavedSnapshot(JSON.stringify(form));
 
     if (form.accepted) {
+      setSubmitting(true);
       setMessage("Submitting group to server...");
       try {
         const response = await fetch("/api/groups", {
@@ -117,6 +121,8 @@ export function OrganizerGroupForm({
         }
       } catch {
         setMessage("Could not reach the server. Please try again later.");
+      } finally {
+        setSubmitting(false);
       }
     } else {
       setMessage("Group draft saved locally. Accept the checklist when you are ready to submit.");
@@ -402,9 +408,10 @@ export function OrganizerGroupForm({
               <button
                 type="button"
                 onClick={saveDraft}
-                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5"
+                disabled={submitting}
+                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white shadow-[0_16px_40px_rgba(232,97,77,0.24)] transition hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Save local group draft
+                {submitting ? "Submitting…" : "Save local group draft"}
                 <CheckCheck className="h-4 w-4" />
               </button>
               <div className="text-sm text-brand-text-muted">
