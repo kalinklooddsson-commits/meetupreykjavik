@@ -37,7 +37,7 @@ export async function OrganizerEventsScreen() {
   const data = await getOrganizerPortalData();
   const tier = resolveOrganizerTier(null);
   const maxEvents = getMaxActiveEvents(null);
-  const activeCount = data.events.length;
+  const activeCount = data.events.filter((e) => e.status !== "cancelled").length;
   const atLimit = tier === "starter" && activeCount >= maxEvents;
 
   return (

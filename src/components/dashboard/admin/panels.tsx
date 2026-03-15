@@ -708,7 +708,7 @@ export function AdminGroupOperationsDesk({
         rows={filtered.map((g) => ({
           key: g.key,
           cells: [
-            <a key="n" href={`/groups/${g.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-primary hover:underline">{g.name}</a>,
+            <a key="n" href={`/groups/${g.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-coral hover:underline">{g.name}</a>,
             g.organizer,
             <ToneBadge key="s" tone={toneForStatus(g.status)}>{g.status}</ToneBadge>,
             <div key="a" className="flex gap-1.5">
@@ -727,8 +727,22 @@ export function AdminGroupOperationsDesk({
                   <Archive className="h-3.5 w-3.5" /> Archive
                 </button>
               )}
+              {g.status !== "Featured" && g.status !== "Rejected" && g.status !== "Suspended" && (
+                <button type="button" className={btnGhost} onClick={() => updateGroup(g.key, "Featured")}>
+                  <Star className="h-3.5 w-3.5 text-brand-coral" /> Feature
+                </button>
+              )}
+              {g.status !== "Suspended" && (
+                <button type="button" className={btnGhost} onClick={() => {
+                  if (window.confirm(`Are you sure you want to suspend the group "${g.name}"?`)) {
+                    updateGroup(g.key, "Suspended");
+                  }
+                }}>
+                  <Ban className="h-3.5 w-3.5 text-brand-coral" /> Suspend
+                </button>
+              )}
               <button type="button" className={btnGhost} onClick={() => window.open(`/groups/${g.key}`, "_blank")}>
-                <Edit2 className="h-3.5 w-3.5" /> View
+                <Eye className="h-3.5 w-3.5" /> View
               </button>
             </div>,
           ],
@@ -835,7 +849,7 @@ export function AdminEventOperationsDesk({
         rows={filtered.map((e) => ({
           key: e.key,
           cells: [
-            <a key="t" href={`/events/${e.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-primary hover:underline">{e.title}</a>,
+            <a key="t" href={`/events/${e.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-coral hover:underline">{e.title}</a>,
             <ToneBadge key="c" tone="neutral">{e.category}</ToneBadge>,
             e.venue,
             e.date,

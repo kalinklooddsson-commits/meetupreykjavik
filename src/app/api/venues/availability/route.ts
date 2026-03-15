@@ -36,14 +36,28 @@ export async function PATCH(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Find venue owned by this user (try owner_id, then slug for demo accounts)
+    // Admin users can specify venue_id or venue_slug directly in the request body
     let venue: { id: string } | null = null;
-    const { data: venueByOwner } = await db
-      .from("venues")
-      .select("id")
-      .eq("owner_id", session.id)
-      .maybeSingle();
-    venue = venueByOwner;
+    if (session.accountType === "admin" && body.venue_id) {
+      venue = { id: body.venue_id };
+    } else if (session.accountType === "admin" && body.venue_slug) {
+      const { data: venueBySlug } = await db
+        .from("venues")
+        .select("id")
+        .eq("slug", body.venue_slug)
+        .maybeSingle();
+      venue = venueBySlug;
+    }
+
+    // Find venue owned by this user (try owner_id, then slug for demo accounts)
+    if (!venue) {
+      const { data: venueByOwner } = await db
+        .from("venues")
+        .select("id")
+        .eq("owner_id", session.id)
+        .maybeSingle();
+      venue = venueByOwner;
+    }
 
     // Try looking up venue via the user's email → profile → owner_id chain
     if (!venue && session.email) {

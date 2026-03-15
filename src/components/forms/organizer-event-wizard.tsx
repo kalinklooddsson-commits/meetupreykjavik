@@ -90,8 +90,8 @@ function formatIsk(value: number) {
 function createInitialForm() {
   return {
     title: "",
-    groupSlug: publicGroups[0]?.slug ?? "",
-    category: (categories[0]?.name ?? "Nightlife & Social") as string,
+    groupSlug: "",
+    category: "",
     eventType: "in_person",
     tags: "",
     startsOn: "",
@@ -101,7 +101,7 @@ function createInitialForm() {
     recurrenceRule: "",
     recurrenceEnds: "",
     locationMode: "venue",
-    venueSlug: publicVenues[0]?.slug ?? "",
+    venueSlug: "",
     venueAddress: "",
     onlineLink: "",
     attendeeLimit: 50,

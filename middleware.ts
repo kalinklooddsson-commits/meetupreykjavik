@@ -32,7 +32,7 @@ export default async function middleware(request: NextRequest) {
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob: https:",
     "connect-src 'self' https: ws: wss:",
-    "frame-src https://www.paypal.com https://www.sandbox.paypal.com https://www.openstreetmap.org",
+    "frame-src https://www.paypal.com https://www.sandbox.paypal.com https://www.openstreetmap.org https://maps.google.com https://*.google.com",
     "frame-ancestors 'none'",
     "object-src 'none'",
     "base-uri 'self'",

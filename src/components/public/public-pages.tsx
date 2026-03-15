@@ -3615,13 +3615,13 @@ export function PricingScreen() {
       </section>
 
       {/* Feature comparison */}
-      <section className="overflow-hidden border-t border-gray-200 bg-brand-basalt">
+      <section className="border-t border-gray-200 bg-brand-basalt">
         <div className="section-shell py-12">
           <h2 className="font-editorial mb-2 text-center text-2xl !text-white">{t("comparison.title")}</h2>
           <p className="mb-8 text-center text-sm text-gray-400">{t("comparison.description")}</p>
           <div className="mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.memberPlans")}</h3>
-            <div className="overflow-x-auto rounded-xl border border-white/15">
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 rounded-xl border border-white/15">
               <table className="w-full min-w-[540px] text-left text-sm">
                 <thead><tr className="border-b border-white/15 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{userTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
@@ -3634,7 +3634,7 @@ export function PricingScreen() {
           </div>
           <div className="mb-10">
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.organizerPlans")}</h3>
-            <div className="overflow-x-auto rounded-xl border border-white/15">
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 rounded-xl border border-white/15">
               <table className="w-full min-w-[540px] text-left text-sm">
                 <thead><tr className="border-b border-white/15 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{organizerTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Organizer ", "")}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
@@ -3647,7 +3647,7 @@ export function PricingScreen() {
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold text-white">{t("comparison.venuePlans")}</h3>
-            <div className="overflow-x-auto rounded-xl border border-white/15">
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 rounded-xl border border-white/15">
               <table className="w-full min-w-[540px] text-left text-sm">
                 <thead><tr className="border-b border-white/15 bg-white/5"><th className="px-5 py-3 font-medium text-gray-400">{t("comparison.feature")}</th>{venueTiers.map((ti) => (<th key={ti.name} className="px-5 py-3 font-semibold text-white">{ti.name.replace("Venue ", "")}</th>))}</tr></thead>
                 <tbody className="text-gray-300">
