@@ -125,7 +125,6 @@ export async function MemberTransactionsScreen() {
         <KeyValueList
           items={[
             { key: "plan", label: "Current plan", value: tier === "free" ? "Free" : tier === "plus" ? "Plus" : "Pro" },
-            { key: "tier", label: "Tier", value: tier === "free" ? "Free" : tier === "plus" ? "Plus" : "Pro" },
             {
               key: "status",
               label: "Status",

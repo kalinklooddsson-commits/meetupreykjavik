@@ -39,6 +39,8 @@ function venueLinks(activeKey: string) {
     { key: "deals", label: "Deals", href: "/venue/deals" as Route },
     { key: "events", label: "Events", href: "/venue/events" as Route },
     { key: "reviews", label: "Reviews", href: "/venue/reviews" as Route },
+    { key: "messages", label: "Messages", href: "/venue/messages" as Route },
+    { key: "notifications", label: "Notifications", href: "/venue/notifications" as Route },
     { key: "analytics", label: "Analytics", href: "/venue/analytics" as Route },
     { key: "profile", label: "Profile", href: "/venue/profile" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
@@ -315,7 +317,7 @@ export async function VenueMessagesScreen() {
       eyebrow="Venue portal"
       title="Messages"
       description="All conversations with organizers and platform support."
-      links={venueLinks("overview")}
+      links={venueLinks("messages")}
       roleMode="venue"
     >
       {/* ── Compose button ──────────────────────────────────── */}
@@ -374,7 +376,7 @@ export async function VenueNotificationsScreen() {
       eyebrow="Venue portal"
       title="Notifications"
       description="Action items, alerts, and venue updates."
-      links={venueLinks("overview")}
+      links={venueLinks("notifications")}
       roleMode="venue"
     >
       <Surface

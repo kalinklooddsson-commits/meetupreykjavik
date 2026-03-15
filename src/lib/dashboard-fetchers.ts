@@ -399,7 +399,11 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
             return {
               ...section,
               items: section.items.map((item: { label: string; value: string }) => {
-                if (item.label === "Current plan") return { ...item, value: isPremium ? ((realProfile as Record<string, unknown>)?.premium_tier as string ?? "Plus") : "Free" };
+                if (item.label === "Current plan") {
+                  const rawTier = (realProfile as Record<string, unknown>)?.premium_tier as string | undefined;
+                  const displayTier = rawTier === "plus" ? "Plus" : rawTier === "pro" ? "Pro" : rawTier === "supporter" ? "Plus" : rawTier ?? "Plus";
+                  return { ...item, value: isPremium ? displayTier : "Free" };
+                }
                 if (item.label === "Renewal date") return { ...item, value: isPremium ? item.value : "—" };
                 if (item.label === "Stored invoices") return { ...item, value: isPremium ? item.value : "—" };
                 return item;
