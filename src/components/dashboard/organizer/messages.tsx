@@ -22,6 +22,7 @@ function organizerLinks(activeKey: string) {
     { key: "venues", label: "Venues", href: "/organizer/venues" as Route },
     { key: "analytics", label: "Analytics", href: "/organizer/analytics" as Route },
     { key: "messages", label: "Messages", href: "/organizer/messages" as Route },
+    { key: "notifications", label: "Notifications", href: "/organizer/notifications" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
@@ -147,7 +148,7 @@ export async function OrganizerNotificationsScreen() {
       eyebrow="Organizer portal"
       title="Notifications"
       description="System alerts, approval reminders, and milestone updates for your events."
-      links={organizerLinks("messages")}
+      links={organizerLinks("notifications")}
       roleMode="organizer"
     >
       <div className="space-y-6">

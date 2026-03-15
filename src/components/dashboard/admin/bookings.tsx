@@ -29,6 +29,10 @@ function adminLinks(activeKey: string) {
     { key: "messages", label: "Messages", href: "/admin/messages" as Route },
     { key: "settings", label: "Settings", href: "/admin/settings" as Route },
     { key: "audit", label: "Audit Log", href: "/admin/audit" as Route },
+    { key: "analytics", label: "Analytics", href: "/admin/analytics" as Route },
+    { key: "content", label: "Content", href: "/admin/content" as Route },
+    { key: "comms", label: "Comms", href: "/admin/comms" as Route },
+    { key: "moderation", label: "Moderation", href: "/admin/moderation" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 

@@ -33,6 +33,10 @@ function adminLinks(activeKey: string) {
     { key: "messages", label: "Messages", href: "/admin/messages" as Route },
     { key: "settings", label: "Settings", href: "/admin/settings" as Route },
     { key: "audit", label: "Audit Log", href: "/admin/audit" as Route },
+    { key: "analytics", label: "Analytics", href: "/admin/analytics" as Route },
+    { key: "content", label: "Content", href: "/admin/content" as Route },
+    { key: "comms", label: "Comms", href: "/admin/comms" as Route },
+    { key: "moderation", label: "Moderation", href: "/admin/moderation" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
@@ -142,7 +146,7 @@ export async function AdminContentScreen() {
       eyebrow="Admin portal"
       title="Content"
       description="Manage homepage sections, event categories, and the editorial blog queue."
-      links={adminLinks("settings")}
+      links={adminLinks("content")}
       variant="admin"
       roleMode="admin"
     >
@@ -162,7 +166,7 @@ export async function AdminModerationScreen() {
       eyebrow="Admin portal"
       title="Moderation"
       description="Review reports, manage banned accounts, and track moderation actions."
-      links={adminLinks("settings")}
+      links={adminLinks("moderation")}
       variant="admin"
       roleMode="admin"
     >
@@ -211,7 +215,7 @@ export async function AdminCommsScreen() {
       eyebrow="Admin portal"
       title="Communications"
       description="Manage email campaigns, audience targeting, and communication history."
-      links={adminLinks("settings")}
+      links={adminLinks("comms")}
       variant="admin"
       roleMode="admin"
     >
