@@ -5,7 +5,7 @@ import {
   VenueDetailScreen,
 } from "@/components/public/public-pages";
 import { VenueJsonLd } from "@/components/public/json-ld";
-import { fetchVenueBySlug } from "@/lib/data";
+import { fetchVenueBySlug, extractOgImageUrl } from "@/lib/data";
 import { getSourcedPlaceBySlug, getSourcedPlaces } from "@/lib/reykjavik-source-data";
 
 export async function generateMetadata({
@@ -28,6 +28,7 @@ export async function generateMetadata({
       `${venue.name} — a ${venue.type} in ${venue.area}, Reykjavik`;
     const canonicalUrl = `/venues/${venue.slug}`;
 
+    const ogImage = extractOgImageUrl(venue.art);
     return {
       title,
       description,
@@ -39,15 +40,15 @@ export async function generateMetadata({
         description,
         url: canonicalUrl,
         type: "profile",
-        images: venue.art
-          ? [{ url: venue.art, alt: venue.name }]
+        images: ogImage
+          ? [{ url: ogImage, alt: venue.name }]
           : undefined,
       },
       twitter: {
         card: "summary_large_image",
         title,
         description,
-        images: venue.art ? [venue.art] : undefined,
+        images: ogImage ? [ogImage] : undefined,
       },
     };
   }

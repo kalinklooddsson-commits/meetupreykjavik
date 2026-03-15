@@ -18,6 +18,9 @@ export async function POST(request: NextRequest) {
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if (session.accountType !== "organizer" && session.accountType !== "admin") {
+      return NextResponse.json({ error: "Only organizers and admins can create bookings" }, { status: 403 });
+    }
 
     let body: Record<string, unknown>;
     try {

@@ -101,12 +101,19 @@ export async function POST(
         // Already going — no-op
         return NextResponse.json({ ok: true, action: "already_going" });
       }
-      // Re-activate cancelled RSVP — check capacity first
-      if (event.attendee_limit && (event.rsvp_count ?? 0) >= event.attendee_limit) {
-        return NextResponse.json(
-          { error: "Event is full", waitlisted: true },
-          { status: 409 },
-        );
+      // Re-activate cancelled RSVP — atomic capacity check
+      if (event.attendee_limit) {
+        const { count } = await db
+          .from("rsvps")
+          .select("id", { count: "exact", head: true })
+          .eq("event_id", event.id)
+          .eq("status", "going");
+        if (count !== null && count >= event.attendee_limit) {
+          return NextResponse.json(
+            { error: "Event is full", waitlisted: true },
+            { status: 409 },
+          );
+        }
       }
       await db
         .from("rsvps")
@@ -121,12 +128,20 @@ export async function POST(
       return NextResponse.json({ ok: true, action: "confirmed" });
     }
 
-    // Check attendee limit before creating new RSVP
-    if (event.attendee_limit && (event.rsvp_count ?? 0) >= event.attendee_limit) {
-      return NextResponse.json(
-        { error: "Event is full", waitlisted: true },
-        { status: 409 },
-      );
+    // Atomic capacity check: count actual "going" RSVPs in the DB
+    // rather than trusting the cached rsvp_count column (prevents race conditions)
+    if (event.attendee_limit) {
+      const { count } = await db
+        .from("rsvps")
+        .select("id", { count: "exact", head: true })
+        .eq("event_id", event.id)
+        .eq("status", "going");
+      if (count !== null && count >= event.attendee_limit) {
+        return NextResponse.json(
+          { error: "Event is full", waitlisted: true },
+          { status: 409 },
+        );
+      }
     }
 
     // Create new RSVP
@@ -137,6 +152,10 @@ export async function POST(
     });
 
     if (error) {
+      // Unique constraint violation = duplicate RSVP (concurrent race)
+      if (error.code === "23505") {
+        return NextResponse.json({ ok: true, action: "already_going" });
+      }
       console.error("RSVP creation failed:", error);
       return NextResponse.json(
         { error: "Could not create RSVP. Please try again." },

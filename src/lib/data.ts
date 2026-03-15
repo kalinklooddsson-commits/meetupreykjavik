@@ -53,6 +53,29 @@ function realPhoto(url: unknown): string | null {
   return url;
 }
 
+/**
+ * Extract a usable image URL from an `art` field that may contain
+ * CSS syntax like `url('/path/to/image.jpg')` or `linear-gradient(...), url('...')`.
+ * Returns null if no valid URL can be extracted or if the URL is a data URI / SVG.
+ */
+export function extractOgImageUrl(art: string | undefined | null): string | null {
+  if (!art) return null;
+  // Already a plain URL (starts with / or http)
+  if (/^(https?:\/\/|\/)/.test(art) && !art.includes("url(")) {
+    // Reject data URIs and SVGs
+    if (art.startsWith("data:")) return null;
+    return art;
+  }
+  // Extract from CSS url('...') or url("...") or url(...)
+  const match = art.match(/url\(['"]?([^'")\s]+)['"]?\)/);
+  if (!match) return null;
+  const url = match[1];
+  if (url.startsWith("data:")) return null;
+  // Only return image files, not SVG gradients
+  if (url.endsWith(".svg")) return null;
+  return url;
+}
+
 // ── Mappers: DB rows with joins → public presentation types ──
 
 function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {

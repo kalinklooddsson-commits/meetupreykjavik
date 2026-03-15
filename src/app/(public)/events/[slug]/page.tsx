@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { EventDetailScreen } from "@/components/public/public-pages";
 import { EventJsonLd } from "@/components/public/json-ld";
-import { fetchEventBySlug } from "@/lib/data";
+import { fetchEventBySlug, extractOgImageUrl } from "@/lib/data";
 
 export async function generateMetadata({
   params,
@@ -21,6 +21,7 @@ export async function generateMetadata({
     event.summary ||
     `${event.title} at ${event.venueName} — ${event.category} event in Reykjavik`;
   const canonicalUrl = `/events/${event.slug}`;
+  const ogImage = extractOgImageUrl(event.art);
 
   return {
     title,
@@ -33,15 +34,15 @@ export async function generateMetadata({
       description,
       url: canonicalUrl,
       type: "article",
-      images: event.art
-        ? [{ url: event.art, alt: event.title }]
+      images: ogImage
+        ? [{ url: ogImage, alt: event.title }]
         : undefined,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: event.art ? [event.art] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
   };
 }

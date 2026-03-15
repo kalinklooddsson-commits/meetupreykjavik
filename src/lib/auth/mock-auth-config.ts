@@ -1,5 +1,13 @@
 import type { AccountType, Locale } from "@/types/domain";
 
+/**
+ * Production guard — mock auth must NEVER be used in production.
+ * Check this before calling any mock auth function.
+ */
+export function isMockAuthAllowed(): boolean {
+  return process.env.NODE_ENV !== "production" || process.env.ENABLE_MOCK_AUTH === "true";
+}
+
 export const MOCK_PASSWORD_HINT = "meetup123";
 
 export type MockSession = {

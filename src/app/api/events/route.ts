@@ -17,6 +17,9 @@ export async function POST(request: NextRequest) {
     if (!session) {
       return NextResponse.json({ error: "Login required" }, { status: 401 });
     }
+    if (session.accountType !== "organizer" && session.accountType !== "admin") {
+      return NextResponse.json({ error: "Only organizers and admins can create events" }, { status: 403 });
+    }
 
     const body = await request.json();
     const {

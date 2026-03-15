@@ -11,6 +11,7 @@ import {
   readMockSessionFromRequest,
   withMockSessionCookie,
 } from "@/lib/auth/mock-auth";
+import { isMockAuthAllowed } from "@/lib/auth/mock-auth-config";
 import { getOrCreateSessionForSupabaseUser } from "@/lib/auth/session";
 import {
   adminPortalData,
@@ -1513,9 +1514,13 @@ async function handleLiveDataRequest(
         if (!rsvpId && eventSlug && attendeeName) {
           const { data: evt } = await supabase
             .from("events")
-            .select("id")
+            .select("id, host_id")
             .eq("slug", eventSlug)
             .maybeSingle();
+          // Verify the current user is the event host or an admin
+          if (evt && evt.host_id !== session.id && session.accountType !== "admin") {
+            return forbiddenResponse("Only the event host can manage attendees.");
+          }
           if (evt) {
             // Find RSVP by matching user display name on this event
             const { data: rsvpRow } = await supabase
@@ -2729,11 +2734,12 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
       // Demo accounts must work regardless of Supabase auth mode.
       // Peek at the email to decide which handler to use — demo emails
       // always go through mock auth, real emails go through Supabase.
+      // SECURITY: Block mock auth entirely in production unless explicitly enabled.
       let response: Response | null = null;
       if (hasLiveSupabaseAuth() && (key === "POST /api/auth/login" || key === "POST /api/auth/signup")) {
         const bodyText = await request.text();
         const bodyJson = JSON.parse(bodyText);
-        const isDemoEmail = !!findMockAccountByEmail(String(bodyJson?.email ?? ""));
+        const isDemoEmail = isMockAuthAllowed() && !!findMockAccountByEmail(String(bodyJson?.email ?? ""));
         // Rebuild the request with the consumed body
         const rebuiltRequest = new NextRequest(request.url, {
           method: request.method,
@@ -2743,8 +2749,11 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
         response = isDemoEmail
           ? await handleMockAuthRequest(rebuiltRequest, key)
           : await handleLiveAuthRequest(rebuiltRequest, key);
-      } else {
+      } else if (isMockAuthAllowed()) {
         response = await handleMockAuthRequest(request, key);
+      } else {
+        // Production without Supabase auth — no login available
+        return NextResponse.json({ error: "Authentication service unavailable" }, { status: 503 });
       }
 
       if (response) {

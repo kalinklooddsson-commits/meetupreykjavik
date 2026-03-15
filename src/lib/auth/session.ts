@@ -6,6 +6,7 @@ import {
   readServerMockSession,
 } from "@/lib/auth/mock-auth";
 import type { MockSession } from "@/lib/auth/mock-auth-config";
+import { isMockAuthAllowed } from "@/lib/auth/mock-auth-config";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { accountTypes, locales, type AccountType, type Locale } from "@/types/domain";
@@ -195,6 +196,10 @@ export async function getOrCreateSessionForSupabaseUser(
 
 export async function getCurrentAppSession() {
   if (!hasLiveSupabaseAuth()) {
+    // Block mock auth in production — force real Supabase auth
+    if (!isMockAuthAllowed()) {
+      return null;
+    }
     return readServerMockSession();
   }
 
