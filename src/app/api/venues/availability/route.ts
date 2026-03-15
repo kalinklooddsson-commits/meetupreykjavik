@@ -125,7 +125,11 @@ export async function PATCH(request: NextRequest) {
     }
 
     // Delete existing non-blocked availability then insert new rows
-    await db.from("venue_availability").delete().eq("venue_id", venue.id).eq("is_blocked", false);
+    const { error: deleteErr } = await db.from("venue_availability").delete().eq("venue_id", venue.id).eq("is_blocked", false);
+    if (deleteErr) {
+      console.error("Availability delete failed:", deleteErr);
+      return NextResponse.json({ error: "Failed to clear existing availability" }, { status: 500 });
+    }
 
     if (rows.length > 0) {
       const { error } = await db.from("venue_availability").insert(rows);

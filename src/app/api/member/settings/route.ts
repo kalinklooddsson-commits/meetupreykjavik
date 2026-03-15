@@ -68,7 +68,11 @@ export async function PATCH(request: NextRequest) {
         profileUpdate.display_name = displayName;
       }
       if (Object.keys(profileUpdate).length > 0) {
-        await db.from("profiles").update(profileUpdate).eq("id", session.id);
+        const { error: profileError } = await db.from("profiles").update(profileUpdate).eq("id", session.id);
+        if (profileError) {
+          console.error("Profile update failed:", profileError);
+          return NextResponse.json({ error: "Profile update failed" }, { status: 500 });
+        }
       }
     }
 

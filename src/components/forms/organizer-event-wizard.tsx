@@ -268,20 +268,25 @@ export function OrganizerEventWizard({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(buildPayload()),
         });
-        const result = await response.json();
-        if (result.ok) {
-          if (isEdit) {
-            window.location.href = `/organizer/events/${eventSlug}`;
-            return;
-          }
-          const createdSlug = result.data?.slug;
-          if (createdSlug) {
-            window.location.href = `/events/${createdSlug}`;
-            return;
-          }
-          setMessage("Event published successfully!");
+        if (!response.ok) {
+          const err = await response.json().catch(() => null);
+          setMessage(`Server responded: ${err?.details?.formErrors?.[0] ?? err?.error ?? `Error ${response.status}`}`);
         } else {
-          setMessage(`Server responded: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+          const result = await response.json();
+          if (result.ok) {
+            if (isEdit) {
+              window.location.href = `/organizer/events/${eventSlug}`;
+              return;
+            }
+            const createdSlug = result.data?.slug;
+            if (createdSlug) {
+              window.location.href = `/events/${createdSlug}`;
+              return;
+            }
+            setMessage("Event published successfully!");
+          } else {
+            setMessage(`Server responded: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+          }
         }
       } catch {
         setMessage(isEdit

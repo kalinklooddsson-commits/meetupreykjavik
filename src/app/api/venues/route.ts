@@ -93,7 +93,10 @@ export async function POST(request: NextRequest) {
 
     // Update user's account type to venue if they're a regular user
     if (session.accountType === "user") {
-      await db.from("profiles").update({ account_type: "venue" }).eq("id", session.id);
+      const { error: profileErr } = await db.from("profiles").update({ account_type: "venue" }).eq("id", session.id);
+      if (profileErr) {
+        console.error("Profile type update failed:", profileErr);
+      }
     }
 
     return NextResponse.json({ ok: true, slug: data?.slug });

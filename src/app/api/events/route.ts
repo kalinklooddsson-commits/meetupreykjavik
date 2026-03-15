@@ -146,13 +146,16 @@ export async function POST(request: NextRequest) {
     // Create ticket tiers if provided
     if (ticketTiers && Array.isArray(ticketTiers) && ticketTiers.length > 0 && data?.id) {
       for (const tier of ticketTiers) {
-        await db.from("ticket_tiers").insert({
+        const { error: tierErr } = await db.from("ticket_tiers").insert({
           event_id: data.id,
           name: tier.name,
           price_isk: tier.priceIsk ?? 0,
           price_usd: tier.priceUsd ?? 0,
           quantity: tier.quantity ?? 0,
         });
+        if (tierErr) {
+          console.error("Ticket tier insert failed:", tierErr);
+        }
       }
     }
 

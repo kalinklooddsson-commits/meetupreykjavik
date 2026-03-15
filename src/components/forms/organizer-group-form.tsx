@@ -117,12 +117,17 @@ export function OrganizerGroupForm({
             banner_url: null,
           }),
         });
-        const result = await response.json();
-        if (result.ok) {
-          setMessage("Group submitted for review! Redirecting…");
-          setTimeout(() => { window.location.href = result.slug ? `/groups/${result.slug}` : "/organizer/groups"; }, 1200);
+        if (!response.ok) {
+          const err = await response.json().catch(() => null);
+          setMessage(`Server: ${err?.details?.formErrors?.[0] ?? err?.error ?? `Error ${response.status}`}`);
         } else {
-          setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+          const result = await response.json();
+          if (result.ok) {
+            setMessage("Group submitted for review! Redirecting…");
+            setTimeout(() => { window.location.href = result.slug ? `/groups/${result.slug}` : "/organizer/groups"; }, 1200);
+          } else {
+            setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+          }
         }
       } catch {
         setMessage("Could not reach the server. Please try again later.");

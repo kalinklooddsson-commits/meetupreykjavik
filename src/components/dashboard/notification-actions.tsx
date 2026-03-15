@@ -24,12 +24,17 @@ export function MarkAllReadButton({ ids }: { ids: string[] }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids }),
       });
-      const result = await res.json();
-      if (result.ok) {
-        toast("success", `Marked ${result.count} notification${result.count === 1 ? "" : "s"} as read`);
-        router.refresh();
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast("error", err?.error ?? "Could not mark notifications as read");
       } else {
-        toast("error", result.error ?? "Could not mark notifications as read");
+        const result = await res.json();
+        if (result.ok) {
+          toast("success", `Marked ${result.count} notification${result.count === 1 ? "" : "s"} as read`);
+          router.refresh();
+        } else {
+          toast("error", result.error ?? "Could not mark notifications as read");
+        }
       }
     } catch {
       toast("error", "Network error. Please try again.");
