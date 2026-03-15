@@ -815,11 +815,17 @@ export function AdminEventOperationsDesk({
 
   async function updateEvent(key: string, status: string) {
     try {
-      await fetch("/api/admin/events/action", {
+      const res = await fetch("/api/admin/events/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        toast("error", (body as Record<string, string>).error ?? "Could not update event.");
+        setConfirmKey(null);
+        return;
+      }
       setLocalEvents((prev) => prev.map((e) => (e.key === key ? { ...e, status } : e)));
       toast("success", `Event ${status.toLowerCase()}`);
     } catch {

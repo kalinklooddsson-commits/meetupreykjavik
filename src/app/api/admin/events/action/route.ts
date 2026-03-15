@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
     published: "published",
     cancelled: "cancelled",
     completed: "completed",
+    rejected: "cancelled",
   };
 
   const newStatus = statusMap[action];
