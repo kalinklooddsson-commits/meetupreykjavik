@@ -75,7 +75,7 @@ export async function getMemberProfile(): Promise<MemberProfile> {
       tier: "Free",
       bio: "",
       completion: 20,
-      memberSince: new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }),
+      memberSince: new Date().toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "Atlantic/Reykjavik" }),
       stats: { eventsAttended: 0, groupsJoined: 0, memberSinceYear: new Date().getFullYear() },
       interests: [],
       badges: [],
@@ -115,6 +115,7 @@ export async function getMemberProfile(): Promise<MemberProfile> {
     memberSince: new Date(profile.created_at).toLocaleDateString("en-US", {
       month: "long",
       year: "numeric",
+      timeZone: "Atlantic/Reykjavik",
     }),
     bio: profile.bio ?? "",
     completion: calculateProfileCompletion(profile as unknown as Record<string, unknown>),
@@ -1452,7 +1453,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       const cat = e.categories as Record<string, unknown> | null;
       const startsAt = new Date(e.starts_at as string);
       const day = startsAt.getDate();
-      const month = startsAt.toLocaleString("en", { month: "short" });
+      const month = startsAt.toLocaleString("en", { month: "short", timeZone: "Atlantic/Reykjavik" });
       return {
         key: e.slug as string,
         title: e.title as string,
@@ -1495,7 +1496,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       if (diff < 3600000) return `${Math.max(1, Math.round(diff / 60000))} min ago`;
       if (diff < 86400000) return `${Math.round(diff / 3600000)} h ago`;
       if (diff < 172800000) return "Yesterday";
-      return new Date(dateStr).toLocaleDateString("en", { month: "short", year: "numeric" });
+      return new Date(dateStr).toLocaleDateString("en", { month: "short", year: "numeric", timeZone: "Atlantic/Reykjavik" });
     }
     function deriveTier(u: Record<string, unknown>): string {
       if (u.premium_tier) return String(u.premium_tier).charAt(0).toUpperCase() + String(u.premium_tier).slice(1);
@@ -1511,7 +1512,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         email: (u.email as string) ?? "",
         type: formatAccountType((u.account_type as string) ?? "member"),
         status: deriveUserStatus(u),
-        joined: new Date(u.created_at as string).toLocaleDateString("en", { month: "short", year: "numeric" }),
+        joined: new Date(u.created_at as string).toLocaleDateString("en", { month: "short", year: "numeric", timeZone: "Atlantic/Reykjavik" }),
         lastActive: timeAgo(u.last_active_at as string | null),
         groups: "—",
         events: "—",
@@ -1562,10 +1563,10 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       const createdAt = new Date(t.created_at as string);
       const diffMs = Date.now() - createdAt.getTime();
       const when = diffMs < 86400000
-        ? `Today ${createdAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}`
+        ? `Today ${createdAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Atlantic/Reykjavik" })}`
         : diffMs < 172800000
           ? "Yesterday"
-          : createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+          : createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Atlantic/Reykjavik" });
       const profile = t.profiles as Record<string, unknown> | null;
       return {
         key: t.id as string,
@@ -1749,9 +1750,9 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       const createdAt = new Date(a.created_at as string);
       const diffMs = Date.now() - createdAt.getTime();
       const when = diffMs < 3600000 ? `${Math.max(1, Math.round(diffMs / 60000))} min ago`
-        : diffMs < 86400000 ? `Today ${createdAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false })}`
+        : diffMs < 86400000 ? `Today ${createdAt.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Atlantic/Reykjavik" })}`
         : diffMs < 172800000 ? "Yesterday"
-        : createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+        : createdAt.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Atlantic/Reykjavik" });
       return {
         key: (a.id as string) ?? `handoff-${i}`,
         lane,
@@ -1884,7 +1885,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       d.setDate(d.getDate() - (6 - i));
       return d;
     });
-    const dayLabels = last7Days.map((d) => d.toLocaleDateString("en", { weekday: "short" }));
+    const dayLabels = last7Days.map((d) => d.toLocaleDateString("en", { weekday: "short", timeZone: "Atlantic/Reykjavik" }));
 
     // User signups by day
     const userGrowthData = last7Days.map((d) => {
