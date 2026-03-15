@@ -74,6 +74,7 @@ export async function POST(request: Request) {
             day: "numeric",
             hour: "numeric",
             minute: "2-digit",
+            timeZone: "Atlantic/Reykjavik",
           }),
           event.venues?.name ?? "",
           event.slug,
@@ -111,7 +112,7 @@ export async function POST(request: Request) {
         const locale = (profile.locale as "en" | "is") ?? "en";
         const eventTime = new Date(event.starts_at).toLocaleTimeString(
           locale === "is" ? "is-IS" : "en-US",
-          { hour: "numeric", minute: "2-digit" },
+          { hour: "numeric", minute: "2-digit", timeZone: "Atlantic/Reykjavik" },
         );
 
         const { subject, html } = eventReminder2hEmail(

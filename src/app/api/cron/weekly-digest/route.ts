@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       slug: e.slug as string,
       date: new Date(e.starts_at as string).toLocaleDateString(
         locale === "is" ? "is-IS" : "en-US",
-        { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" },
+        { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZone: "Atlantic/Reykjavik" },
       ),
     }));
 
