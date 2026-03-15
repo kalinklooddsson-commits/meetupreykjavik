@@ -32,11 +32,15 @@ export function parseRecurrenceRule(rule: string): RecurrenceOptions | null {
   const freq = parts["FREQ"]?.toLowerCase();
   if (!freq) return null;
 
+  const interval = parts["INTERVAL"] ? parseInt(parts["INTERVAL"], 10) : 1;
+
   return {
     frequency:
       freq === "biweekly"
         ? "biweekly"
-        : (freq as RecurrenceOptions["frequency"]),
+        : freq === "weekly" && interval === 2
+          ? "biweekly"
+          : (freq as RecurrenceOptions["frequency"]),
     dayOfWeek: parts["BYDAY"] ? DAY_MAP[parts["BYDAY"]] : undefined,
     dayOfMonth: parts["BYMONTHDAY"]
       ? parseInt(parts["BYMONTHDAY"], 10)
