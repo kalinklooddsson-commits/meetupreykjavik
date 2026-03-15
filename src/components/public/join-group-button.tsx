@@ -37,16 +37,16 @@ export function JoinGroupButton({
     try {
       const res = await fetch(`/api/groups/${slug}/join`, { method: "POST" });
 
-      if (res.status === 401) {
-        // Not authenticated — redirect to signup
-        router.push("/signup");
+      if (res.status === 401 || res.status === 403) {
+        // Not authenticated — redirect to login with return path
+        router.push(`/login?redirect=/groups/${slug}`);
         return;
       }
 
       const data = await res.json();
       if (!res.ok) {
         // Already a member is not really an error
-        if (data.error?.toLowerCase().includes("already")) {
+        if (data.error?.toLowerCase().includes("already") || data.error?.toLowerCase().includes("authentication")) {
           setState("joined");
           return;
         }

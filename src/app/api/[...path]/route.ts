@@ -386,7 +386,7 @@ async function getLiveSessionResponse(request: NextRequest) {
 async function handleMockAuthRequest(request: NextRequest, key: string) {
   switch (key) {
     case "POST /api/auth/login": {
-      const body = (await parseValidatedBody(request, key)) as { email: string };
+      const body = (await parseValidatedBody(request, key)) as { email: string; password: string };
       const account = findMockAccountByEmail(String(body?.email ?? ""));
 
       if (!account) {
@@ -396,6 +396,15 @@ async function handleMockAuthRequest(request: NextRequest, key: string) {
           ],
           fieldErrors: {
             email: ["Unknown demo account email."],
+          },
+        });
+      }
+
+      if (body.password !== account.password) {
+        return validationErrorResponse({
+          formErrors: ["Invalid credentials."],
+          fieldErrors: {
+            password: ["Incorrect password."],
           },
         });
       }
@@ -2668,9 +2677,26 @@ async function handleApiRequest(request: NextRequest, method: ApiMethod) {
         }
       }
 
-      const response = hasLiveSupabaseAuth()
-        ? await handleLiveAuthRequest(request, key)
-        : await handleMockAuthRequest(request, key);
+      // Demo accounts must work regardless of Supabase auth mode.
+      // Peek at the email to decide which handler to use — demo emails
+      // always go through mock auth, real emails go through Supabase.
+      let response: Response | null = null;
+      if (hasLiveSupabaseAuth() && (key === "POST /api/auth/login" || key === "POST /api/auth/signup")) {
+        const bodyText = await request.text();
+        const bodyJson = JSON.parse(bodyText);
+        const isDemoEmail = !!findMockAccountByEmail(String(bodyJson?.email ?? ""));
+        // Rebuild the request with the consumed body
+        const rebuiltRequest = new NextRequest(request.url, {
+          method: request.method,
+          headers: request.headers,
+          body: bodyText,
+        });
+        response = isDemoEmail
+          ? await handleMockAuthRequest(rebuiltRequest, key)
+          : await handleLiveAuthRequest(rebuiltRequest, key);
+      } else {
+        response = await handleMockAuthRequest(request, key);
+      }
 
       if (response) {
         return response;

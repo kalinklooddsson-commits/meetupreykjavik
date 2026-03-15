@@ -70,25 +70,25 @@ export const demoAuthAccounts = [
     email: "anna@example.com",
     displayName: "Anna Jonsdottir",
     accountType: "user" as AccountType,
-    passwordHint: "Member123!",
+    passwordHint: MOCK_PASSWORD_HINT,
   },
   {
     email: "kari@meetupreykjavik.is",
     displayName: "Kari Sigurdsson",
     accountType: "organizer" as AccountType,
-    passwordHint: "Organizer123!",
+    passwordHint: MOCK_PASSWORD_HINT,
   },
   {
     email: "lebowski@meetupreykjavik.is",
     displayName: "Lebowski Bar",
     accountType: "venue" as AccountType,
-    passwordHint: "Venue123!",
+    passwordHint: MOCK_PASSWORD_HINT,
   },
   {
     email: "admin@meetupreykjavik.is",
     displayName: "Platform Admin",
     accountType: "admin" as AccountType,
-    passwordHint: "Admin123!",
+    passwordHint: MOCK_PASSWORD_HINT,
   },
 ];
 

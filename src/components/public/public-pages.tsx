@@ -1245,6 +1245,7 @@ function IndexHero({
             </div>
             <button
               type="submit"
+              aria-label="Search"
               className="rounded-r-full bg-brand-coral px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:opacity-90"
             >
               <Search className="h-5 w-5" />

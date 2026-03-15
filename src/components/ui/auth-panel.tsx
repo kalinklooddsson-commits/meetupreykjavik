@@ -149,7 +149,9 @@ export function AuthPanel({
 
     if (payload.data?.redirectTo) {
       refreshUser();
-      router.push(payload.data.redirectTo as Route);
+      const redirectParam = searchParams.get("redirect");
+      const target = redirectParam || payload.data.redirectTo;
+      router.push(target as Route);
       router.refresh();
     }
   }
@@ -385,7 +387,9 @@ export function AuthPanel({
                     setError("");
                     refreshUser();
                     if (payload.data?.redirectTo) {
-                      router.push(payload.data.redirectTo as Route);
+                      const redirectParam = searchParams.get("redirect");
+                      const target = redirectParam || payload.data.redirectTo;
+                      router.push(target as Route);
                       router.refresh();
                     }
                   });
