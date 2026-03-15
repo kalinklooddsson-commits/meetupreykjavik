@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 import type { VenueStatus } from "@/types/domain";
 
 export async function POST(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   const session = await getUser();
   if (!session || session.accountType !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
