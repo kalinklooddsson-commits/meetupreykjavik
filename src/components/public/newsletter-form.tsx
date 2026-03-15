@@ -30,13 +30,18 @@ export function NewsletterForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim() }),
       });
-      const result = await res.json();
-      if (result.ok) {
-        toast("success", result.message ?? t("subscribed"));
-        setEmail("");
-        setSubscribed(true);
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast("error", err?.error ?? t("couldNotSubscribe"));
       } else {
-        toast("error", result.error ?? t("couldNotSubscribe"));
+        const result = await res.json();
+        if (result.ok) {
+          toast("success", result.message ?? t("subscribed"));
+          setEmail("");
+          setSubscribed(true);
+        } else {
+          toast("error", result.error ?? t("couldNotSubscribe"));
+        }
       }
     } catch {
       toast("error", t("networkError"));
