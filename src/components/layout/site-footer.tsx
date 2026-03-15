@@ -8,6 +8,7 @@ export async function SiteFooter() {
   const tNav = await getTranslations("nav");
   const tFooter = await getTranslations("footer");
   const tCta = await getTranslations("cta");
+  const tHeader = await getTranslations("header");
   const footerColumns = [
     {
       title: tFooter("explore"),
@@ -49,10 +50,10 @@ export async function SiteFooter() {
             </span>
             <div>
               <div className="text-sm font-bold uppercase tracking-[0.18em] text-white/70">
-                Meetup
+                {tHeader("brandTop")}
               </div>
               <div className="font-editorial text-2xl text-white">
-                Reykjavík
+                {tHeader("brandBottom")}
               </div>
             </div>
           </div>
