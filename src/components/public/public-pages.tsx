@@ -369,6 +369,8 @@ function extractImageUrl(art: string | undefined | null): string | null {
   const match = art.match(/url\(['"]?([^'")\s]+)['"]?\)/);
   if (match) {
     const url = match[1];
+    // Reject data URLs extracted from CSS — Next.js Image can't handle them
+    if (url.startsWith("data:")) return null;
     if (/\.\w{3,4}\/\d+px-/i.test(url)) return null;
     return url;
   }
