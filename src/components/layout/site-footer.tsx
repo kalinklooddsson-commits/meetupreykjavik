@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { Compass, Instagram, Facebook, Twitter } from "lucide-react";
+import { Compass } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { NewsletterForm } from "@/components/public/newsletter-form";
 
@@ -103,41 +103,6 @@ export async function SiteFooter() {
         <p className="text-sm text-white/70">
           &copy; {new Date().getFullYear()} MeetupReykjavik. {tFooter("copyright")}
         </p>
-        <div className="flex items-center gap-2">
-          <span className="mr-2 text-xs font-bold uppercase tracking-[0.18em] text-white/70">
-            {tFooter("followUs")}
-          </span>
-          <a
-            href="https://instagram.com/meetupreykjavik"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={tFooter("socialInstagram")}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
-          >
-            <Instagram className="h-4 w-4" />
-            <span className="sr-only">{tFooter("socialInstagram")}</span>
-          </a>
-          <a
-            href="https://facebook.com/meetupreykjavik"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={tFooter("socialFacebook")}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
-          >
-            <Facebook className="h-4 w-4" />
-            <span className="sr-only">{tFooter("socialFacebook")}</span>
-          </a>
-          <a
-            href="https://x.com/meetupreykjavik"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={tFooter("socialX")}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition hover:bg-white/[0.15] hover:text-white/90"
-          >
-            <Twitter className="h-4 w-4" />
-            <span className="sr-only">{tFooter("socialX")}</span>
-          </a>
-        </div>
       </div>
     </footer>
   );

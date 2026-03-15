@@ -224,7 +224,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A guided tasting focused on volcanic soils, storytelling, and a premium seated format.",
     description: [
       "The evening combines education and atmosphere. Each pour is paired with a short story, and the layout keeps the room intimate enough for questions without making it feel formal.",
-      "This is the kind of venue-led format the product should eventually monetize well: premium inventory, limited capacity, and strong host credibility."
+      "The limited capacity and strong host credibility make this one of the best premium tasting formats in the city."
     ],
     attendees: 24,
     capacity: 28,
@@ -264,7 +264,7 @@ export const publicEvents: PublicEvent[] = [
     summary: "A social format for newcomers who want structure, easier intros, and no awkward room-reading.",
     description: [
       "This event is designed around clarity. Timed rounds, host prompts, and a strong arrival flow mean people can settle in fast even if they just moved to the city last week.",
-      "Because the format is repeatable, it gives the platform a strong example of how group identity, venue partnership, and event consistency can reinforce one another."
+      "The repeatable format builds real community — regulars start recognizing each other, and each round gets better as the group finds its rhythm."
     ],
     attendees: 58,
     capacity: 70,
@@ -592,7 +592,7 @@ export const publicGroups: PublicGroup[] = [
     summary: "Weekly hikes around Iceland with welcoming pacing and strong repeat attendance.",
     description: [
       "This group is built around consistency. The organizer posts clear route notes, weather context, and meetup logistics early so first-timers can join without guessing how serious the pace will be.",
-      "It is exactly the kind of durable local group the platform should spotlight: easy to understand, high trust, and strongly tied to place."
+      "The group has strong repeat attendance and a welcoming culture that makes newcomers feel at home from the first hike."
     ],
     organizer: "Helga Arnadottir",
     banner: "/place-images/reykjavik/generated/esja.svg",
@@ -697,7 +697,7 @@ export const publicGroups: PublicGroup[] = [
     summary: "Social nights, dinner events, and weekend gatherings for people who want more than random bar hopping.",
     description: [
       "The group organizes structured social formats that make going out feel intentional. Dinner socials, hosted bar nights, and seasonal parties are designed with arrival flow, conversation structure, and venue partnerships that raise the quality above typical weekend plans.",
-      "It is one of the most active groups on the platform and a strong example of how nightlife formats can be community-driven without losing spontaneity."
+      "It has become one of the most active social groups in the city — proof that nightlife formats can be community-driven without losing spontaneity."
     ],
     organizer: "Kari Sigurdsson",
     banner: "/place-images/reykjavik/venues/lebowski-bar.jpg",
@@ -764,7 +764,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A lively central venue that works especially well for hosted social nights and structured mixers.",
     description: [
       "Lebowski works because the room is flexible. Hosts can reserve a clear meetup zone, the bar supports quick arrivals, and the energy is social without becoming too loud too early.",
-      "For the platform, it is a strong example of a venue partner that benefits from recurring formats and member-only deals."
+      "It works especially well for recurring formats — regulars get to know the staff, the layout stays familiar, and each event builds on the last."
     ],
     address: "Laugavegur 20a, 101 Reykjavik",
     amenities: ["Hosted meetup area", "Cocktail menu", "Late hours", "Group seating"],
@@ -828,7 +828,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A practical venue for workshops, founder sessions, and technical community programming.",
     description: [
       "The venue suits events where clarity matters more than atmosphere alone. Seating, projection, wifi, and layout all support education-driven formats that still want some social tail after the session.",
-      "This is where the platform can demonstrate that venue partnerships are not just nightlife. Utility matters too."
+      "It proves that great event venues are not just about nightlife — practical spaces with the right infrastructure matter just as much."
     ],
     address: "Grandagardur 16, 101 Reykjavik",
     amenities: ["Projector", "Fast wifi", "Stage zone", "Coffee setup"],
@@ -859,8 +859,8 @@ export const publicVenues: PublicVenue[] = [
     rating: 4.9,
     summary: "A premium small-format wine venue suited to guided tastings and intimate hosted events.",
     description: [
-      "Bryggjuhusid is one of the strongest examples of premium inventory in the venue network. Its seating, pacing, and staff support make it ideal for limited-capacity events that should feel worth paying for.",
-      "As the product matures, this type of venue is where margin, reviews, and recurring quality can compound."
+      "Bryggjuhusid is one of the strongest examples of a premium small venue in the city. Its seating, pacing, and staff support make it ideal for limited-capacity events that feel worth paying for.",
+      "The intimate format builds loyalty — guests return for the quality, and each event raises the bar for the next."
     ],
     address: "Vesturgata 2, 101 Reykjavik",
     amenities: ["Seated tasting", "Curated menu", "Premium service", "Quiet format"],
@@ -890,7 +890,7 @@ export const publicVenues: PublicVenue[] = [
     summary: "A central social space with a rooftop terrace and a relaxed ground floor that works well for casual meetups and morning events.",
     description: [
       "Loft Hostel sits right on Bankastraeti with one of the better rooftop views in downtown Reykjavik. The ground floor bar doubles as a social hub with flexible seating that can accommodate everything from yoga mats to speed friending tables.",
-      "For the platform, it represents a versatile venue partner. The morning availability makes it unusual among bar-first venues, and the hostel crowd adds a natural international energy to any event held here."
+      "The morning availability makes it unusual among bar-first venues, and the hostel crowd adds a natural international energy to any event held here."
     ],
     address: "Bankastræti 7, 101 Reykjavik",
     amenities: ["Rooftop terrace", "Flexible ground floor", "Morning availability", "International crowd"],

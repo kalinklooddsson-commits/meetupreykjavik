@@ -131,6 +131,7 @@ export function AdminUserCommandCenter({
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [preSuspendStatus, setPreSuspendStatus] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   const roleChips = [
@@ -170,6 +171,9 @@ export function AdminUserCommandCenter({
             className={cn(inputClass, "pl-9")}
           />
         </div>
+        <span className="text-xs text-brand-text-muted">
+          {filtered.length} of {localUsers.length} accounts
+        </span>
       </div>
       <FilterChips items={roleChips} onSelect={(k) => setRoleFilter(k)} />
 
@@ -299,15 +303,22 @@ export function AdminUserCommandCenter({
                   type="button"
                   className={selected.status === "Suspended" ? btnPrimary : btnDanger}
                   onClick={async () => {
-                    const action = selected.status === "Suspended" ? "unsuspend" : "suspend";
-                    const msg = selected.status === "Suspended" ? "User unsuspended" : "User suspended";
+                    const isSuspended = selected.status === "Suspended";
+                    const action = isSuspended ? "unsuspend" : "suspend";
+                    const msg = isSuspended ? "User unsuspended" : "User suspended";
                     try {
                       await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                      updateUser(selected.key, { status: selected.status === "Suspended" ? "Active" : "Suspended" });
+                      if (isSuspended) {
+                        const restored = preSuspendStatus[selected.key] || "Active";
+                        updateUser(selected.key, { status: restored });
+                      } else {
+                        setPreSuspendStatus((prev) => ({ ...prev, [selected.key]: selected.status }));
+                        updateUser(selected.key, { status: "Suspended" });
+                      }
                       toast("success", msg);
                     } catch {
                       toast("error", `Could not update suspension status. Please try again.`);
@@ -630,6 +641,7 @@ export function AdminGroupOperationsDesk({
   groups: readonly GroupRow[];
 }) {
   const [localGroups, setLocalGroups] = useState<GroupRow[]>([...groups]);
+  const [search, setSearch] = useState("");
   const { toast } = useToast();
 
   async function updateGroup(key: string, status: string) {
@@ -646,10 +658,21 @@ export function AdminGroupOperationsDesk({
     }
   }
 
+  const filtered = search
+    ? localGroups.filter((g) => g.name.toLowerCase().includes(search.toLowerCase()) || g.organizer.toLowerCase().includes(search.toLowerCase()))
+    : localGroups;
+
   return (
     <div className="space-y-4">
+      <input
+        type="text"
+        placeholder="Search groups..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full rounded-lg border border-brand-border bg-white px-3 py-2 text-sm placeholder:text-brand-text-muted focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo"
+      />
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {localGroups.map((g) => (
+        {filtered.map((g) => (
           <StreamCard
             key={g.key}
             eyebrow={g.organizer}
@@ -662,10 +685,10 @@ export function AdminGroupOperationsDesk({
       </div>
       <DashboardTable
         columns={["Group", "Organizer", "Status", "Actions"]}
-        rows={localGroups.map((g) => ({
+        rows={filtered.map((g) => ({
           key: g.key,
           cells: [
-            <span key="n" className="font-medium">{g.name}</span>,
+            <a key="n" href={`/groups/${g.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-primary hover:underline">{g.name}</a>,
             g.organizer,
             <ToneBadge key="s" tone={toneForStatus(g.status)}>{g.status}</ToneBadge>,
             <div key="a" className="flex gap-1.5">
@@ -684,6 +707,9 @@ export function AdminGroupOperationsDesk({
                   <Archive className="h-3.5 w-3.5" /> Archive
                 </button>
               )}
+              <button type="button" className={btnGhost} onClick={() => window.open(`/groups/${g.key}`, "_blank")}>
+                <Edit2 className="h-3.5 w-3.5" /> View
+              </button>
             </div>,
           ],
         }))}
@@ -1935,5 +1961,101 @@ export function AdminActionButton({
     >
       {loading ? "..." : actionLabel}
     </button>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   BOOKING ACTIONS TABLE (client component for admin/bookings)
+   ═══════════════════════════════════════════════════ */
+
+type BookingRow = {
+  key: string;
+  organizer: string;
+  venue: string;
+  date: string;
+  time: string;
+  attendance: string;
+  status: string;
+  message?: string;
+};
+
+export function AdminBookingActionsTable({
+  bookings,
+}: {
+  bookings: readonly BookingRow[];
+}) {
+  const [local, setLocal] = useState<BookingRow[]>([...bookings]);
+  const [filter, setFilter] = useState("All");
+  const { toast } = useToast();
+
+  async function updateBooking(key: string, newStatus: string) {
+    try {
+      await fetch("/api/admin/bookings/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, action: newStatus }),
+      });
+      setLocal((prev) => prev.map((b) => (b.key === key ? { ...b, status: newStatus } : b)));
+      toast("success", `Booking ${newStatus}`);
+    } catch {
+      toast("error", "Could not update booking. Please try again.");
+    }
+  }
+
+  const filtered = filter === "All" ? local : local.filter((b) => b.status.toLowerCase() === filter.toLowerCase());
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 text-xs font-medium">
+        <span className="text-brand-text-muted">Status:</span>
+        {["All", "pending", "accepted", "cancelled"].map((s) => (
+          <button
+            key={s}
+            type="button"
+            onClick={() => setFilter(s)}
+            className={`rounded-full px-2.5 py-1 transition ${filter === s ? "bg-brand-indigo text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+          >
+            {s === "All" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
+          </button>
+        ))}
+      </div>
+      <DashboardTable
+        columns={["Organizer", "Venue", "Date", "Time", "Status", "Actions"]}
+        rows={filtered.map((b) => ({
+          key: b.key,
+          cells: [
+            <span key="org" className="font-medium">{b.organizer}</span>,
+            b.venue,
+            b.date,
+            b.time,
+            <ToneBadge key="s" tone={toneForStatus(b.status)}>
+              {b.status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+            </ToneBadge>,
+            <div key="a" className="flex gap-1.5">
+              {b.status === "pending" && (
+                <>
+                  <button type="button" className={btnGhost} onClick={() => updateBooking(b.key, "accepted")}>
+                    <CheckCircle2 className="h-3.5 w-3.5 text-brand-sage" /> Approve
+                  </button>
+                  <button type="button" className={btnGhost} onClick={() => updateBooking(b.key, "declined")}>
+                    <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Decline
+                  </button>
+                </>
+              )}
+              {b.status === "accepted" && (
+                <button type="button" className={btnGhost} onClick={() => updateBooking(b.key, "cancelled")}>
+                  <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Cancel
+                </button>
+              )}
+              {(b.status === "cancelled" || b.status === "declined") && (
+                <span className="text-xs text-brand-text-muted">No actions</span>
+              )}
+            </div>,
+          ],
+        }))}
+        dense
+        caption="Venue booking requests"
+      />
+    </div>
   );
 }

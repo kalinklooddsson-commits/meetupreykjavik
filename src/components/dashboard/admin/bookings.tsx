@@ -3,16 +3,13 @@ import {
   CalendarCheck,
   Clock,
   Users,
-  MessageSquare,
 } from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
-  DashboardTable,
-  ToneBadge,
   StatCard,
 } from "@/components/dashboard/primitives";
-import type { DashboardTone } from "@/components/dashboard/primitives";
+import { AdminBookingActionsTable } from "@/components/dashboard/admin/panels";
 import { adminBookings as mockAdminBookings } from "@/lib/dashboard-data";
 import { hasSupabaseEnv } from "@/lib/env";
 import { getAllBookings } from "@/lib/db/bookings";
@@ -33,13 +30,6 @@ function adminLinks(activeKey: string) {
     { key: "settings", label: "Settings", href: "/admin/settings" as Route },
     { key: "audit", label: "Audit Log", href: "/admin/audit" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
-}
-
-function statusTone(s: string): DashboardTone {
-  if (/active|published|approved|going|accepted|completed/i.test(s)) return "sage";
-  if (/pending|draft|waitlisted|counter/i.test(s)) return "sand";
-  if (/cancelled|rejected|suspended|declined|critical/i.test(s)) return "coral";
-  return "neutral";
 }
 
 function formatStatus(s: string): string {
@@ -149,34 +139,7 @@ export async function AdminBookingsScreen() {
         title="Booking requests"
         description="Complete list of venue booking requests from organizers. Review status and respond to counter-offers."
       >
-        <DashboardTable
-          columns={["Organizer", "Venue", "Date", "Time", "Attendance", "Status", "Message"]}
-          rows={bookings.map((b) => ({
-            key: b.key,
-            cells: [
-              <span key="org" className="font-medium">{b.organizer}</span>,
-              b.venue,
-              b.date,
-              b.time,
-              <span key="att" className="flex items-center gap-1 tabular-nums">
-                <Users className="h-3 w-3 text-brand-text-light" />
-                {b.attendance}
-              </span>,
-              <ToneBadge key="status" tone={statusTone(b.status)}>
-                {formatStatus(b.status)}
-              </ToneBadge>,
-              "message" in b && b.message ? (
-                <span key="msg" className="flex items-center gap-1 text-xs text-brand-text-muted">
-                  <MessageSquare className="h-3 w-3" />
-                  {b.message}
-                </span>
-              ) : (
-                <span key="msg" className="text-xs text-brand-text-light">—</span>
-              ),
-            ],
-          }))}
-          caption="Venue booking requests"
-        />
+        <AdminBookingActionsTable bookings={bookings} />
       </Surface>
     </PortalShell>
   );

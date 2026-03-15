@@ -1694,7 +1694,8 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                         </div>
                         <div className="flex-1">
                           <span className="font-semibold text-gray-900">{comment.author}</span>
-                          <span className="ml-2 text-xs text-gray-400">{comment.postedAt}</span>
+                          <span className="mx-1.5 text-xs text-gray-300">·</span>
+                          <span className="text-xs text-gray-400">{comment.postedAt}</span>
                         </div>
                       </div>
                       <p className="mt-2.5 pl-12 leading-relaxed text-gray-700">{comment.text}</p>

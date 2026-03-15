@@ -1,18 +1,8 @@
 import type { Route } from "next";
-import {
-  Users,
-  UserCheck,
-  Shield,
-  Star,
-  Award,
-  Briefcase,
-} from "lucide-react";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
-  DashboardTable,
   ToneBadge,
-  AvatarStamp,
   KeyValueList,
   ActivityFeed,
 } from "@/components/dashboard/primitives";
@@ -38,24 +28,11 @@ function adminLinks(activeKey: string) {
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
-function statusTone(s: string): DashboardTone {
-  if (/active|published|approved|going|accepted|completed|verified/i.test(s)) return "sage";
-  if (/pending|draft|waitlisted|counter/i.test(s)) return "sand";
-  if (/cancelled|rejected|suspended|declined|critical|flagged/i.test(s)) return "coral";
-  return "neutral";
-}
-
-function typeTone(t: string): DashboardTone {
-  if (/organizer/i.test(t)) return "indigo";
-  if (/venue/i.test(t)) return "coral";
-  return "neutral";
-}
-
 /* ── Screen ──────────────────────────────────────────────────── */
 
 export async function AdminUsersScreen() {
   const data = await getAdminPortalData();
-  const { users, selectedUser, clientDossier } = data;
+  const { users, clientDossier } = data;
 
   return (
     <PortalShell
@@ -70,68 +47,9 @@ export async function AdminUsersScreen() {
       <Surface
         eyebrow="All accounts"
         title="Platform users"
-        description={`${users.length} accounts shown. Search, filter by role, and take admin actions.`}
+        description="Search, filter by role, and take admin actions."
       >
         <AdminUserCommandCenter users={users} />
-      </Surface>
-
-      {/* ── Selected user profile ──────────────────────────── */}
-      <Surface
-        eyebrow="User spotlight"
-        title={selectedUser.name}
-        description={selectedUser.notes}
-      >
-        <div className="grid gap-4 xl:grid-cols-2">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <AvatarStamp name={selectedUser.name} size="lg" />
-              <div>
-                <div className="text-base font-semibold text-brand-text">{selectedUser.name}</div>
-                <ToneBadge tone="indigo">{selectedUser.role}</ToneBadge>
-              </div>
-            </div>
-            <p className="text-sm leading-relaxed text-brand-text-muted">{selectedUser.bio}</p>
-            <KeyValueList
-              items={selectedUser.items.map((item) => ({
-                key: item.key,
-                label: item.label,
-                value: item.value,
-              }))}
-            />
-          </div>
-          <div className="space-y-4">
-            <div>
-              <div className="mb-2 text-xs font-medium uppercase tracking-wider text-brand-text-light">
-                Trust signals
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {selectedUser.trustSignals.map((signal) => (
-                  <ToneBadge key={signal} tone="sage">{signal}</ToneBadge>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="mb-2 text-xs font-medium uppercase tracking-wider text-brand-text-light">
-                Interests
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {selectedUser.interests.map((interest) => (
-                  <ToneBadge key={interest} tone="neutral">{interest}</ToneBadge>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="mb-2 text-xs font-medium uppercase tracking-wider text-brand-text-light">
-                Badges
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {selectedUser.badges.map((badge) => (
-                  <ToneBadge key={badge} tone="indigo">{badge}</ToneBadge>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
       </Surface>
 
       {/* ── Client dossier ─────────────────────────────────── */}
