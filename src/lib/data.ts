@@ -160,13 +160,13 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     description: isGenericEventDesc && mockEvent ? mockEvent.description : (dbDesc ? htmlToTextParagraphs(dbDesc) : []),
     attendees: extractRsvpCount(row) ?? (row.rsvp_count as number) ?? 0,
     capacity: (row.attendee_limit as number) ?? mockEvent?.capacity ?? 50,
-    priceLabel: isFree ? (mockEvent?.priceLabel ?? "Free") : (mockEvent?.priceLabel ?? "Paid"),
+    priceLabel: isFree ? "Free" : ((row.ticket_price as string) ?? "Paid"),
     ageLabel,
     isFree,
     visibilityLabel: (row.visibility_mode as string) ?? mockEvent?.visibilityLabel ?? "public",
     approvalLabel: (row.rsvp_mode as string) ?? mockEvent?.approvalLabel ?? "open",
     reminderLabel: (row.reminder_policy as string) ?? mockEvent?.reminderLabel ?? "24h before",
-    hostContact: (row.host_contact as string) ?? mockEvent?.hostContact ?? "",
+    hostContact: (row.host_contact as string) ?? "",
     shareLabel: "Share this event",
     art:
       realPhoto(row.featured_photo_url) ??
@@ -174,9 +174,9 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
       createSceneCoverDataUrl(row.title as string, (category?.name_en as string) ?? "Event"),
     gallery: (Array.isArray(row.gallery_photos) && (row.gallery_photos as string[]).length > 0)
       ? (row.gallery_photos as string[])
-      : mockEvent?.gallery ?? [],
-    comments: comments.length > 0 ? comments : mockEvent?.comments ?? [],
-    ratings: ratings.length > 0 ? ratings : mockEvent?.ratings ?? [],
+      : [],
+    comments: comments.length > 0 ? comments : [],
+    ratings: ratings.length > 0 ? ratings : [],
   };
 }
 
