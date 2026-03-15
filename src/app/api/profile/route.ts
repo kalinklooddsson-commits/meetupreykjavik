@@ -47,14 +47,18 @@ export async function PATCH(request: NextRequest) {
             if (item.label === "Public summary") profileUpdate.bio = item.value;
             if (item.label === "Address") venueUpdate.address = item.value;
             if (item.label === "Capacity") {
-              // Parse capacity string like "120 standing / mixed"
-              const match = item.value.match(/^(\d+)/);
-              if (match) venueUpdate.capacity_standing = parseInt(match[1], 10);
+              const capMatch = item.value.match(/^(\d+)/);
+              if (capMatch) venueUpdate.capacity_standing = parseInt(capMatch[1], 10);
             }
           }
         }
+        if (section.key === "amenities") {
+          // Amenities come as items with label = amenity name
+          venueUpdate.amenities = section.items
+            .map((item) => item.label || item.value)
+            .filter(Boolean);
+        }
         if (section.key === "hours") {
-          // Build opening_hours JSONB from day/hours items
           const hours: Record<string, string> = {};
           for (const item of section.items) {
             hours[item.label] = item.value;
@@ -78,10 +82,19 @@ export async function PATCH(request: NextRequest) {
         await db.from("profiles").update(profileUpdate).eq("id", session.id);
       }
 
-      // Save venue fields (find venue owned by this user, fallback to slug for demo accounts)
+      // Save venue fields — find the venue by owner_id, then fall back to slug
       if (Object.keys(venueUpdate).length > 0) {
-        const { count } = await db.from("venues").update(venueUpdate).eq("owner_id", session.id);
-        if (!count && session.slug) {
+        // First try to find which venue this user owns
+        const { data: ownedVenue } = await db
+          .from("venues")
+          .select("id")
+          .eq("owner_id", session.id)
+          .maybeSingle();
+
+        if (ownedVenue) {
+          await db.from("venues").update(venueUpdate).eq("id", ownedVenue.id);
+        } else if (session.slug) {
+          // Fallback: match by slug (for seed/demo accounts where owner_id may not match)
           await db.from("venues").update(venueUpdate).eq("slug", session.slug);
         }
       }

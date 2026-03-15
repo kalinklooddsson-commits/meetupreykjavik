@@ -1023,7 +1023,10 @@ async function handleLiveDataRequest(
         }
         const venueToUpdate = await getVenueBySlug(match.params.slug);
         if (!venueToUpdate) return validationMessage("Venue not found.");
-        if (venueToUpdate.owner_id !== session.id && session.accountType !== "admin") {
+        // Ownership check: owner_id match, or venue slug matches session slug (for seed/demo accounts), or admin
+        const isOwner = venueToUpdate.owner_id === session.id;
+        const isSlugMatch = session.accountType === "venue" && session.slug === match.params.slug;
+        if (!isOwner && !isSlugMatch && session.accountType !== "admin") {
           return forbiddenResponse("You can only edit your own venues.");
         }
         let venueBody = await parseValidatedBody(request, key);
@@ -1060,7 +1063,8 @@ async function handleLiveDataRequest(
         if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
-        if (venue.owner_id !== session.id && session.accountType !== "admin") {
+        const isDealOwner = venue.owner_id === session.id || (session.accountType === "venue" && session.slug === match.params.slug);
+        if (!isDealOwner && session.accountType !== "admin") {
           return forbiddenResponse("Only the venue owner can manage deals.");
         }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
@@ -1139,7 +1143,8 @@ async function handleLiveDataRequest(
         if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
-        if (venue.owner_id !== session.id && session.accountType !== "admin") {
+        const isAvailOwner = venue.owner_id === session.id || (session.accountType === "venue" && session.slug === match.params.slug);
+        if (!isAvailOwner && session.accountType !== "admin") {
           return forbiddenResponse("Only the venue owner can manage availability.");
         }
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
@@ -2592,7 +2597,8 @@ async function handleLiveDataRequest(
         if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
-        if (venue.owner_id !== session.id && session.accountType !== "admin") {
+        const isBlockOwner = venue.owner_id === session.id || (session.accountType === "venue" && session.slug === match.params.slug);
+        if (!isBlockOwner && session.accountType !== "admin") {
           return forbiddenResponse("Only the venue owner can block users.");
         }
         const body = await request.json().catch(() => ({}));

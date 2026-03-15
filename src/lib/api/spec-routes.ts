@@ -108,6 +108,7 @@ export const apiSpecRoutes: ApiSpecRoute[] = [
   { category: "admin", method: "POST", pattern: "/api/admin/comms/send", description: "Send a communication (email, push, announcement).", implementation: "scaffold" },
   { category: "admin", method: "POST", pattern: "/api/admin/groups/action", description: "Perform admin group action (approve, reject, suspend).", implementation: "scaffold" },
   { category: "admin", method: "POST", pattern: "/api/admin/events/action", description: "Perform admin event action (cancel, feature, suspend).", implementation: "scaffold" },
+  { category: "admin", method: "POST", pattern: "/api/admin/bookings/action", description: "Perform admin booking action (approve, decline, cancel).", implementation: "scaffold" },
 
   { category: "organizer", method: "POST", pattern: "/api/attendees/action", description: "Approve or reject an attendee RSVP.", implementation: "scaffold" },
 

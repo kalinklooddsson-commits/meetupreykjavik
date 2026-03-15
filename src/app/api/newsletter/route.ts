@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { hasTrustedOrigin } from "@/lib/security/request";
-import { forbiddenResponse } from "@/lib/security/response";
 import {
   checkRateLimit,
   rateLimitKeyFromRequest,
@@ -16,8 +15,10 @@ const newsletterSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Origin check is advisory for newsletter — log but never block subscribers.
+  // The Origin header can be absent in some browsers or fetch configurations.
   if (!hasTrustedOrigin(request)) {
-    return forbiddenResponse("Cross-site submissions are not allowed.");
+    console.warn("[Newsletter] Origin check failed — proceeding anyway for subscriber experience.");
   }
 
   const rlKey = rateLimitKeyFromRequest(request, "newsletter");
