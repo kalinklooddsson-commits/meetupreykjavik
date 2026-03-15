@@ -79,12 +79,15 @@ export async function PATCH(request: NextRequest) {
 
       // Save profile fields
       if (Object.keys(profileUpdate).length > 0) {
-        await db.from("profiles").update(profileUpdate).eq("id", session.id);
+        const { error: profErr } = await db.from("profiles").update(profileUpdate).eq("id", session.id);
+        if (profErr) {
+          console.error("Profile update failed:", profErr);
+          return NextResponse.json({ error: "Failed to save profile." }, { status: 500 });
+        }
       }
 
       // Save venue fields — find the venue by owner_id, then fall back to slug
       if (Object.keys(venueUpdate).length > 0) {
-        // First try to find which venue this user owns
         const { data: ownedVenue } = await db
           .from("venues")
           .select("id")
@@ -92,10 +95,19 @@ export async function PATCH(request: NextRequest) {
           .maybeSingle();
 
         if (ownedVenue) {
-          await db.from("venues").update(venueUpdate).eq("id", ownedVenue.id);
+          const { error: venueErr } = await db.from("venues").update(venueUpdate).eq("id", ownedVenue.id);
+          if (venueErr) {
+            console.error("Venue update failed:", venueErr);
+            return NextResponse.json({ error: "Failed to save venue profile." }, { status: 500 });
+          }
         } else if (session.slug) {
-          // Fallback: match by slug (for seed/demo accounts where owner_id may not match)
-          await db.from("venues").update(venueUpdate).eq("slug", session.slug);
+          const { error: slugErr } = await db.from("venues").update(venueUpdate).eq("slug", session.slug);
+          if (slugErr) {
+            console.error("Venue update (slug fallback) failed:", slugErr);
+            return NextResponse.json({ error: "Failed to save venue profile." }, { status: 500 });
+          }
+        } else {
+          return NextResponse.json({ error: "No venue found for your account." }, { status: 404 });
         }
       }
 

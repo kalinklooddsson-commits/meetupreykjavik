@@ -1485,20 +1485,32 @@ async function handleLiveDataRequest(
           if (values["Bio"]) profileUpdates.bio = values["Bio"];
           if (values["Location"]) profileUpdates.city = values["Location"];
           if (Object.keys(profileUpdates).length > 0) {
-            await supabase.from("profiles").update(profileUpdates).eq("id", session.id);
+            const { error: profErr } = await supabase.from("profiles").update(profileUpdates).eq("id", session.id);
+            if (profErr) {
+              console.error("Profile settings update failed:", profErr);
+              return NextResponse.json({ ok: false, error: "Failed to save profile settings." }, { status: 500 });
+            }
           }
         }
         // Locale section → update profiles.locale
         if (section === "locale" && values["Language"]) {
-          await supabase.from("profiles").update({ locale: values["Language"] }).eq("id", session.id);
+          const { error: localeErr } = await supabase.from("profiles").update({ locale: values["Language"] }).eq("id", session.id);
+          if (localeErr) {
+            console.error("Locale update failed:", localeErr);
+            return NextResponse.json({ ok: false, error: "Failed to save locale." }, { status: 500 });
+          }
         }
         // Other sections (notifications, privacy, billing) → persist to platform_settings
         if (["notifications", "privacy", "billing"].includes(section)) {
           const settingsKey = `user_settings:${session.id}:${section}`;
-          await supabase.from("platform_settings").upsert(
+          const { error: settingsErr } = await supabase.from("platform_settings").upsert(
             { key: settingsKey, value: values as Record<string, unknown>, updated_at: new Date().toISOString(), updated_by: session.id },
             { onConflict: "key" },
           );
+          if (settingsErr) {
+            console.error("Settings upsert failed:", settingsErr);
+            return NextResponse.json({ ok: false, error: "Failed to save settings." }, { status: 500 });
+          }
         }
         return successResponse({ ok: true, section, values });
       }
@@ -1597,17 +1609,21 @@ async function handleLiveDataRequest(
         const body = await request.json();
         const { schedule } = body as { schedule: { day: string; open_time: string; close_time: string; is_available: boolean }[] };
         if (!ownedVenue) {
-          return successResponse({ ok: true, schedule });
+          return NextResponse.json({ ok: false, error: "No venue found for your account." }, { status: 404 });
         }
         // Delete existing recurring availability, then insert fresh
         const dayMap: Record<string, number> = {
           sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6,
         };
-        await supabase
+        const { error: delErr } = await supabase
           .from("venue_availability")
           .delete()
           .eq("venue_id", ownedVenue.id)
           .eq("is_recurring", true);
+        if (delErr) {
+          console.error("Venue availability delete failed:", delErr);
+          return NextResponse.json({ ok: false, error: "Failed to update availability." }, { status: 500 });
+        }
         const rows = schedule
           .filter((slot) => slot.is_available !== false)
           .map((slot) => ({
@@ -1618,7 +1634,11 @@ async function handleLiveDataRequest(
             is_recurring: true,
           }));
         if (rows.length > 0) {
-          await supabase.from("venue_availability").insert(rows);
+          const { error: insertErr } = await supabase.from("venue_availability").insert(rows);
+          if (insertErr) {
+            console.error("Venue availability insert failed:", insertErr);
+            return NextResponse.json({ ok: false, error: "Failed to save availability slots." }, { status: 500 });
+          }
         }
         return successResponse({ ok: true, venueId: ownedVenue.id, schedule });
       }
@@ -1651,8 +1671,7 @@ async function handleLiveDataRequest(
           title: string; type: string; tier: string; note: string;
         };
         if (!dealVenue) {
-          // No venue in DB (mock mode) — acknowledge without DB write
-          return successResponse({ ok: true, deal: { title, deal_type: dealType, deal_tier: tier } });
+          return NextResponse.json({ ok: false, error: "No venue found for your account." }, { status: 404 });
         }
         // Map UI deal types → schema CHECK values
         const typeMap: Record<string, string> = {
@@ -1960,7 +1979,22 @@ async function handleLiveDataRequest(
           if (error) throw error;
           return successResponse({ ok: true, action: groupAction, group: data });
         }
-        // Non-status actions (feature, monitor, prompt organizer) — acknowledge without DB change
+        // Non-status actions — handle feature toggle, log others
+        if (groupAction === "feature" || groupAction === "featured") {
+          await supabase
+            .from("groups")
+            .update({ is_featured: true, status: "active" })
+            .eq("slug", key);
+          return successResponse({ ok: true, action: groupAction, key });
+        }
+        if (groupAction === "unfeature") {
+          await supabase
+            .from("groups")
+            .update({ is_featured: false })
+            .eq("slug", key);
+          return successResponse({ ok: true, action: groupAction, key });
+        }
+        // Monitor, prompt organizer — no DB column but acknowledge
         return successResponse({ ok: true, action: groupAction, key });
       }
 
@@ -2026,7 +2060,7 @@ async function handleLiveDataRequest(
           if (error) throw error;
           return successResponse({ ok: true, transaction: data });
         }
-        return successResponse({ ok: true, key });
+        return NextResponse.json({ ok: false, error: "Invalid transaction ID format." }, { status: 400 });
       }
 
       // ── Admin bookings action ──
@@ -2049,7 +2083,7 @@ async function handleLiveDataRequest(
         const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         if (uuidPattern.test(key)) {
           const { data, error } = await supabase
-            .from("bookings")
+            .from("venue_bookings")
             .update({ status: mappedStatus })
             .eq("id", key)
             .select()
@@ -2057,8 +2091,8 @@ async function handleLiveDataRequest(
           if (error) throw error;
           return successResponse({ ok: true, action: bookingAction, booking: data });
         }
-        // Non-UUID key — acknowledge without DB change
-        return successResponse({ ok: true, action: bookingAction, key });
+        // Non-UUID key — can't update DB without a valid ID
+        return NextResponse.json({ ok: false, error: "Invalid booking ID format." }, { status: 400 });
       }
 
       // ── Admin ops action (no dedicated table yet) ──

@@ -55,15 +55,16 @@ export async function POST(
       );
     }
 
-    // Check venue ownership — the profile's venue_id or managed venues
+    // Check venue ownership — owner_id match, slug match for demo accounts, or admin
     const { data: venue } = await db
       .from("venues")
-      .select("id, owner_id")
+      .select("id, owner_id, slug")
       .eq("id", review.venue_id)
       .maybeSingle();
 
     const isOwner =
       venue?.owner_id === session.id ||
+      (session.accountType === "venue" && venue?.slug === session.slug) ||
       session.accountType === "admin";
 
     if (!isOwner) {
