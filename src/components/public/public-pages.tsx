@@ -1451,7 +1451,13 @@ export function EventsIndexScreen({
           {/* Category filter chips — interactive links */}
           <div className="mb-6 flex flex-wrap gap-2">
             <Link
-              href="/events"
+              href={(() => {
+                const p = new URLSearchParams();
+                if (searchQuery) p.set("q", searchQuery);
+                if (activeWhen) p.set("when", activeWhen);
+                const qs = p.toString();
+                return (`/events${qs ? `?${qs}` : ""}`) as Route;
+              })()}
               className={cn(
                 "rounded-full px-4 py-1.5 text-xs font-semibold transition",
                 !activeCategory
@@ -1464,13 +1470,20 @@ export function EventsIndexScreen({
             {publicCategoryOptions.map((cat) => {
               const isActive = activeCategory?.toLowerCase() === cat.toLowerCase();
               const catParam = cat.toLowerCase();
-              const href = activeWhen
-                ? (`/events?category=${encodeURIComponent(catParam)}&when=${activeWhen}` as Route)
-                : (`/events?category=${encodeURIComponent(catParam)}` as Route);
+              const chipParams = new URLSearchParams();
+              chipParams.set("category", catParam);
+              if (activeWhen) chipParams.set("when", activeWhen);
+              if (searchQuery) chipParams.set("q", searchQuery);
+              const href = (`/events?${chipParams.toString()}`) as Route;
+              const toggleOffParams = new URLSearchParams();
+              if (searchQuery) toggleOffParams.set("q", searchQuery);
+              if (activeWhen) toggleOffParams.set("when", activeWhen);
+              const toggleOffQs = toggleOffParams.toString();
+              const toggleOffHref = (`/events${toggleOffQs ? `?${toggleOffQs}` : ""}`) as Route;
               return (
                 <Link
                   key={cat}
-                  href={isActive ? "/events" : href}
+                  href={isActive ? toggleOffHref : href}
                   className={cn(
                     "rounded-full px-4 py-1.5 text-xs font-semibold transition",
                     isActive
@@ -1713,9 +1726,9 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                   {t("sections.reviews")}
                 </h2>
                 <div className="space-y-5">
-                  {event.ratings.map((rating) => (
+                  {event.ratings.map((rating, idx) => (
                     <div
-                      key={`${rating.author}-${rating.rating}`}
+                      key={`${rating.author}-${rating.rating}-${idx}`}
                       className="border-b border-brand-border-light pb-5 last:border-0 last:pb-0"
                     >
                       <div className="flex items-center gap-3">
@@ -1882,7 +1895,7 @@ export function GroupsIndexScreen({
   const t = useTranslations("groupsPage");
   const tCards = useTranslations("cards");
   const totalMembers = groups.reduce((sum, g) => sum + g.members, 0);
-  const avgActivity = Math.round(groups.reduce((sum, g) => sum + g.activity, 0) / groups.length);
+  const avgActivity = groups.length > 0 ? Math.round(groups.reduce((sum, g) => sum + g.activity, 0) / groups.length) : 0;
   const strongestGroups = [...groups]
     .sort((left, right) => right.activity - left.activity || right.members - left.members)
     .slice(0, 3);
@@ -2347,7 +2360,7 @@ export function GroupDetailScreen({ group, events: eventsProp, isMember = false 
                   { label: t("labels.bestKnownFor"), value: (group.tags ?? []).join(" · ") },
                   {
                     label: t("labels.whyThisGroupMatters"),
-                    value: group.description || groupArchetype(group),
+                    value: (Array.isArray(group.description) ? group.description.join(" ") : group.description) || groupArchetype(group),
                   },
                 ].map((item) => (
                   <div
@@ -2407,6 +2420,7 @@ export function VenuesIndexScreen({
         imageSrc="/place-images/reykjavik/hof-i-deccf755.jpg"
         searchAction="/venues"
         searchPlaceholder={tCards("searchVenues")}
+        searchDefault={searchQuery}
         stats={[
           { label: t("stats.partnerVenues"), value: String(venues.length) },
           { label: t("stats.avgRating"), value: `${avgRating}/5` },
