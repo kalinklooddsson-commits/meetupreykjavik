@@ -72,7 +72,7 @@ export async function MemberOverviewScreen() {
   return (
     <PortalShell
       eyebrow="Member portal"
-      title={`Welcome back, ${profile.name.split(" ")[0]}`}
+      title={`Welcome back, ${(profile.name || "there").split(" ")[0]}`}
       description="Your events, groups, and community at a glance."
       links={memberLinks("overview")}
       roleMode="member"

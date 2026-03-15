@@ -75,6 +75,9 @@ const VENUE_PHOTOS: Record<string, string> = {
   "reykjavik-roasters": "/place-images/reykjavik/venues/reykjavik-roasters.jpg",
   "apotek": "/place-images/reykjavik/venues/apotek.jpg",
   "grandi-hub": "/place-images/reykjavik/venues/grandi-hub.jpg",
+  "hlemmur-square": "/place-images/reykjavik/venues/hlemmur-square.jpg",
+  "micro-bar": "/place-images/reykjavik/venues/micro-bar.jpg",
+  "stofan-cafe": "/place-images/reykjavik/venues/stofan-cafe.jpg",
 };
 
 /** Format a starts_at timestamptz into day / date / time for the event card. */

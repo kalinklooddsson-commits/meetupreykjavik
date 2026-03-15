@@ -89,11 +89,12 @@ export async function getMemberProfile(): Promise<MemberProfile> {
     groupCount = groupResult.count ?? 0;
   }
 
+  const displayName = profile.display_name || profile.email?.split("@")[0] || "User";
   return {
     slug: profile.slug,
-    name: profile.display_name,
+    name: displayName,
     email: profile.email ?? "",
-    initials: profile.display_name
+    initials: displayName
       .split(" ")
       .map((w: string) => w[0])
       .join("")
