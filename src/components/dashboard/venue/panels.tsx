@@ -47,8 +47,8 @@ export function VenueBookingCommandCenter({
         }),
       });
       const result = await res.json();
-      setDecisions((prev) => ({ ...prev, [key]: action }));
       if (result.ok) {
+        setDecisions((prev) => ({ ...prev, [key]: action }));
         toast("success", `Booking ${action} successfully`);
       } else {
         toast("error", result.error ?? `Could not ${action} booking. Please try again.`);
@@ -455,15 +455,13 @@ export function VenueDealStudio({
                   const result = await res.json();
                   if (result.ok) {
                     toast("success", "Deal created successfully");
+                    setShowForm(false);
+                    setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                   } else {
                     toast("error", result.error ?? "Could not create deal. Please try again.");
                   }
-                  setShowForm(false);
-                  setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                 } catch {
                   toast("error", "Could not save deal. Please try again.");
-                  setShowForm(false);
-                  setFormData({ title: "", type: "Free item", tier: "Bronze", note: "" });
                 } finally {
                   setSaving(false);
                 }

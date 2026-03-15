@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Save } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 
@@ -24,17 +24,18 @@ export function MemberSettingsStudio({
   sections: readonly SettingsSection[];
 }) {
   const profileSection = sections.find((s) => s.key === "profile");
-  const nameItem = profileSection?.items.find((i) => i.label === "Display name");
+  const findItem = (label: string) => profileSection?.items.find((i) => i.label === label)?.value ?? "";
 
   const [form, setForm] = useState<FormState>({
-    displayName: nameItem?.value ?? "",
-    bio: "",
-    city: "Reykjavik",
-    languages: "English, Icelandic",
+    displayName: findItem("Display name"),
+    bio: findItem("Bio"),
+    city: findItem("City") || findItem("Location") || "Reykjavik",
+    languages: findItem("Languages") || "English, Icelandic",
   });
 
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { toast } = useToast();
 
   function handleChange(field: keyof FormState, value: string) {
@@ -54,9 +55,10 @@ export function MemberSettingsStudio({
       if (result.ok) {
         setSaved(true);
         toast("success", "Profile updated successfully");
-        setTimeout(() => setSaved(false), 3000);
+        if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+        savedTimerRef.current = setTimeout(() => setSaved(false), 3000);
       } else {
-        toast("error", result.note || "Failed to save profile");
+        toast("error", result.error || "Failed to save profile");
       }
     } catch {
       toast("error", "Could not save profile. Please try again.");

@@ -232,13 +232,18 @@ export function AdminUserCommandCenter({
                   onChange={async (e) => {
                     const newRole = e.target.value;
                     try {
-                      await fetch("/api/admin/users/action", {
+                      const res = await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action: "role", value: newRole }),
                       });
-                      updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
-                      toast("success", `Role changed to ${newRole}`);
+                      const result = await res.json();
+                      if (result.ok) {
+                        updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
+                        toast("success", `Role changed to ${newRole}`);
+                      } else {
+                        toast("error", result.error ?? `Could not change role. Please try again.`);
+                      }
                     } catch {
                       toast("error", `Could not change role. Please try again.`);
                     }
@@ -260,13 +265,18 @@ export function AdminUserCommandCenter({
                     const action = selected.status === "Verified" ? "unverify" : "verify";
                     const msg = selected.status === "Verified" ? "Verification removed" : "User verified";
                     try {
-                      await fetch("/api/admin/users/action", {
+                      const res = await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                      updateUser(selected.key, { status: selected.status === "Verified" ? "Unverified" : "Verified" });
-                      toast("success", msg);
+                      const result = await res.json();
+                      if (result.ok) {
+                        updateUser(selected.key, { status: selected.status === "Verified" ? "Unverified" : "Verified" });
+                        toast("success", msg);
+                      } else {
+                        toast("error", result.error ?? `Could not update verification. Please try again.`);
+                      }
                     } catch {
                       toast("error", `Could not update verification. Please try again.`);
                     }
@@ -284,13 +294,18 @@ export function AdminUserCommandCenter({
                     const msg = isPremium ? "Premium removed" : "Premium granted";
                     const newPlan = isPremium ? "Free" : "Plus";
                     try {
-                      await fetch("/api/admin/users/action", {
+                      const res = await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                      updateUser(selected.key, { plan: newPlan });
-                      toast("success", msg);
+                      const result = await res.json();
+                      if (result.ok) {
+                        updateUser(selected.key, { plan: newPlan });
+                        toast("success", msg);
+                      } else {
+                        toast("error", result.error ?? `Could not update premium status. Please try again.`);
+                      }
                     } catch {
                       toast("error", `Could not update premium status. Please try again.`);
                     }
@@ -307,19 +322,24 @@ export function AdminUserCommandCenter({
                     const action = isSuspended ? "unsuspend" : "suspend";
                     const msg = isSuspended ? "User unsuspended" : "User suspended";
                     try {
-                      await fetch("/api/admin/users/action", {
+                      const res = await fetch("/api/admin/users/action", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
-                      if (isSuspended) {
-                        const restored = preSuspendStatus[selected.key] || "Active";
-                        updateUser(selected.key, { status: restored });
+                      const result = await res.json();
+                      if (result.ok) {
+                        if (isSuspended) {
+                          const restored = preSuspendStatus[selected.key] || "Active";
+                          updateUser(selected.key, { status: restored });
+                        } else {
+                          setPreSuspendStatus((prev) => ({ ...prev, [selected.key]: selected.status }));
+                          updateUser(selected.key, { status: "Suspended" });
+                        }
+                        toast("success", msg);
                       } else {
-                        setPreSuspendStatus((prev) => ({ ...prev, [selected.key]: selected.status }));
-                        updateUser(selected.key, { status: "Suspended" });
+                        toast("error", result.error ?? `Could not update suspension status. Please try again.`);
                       }
-                      toast("success", msg);
                     } catch {
                       toast("error", `Could not update suspension status. Please try again.`);
                     }
@@ -1852,16 +1872,27 @@ export function AdminCommsStudio({ comms }: { comms: CommsData }) {
     setDraft((prev) => ({ ...prev, [field]: value }));
   }
 
+  const [sending, setSending] = useState(false);
+
   async function handleSend() {
+    if (sending || !draft.subject?.trim()) return;
+    setSending(true);
     try {
-      await fetch("/api/admin/comms/send", {
+      const res = await fetch("/api/admin/comms/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audience: selectedAudience, draft }),
       });
-      toast("success", `Message sent to "${selectedAudience}"`);
+      const result = await res.json();
+      if (result.ok) {
+        toast("success", `Message sent to "${selectedAudience}"`);
+      } else {
+        toast("error", result.error ?? `Could not send message. Please try again.`);
+      }
     } catch {
       toast("error", `Could not send message. Please try again.`);
+    } finally {
+      setSending(false);
     }
   }
 
