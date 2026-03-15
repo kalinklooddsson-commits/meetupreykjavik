@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         }
       }
     } else {
-      console.log(`[Newsletter] New subscriber: ${email}`);
+      console.info("[Newsletter] Mock mode — subscription acknowledged (not saved)");
     }
 
     return NextResponse.json({

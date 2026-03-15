@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Mock mode: log and acknowledge
-      console.log(`[Contact form] From: ${name} <${email}> | Topic: ${topic} | Message: ${message.slice(0, 100)}...`);
+      console.info("[Contact form] Mock mode — message acknowledged (not sent)");
     }
 
     return NextResponse.json({

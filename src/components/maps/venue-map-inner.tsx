@@ -10,7 +10,8 @@ type VenueMapInnerProps = {
 };
 
 export default function VenueMapInner({ name, address }: VenueMapInnerProps) {
-  const searchQuery = encodeURIComponent(`${name}, ${address}, Reykjavik, Iceland`);
+  const locationParts = [name, address, "Reykjavik, Iceland"].filter(Boolean);
+  const searchQuery = encodeURIComponent(locationParts.join(", "));
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
   const googleMapsEmbedSrc = `https://maps.google.com/maps?q=${searchQuery}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
 
