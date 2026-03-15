@@ -59,17 +59,16 @@ function createInitialForm() {
     area: "101 Reykjavik",
     capacitySeated: 40,
     capacityStanding: 80,
-    summary: "A warm, flexible room built for hosted community formats and repeat organizer partnerships.",
-    description:
-      "This venue works best when the room has a visible host point, enough flexibility for small-group movement, and a team that understands the event format rather than just renting out space.",
-    amenities: "host desk, group seating, projector, coffee service",
-    galleryNotes: "One wide room shot, one arrival-zone shot, one service detail shot.",
-    heroDirection: "Indigo evening with warm coral spill from the bar area.",
-    openingHours: "Mon-Thu 17:00-23:00, Fri-Sat 17:00-01:00, Sun 18:00-23:00",
-    availabilityRules: "Wednesday 18:00-23:00 community-preferred. Sunday 19:00-23:30 social formats.",
-    dealTitle: "Host welcome drink",
-    dealType: "welcome_drink",
-    partnershipTier: "premium",
+    summary: "",
+    description: "",
+    amenities: "",
+    galleryNotes: "",
+    heroDirection: "",
+    openingHours: "",
+    availabilityRules: "",
+    dealTitle: "",
+    dealType: "",
+    partnershipTier: "free",
     contactName: "",
     email: "",
     phone: "",
@@ -133,6 +132,16 @@ export function VenueOnboardingWizard({
     form.partnershipTier as keyof typeof partnershipTierDetails
   ];
   const isDirty = JSON.stringify(form) !== savedSnapshot;
+
+  /** The highest step the user can navigate to (all prior steps must be complete). */
+  const highestReachableStep = useMemo(() => {
+    let max = 0;
+    for (let i = 0; i < steps.length; i++) {
+      if (!stepIsReady(i, form)) break;
+      max = i + 1;
+    }
+    return max;
+  }, [form]);
 
   useUnsavedChangesWarning(isDirty);
 
@@ -237,12 +246,15 @@ export function VenueOnboardingWizard({
               <button
                 key={item.key}
                 type="button"
+                disabled={index > highestReachableStep && index !== step}
                 onClick={() => setStep(index)}
                 className={cn(
                   "wizard-step-card flex w-full items-center gap-3 rounded-[1.1rem] border px-4 py-3 text-left transition",
                   step === index
                     ? "wizard-step-card-active border-[rgba(79,70,229,0.2)] bg-[rgba(79,70,229,0.08)]"
-                    : "border-[rgba(153,148,168,0.12)] bg-white/78",
+                    : index > highestReachableStep
+                      ? "cursor-not-allowed border-[rgba(153,148,168,0.08)] bg-white/40 opacity-50"
+                      : "border-[rgba(153,148,168,0.12)] bg-white/78",
                 )}
               >
                 <span
@@ -765,25 +777,47 @@ export function VenueOnboardingWizard({
                     {selectedTierDetails.name}
                   </span>
                 </div>
-                <div className="font-editorial mt-4 text-3xl tracking-[-0.05em] text-brand-text">
+                <div className={cn(
+                  "font-editorial mt-4 text-3xl tracking-[-0.05em]",
+                  form.businessName ? "text-brand-text" : "text-brand-text-muted italic",
+                )}>
                   {form.businessName || "Venue name"}
                 </div>
-                <p className="mt-3 text-sm leading-7 text-brand-text-muted">
-                  {form.summary}
+                <p className={cn(
+                  "mt-3 text-sm leading-7",
+                  form.summary ? "text-brand-text-muted" : "text-brand-text-muted/50 italic",
+                )}>
+                  {form.summary || "No summary yet"}
                 </p>
                 <div className="mt-4 grid gap-3">
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
+                  <div className={cn(
+                    "rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm",
+                    form.address ? "text-brand-text" : "text-brand-text-muted italic",
+                  )}>
                     {form.address || "Venue address"} · {form.area}
                   </div>
                   <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     {form.capacityStanding} standing · {form.capacitySeated} seated
                   </div>
-                  <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
+                  <div className={cn(
+                    "rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm",
+                    form.dealTitle ? "text-brand-text" : "text-brand-text-muted italic",
+                  )}>
                     Deal: {form.dealTitle || "No deal yet"}
                   </div>
                   <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
                     Plan: {selectedTierDetails.price}
                   </div>
+                  {form.contactName || form.email ? (
+                    <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
+                      {form.contactName}{form.contactName && form.email ? " · " : ""}{form.email}
+                    </div>
+                  ) : null}
+                  {form.phone || form.website ? (
+                    <div className="rounded-[1rem] bg-[rgba(245,240,232,0.84)] px-4 py-3 text-sm text-brand-text">
+                      {form.phone}{form.phone && form.website ? " · " : ""}{form.website}
+                    </div>
+                  ) : null}
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {amenities.map((item) => (

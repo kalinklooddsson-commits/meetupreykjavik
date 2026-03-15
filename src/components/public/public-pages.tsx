@@ -507,7 +507,7 @@ function DetailHero({
             src={imageUrl}
             unoptimized={imageUrl.startsWith("https://")}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/30 to-gray-900/80" />
+          <div className="absolute inset-0 bg-black/40 bg-gradient-to-b from-gray-900/70 to-gray-900/90" />
         </>
       ) : (
         <div className="absolute inset-0" style={{ background: art }} />
@@ -1980,7 +1980,7 @@ export function GroupsIndexScreen({
                 className="relative overflow-hidden rounded-xl border-l-4 border-brand-indigo bg-white p-5 shadow-[0_1px_4px_rgba(42,38,56,0.04)]"
               >
                 {/* Large faded step number */}
-                <span className="pointer-events-none absolute -top-3 right-3 select-none text-[5rem] font-black leading-none text-brand-indigo/[0.06]">
+                <span aria-hidden="true" className="pointer-events-none absolute -top-3 right-3 -z-0 select-none text-[5rem] font-black leading-none text-brand-indigo/[0.04]">
                   {item.step}
                 </span>
                 <div className="relative flex items-start gap-4">
@@ -2967,7 +2967,7 @@ export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place:
               src={imageSrc}
               unoptimized={imageSrc.startsWith("https://")}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-gray-900/30 to-gray-900/80" />
+            <div className="absolute inset-0 bg-black/40 bg-gradient-to-b from-gray-900/70 to-gray-900/90" />
           </>
         ) : null}
         <div className="section-shell relative z-10 py-10 text-white sm:py-14 md:py-20">

@@ -53,7 +53,7 @@ export async function OrganizerMessagesScreen() {
       messages = dbMessages.map((m: Record<string, unknown>) => ({
         key: (m.id as string) ?? "",
         counterpart: (m.other_display_name as string) ?? "Unknown",
-        role: "User",
+        role: ((m.other_account_type as string) ?? "User").replace(/^\w/, (c: string) => c.toUpperCase()),
         subject: (m.subject as string) ?? "No subject",
         preview: ((m.body as string) ?? "").slice(0, 100),
         channel: "Direct",

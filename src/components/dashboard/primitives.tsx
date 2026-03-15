@@ -81,6 +81,7 @@ type SignalRailProps = {
     value: string;
     detail: string;
     tone?: DashboardTone;
+    href?: string;
   }>;
 };
 
@@ -347,27 +348,38 @@ export function SignalRail({ eyebrow, title, description, items }: SignalRailPro
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">
-          {items.map((item) => (
-            <article
-              key={item.key}
-              className="rounded-lg border border-brand-border-light bg-white p-3"
-            >
-              <div
+          {items.map((item) => {
+            const content = (
+              <article
                 className={cn(
-                  "inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium",
-                  toneClasses[item.tone ?? "indigo"],
+                  "rounded-lg border border-brand-border-light bg-white p-3",
+                  item.href && "transition hover:border-brand-indigo hover:shadow-sm",
                 )}
               >
-                {item.label}
-              </div>
-              <div className="tabular-nums mt-2 text-2xl font-semibold text-brand-text">
-                {item.value}
-              </div>
-              <p className="mt-1 text-xs leading-relaxed text-brand-text-muted">
-                {item.detail}
-              </p>
-            </article>
-          ))}
+                <div
+                  className={cn(
+                    "inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium",
+                    toneClasses[item.tone ?? "indigo"],
+                  )}
+                >
+                  {item.label}
+                </div>
+                <div className="tabular-nums mt-2 text-2xl font-semibold text-brand-text">
+                  {item.value}
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-brand-text-muted">
+                  {item.detail}
+                </p>
+              </article>
+            );
+            return item.href ? (
+              <Link key={item.key} href={item.href as Route} className="block">
+                {content}
+              </Link>
+            ) : (
+              <div key={item.key}>{content}</div>
+            );
+          })}
         </div>
       </div>
     </section>

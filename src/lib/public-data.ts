@@ -587,7 +587,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "reykjavik-hikers",
     name: "Reykjavik Hikers",
     category: "Outdoors",
-    members: 284,
+    members: 38,
     activity: 81,
     summary: "Weekly hikes around Iceland with welcoming pacing and strong repeat attendance.",
     description: [
@@ -608,7 +608,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "expats-in-iceland",
     name: "Expats in Iceland",
     category: "Expat",
-    members: 512,
+    members: 45,
     activity: 92,
     summary: "A broad social landing place for newcomers building a real life in Reykjavik.",
     description: [
@@ -629,7 +629,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "tech-community-rvk",
     name: "Tech Community RVK",
     category: "Tech",
-    members: 198,
+    members: 27,
     activity: 76,
     summary: "Developers, founders, and operators who prefer practical sessions over vague networking.",
     description: [
@@ -650,7 +650,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "creative-reykjavik",
     name: "Creative Reykjavik",
     category: "Arts",
-    members: 203,
+    members: 22,
     activity: 63,
     summary: "Art nights, gallery walks, and small format culture events with a social core.",
     description: [
@@ -671,7 +671,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "reykjavik-foodies",
     name: "Reykjavik Foodies",
     category: "Food",
-    members: 167,
+    members: 19,
     activity: 71,
     summary: "Tastings, food walks, and kitchen culture events for people who take eating in Reykjavik seriously.",
     description: [
@@ -692,7 +692,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "nightlife-reykjavik",
     name: "Nightlife Reykjavik",
     category: "Social",
-    members: 389,
+    members: 34,
     activity: 85,
     summary: "Social nights, dinner events, and weekend gatherings for people who want more than random bar hopping.",
     description: [
@@ -713,7 +713,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "wellness-reykjavik",
     name: "Wellness Reykjavik",
     category: "Sports",
-    members: 142,
+    members: 16,
     activity: 64,
     summary: "Yoga, breathwork, and mindful movement events for people who want a calmer start to the day or week.",
     description: [
@@ -734,7 +734,7 @@ export const publicGroups: PublicGroup[] = [
     slug: "language-exchange-rvk",
     name: "Language Exchange RVK",
     category: "Language",
-    members: 231,
+    members: 29,
     activity: 78,
     summary: "Weekly conversation tables for Icelandic learners, native speakers, and multilingual residents who want structured practice.",
     description: [

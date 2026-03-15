@@ -93,7 +93,7 @@ export async function OrganizerBookingsScreen() {
             />
           ) : (
             <p className="py-8 text-center text-sm text-gray-500">
-              No booking requests yet. Browse venue matches below to get started.
+              No booking requests yet. Request a venue booking to get started.
             </p>
           )}
         </Surface>
@@ -127,9 +127,12 @@ export async function OrganizerVenuesScreen() {
               key: v.venue.slug,
               cells: [
                 <div key="venue">
-                  <span className="font-medium text-brand-text">
+                  <Link
+                    href={`/venues/${v.venue.slug}` as Route}
+                    className="font-medium text-brand-indigo hover:underline"
+                  >
                     {v.venue.name}
-                  </span>
+                  </Link>
                   <div className="mt-0.5 text-xs text-brand-text-muted">
                     {v.venue.area}
                   </div>

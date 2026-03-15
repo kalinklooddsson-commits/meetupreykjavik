@@ -282,7 +282,7 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
         (e: Record<string, unknown>) => !rsvpEventIds.has(e.id as string),
       );
       recommendationCount = available.length;
-      realRecommendations = available.slice(0, 5).map((e: Record<string, unknown>, i: number) => {
+      realRecommendations = available.slice(0, 10).map((e: Record<string, unknown>, i: number) => {
         const venue = e.venues as Record<string, string> | null;
         return {
           event: {
@@ -651,7 +651,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
       nextEvents: allMappedEvents
         .filter((e) => !/cancelled|completed/i.test(e.status))
         .slice(0, 10),
-      ...(rsvpTrendData ? { rsvpTrend: rsvpTrendData } : {}),
+      rsvpTrend: rsvpTrendData ?? [],
 
       // ── Real notifications (same pattern as member/venue) ────────
       notifications: notifications.length > 0
@@ -685,7 +685,7 @@ export async function getOrganizerPortalData(): Promise<OrganizerPortalData> {
             return {
               key: m.id as string,
               counterpart: (m.other_display_name as string) ?? "Unknown",
-              role: "User",
+              role: ((m.other_account_type as string) ?? "User").replace(/^\w/, (c: string) => c.toUpperCase()),
               subject: subjectText,
               preview: body !== subjectText ? body.slice(0, 80) : "",
               channel: "Direct message",
@@ -1302,7 +1302,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       supabase
         ? supabase
             .from("events")
-            .select("id, slug, title, status, starts_at, venue_name, venues:venue_id ( name ), categories:category_id ( name_en )")
+            .select("id, slug, title, status, starts_at, venue_name, venues:venue_id ( name, slug ), categories:category_id ( name_en )")
             .order("starts_at", { ascending: true })
             .limit(100)
         : Promise.resolve({ data: null }),
@@ -1404,6 +1404,7 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         status: formatAdminStatus(e.status as string),
         category: (cat?.name_en as string) ?? "",
         venue: (venue?.name as string) ?? (e.venue_name as string) ?? "",
+        venueSlug: (venue?.slug as string) ?? "",
         date: `${day} ${month}`,
         action: "",
       };

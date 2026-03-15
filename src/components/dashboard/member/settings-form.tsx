@@ -90,7 +90,7 @@ export function SettingsForm({
     "Profile visibility": ["Public", "Members only", "Private"],
     "Attendance history": ["Visible to joined groups", "Visible to all", "Hidden"],
     "Direct messages": ["Allow organizers only", "Allow all members", "Disabled"],
-    "2-step auth": ["Recommended", "Enabled", "Disabled"],
+    "2-step auth": ["Enabled", "Disabled", "App-based", "SMS-based"],
   };
 
   return (
@@ -164,16 +164,18 @@ export function SettingsForm({
             })}
           </div>
 
-          <div className="mt-5 flex justify-end">
-            <button
-              type="button"
-              onClick={() => handleSave(section.key)}
-              disabled={saving === section.key}
-              className="rounded-lg bg-brand-indigo px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-indigo-dark disabled:opacity-50"
-            >
-              {saving === section.key ? "Saving…" : "Save changes"}
-            </button>
-          </div>
+          {section.items.some((item) => !readOnlyFields.has(item.label)) && (
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => handleSave(section.key)}
+                disabled={saving === section.key}
+                className="rounded-lg bg-brand-indigo px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-indigo-dark disabled:opacity-50"
+              >
+                {saving === section.key ? "Saving…" : "Save changes"}
+              </button>
+            </div>
+          )}
         </div>
       ))}
     </div>

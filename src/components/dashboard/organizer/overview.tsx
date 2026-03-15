@@ -2,7 +2,6 @@ import type { Route } from "next";
 import { PortalShell } from "@/components/layout/portal-shell";
 import {
   Surface,
-  StatCard,
   DashboardTable,
   TrendChart,
   ActivityFeed,
@@ -114,26 +113,6 @@ export async function OrganizerOverviewScreen() {
           items={decisionItems}
         />
 
-        {/* Stat cards */}
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {data.metrics.map((m) => (
-            <StatCard
-              key={m.label}
-              label={m.label}
-              value={m.value}
-              detail={m.detail}
-              delta={m.delta}
-              tone={
-                m.label.includes("Pending")
-                  ? "coral"
-                  : m.label.includes("Venue")
-                    ? "indigo"
-                    : "sage"
-              }
-            />
-          ))}
-        </div>
-
         {/* Active events table */}
         <Surface
           eyebrow="Your events"
@@ -180,7 +159,13 @@ export async function OrganizerOverviewScreen() {
             title="RSVP trend"
             description="RSVPs received across all your events over the past week."
           >
-            <TrendChart data={data.rsvpTrend} tone="indigo" />
+            {data.rsvpTrend.length > 0 && data.rsvpTrend.some((d) => d.value > 0) ? (
+              <TrendChart data={data.rsvpTrend} tone="indigo" />
+            ) : (
+              <p className="py-8 text-center text-sm text-gray-500">
+                No RSVP data yet. Trends will appear once attendees start responding to your events.
+              </p>
+            )}
           </Surface>
 
           <Surface

@@ -134,16 +134,20 @@ export async function OrganizerAnalyticsScreen() {
         <StatCard label="Avg Fill Rate" value={avgFillRate} icon={TrendingUp} />
       </div>
 
-      {trendData.length > 0 && (
-        <Surface title="RSVP Trend (Past Week)" className="mt-6">
+      <Surface title="RSVP Trend (Past Week)" className="mt-6">
+        {trendData.length > 0 && trendData.some((d) => typeof d === "object" && d !== null && ((d as Record<string, unknown>).value as number) > 0) ? (
           <TrendChart
             data={trendData.map((d) => ({
               label: typeof d === "object" && d !== null ? ((d as Record<string, unknown>).label as string) ?? "" : "",
               value: typeof d === "object" && d !== null ? ((d as Record<string, unknown>).value as number) ?? 0 : 0,
             }))}
           />
-        </Surface>
-      )}
+        ) : (
+          <p className="py-8 text-center text-sm text-gray-500">
+            No RSVP data yet. Trends will appear once attendees start responding to your events.
+          </p>
+        )}
+      </Surface>
 
       <Surface title="Event Performance" className="mt-6">
         {eventRows.length > 0 ? (

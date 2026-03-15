@@ -1,4 +1,5 @@
 import type { Route } from "next";
+import Link from "next/link";
 import {
   Users,
   CalendarDays,
@@ -121,13 +122,14 @@ export async function AdminOverviewScreen() {
       >
         <div className="grid gap-3 lg:grid-cols-3">
           {data.urgentQueues.map((q) => (
-            <StreamCard
-              key={q.key}
-              eyebrow={q.meta}
-              title={q.title}
-              description={q.detail}
-              badge={<ToneBadge tone={q.tone}>{q.tone === "coral" ? "Urgent" : "Review"}</ToneBadge>}
-            />
+            <Link key={q.key} href={"/admin/events" as Route} className="block transition hover:opacity-80">
+              <StreamCard
+                eyebrow={q.meta}
+                title={q.title}
+                description={q.detail}
+                badge={<ToneBadge tone={q.tone}>{q.tone === "coral" ? "Urgent" : "Review"}</ToneBadge>}
+              />
+            </Link>
           ))}
         </div>
       </Surface>
@@ -219,13 +221,26 @@ export async function AdminOverviewScreen() {
         eyebrow="Operations"
         title="Ops inbox"
         description="Current workstream items assigned across the operations team."
-        items={data.opsInbox.map((item) => ({
-          key: item.key,
-          label: item.lane,
-          value: item.status,
-          detail: item.title,
-          tone: statusTone(item.status),
-        }))}
+        items={data.opsInbox.map((item) => {
+          const laneRoutes: Record<string, string> = {
+            Moderation: "/admin/moderation",
+            Revenue: "/admin/revenue",
+            Events: "/admin/events",
+            Users: "/admin/users",
+            Venues: "/admin/venues",
+            Bookings: "/admin/bookings",
+            Groups: "/admin/groups",
+            Payouts: "/admin/payouts",
+          };
+          return {
+            key: item.key,
+            label: item.lane,
+            value: item.status,
+            detail: item.title,
+            tone: statusTone(item.status),
+            href: laneRoutes[item.lane] ?? "/admin",
+          };
+        })}
       />
     </PortalShell>
   );

@@ -5,6 +5,7 @@ import {
   DashboardTable,
   ToneBadge,
 } from "@/components/dashboard/primitives";
+import Link from "next/link";
 import type { DashboardTone } from "@/components/dashboard/primitives";
 import { getOrganizerPortalData } from "@/lib/dashboard-fetchers";
 
@@ -100,9 +101,17 @@ export async function OrganizerGroupsScreen() {
               caption="Groups you manage"
             />
           ) : (
-            <p className="py-8 text-center text-sm text-gray-500">
-              No groups yet. Browse existing groups or create your own to get started.
-            </p>
+            <div className="py-8 text-center">
+              <p className="text-sm text-gray-500">
+                No groups yet. Browse existing groups or create your own to get started.
+              </p>
+              <Link
+                href={"/groups/new" as Route}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-brand-indigo px-5 py-2.5 text-sm font-medium text-white transition hover:bg-brand-indigo/90"
+              >
+                Create group
+              </Link>
+            </div>
           )}
         </Surface>
 

@@ -131,7 +131,17 @@ export function AdminUserCommandCenter({
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [preSuspendStatus, setPreSuspendStatus] = useState<Record<string, string>>({});
+  const [preSuspendStatus, setPreSuspendStatus] = useState<Record<string, string>>(() => {
+    // Initialize with the original status of every non-suspended user so that
+    // suspending and then unsuspending restores the correct status (e.g. "Verified")
+    const map: Record<string, string> = {};
+    for (const u of users) {
+      if (u.status !== "Suspended") {
+        map[u.key] = u.status;
+      }
+    }
+    return map;
+  });
   const { toast } = useToast();
 
   const roleChips = [
@@ -171,8 +181,13 @@ export function AdminUserCommandCenter({
             className={cn(inputClass, "pl-9")}
           />
         </div>
-        <span className="text-xs text-brand-text-muted">
-          {filtered.length} of {localUsers.length} accounts
+        <span className="inline-flex items-center gap-1.5 text-xs text-brand-text-muted">
+          <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-brand-indigo px-1.5 text-[11px] font-semibold tabular-nums text-white">
+            {filtered.length}
+          </span>
+          {filtered.length !== localUsers.length
+            ? `of ${localUsers.length} accounts`
+            : "accounts"}
         </span>
       </div>
       <FilterChips items={roleChips} onSelect={(k) => setRoleFilter(k)} />
@@ -764,6 +779,7 @@ type EventRow = {
   status: string;
   category: string;
   venue: string;
+  venueSlug?: string;
   date: string;
   action: string;
 };
@@ -851,35 +867,47 @@ export function AdminEventOperationsDesk({
           cells: [
             <a key="t" href={`/events/${e.key}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-coral hover:underline">{e.title}</a>,
             <ToneBadge key="c" tone="neutral">{e.category}</ToneBadge>,
-            e.venue,
+            e.venueSlug ? (
+              <a key="v" href={`/venues/${e.venueSlug}`} target="_blank" rel="noopener noreferrer" className="font-medium text-brand-coral hover:underline">{e.venue}</a>
+            ) : (
+              e.venue
+            ),
             e.date,
             <ToneBadge key="s" tone={toneForStatus(e.status)}>{e.status}</ToneBadge>,
             <div key="a" className="flex gap-1.5">
-              {e.status === "Pending Review" && (
-                <>
-                  <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Published")}>
-                    <CheckCircle2 className="h-3.5 w-3.5 text-brand-sage" /> Approve
-                  </button>
-                  <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Rejected")}>
-                    <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Decline
-                  </button>
-                </>
-              )}
-              {e.status === "Draft" && (
-                <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Published")}>
-                  <Send className="h-3.5 w-3.5 text-brand-sage" /> Publish
-                </button>
-              )}
-              {e.status !== "Cancelled" && e.status !== "Rejected" && e.status !== "Pending Review" && (
-                <button type="button" className={btnGhost} onClick={() => updateEvent(e.key, "Featured")}>
-                  <Star className="h-3.5 w-3.5 text-brand-coral" /> Feature
-                </button>
-              )}
-              {e.status !== "Cancelled" && e.status !== "Rejected" && (
-                <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Cancelled")}>
-                  <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Cancel
-                </button>
-              )}
+              {(() => {
+                const isCancelled = /^cancelled$/i.test(e.status);
+                const isRejected = /^rejected$/i.test(e.status);
+                return (
+                  <>
+                    {e.status === "Pending Review" && !isCancelled && (
+                      <>
+                        <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Published")}>
+                          <CheckCircle2 className="h-3.5 w-3.5 text-brand-sage" /> Approve
+                        </button>
+                        <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Rejected")}>
+                          <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Decline
+                        </button>
+                      </>
+                    )}
+                    {e.status === "Draft" && !isCancelled && (
+                      <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Published")}>
+                        <Send className="h-3.5 w-3.5 text-brand-sage" /> Publish
+                      </button>
+                    )}
+                    {!isCancelled && !isRejected && e.status !== "Pending Review" && (
+                      <button type="button" className={btnGhost} onClick={() => updateEvent(e.key, "Featured")}>
+                        <Star className="h-3.5 w-3.5 text-brand-coral" /> Feature
+                      </button>
+                    )}
+                    {!isCancelled && !isRejected && (
+                      <button type="button" className={btnGhost} onClick={() => requestConfirm(e.key, "Cancelled")}>
+                        <XCircle className="h-3.5 w-3.5 text-brand-coral" /> Cancel
+                      </button>
+                    )}
+                  </>
+                );
+              })()}
             </div>,
           ],
         }))}
