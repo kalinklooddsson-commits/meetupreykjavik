@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
   if (action === "featured") {
     const { error } = await db
       .from("events")
-      .update({ is_featured: true })
+      .update({ is_featured: true, status: "published" as EventStatus })
       .eq("id", eventId);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, status: "featured" });

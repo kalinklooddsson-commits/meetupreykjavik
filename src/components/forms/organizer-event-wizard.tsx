@@ -90,7 +90,7 @@ function formatIsk(value: number) {
 function createInitialForm() {
   return {
     title: "",
-    groupSlug: "",
+    groupSlug: publicGroups[0]?.slug ?? "",
     category: "",
     eventType: "in_person",
     tags: "",

@@ -860,7 +860,7 @@ async function handleLiveDataRequest(
       case "POST /api/events/[slug]/comments": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
@@ -879,7 +879,7 @@ async function handleLiveDataRequest(
       }
       case "GET /api/events/[slug]/comments": {
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return successResponse([]);
         const { data } = await supabase
@@ -894,7 +894,7 @@ async function handleLiveDataRequest(
       case "POST /api/events/[slug]/rate": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         // Prevent duplicate ratings
@@ -976,7 +976,7 @@ async function handleLiveDataRequest(
       }
       case "GET /api/groups/[slug]/members": {
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const group = await getGroupBySlug(match.params.slug);
         if (!group) return successResponse([]);
         const { data } = await supabase
@@ -1056,7 +1056,7 @@ async function handleLiveDataRequest(
       case "POST /api/venues/[slug]/deals": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
         if (venue.owner_id !== session.id && session.accountType !== "admin") {
@@ -1083,7 +1083,7 @@ async function handleLiveDataRequest(
       }
       case "GET /api/venues/[slug]/deals": {
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return successResponse([]);
         const { data } = await supabase
@@ -1098,7 +1098,7 @@ async function handleLiveDataRequest(
       case "POST /api/venues/[slug]/reviews": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
         const body = (await parseValidatedBody(request, key)) as Record<string, unknown>;
@@ -1120,7 +1120,7 @@ async function handleLiveDataRequest(
       }
       case "GET /api/venues/[slug]/reviews": {
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return successResponse([]);
         const { data } = await supabase
@@ -1135,7 +1135,7 @@ async function handleLiveDataRequest(
       case "POST /api/venues/[slug]/availability": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
         if (venue.owner_id !== session.id && session.accountType !== "admin") {
@@ -1164,7 +1164,7 @@ async function handleLiveDataRequest(
       }
       case "GET /api/venues/[slug]/availability": {
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return successResponse([]);
         const { data } = await supabase
@@ -1225,7 +1225,7 @@ async function handleLiveDataRequest(
       case "GET /api/bookings": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         // Fetch bookings where user is organizer
         const { data: asOrganizer } = await supabase
           .from("venue_bookings")
@@ -1266,7 +1266,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/bookings/[id]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabaseForBooking = await createSupabaseServerClient();
-        if (!supabaseForBooking) return null;
+        if (!supabaseForBooking) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const { data: bookingToUpdate } = await supabaseForBooking
           .from("venue_bookings")
           .select("organizer_id, venue_id, venues:venue_id (owner_id)")
@@ -1469,7 +1469,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/member/settings": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { section, values } = body as { section: string; values: Record<string, string> };
         // Map profile section fields to profiles columns
@@ -1501,7 +1501,7 @@ async function handleLiveDataRequest(
       case "POST /api/attendees/action": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         // Accept both field-name conventions: { attendeeName, rsvpId } or { name, eventSlug }
         const attendeeName = (body.attendeeName ?? body.name) as string;
@@ -1565,7 +1565,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/venues/availability": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         // Find venue owned by current user (try owner_id, then slug for demo accounts)
         let ownedVenue: { id: string } | null = null;
         const { data: ownedVenueByOwner } = await supabase
@@ -1617,7 +1617,7 @@ async function handleLiveDataRequest(
       case "POST /api/venues/deals": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         // Find venue owned by current user (try owner_id, then slug for demo accounts)
         let dealVenue: { id: string } | null = null;
         const { data: dealVenueByOwner } = await supabase
@@ -1675,7 +1675,7 @@ async function handleLiveDataRequest(
       case "GET /api/admin/stats": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const [users, events, groups, venues] = await Promise.all([
           supabase.from("profiles").select("id", { count: "exact", head: true }),
           supabase.from("events").select("id", { count: "exact", head: true }),
@@ -1694,7 +1694,7 @@ async function handleLiveDataRequest(
       case "GET /api/admin/analytics/[type]": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const analyticsType = match.params.type;
         switch (analyticsType) {
           case "users": {
@@ -1743,7 +1743,7 @@ async function handleLiveDataRequest(
       case "GET /api/admin/transactions": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const url = request.nextUrl;
         const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 50) || 50, 1), 200);
         const offset = Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0);
@@ -1760,7 +1760,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/admin/groups/[id]/approve": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const status = body.status === "rejected" ? "archived" : "active";
         const { data, error } = await supabase
@@ -1777,7 +1777,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/admin/venues/[id]/approve": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const status = body.status === "rejected" ? "rejected" : "active";
         const { data, error } = await supabase
@@ -1794,7 +1794,7 @@ async function handleLiveDataRequest(
       case "GET /api/admin/moderation": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const [pendingGroups, pendingVenues] = await Promise.all([
           supabase.from("groups").select("*").eq("status", "pending").order("created_at", { ascending: false }),
           supabase.from("venues").select("*").eq("status", "pending").order("created_at", { ascending: false }),
@@ -1809,7 +1809,7 @@ async function handleLiveDataRequest(
       case "POST /api/admin/announcements": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const title = (body.title as string) ?? "Announcement";
         const detail = (body.message as string) ?? (body.detail as string) ?? "";
@@ -1833,7 +1833,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/admin/settings": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { sectionKey, items } = body as { sectionKey: string; items: { label: string; value: string }[] };
         if (!sectionKey) return validationMessage("sectionKey is required", "sectionKey");
@@ -1851,7 +1851,7 @@ async function handleLiveDataRequest(
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         // Admin client bypasses RLS to update any profile
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { userKey, action, value } = body as { userKey: string; action: string; value?: string };
         const updates: Record<string, unknown> = {};
@@ -1893,7 +1893,7 @@ async function handleLiveDataRequest(
       case "POST /api/admin/notes": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { key, action: noteAction, note } = body as { key: string; action: string; note: string };
         if (noteAction === "add") {
@@ -1914,7 +1914,7 @@ async function handleLiveDataRequest(
       case "DELETE /api/admin/notes": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { key, note } = body as { key: string; note: string };
         try {
@@ -1929,33 +1929,13 @@ async function handleLiveDataRequest(
       }
 
       // ── Admin events action ──
-      case "POST /api/admin/events/action": {
-        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
-        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
-        const body = await request.json();
-        const { key, action: eventAction } = body as { key: string; action: string };
-        const updates: Record<string, unknown> = {};
-        if (eventAction === "published") updates.status = "published";
-        else if (eventAction === "rejected") updates.status = "cancelled";
-        else if (eventAction === "featured") { updates.is_featured = true; updates.status = "published"; }
-        else if (eventAction === "cancelled") updates.status = "cancelled";
-        else return validationMessage(`Unknown event action: ${eventAction}`);
-        const { data, error } = await supabase
-          .from("events")
-          .update(updates)
-          .eq("slug", key)
-          .select()
-          .maybeSingle();
-        if (error) throw error;
-        return successResponse({ ok: true, action: eventAction, event: data });
-      }
+      // Handled by dedicated route: /api/admin/events/action/route.ts
 
       // ── Admin groups action ──
       case "POST /api/admin/groups/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { key, action: groupAction } = body as { key: string; action: string };
         const statusMap: Record<string, string> = { approved: "active", rejected: "archived", archived: "archived" };
@@ -1978,7 +1958,7 @@ async function handleLiveDataRequest(
       case "POST /api/admin/venues/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { key, keys, action: venueAction } = body as { key?: string; keys?: string[]; action: string };
         // Map action to valid venue status (DB CHECK: pending, active, waitlisted, suspended, rejected)
@@ -2022,7 +2002,7 @@ async function handleLiveDataRequest(
       case "POST /api/admin/refund": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { key } = body as { key: string };
         const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -2037,6 +2017,38 @@ async function handleLiveDataRequest(
           return successResponse({ ok: true, transaction: data });
         }
         return successResponse({ ok: true, key });
+      }
+
+      // ── Admin bookings action ──
+      case "POST /api/admin/bookings/action": {
+        if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
+        const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
+        const body = await request.json();
+        const { key, action: bookingAction } = body as { key: string; action: string };
+        const bookingStatusMap: Record<string, string> = {
+          accepted: "accepted",
+          approved: "accepted",
+          declined: "declined",
+          rejected: "declined",
+          cancelled: "cancelled",
+          pending: "pending",
+        };
+        const mappedStatus = bookingStatusMap[bookingAction.toLowerCase()];
+        if (!mappedStatus) return validationMessage(`Unknown booking action: ${bookingAction}`);
+        const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (uuidPattern.test(key)) {
+          const { data, error } = await supabase
+            .from("bookings")
+            .update({ status: mappedStatus })
+            .eq("id", key)
+            .select()
+            .maybeSingle();
+          if (error) throw error;
+          return successResponse({ ok: true, action: bookingAction, booking: data });
+        }
+        // Non-UUID key — acknowledge without DB change
+        return successResponse({ ok: true, action: bookingAction, key });
       }
 
       // ── Admin ops action (no dedicated table yet) ──
@@ -2055,7 +2067,7 @@ async function handleLiveDataRequest(
       case "POST /api/admin/moderation/action": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = createSupabaseAdminClient() as Awaited<ReturnType<typeof createSupabaseServerClient>>;
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { key, action: modAction } = body as { key: string; action: string };
         if (modAction === "unban") {
@@ -2080,7 +2092,7 @@ async function handleLiveDataRequest(
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         // Use admin client to bypass RLS — admin needs to read ALL profiles
         const adminDb = createSupabaseAdminClient();
-        if (!adminDb) return null;
+        if (!adminDb) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { audience, draft } = body as { audience: string; draft: { subject?: string; headline?: string; body?: string } };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -2108,7 +2120,7 @@ async function handleLiveDataRequest(
       case "GET /api/admin/audit-log": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const url = request.nextUrl;
         const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 50) || 50, 1), 200);
         const offset = Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0);
@@ -2128,7 +2140,7 @@ async function handleLiveDataRequest(
       case "GET /api/admin/export/[type]": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const exportType = match.params.type;
         const tableMap: Record<string, string> = {
           events: "events",
@@ -2178,7 +2190,7 @@ async function handleLiveDataRequest(
       case "GET /api/users": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const url = request.nextUrl;
         const limit = Math.min(Math.max(Number(url.searchParams.get("limit") ?? 50) || 50, 1), 200);
         const offset = Math.max(Number(url.searchParams.get("offset") ?? 0) || 0, 0);
@@ -2201,7 +2213,7 @@ async function handleLiveDataRequest(
       case "DELETE /api/users/[id]": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const { error } = await supabase
           .from("profiles")
           .delete()
@@ -2214,7 +2226,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/users/[id]/type": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         if (!body.account_type) return validationMessage("account_type is required.", "account_type");
         const { data, error } = await supabase
@@ -2231,7 +2243,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/users/[id]/status": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         // profiles table has no 'status' column — this endpoint is non-functional
         return validationMessage("User status updates are not supported (no status column in profiles schema).");
@@ -2241,7 +2253,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/events/[slug]/rsvp/[userId]/approve": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         if (event.host_id !== session.id && session.accountType !== "admin") {
@@ -2260,7 +2272,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/events/[slug]/rsvp/[userId]/reject": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         if (event.host_id !== session.id && session.accountType !== "admin") {
@@ -2279,7 +2291,7 @@ async function handleLiveDataRequest(
       case "DELETE /api/events/[slug]/rsvp/[userId]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         if (event.host_id !== session.id && session.accountType !== "admin") {
@@ -2296,7 +2308,7 @@ async function handleLiveDataRequest(
       case "POST /api/events/[slug]/rsvp/override": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         const body = await request.json();
@@ -2317,7 +2329,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/groups/[slug]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const group = await getGroupBySlug(match.params.slug);
         if (!group) return validationMessage("Group not found.");
         if (group.organizer_id !== session.id && session.accountType !== "admin") {
@@ -2336,7 +2348,7 @@ async function handleLiveDataRequest(
       case "DELETE /api/groups/[slug]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const group = await getGroupBySlug(match.params.slug);
         if (!group) return validationMessage("Group not found.");
         if (group.organizer_id !== session.id && session.accountType !== "admin") {
@@ -2352,7 +2364,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/groups/[slug]/members/[userId]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const group = await getGroupBySlug(match.params.slug);
         if (!group) return validationMessage("Group not found.");
         if (group.organizer_id !== session.id && session.accountType !== "admin") {
@@ -2372,7 +2384,7 @@ async function handleLiveDataRequest(
       case "POST /api/groups/[slug]/block/[userId]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const group = await getGroupBySlug(match.params.slug);
         if (!group) return validationMessage("Group not found.");
         if (group.organizer_id !== session.id && session.accountType !== "admin") {
@@ -2402,7 +2414,7 @@ async function handleLiveDataRequest(
       case "PATCH /api/deals/[id]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         // Verify ownership
         const { data: deal } = await supabase
           .from("venue_deals")
@@ -2427,7 +2439,7 @@ async function handleLiveDataRequest(
       case "DELETE /api/deals/[id]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const { data: deal } = await supabase
           .from("venue_deals")
           .select("*, venues:venue_id (owner_id)")
@@ -2450,7 +2462,7 @@ async function handleLiveDataRequest(
       case "POST /api/events/[slug]/invite": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         if (event.host_id !== session.id && session.accountType !== "admin") {
@@ -2478,7 +2490,7 @@ async function handleLiveDataRequest(
       case "POST /api/events/[slug]/checkin/[userId]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const event = await getEventBySlug(match.params.slug);
         if (!event) return validationMessage("Event not found.");
         if (event.host_id !== session.id && session.accountType !== "admin") {
@@ -2499,7 +2511,7 @@ async function handleLiveDataRequest(
       case "GET /api/messages/[threadId]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         // Admin users can read any thread for moderation
         if (session.accountType !== "admin") {
           // Verify the requesting user is a participant in this thread
@@ -2526,7 +2538,7 @@ async function handleLiveDataRequest(
       case "POST /api/users/[id]/block": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const body = await request.json();
         const { data, error } = await supabase
           .from("blocked_users")
@@ -2545,7 +2557,7 @@ async function handleLiveDataRequest(
       case "DELETE /api/users/[id]/block": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const { error } = await supabase
           .from("blocked_users")
           .delete()
@@ -2559,7 +2571,7 @@ async function handleLiveDataRequest(
       case "GET /api/admin/blocked": {
         if (!session || session.accountType !== "admin") return forbiddenResponse("Admin access required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const { data, error } = await supabase
           .from("blocked_users")
           .select("*, blocker:blocked_by (*), blocked:user_id (*)")
@@ -2572,7 +2584,7 @@ async function handleLiveDataRequest(
       case "POST /api/venues/[slug]/block/[userId]": {
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const venue = await getVenueBySlug(match.params.slug);
         if (!venue) return validationMessage("Venue not found.");
         if (venue.owner_id !== session.id && session.accountType !== "admin") {
@@ -2600,7 +2612,7 @@ async function handleLiveDataRequest(
         const q = (url.searchParams.get("q") ?? "").trim().replace(/[%_]/g, "");
         if (!q || q.length < 2) return successResponse({ events: [], groups: [], venues: [] });
         const supabase = await createSupabaseServerClient();
-        if (!supabase) return null;
+        if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
         const pattern = `%${q}%`;
         const [eventsRes, groupsRes, venuesRes] = await Promise.all([
           supabase.from("events").select("id, slug, title, starts_at, status").ilike("title", pattern).eq("status", "published").limit(8),
@@ -2623,7 +2635,7 @@ async function handleLiveDataRequest(
           session?.accountType === "admin"
         ) {
           const supabase = await createSupabaseServerClient();
-          if (!supabase) return null;
+          if (!supabase) return NextResponse.json({ ok: false, error: "Database connection unavailable. Please try again later." }, { status: 503 });
           const slug = match.params?.slug ?? key.split("/")[4];
           const body = await request.json();
           const isFeatured = Boolean(body.is_featured);
