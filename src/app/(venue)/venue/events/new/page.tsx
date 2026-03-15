@@ -3,6 +3,7 @@ import { PortalShell } from "@/components/layout/portal-shell";
 import { Surface } from "@/components/dashboard/primitives";
 import { VenueEventForm } from "@/components/forms/venue-event-form";
 import { requireSession } from "@/lib/auth/guards";
+import { getVenuePortalData } from "@/lib/dashboard-fetchers";
 
 function venueLinks(activeKey: string) {
   return [
@@ -21,12 +22,16 @@ function venueLinks(activeKey: string) {
 
 export default async function VenueNewEventPage() {
   const session = await requireSession(["venue"]);
+  const data = await getVenuePortalData();
+  const venueObj = data.venue as Record<string, unknown> | undefined;
+  const venueName = (venueObj?.name as string) || session.displayName;
+  const venueSlug = (venueObj?.slug as string) || session.slug;
 
   return (
     <PortalShell
       eyebrow="Venue portal"
       title="Create event"
-      description={`Host an event at ${session.displayName}. Fill in the details below and publish when ready.`}
+      description={`Host an event at ${venueName}. Fill in the details below and publish when ready.`}
       links={venueLinks("events")}
       roleMode="venue"
     >
@@ -36,8 +41,8 @@ export default async function VenueNewEventPage() {
         description="Fill in the details for your event."
       >
         <VenueEventForm
-          venueSlug={session.slug}
-          venueName={session.displayName}
+          venueSlug={venueSlug}
+          venueName={venueName}
         />
       </Surface>
     </PortalShell>

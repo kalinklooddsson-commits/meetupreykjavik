@@ -138,7 +138,7 @@ export async function VenueDashboardScreen() {
       >
         {data.upcomingEvents.length > 0 ? (
           <DashboardTable
-            columns={["Event", "Organizer", "Status", "Note"]}
+            columns={["Event", "Date", "Organizer", "Status", "Note"]}
             rows={data.upcomingEvents.map((e) => ({
               key: e.event.slug,
               cells: [
@@ -149,6 +149,7 @@ export async function VenueDashboardScreen() {
                 >
                   {e.event.title}
                 </Link>,
+                <span key="date" className="tabular-nums text-brand-text-muted">{(e as Record<string, unknown>).date as string ?? ""}</span>,
                 e.organizer,
                 <ToneBadge key="status" tone={statusTone(e.status)}>
                   {e.status}

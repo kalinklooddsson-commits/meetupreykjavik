@@ -75,7 +75,7 @@ export async function MemberTransactionsScreen() {
   }
 
   const completedTotal = memberTransactions
-    .filter((t) => t.status === "completed" && !t.amount.startsWith("-"))
+    .filter((t) => t.status === "completed")
     .reduce((sum, t) => {
       const num = parseInt(t.amount.replace(/\s/g, "").replace("ISK", ""), 10);
       return sum + (isNaN(num) ? 0 : num);

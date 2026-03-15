@@ -141,7 +141,7 @@ export async function VenueDealsScreen() {
         title="Deal studio"
         description="Create new deals and manage existing ones."
       >
-        <VenueDealStudio deals={data.deals} />
+        <VenueDealStudio deals={data.deals} venueId={(data.venue as Record<string, unknown>)?.id as string | undefined} />
       </Surface>
     </PortalShell>
   );

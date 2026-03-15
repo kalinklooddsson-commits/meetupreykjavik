@@ -2217,8 +2217,8 @@ export function GroupDetailScreen({ group, events: eventsProp, isMember = false 
                 {t("sections.about")}
               </h2>
               <div className="space-y-5">
-                {group.description.map((paragraph) => (
-                  <p key={paragraph} className="leading-8 text-gray-700">{paragraph}</p>
+                {group.description.map((paragraph, i) => (
+                  <p key={i} className="leading-8 text-gray-700">{paragraph}</p>
                 ))}
               </div>
               <div className="mt-5 flex flex-wrap gap-2">

@@ -76,7 +76,7 @@ export async function VenueAvailabilityScreen() {
         title="Weekly availability grid"
         description="Your available time blocks for each day of the week. Click a day to add or remove slots."
       >
-        <VenueAvailabilityStudio weeklyGrid={data.availability.weeklyGrid} />
+        <VenueAvailabilityStudio weeklyGrid={data.availability.weeklyGrid} venueId={(data.venue as Record<string, unknown>)?.id as string | undefined} />
       </Surface>
 
       {/* ── Recurring schedule ────────────────────────────── */}

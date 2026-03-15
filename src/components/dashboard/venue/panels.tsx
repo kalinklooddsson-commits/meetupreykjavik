@@ -179,8 +179,10 @@ type WeeklyGridDay = {
 
 export function VenueAvailabilityStudio({
   weeklyGrid,
+  venueId,
 }: {
   weeklyGrid: readonly WeeklyGridDay[];
+  venueId?: string;
 }) {
   const [editingDay, setEditingDay] = useState<string | null>(null);
   const [newBlock, setNewBlock] = useState("");
@@ -293,7 +295,7 @@ export function VenueAvailabilityStudio({
               const res = await fetch("/api/venues/availability", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ schedule: localGrid }),
+                body: JSON.stringify({ schedule: localGrid, ...(venueId ? { venue_id: venueId } : {}) }),
               });
               const result = await res.json();
               if (result.ok) {
@@ -331,8 +333,10 @@ type DealItem = {
 
 export function VenueDealStudio({
   deals,
+  venueId,
 }: {
   deals: readonly DealItem[];
+  venueId?: string;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -450,7 +454,7 @@ export function VenueDealStudio({
                   const res = await fetch("/api/venues/deals", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(formData),
+                    body: JSON.stringify({ ...formData, ...(venueId ? { venue_id: venueId } : {}) }),
                   });
                   const result = await res.json();
                   if (result.ok) {
@@ -561,30 +565,38 @@ export function VenueProfileSectionEditor({
               </button>
             </div>
 
-            <div className="mt-4 divide-y divide-brand-border-light rounded-lg border border-brand-border-light">
-              {section.items.map((item, i) => (
-                <div
-                  key={`${section.key}-${i}`}
-                  className="flex items-start justify-between gap-4 px-3 py-2.5"
-                >
-                  <dt className="text-sm text-brand-text-muted">{item.label}</dt>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={item.value}
-                      onChange={(e) =>
-                        updateItem(section.key, i, e.target.value)
-                      }
-                      className="w-60 rounded-md border border-brand-border-light bg-white px-2 py-1 text-right text-sm font-medium text-brand-text focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo"
-                    />
-                  ) : (
-                    <dd className="text-right text-sm font-medium text-brand-text">
-                      {item.value}
-                    </dd>
-                  )}
-                </div>
-              ))}
-            </div>
+            {section.items.length > 0 ? (
+              <div className="mt-4 divide-y divide-brand-border-light rounded-lg border border-brand-border-light">
+                {section.items.map((item, i) => (
+                  <div
+                    key={`${section.key}-${i}`}
+                    className="flex items-start justify-between gap-4 px-3 py-2.5"
+                  >
+                    <dt className="text-sm text-brand-text-muted">{item.label}</dt>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={item.value}
+                        onChange={(e) =>
+                          updateItem(section.key, i, e.target.value)
+                        }
+                        className="w-60 rounded-md border border-brand-border-light bg-white px-2 py-1 text-right text-sm font-medium text-brand-text focus:border-brand-indigo focus:outline-none focus:ring-1 focus:ring-brand-indigo"
+                      />
+                    ) : (
+                      <dd className="text-right text-sm font-medium text-brand-text">
+                        {item.value}
+                      </dd>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-brand-text-muted">
+                {section.key === "hours"
+                  ? "No hours set \u2014 click Edit to add your opening hours."
+                  : `No ${section.title.toLowerCase()} added yet \u2014 click Edit to get started.`}
+              </p>
+            )}
           </div>
         );
       })}

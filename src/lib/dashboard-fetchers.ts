@@ -1010,6 +1010,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       .map((e) => ({
         event: { slug: e.slug as string, title: e.title as string },
         organizer: ((e.host as unknown as Record<string, unknown> | null)?.display_name as string) ?? "Unknown",
+        date: (e.starts_at as string)?.slice(0, 10) ?? "",
         status: (e.status as string) === "draft" ? "Pending review" : "Confirmed",
         note: "",
       }));
@@ -1048,6 +1049,19 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
       : [];
 
     // ── 2G: Messages ──
+    const relativeTime = (iso: string | undefined | null): string => {
+      if (!iso) return "";
+      const diff = Date.now() - new Date(iso).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 1) return "Just now";
+      if (mins < 60) return `${mins} min ago`;
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 24) return hrs === 1 ? "1 hour ago" : `${hrs} hours ago`;
+      const days = Math.floor(hrs / 24);
+      if (days === 1) return "Yesterday";
+      if (days < 7) return `${days} days ago`;
+      return iso.slice(0, 10);
+    };
     const mappedMessages = Array.isArray(messages)
       ? messages.slice(0, 10).map((m: Record<string, unknown>, i: number) => ({
           key: (m.id as string) ?? `msg-${i}`,
@@ -1057,7 +1071,7 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
           preview: (m.last_message as string) ?? (m.preview as string) ?? "",
           channel: "Booking thread",
           status: (m.unread_count as number) > 0 ? "Needs reply" : "Read",
-          meta: (m.updated_at as string)?.slice(0, 10) ?? "",
+          meta: relativeTime((m.updated_at as string) ?? (m.created_at as string) ?? null),
         }))
       : [];
 

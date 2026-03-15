@@ -40,6 +40,14 @@ function memberLinks(activeKey: string) {
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
 }
 
+const channelLabel = (ch: string) =>
+  ({
+    admin_message: "Direct Message",
+    system: "System",
+    event_update: "Event Update",
+    rsvp_confirmation: "RSVP Confirmation",
+  }[ch] ?? ch.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()));
+
 function statusTone(s: string): DashboardTone {
   if (/active|published|approved|going|accepted|completed/i.test(s)) return "sage";
   if (/pending|draft|waitlisted|waitlist/i.test(s)) return "sand";
@@ -68,11 +76,6 @@ export async function MemberOverviewScreen() {
       description="Your events, groups, and community at a glance."
       links={memberLinks("overview")}
       roleMode="member"
-      signalCards={data.metrics.map((m) => ({
-        label: m.label,
-        value: m.value,
-        detail: m.detail,
-      }))}
     >
       {/* ── Profile welcome bar ─────────────────────────────── */}
       <Surface
@@ -136,7 +139,7 @@ export async function MemberOverviewScreen() {
       >
         {data.upcomingEvents.length > 0 ? (
           <DashboardTable
-            columns={["Event", "Venue", "Status", "Seat / Position", "Action"]}
+            columns={["Event", "Venue", "Status", "Action"]}
             rows={data.upcomingEvents.map((e) => ({
               key: e.event.slug,
               cells: [
@@ -151,7 +154,6 @@ export async function MemberOverviewScreen() {
                 <ToneBadge key="status" tone={statusTone(e.status)}>
                   {e.status}
                 </ToneBadge>,
-                e.seat,
                 <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
               ],
             }))}
@@ -219,7 +221,7 @@ export async function MemberOverviewScreen() {
                   <div className="font-medium">{n.title}</div>
                   <div className="mt-0.5 text-xs text-brand-text-muted">{n.detail}</div>
                 </div>,
-                n.channel,
+                channelLabel(n.channel),
                 <ToneBadge key="status" tone={statusTone(n.status)}>
                   {n.status}
                 </ToneBadge>,
