@@ -16,6 +16,10 @@ const COLORS = {
 const FONT_STACK =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
+/** HTML-escape user-supplied values to prevent XSS in email bodies */
+const esc = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
 /* -------------------------------------------------------------------------- */
 /*  Translations                                                              */
 /* -------------------------------------------------------------------------- */
@@ -78,17 +82,17 @@ function ctaButton(label: string, href: string): string {
 }
 
 function heading(text: string): string {
-  return `<h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:${COLORS.textDark};font-family:${FONT_STACK};">${text}</h1>`;
+  return `<h1 style="margin:0 0 16px;font-size:24px;font-weight:700;color:${COLORS.textDark};font-family:${FONT_STACK};">${esc(text)}</h1>`;
 }
 
 function paragraph(text: string): string {
-  return `<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${COLORS.textDark};font-family:${FONT_STACK};">${text}</p>`;
+  return `<p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${COLORS.textDark};font-family:${FONT_STACK};">${esc(text)}</p>`;
 }
 
 function detailRow(label: string, value: string): string {
   return `<tr>
-  <td style="padding:8px 0;font-size:14px;color:${COLORS.textMuted};font-family:${FONT_STACK};width:100px;vertical-align:top;">${label}</td>
-  <td style="padding:8px 0;font-size:14px;color:${COLORS.textDark};font-family:${FONT_STACK};font-weight:600;">${value}</td>
+  <td style="padding:8px 0;font-size:14px;color:${COLORS.textMuted};font-family:${FONT_STACK};width:100px;vertical-align:top;">${esc(label)}</td>
+  <td style="padding:8px 0;font-size:14px;color:${COLORS.textDark};font-family:${FONT_STACK};font-weight:600;">${esc(value)}</td>
 </tr>`;
 }
 
@@ -365,8 +369,9 @@ export function bookingRequestEmail(
     `Ný bókunarbeiðni fyrir ${venueName}`,
   );
 
-  const acceptUrl = `${SITE_URL()}/api/bookings/${bookingId}?action=accept`;
-  const declineUrl = `${SITE_URL()}/api/bookings/${bookingId}?action=decline`;
+  // Link to venue dashboard bookings page (API requires PATCH, not GET)
+  const acceptUrl = `${SITE_URL()}/venue/bookings?highlight=${bookingId}`;
+  const declineUrl = `${SITE_URL()}/venue/bookings?highlight=${bookingId}`;
 
   const body = [
     heading(t(locale, "New Booking Request", "Ný bókunarbeiðni")),

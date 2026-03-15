@@ -41,7 +41,7 @@ export function hasTrustedOrigin(request: NextRequest) {
   }
 
   return Array.from(getAllowedOrigins(request)).some((allowedOrigin) =>
-    requestOriginMatches(request, allowedOrigin) || allowedOrigin === origin,
+    requestOriginMatches(request, allowedOrigin),
   );
 }
 
