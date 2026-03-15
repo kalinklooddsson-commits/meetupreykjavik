@@ -1,4 +1,9 @@
 {
+  "metadata": {
+    "siteTitle": "MeetupReykjavik — Finndu þitt fólk í Reykjavík",
+    "siteTitleTemplate": "%s | MeetupReykjavik",
+    "siteDescription": "Uppgötvaðu viðburði, skráðu þig í hópa og kannaðu samstarfsstaði um alla Reykjavík. Ókeypis aðgangur, byggt fyrir samfélagið."
+  },
   "locale": {
     "switcher": "Skipta um tungumál",
     "en": "EN",
@@ -632,6 +637,7 @@
     "submit": "Senda skilaboð",
     "status": {
       "incomplete": "Vinsamlegast fylltu inn nafn, netfang og skilaboð áður en þú sendir.",
+      "sending": "Sendi\u2026",
       "saved": "Takk! Skilaboðin þín hafa borist. Við svörum innan eins virkra dags."
     }
   },

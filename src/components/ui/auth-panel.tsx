@@ -342,7 +342,8 @@ export function AuthPanel({
         </Link>
       </form>
 
-      {mode === "login" ? (
+      {/* Demo accounts section — only shown in development */}
+      {mode === "login" && process.env.NODE_ENV === "development" ? (
         <div className="mt-8 border-t border-brand-border-light pt-6">
           <div className="text-xs font-bold uppercase tracking-wider text-brand-text-light">
             {tAuth("demoAccounts")}

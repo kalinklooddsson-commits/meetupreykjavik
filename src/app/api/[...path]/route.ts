@@ -2476,6 +2476,19 @@ async function handleLiveDataRequest(
         if (!session) return forbiddenResponse("Authentication required.");
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;
+        // Admin users can read any thread for moderation
+        if (session.accountType !== "admin") {
+          // Verify the requesting user is a participant in this thread
+          const { data: participation } = await supabase
+            .from("messages")
+            .select("id")
+            .eq("thread_id", match.params.threadId)
+            .or(`sender_id.eq.${session.id},recipient_id.eq.${session.id}`)
+            .limit(1);
+          if (!participation || participation.length === 0) {
+            return forbiddenResponse("You are not a participant in this thread.");
+          }
+        }
         const { data, error } = await supabase
           .from("messages")
           .select("*, profiles:sender_id (*)")

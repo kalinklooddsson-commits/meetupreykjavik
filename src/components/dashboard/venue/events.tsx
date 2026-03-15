@@ -77,7 +77,7 @@ export async function VenueEventsScreen() {
                 >
                   {e.event.title}
                 </Link>,
-                <span key="date" className="tabular-nums text-brand-text-muted">{(e as Record<string, unknown>).date as string ?? ""}</span>,
+                <span key="date" className="tabular-nums text-brand-text-muted">{e.date ?? ""}</span>,
                 <div key="org" className="flex items-center gap-2">
                   <AvatarStamp name={e.organizer} size="sm" />
                   <span>{e.organizer}</span>

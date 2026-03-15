@@ -24,7 +24,7 @@ export default async function VenueNewEventPage() {
   const session = await requireSession(["venue"]);
   const data = await getVenuePortalData();
   const venueObj = data.venue as Record<string, unknown> | undefined;
-  const venueName = (venueObj?.name as string) || session.displayName;
+  const venueName = (venueObj?.name as string) || "your venue";
   const venueSlug = (venueObj?.slug as string) || session.slug;
 
   return (

@@ -235,7 +235,13 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
       return {
         key: m.id as string,
         counterpart: (m.other_display_name as string) ?? "Unknown",
-        role: "Member",
+        role: (() => {
+          const acct = (m.other_account_type as string) ?? "";
+          if (acct === "venue") return "Venue";
+          if (acct === "organizer") return "Organizer";
+          if (acct === "admin") return "Admin";
+          return "Member";
+        })(),
         subject: subjectText,
         preview: body !== subjectText ? body.slice(0, 80) : "",
         channel: "Direct message",

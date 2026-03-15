@@ -1625,8 +1625,8 @@ export function EventDetailScreen({ event }: { event: PublicEvent }) {
                 {t("sections.aboutThisEvent")}
               </h2>
               <div className="space-y-5">
-                {event.description.map((paragraph) => (
-                  <p key={paragraph} className="leading-8 text-gray-700">
+                {event.description.map((paragraph, i) => (
+                  <p key={i} className="leading-8 text-gray-700">
                     {paragraph}
                   </p>
                 ))}
@@ -2735,8 +2735,8 @@ export function VenueDetailScreen({ venue }: { venue: PublicVenue }) {
                 {t("sections.about")}
               </h2>
               <div className="space-y-5">
-                {venue.description.map((paragraph) => (
-                  <p key={paragraph} className="leading-8 text-gray-700">{paragraph}</p>
+                {venue.description.map((paragraph, i) => (
+                  <p key={i} className="leading-8 text-gray-700">{paragraph}</p>
                 ))}
               </div>
             </div>
@@ -3259,12 +3259,6 @@ export function BlogDetailScreen({ post }: { post: BlogPost }) {
                 </div>
               ))}
             </div>
-          </Section>
-
-          <Section title={t("detail.whyMatters")}>
-            <p className="text-base leading-relaxed text-gray-600">
-              {t("detail.whyMattersBody")}
-            </p>
           </Section>
 
           {post.sections.map((section) => (

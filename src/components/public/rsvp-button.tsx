@@ -43,12 +43,11 @@ export function AttendeeCount({ eventSlug, serverCount, capacity }: { eventSlug:
   const t = useTranslations("common");
   const [count, setCount] = useState(serverCount);
 
+  // Trust the server count — it already includes real RSVPs.
+  // Only adjust the count when the user RSVPs or cancels during this session.
   useEffect(() => {
-    // Check if already RSVP'd on mount
-    if (getStoredRsvps().has(eventSlug)) {
-      setCount(serverCount + 1);
-    }
-  }, [eventSlug, serverCount]);
+    setCount(serverCount);
+  }, [serverCount]);
 
   useEffect(() => {
     function onRsvpChanged(e: Event) {
@@ -112,10 +111,45 @@ export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }
     });
   }, [eventSlug]);
 
-  // Hydrate from localStorage on mount
+  // Check actual RSVP status from server on mount (for logged-in users).
+  // Falls back to localStorage only when user is not logged in or fetch fails.
   useEffect(() => {
-    syncFromStorage();
-  }, [syncFromStorage]);
+    if (userLoading) return;
+
+    if (!user) {
+      // Not logged in — use localStorage as fallback
+      syncFromStorage();
+      return;
+    }
+
+    let cancelled = false;
+    async function checkServerRsvp() {
+      try {
+        const res = await fetch(`/api/events/${eventSlug}/rsvp`);
+        if (cancelled) return;
+        if (res.ok) {
+          const data = await res.json();
+          const serverGoing = data.status === "going";
+          setState((prev) => (prev === "loading" ? prev : serverGoing ? "going" : "idle"));
+          // Sync localStorage to match server truth
+          if (serverGoing) {
+            saveRsvp(eventSlug);
+          } else {
+            removeRsvp(eventSlug);
+          }
+        } else {
+          // Server error — fall back to localStorage
+          syncFromStorage();
+        }
+      } catch {
+        // Network error — fall back to localStorage
+        if (!cancelled) syncFromStorage();
+      }
+    }
+
+    checkServerRsvp();
+    return () => { cancelled = true; };
+  }, [user, userLoading, eventSlug, syncFromStorage]);
 
   // Listen for cross-instance RSVP changes
   useEffect(() => {

@@ -353,7 +353,7 @@ export function VenueOnboardingWizard({
                     name="address"
                     value={form.address}
                     onChange={(event) => updateField("address", event.target.value)}
-                    placeholder="Laugavegur 20b, 101 Reykjavik"
+                    placeholder="Laugavegur 20a, 101 Reykjavik"
                     autoComplete="street-address"
                     className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   />

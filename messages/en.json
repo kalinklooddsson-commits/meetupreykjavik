@@ -1,4 +1,9 @@
 {
+  "metadata": {
+    "siteTitle": "MeetupReykjavik — Find your people in Reykjavik",
+    "siteTitleTemplate": "%s | MeetupReykjavik",
+    "siteDescription": "Discover events, join groups, and explore venue partners across Reykjavik. Free to join, built for the local community."
+  },
   "locale": {
     "switcher": "Change language",
     "en": "EN",
@@ -100,7 +105,7 @@
   },
   "header": {
     "brandTop": "Meetup",
-    "brandBottom": "Reykjavik",
+    "brandBottom": "Reykjavík",
     "search": "Search",
     "searchPlaceholder": "Search events, groups, venues...",
     "recentSearches": "Recent searches",
@@ -632,6 +637,7 @@
     "submit": "Send message",
     "status": {
       "incomplete": "Please fill in your name, email, and message before sending.",
+      "sending": "Sending\u2026",
       "saved": "Thank you! Your message has been received. We'll respond within one business day."
     }
   },

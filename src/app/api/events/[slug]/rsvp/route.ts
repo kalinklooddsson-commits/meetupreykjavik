@@ -3,11 +3,58 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
 
 /**
+ * GET /api/events/[slug]/rsvp — Check current user's RSVP status
  * POST /api/events/[slug]/rsvp — Create RSVP
  * DELETE /api/events/[slug]/rsvp — Cancel RSVP
  *
  * Public endpoint for event RSVP management.
  */
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> },
+) {
+  try {
+    const session = await getUser();
+    if (!session) {
+      return NextResponse.json({ status: "none" });
+    }
+
+    const { slug } = await params;
+    const supabase = createSupabaseAdminClient();
+    if (!supabase) {
+      return NextResponse.json({ status: "none" });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+
+    const { data: event } = await db
+      .from("events")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (!event) {
+      return NextResponse.json({ status: "none" });
+    }
+
+    const { data: rsvp } = await db
+      .from("rsvps")
+      .select("id, status")
+      .eq("event_id", event.id)
+      .eq("user_id", session.id)
+      .maybeSingle();
+
+    if (!rsvp || rsvp.status !== "going") {
+      return NextResponse.json({ status: "none" });
+    }
+
+    return NextResponse.json({ status: "going" });
+  } catch {
+    return NextResponse.json({ status: "none" });
+  }
+}
+
 export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },

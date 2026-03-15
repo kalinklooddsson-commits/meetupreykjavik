@@ -828,24 +828,28 @@ export const venuePortalData = {
     {
       event: singlesNight,
       organizer: "Nightlife Reykjavik",
+      date: singlesNight.startsAt?.slice(0, 10) ?? "",
       status: "Confirmed",
       note: "Host desk near front booth. Welcome drink perk enabled.",
     },
     {
       event: wineTasting,
       organizer: "Reykjavik Foodies",
+      date: wineTasting.startsAt?.slice(0, 10) ?? "",
       status: "Transferred to premium room",
       note: "Small-format layout requires seated service adjustment.",
     },
     {
       event: newcomersNight,
       organizer: expatsGroup.name,
+      date: newcomersNight.startsAt?.slice(0, 10) ?? "",
       status: "Counter sent",
       note: "Need final headcount and staffing level before approval.",
     },
     {
       event: { slug: "friday-jazz-night", title: "Friday Jazz Night" },
       organizer: "Lebowski Bar",
+      date: "2026-03-20",
       status: "Pending review",
       note: "Submitted by venue — awaiting admin approval.",
     },

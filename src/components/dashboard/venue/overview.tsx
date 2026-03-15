@@ -149,7 +149,7 @@ export async function VenueDashboardScreen() {
                 >
                   {e.event.title}
                 </Link>,
-                <span key="date" className="tabular-nums text-brand-text-muted">{(e as Record<string, unknown>).date as string ?? ""}</span>,
+                <span key="date" className="tabular-nums text-brand-text-muted">{e.date ?? ""}</span>,
                 e.organizer,
                 <ToneBadge key="status" tone={statusTone(e.status)}>
                   {e.status}

@@ -299,6 +299,7 @@ export function HomePage({
   const tStats = useTranslations("home.stats");
   const tSteps = useTranslations("home.steps");
   const tSocial = useTranslations("home.social");
+  const tCatNames = useTranslations("categoriesPage.names");
 
   const localizedHeroStats = [
     { value: heroStats[0]?.value ?? "19", label: tStats("members") },
@@ -510,7 +511,7 @@ export function HomePage({
                     {category.letter}
                   </span>
                   <h3 className="mt-3 text-sm font-bold tracking-tight text-brand-text">
-                    {category.name}
+                    {tCatNames(slugify(category.name) as Parameters<typeof tCatNames>[0]) ?? category.name}
                   </h3>
                   <p className="mt-1 text-xs font-medium text-gray-600">
                     {count} {count === 1 ? tSocial("meetup") : tSocial("meetups")}

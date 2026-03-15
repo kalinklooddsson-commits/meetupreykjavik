@@ -13,13 +13,13 @@ export async function getUserConversations(userId: string, limit = 50) {
   const [sentResult, receivedResult] = await Promise.all([
     supabase
       .from("messages")
-      .select(`*, sender:sender_id ( display_name ), receiver:receiver_id ( display_name )`)
+      .select(`*, sender:sender_id ( display_name, account_type ), receiver:receiver_id ( display_name, account_type )`)
       .eq("sender_id", userId)
       .order("created_at", { ascending: false })
       .limit(limit),
     supabase
       .from("messages")
-      .select(`*, sender:sender_id ( display_name ), receiver:receiver_id ( display_name )`)
+      .select(`*, sender:sender_id ( display_name, account_type ), receiver:receiver_id ( display_name, account_type )`)
       .eq("receiver_id", userId)
       .order("created_at", { ascending: false })
       .limit(limit),
@@ -51,12 +51,13 @@ export async function getUserConversations(userId: string, limit = 50) {
   // Annotate each message with `other_display_name` based on who the viewer is
   const annotated = unique.slice(0, limit).map((msg) => {
     const m = msg as Record<string, unknown>;
-    const sender = m.sender as { display_name: string } | null;
-    const receiver = m.receiver as { display_name: string } | null;
+    const sender = m.sender as { display_name: string; account_type?: string } | null;
+    const receiver = m.receiver as { display_name: string; account_type?: string } | null;
     const isSender = (m.sender_id as string) === userId;
     // If the viewer sent the message, the "other" party is the receiver; otherwise it's the sender
     const otherName = isSender ? receiver?.display_name : sender?.display_name;
-    return { ...m, other_display_name: otherName ?? null };
+    const otherAccountType = isSender ? receiver?.account_type : sender?.account_type;
+    return { ...m, other_display_name: otherName ?? null, other_account_type: otherAccountType ?? null };
   });
 
   return annotated;

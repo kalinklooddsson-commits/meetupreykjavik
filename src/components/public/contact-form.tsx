@@ -108,6 +108,7 @@ export function ContactForm() {
         toast("success", tCommon("messageSent"));
         startTransition(() => {
           setForm(initialForm);
+          setSavedSnapshot(JSON.stringify(initialForm));
           setFieldErrors({});
         });
       } else {

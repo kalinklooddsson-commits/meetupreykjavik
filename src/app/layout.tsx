@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Fraunces, Geist } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -21,33 +21,39 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "MeetupReykjavik — Find your people in Reykjavik",
-    template: "%s | MeetupReykjavik",
-  },
-  description:
-    "Discover events, join groups, and explore venue partners across Reykjavik. Free to join, built for the local community.",
-  metadataBase: new URL("https://meetupreykjavik.vercel.app"),
-  openGraph: {
-    type: "website",
-    locale: "en_IS",
-    siteName: "MeetupReykjavik",
-    title: "MeetupReykjavik — Find your people in Reykjavik",
-    description:
-      "Discover events, join groups, and explore venue partners across Reykjavik. Free to join, built for the local community.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "MeetupReykjavik — Find your people in Reykjavik",
-    description:
-      "Discover events, join groups, and explore venue partners across Reykjavik.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  const locale = await getLocale();
+
+  const siteTitle = t("siteTitle");
+  const siteDescription = t("siteDescription");
+  const titleTemplate = t("siteTitleTemplate");
+
+  return {
+    title: {
+      default: siteTitle,
+      template: titleTemplate,
+    },
+    description: siteDescription,
+    metadataBase: new URL("https://meetupreykjavik.vercel.app"),
+    openGraph: {
+      type: "website",
+      locale: locale === "is" ? "is_IS" : "en_IS",
+      siteName: "MeetupReykjavik",
+      title: siteTitle,
+      description: siteDescription,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteTitle,
+      description: siteDescription,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
