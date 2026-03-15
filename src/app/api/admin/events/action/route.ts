@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       .from("events")
       .update({ is_featured: true, status: "published" as EventStatus })
       .eq("id", eventId);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) { console.error("Admin event action failed:", error.message); return NextResponse.json({ error: "Action failed" }, { status: 500 }); }
     return NextResponse.json({ ok: true, status: "featured" });
   }
 
@@ -70,7 +70,8 @@ export async function POST(request: NextRequest) {
     .eq("id", eventId);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Admin event action failed:", error.message);
+    return NextResponse.json({ error: "Action failed" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, status: newStatus });

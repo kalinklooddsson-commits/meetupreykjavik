@@ -41,7 +41,8 @@ export async function POST(request: NextRequest) {
     .eq("id", key);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Admin booking action failed:", error.message);
+    return NextResponse.json({ error: "Action failed" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, status: action });
