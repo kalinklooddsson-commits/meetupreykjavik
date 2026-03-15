@@ -3,8 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentAppSession } from "@/lib/auth/session";
 import { hasPayPalEnv, createTicketOrder } from "@/lib/payments/paypal";
 import { MIN_TICKET_PRICE_ISK } from "@/lib/payments/constants";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 export async function POST(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const session = await getCurrentAppSession();
   if (!session) {
     return NextResponse.json({ error: "Authentication required." }, { status: 401 });
