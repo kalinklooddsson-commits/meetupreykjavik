@@ -1240,8 +1240,33 @@ export async function getVenuePortalData(): Promise<VenuePortalData> {
     ).length;
     const eventCount = events.length;
 
+    // Read partnership tier from the DB venue row (falls back to "free")
+    const partnershipTier = (venueObj.partnership_tier as string) ?? "free";
+
+    // Build real onboarding status from venue profile completeness
+    const hasPhotos = Boolean(venueObj.image_url || venueObj.art);
+    const hasHours = hours.length > 0;
+    const hasContact = Boolean(venueObj.phone || venueObj.website);
+    const hasAddress = Boolean(venueObj.address);
+    const onboardingSteps = [
+      { key: "terms", title: "Account + agreement", detail: "Accept venue partner terms.", status: (venueObj.status === "active" || venueObj.status === "approved" ? "done" : "upcoming") as "done" | "active" | "upcoming" },
+      { key: "location", title: "Address + map pin", detail: "Confirm your venue address.", status: (hasAddress ? "done" : "upcoming") as "done" | "active" | "upcoming" },
+      { key: "hours", title: "Hours + availability", detail: "Set your weekly service hours.", status: (hasHours ? "done" : "upcoming") as "done" | "active" | "upcoming" },
+      { key: "gallery", title: "Photo gallery", detail: "Upload venue photos.", status: (hasPhotos ? "done" : "upcoming") as "done" | "active" | "upcoming" },
+      { key: "contact", title: "Venue contacts", detail: "Add contact information.", status: (hasContact ? "done" : "upcoming") as "done" | "active" | "upcoming" },
+    ];
+    const doneCount = onboardingSteps.filter((s) => s.status === "done").length;
+    const onboarding = {
+      completion: `${doneCount} / ${onboardingSteps.length} complete`,
+      reviewer: "Partnerships team",
+      steps: onboardingSteps,
+      requiredDocs: [] as string[],
+    };
+
     return {
       ...mockVenuePortalData,
+      partnershipTier,
+      onboarding,
       venue: venueRow,
       metrics: [
         {
@@ -2037,6 +2062,46 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
       analyticsDeck,
       heatGrid,
       ...(geography.length > 0 ? { geography } : {}),
+      // Override mock-only fields with empty/neutral data to prevent fake names leaking
+      selectedUser: {
+        name: "",
+        role: "",
+        notes: "",
+        bio: "",
+        locale: "",
+        trustSignals: [] as string[],
+        interests: [] as string[],
+        badges: [] as string[],
+        items: [] as Array<{ key: string; label: string; value: string }>,
+      },
+      content: {
+        sections: [] as Array<{ key: string; title: string; status: string; note: string }>,
+        categories: allCategories.length > 0
+          ? allCategories.map((c) => ({ key: (c.name_en as string) ?? "", name: (c.name_en as string) ?? "", count: String(c.event_count ?? 0), tone: "indigo" }))
+          : mockAdminPortalData.content.categories,
+        blogQueue: [] as Array<{ key: string; title: string; category: string; status: string }>,
+      },
+      moderation: {
+        reports: [] as Array<{ key: string; subject: string; priority: string; status: string; note: string }>,
+        pendingApproval: [] as string[],
+        autoFlagged: [] as string[],
+        banned: [] as Array<{ key: string; name: string; reason: string; appeal: string }>,
+        auditLog: [] as Array<{ key: string; action: string; actor: string; when: string }>,
+      },
+      comms: {
+        audiences: mockAdminPortalData.comms.audiences,
+        draft: {
+          templateKey: mockAdminPortalData.comms.draft.templateKey,
+          subject: "",
+          preview: "",
+          preheader: "",
+          headline: "",
+          ctaLabel: "View events",
+          footer: "Sent as part of your MeetupReykjavik digest preferences.",
+        },
+        templates: mockAdminPortalData.comms.templates,
+        history: [] as Array<{ key: string; title: string; audience: string; sent: string; result: string }>,
+      },
     } as AdminPortalData;
   } catch (error) {
     console.error("Failed to fetch admin dashboard data:", error);
