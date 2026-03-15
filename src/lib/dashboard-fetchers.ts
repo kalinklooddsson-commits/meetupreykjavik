@@ -247,7 +247,7 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
         subject: subjectText,
         preview: body !== subjectText ? body.slice(0, 80) : "",
         channel: "Direct message",
-        status: "Unread",
+        status: m.is_read ? "Read" : "Unread",
         meta: formatRelativeTime(m.created_at as string),
       };
     });
@@ -268,10 +268,7 @@ export async function getMemberPortalData(): Promise<MemberPortalData> {
     let realRecommendations: RecommendationItem[] = [];
     if (supabase) {
       const rsvpEventIds = new Set(
-        rsvps.map((r: Record<string, unknown>) => {
-          const ev = r.events as Record<string, unknown> | null;
-          return ev?.id as string;
-        }).filter(Boolean),
+        rsvps.map((r: Record<string, unknown>) => r.event_id as string).filter(Boolean),
       );
       const { data: upcomingPublished } = await supabase
         .from("events")
@@ -1948,8 +1945,21 @@ export async function getAdminPortalData(): Promise<AdminPortalData> {
         value: `${Math.round((count / totalVenueGeo) * 100)}%`,
       }));
 
+    // Build a real clientDossier from the first non-admin user profile
+    const dossierUser = allProfiles.find((p) => (p.account_type as string) !== "admin") ?? allProfiles[0];
+    const realClientDossier = dossierUser ? {
+      ...mockAdminPortalData.clientDossier,
+      name: (dossierUser.display_name as string) ?? "Unknown",
+      tier: (() => {
+        const t = (dossierUser.premium_tier as string | null) ?? "free";
+        return t.charAt(0).toUpperCase() + t.slice(1);
+      })(),
+      summary: `Platform member${dossierUser.is_verified ? " with verified status" : ""}. ${dossierUser.is_premium ? "Premium subscriber." : "Free-tier user."}`,
+    } : mockAdminPortalData.clientDossier;
+
     return {
       ...mockAdminPortalData,
+      clientDossier: realClientDossier,
       metrics: [
         {
           label: "Users",

@@ -112,11 +112,12 @@ export async function POST(
         .from("rsvps")
         .update({ status: "going" })
         .eq("id", existing.id);
-      // Atomic increment rsvp_count to avoid race conditions
-      await db.rpc("increment_counter", { row_id: event.id, table_name: "events", column_name: "rsvp_count", amount: 1 }).catch(() => {
-        // Fallback if RPC not available — less safe but functional
-        return db.from("events").update({ rsvp_count: (event.rsvp_count ?? 0) + 1 }).eq("id", event.id);
-      });
+      // Best-effort counter update — never block the RSVP response
+      try {
+        await db.rpc("increment_counter", { row_id: event.id, table_name: "events", column_name: "rsvp_count", amount: 1 }).catch(() =>
+          db.from("events").update({ rsvp_count: (event.rsvp_count ?? 0) + 1 }).eq("id", event.id)
+        );
+      } catch { /* counter update is non-critical */ }
       return NextResponse.json({ ok: true, action: "confirmed" });
     }
 
@@ -143,10 +144,12 @@ export async function POST(
       );
     }
 
-    // Atomic increment rsvp_count to avoid race conditions
-    await db.rpc("increment_counter", { row_id: event.id, table_name: "events", column_name: "rsvp_count", amount: 1 }).catch(() => {
-      return db.from("events").update({ rsvp_count: (event.rsvp_count ?? 0) + 1 }).eq("id", event.id);
-    });
+    // Best-effort counter update — never block the RSVP response
+    try {
+      await db.rpc("increment_counter", { row_id: event.id, table_name: "events", column_name: "rsvp_count", amount: 1 }).catch(() =>
+        db.from("events").update({ rsvp_count: (event.rsvp_count ?? 0) + 1 }).eq("id", event.id)
+      );
+    } catch { /* counter update is non-critical */ }
 
     return NextResponse.json({ ok: true, action: "created" });
   } catch (error) {
@@ -207,10 +210,12 @@ export async function DELETE(
     if (error) {
       console.error("RSVP cancellation failed:", error);
     } else {
-      // Atomic decrement rsvp_count (floor at 0)
-      await db.rpc("increment_counter", { row_id: event.id, table_name: "events", column_name: "rsvp_count", amount: -1 }).catch(() => {
-        return db.from("events").update({ rsvp_count: Math.max((event.rsvp_count ?? 1) - 1, 0) }).eq("id", event.id);
-      });
+      // Best-effort counter update — never block the cancel response
+      try {
+        await db.rpc("increment_counter", { row_id: event.id, table_name: "events", column_name: "rsvp_count", amount: -1 }).catch(() =>
+          db.from("events").update({ rsvp_count: Math.max((event.rsvp_count ?? 1) - 1, 0) }).eq("id", event.id)
+        );
+      } catch { /* counter update is non-critical */ }
     }
 
     return NextResponse.json({ ok: true });

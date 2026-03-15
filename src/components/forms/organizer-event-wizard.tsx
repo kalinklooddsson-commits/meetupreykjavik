@@ -379,6 +379,7 @@ export function OrganizerEventWizard({
                     onChange={(event) => updateField("groupSlug", event.target.value)}
                     className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
+                    <option value="" disabled>Select a group…</option>
                     {publicGroups.map((group) => (
                       <option key={group.slug} value={group.slug}>
                         {group.name}
@@ -396,6 +397,7 @@ export function OrganizerEventWizard({
                     onChange={(event) => updateField("category", event.target.value)}
                     className="mt-2 w-full rounded-2xl border border-brand-border bg-brand-sand-light px-4 py-3 outline-none transition focus:border-brand-coral"
                   >
+                    <option value="" disabled>Select a category…</option>
                     {categories.map((category) => (
                       <option key={category.name} value={category.name}>
                         {category.name}
@@ -948,7 +950,7 @@ export function OrganizerEventWizard({
               <div className="p-5">
                 <div className="flex flex-wrap gap-2">
                   <span className="rounded-full bg-[rgba(79,70,229,0.08)] px-3 py-1 text-xs font-semibold text-brand-indigo">
-                    {form.category}
+                    {form.category || "No category"}
                   </span>
                   <span className="rounded-full bg-[rgba(245,240,232,0.9)] px-3 py-1 text-xs font-semibold text-brand-text">
                     {form.isFree ? "Free RSVP" : form.ticketPrice || "Paid"}

@@ -26,11 +26,24 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Database unavailable" }, { status: 500 });
   }
 
+  // Admin panels pass event slugs as keys, not UUIDs — resolve to id first
+  const { data: event } = await db
+    .from("events")
+    .select("id")
+    .eq("slug", key)
+    .maybeSingle();
+
+  if (!event) {
+    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+  }
+
+  const eventId = event.id;
+
   if (action === "featured") {
     const { error } = await db
       .from("events")
       .update({ is_featured: true })
-      .eq("id", key);
+      .eq("id", eventId);
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true, status: "featured" });
   }
@@ -49,7 +62,7 @@ export async function POST(request: NextRequest) {
   const { error } = await db
     .from("events")
     .update({ status: newStatus })
-    .eq("id", key);
+    .eq("id", eventId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

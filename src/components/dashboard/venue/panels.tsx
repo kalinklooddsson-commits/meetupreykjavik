@@ -509,9 +509,11 @@ type DealItem = {
 export function VenueDealStudio({
   deals,
   venueId,
+  showTables = false,
 }: {
   deals: readonly DealItem[];
   venueId?: string;
+  showTables?: boolean;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
@@ -551,9 +553,58 @@ export function VenueDealStudio({
     }
   }
 
+  const activeDeals = localDeals.filter((d) => /active/i.test(d.status));
+  const draftDeals = localDeals.filter((d) => /draft/i.test(d.status));
+
   return (
     <div className="space-y-4">
-      {/* Existing deals */}
+      {/* Active / Draft tables (synced with localDeals state) */}
+      {showTables && activeDeals.length > 0 && (
+        <div className="rounded-xl border border-brand-border-light bg-white p-4">
+          <div className="mb-3 text-xs font-medium uppercase tracking-wider text-brand-text-light">Active deals</div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead><tr className="border-b border-brand-border-light text-xs font-medium text-brand-text-muted">
+                <th className="pb-2 pr-4">Deal</th><th className="pb-2 pr-4">Type</th><th className="pb-2 pr-4">Tier</th><th className="pb-2 pr-4">Status</th>
+              </tr></thead>
+              <tbody>
+                {activeDeals.map((d) => (
+                  <tr key={d.key} className="border-b border-brand-border-light last:border-0">
+                    <td className="py-2 pr-4 font-medium">{d.title}</td>
+                    <td className="py-2 pr-4">{d.type}</td>
+                    <td className="py-2 pr-4">{d.tier}</td>
+                    <td className="py-2 pr-4 text-brand-sage">{d.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+      {showTables && draftDeals.length > 0 && (
+        <div className="rounded-xl border border-brand-border-light bg-white p-4">
+          <div className="mb-3 text-xs font-medium uppercase tracking-wider text-brand-text-light">Draft deals</div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead><tr className="border-b border-brand-border-light text-xs font-medium text-brand-text-muted">
+                <th className="pb-2 pr-4">Deal</th><th className="pb-2 pr-4">Type</th><th className="pb-2 pr-4">Tier</th><th className="pb-2 pr-4">Status</th>
+              </tr></thead>
+              <tbody>
+                {draftDeals.map((d) => (
+                  <tr key={d.key} className="border-b border-brand-border-light last:border-0">
+                    <td className="py-2 pr-4 font-medium">{d.title}</td>
+                    <td className="py-2 pr-4">{d.type}</td>
+                    <td className="py-2 pr-4">{d.tier}</td>
+                    <td className="py-2 pr-4">{d.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Existing deals — studio cards */}
       <div className="space-y-3">
         {localDeals.map((d) => (
           <article

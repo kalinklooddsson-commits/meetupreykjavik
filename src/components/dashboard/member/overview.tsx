@@ -154,7 +154,7 @@ export async function MemberOverviewScreen() {
                 <ToneBadge key="status" tone={statusTone(e.status)}>
                   {e.status}
                 </ToneBadge>,
-                <RsvpButton key="rsvp" eventSlug={e.event.slug} className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
+                <RsvpButton key="rsvp" eventSlug={e.event.slug} initialState="going" className="!min-h-0 !px-3 !py-1.5 !text-xs" />,
               ],
             }))}
             caption="Your upcoming events"

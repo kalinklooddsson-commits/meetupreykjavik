@@ -85,6 +85,7 @@ interface RsvpButtonProps {
   className?: string;
   ticketType?: string;
   priceLabel?: string;
+  initialState?: "idle" | "going";
 }
 
 /** Parse "750 ISK" → 750 (returns 0 if unparseable) */
@@ -94,12 +95,12 @@ function parseIskAmount(label?: string): number {
   return isNaN(num) ? 0 : num;
 }
 
-export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel }: RsvpButtonProps) {
+export function RsvpButton({ eventSlug, className = "", ticketType, priceLabel, initialState = "idle" }: RsvpButtonProps) {
   const t = useTranslations("common");
   const { toast } = useToast();
   const router = useRouter();
   const { user, isLoading: userLoading } = useUser();
-  const [state, setState] = useState<"idle" | "loading" | "going" | "error">("idle");
+  const [state, setState] = useState<"idle" | "loading" | "going" | "error">(initialState);
   const [message, setMessage] = useState("");
   const [showCheckout, setShowCheckout] = useState(false);
   const [hovered, setHovered] = useState(false);
