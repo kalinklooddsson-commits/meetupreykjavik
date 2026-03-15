@@ -1420,13 +1420,25 @@ async function handleLiveDataRequest(
         if (receiverId && !receiverId.match(/^[0-9a-f-]{36}$/i)) {
           const supabase = await createSupabaseServerClient();
           if (supabase) {
-            const { data: profile } = await supabase
+            // Use separate .ilike() calls instead of .or() with interpolation
+            // to prevent PostgREST filter injection via special chars (, . etc.)
+            const { data: byName } = await supabase
               .from("profiles")
               .select("id")
-              .or(`display_name.ilike.%${receiverId}%,email.ilike.%${receiverId}%`)
+              .ilike("display_name", `%${receiverId}%`)
               .limit(1)
               .maybeSingle();
-            if (profile) receiverId = profile.id as string;
+            if (byName) {
+              receiverId = byName.id as string;
+            } else {
+              const { data: byEmail } = await supabase
+                .from("profiles")
+                .select("id")
+                .ilike("email", `%${receiverId}%`)
+                .limit(1)
+                .maybeSingle();
+              if (byEmail) receiverId = byEmail.id as string;
+            }
           }
         }
 
@@ -2178,7 +2190,7 @@ async function handleLiveDataRequest(
         // profiles table has no "status" column — filter by account_type instead
         const typeFilter = url.searchParams.get("account_type") ?? url.searchParams.get("status");
         if (typeFilter) query = query.eq("account_type", typeFilter);
-        const search = url.searchParams.get("q");
+        const search = url.searchParams.get("q")?.replace(/[%_]/g, "");
         if (search) query = query.ilike("display_name", `%${search}%`);
         const { data, error } = await query;
         if (error) throw error;
@@ -2585,7 +2597,7 @@ async function handleLiveDataRequest(
       // ── Search (public) ──
       case "GET /api/search": {
         const url = request.nextUrl;
-        const q = (url.searchParams.get("q") ?? "").trim();
+        const q = (url.searchParams.get("q") ?? "").trim().replace(/[%_]/g, "");
         if (!q || q.length < 2) return successResponse({ events: [], groups: [], venues: [] });
         const supabase = await createSupabaseServerClient();
         if (!supabase) return null;

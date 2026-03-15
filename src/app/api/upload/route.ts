@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getCurrentAppSession } from "@/lib/auth/session";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { hasTrustedOrigin } from "@/lib/security/request";
+import { forbiddenResponse } from "@/lib/security/response";
 import {
   checkRateLimit,
   rateLimitKeyFromRequest,
@@ -26,6 +28,11 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
  * Supabase Storage and returns the public URL.
  */
 export async function POST(request: NextRequest) {
+  // --- CSRF ---
+  if (!hasTrustedOrigin(request)) {
+    return forbiddenResponse("Cross-site uploads are not allowed.");
+  }
+
   // --- Auth ---
   const session = await getCurrentAppSession();
   if (!session) {
