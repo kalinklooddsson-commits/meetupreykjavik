@@ -75,10 +75,11 @@ export async function PATCH(
       if (booking.venue_id) {
         const { data: venue } = await db
           .from("venues")
-          .select("owner_id")
+          .select("owner_id, slug")
           .eq("id", booking.venue_id)
           .maybeSingle();
-        isVenueOwner = venue?.owner_id === session.id;
+        isVenueOwner = venue?.owner_id === session.id ||
+          (session.accountType === "venue" && venue?.slug === session.slug);
       }
       if (!isOrganizer && !isVenueOwner) {
         return NextResponse.json({ error: "Not authorized to update this booking" }, { status: 403 });

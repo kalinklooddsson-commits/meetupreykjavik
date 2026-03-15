@@ -507,11 +507,12 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
     if (!newNote.trim()) return;
     const note = newNote.trim();
     try {
-      await fetch("/api/admin/notes", {
+      const res = await fetch("/api/admin/notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: dossier.name, action: "add", note }),
       });
+      if (!res.ok) { toast("error", "Could not add note. Please try again."); return; }
       setNotes((prev) => [...prev, note]);
       setNewNote("");
       toast("success", "Note added");
@@ -522,11 +523,12 @@ export function AdminClientCurationWorkbench({ dossier }: { dossier: CurationDos
 
   async function removeNote(idx: number) {
     try {
-      await fetch("/api/admin/notes", {
+      const res = await fetch("/api/admin/notes", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: dossier.name, action: "remove", note: notes[idx] }),
       });
+      if (!res.ok) { toast("error", "Could not remove note. Please try again."); return; }
       setNotes((prev) => prev.filter((_, i) => i !== idx));
       toast("success", "Note removed");
     } catch {
@@ -681,11 +683,16 @@ export function AdminGroupOperationsDesk({
 
   async function updateGroup(key: string, status: string) {
     try {
-      await fetch("/api/admin/groups/action", {
+      const res = await fetch("/api/admin/groups/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        toast("error", (body as Record<string, string>).error ?? "Could not update group.");
+        return;
+      }
       setLocalGroups((prev) => prev.map((g) => (g.key === key ? { ...g, status } : g)));
       toast("success", `Group ${status.toLowerCase()}`);
     } catch {
@@ -947,11 +954,17 @@ export function AdminRevenueControlDesk({
 
   async function processRefund(key: string) {
     try {
-      await fetch("/api/admin/refund", {
+      const res = await fetch("/api/admin/refund", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key }),
       });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        toast("error", (body as Record<string, string>).error ?? "Could not process refund.");
+        setRefundKey(null);
+        return;
+      }
       setLocalTx((prev) => prev.map((t) => (t.key === key ? { ...t, status: "Refunded" } : t)));
       toast("success", "Refund processed");
     } catch {
@@ -1162,11 +1175,12 @@ export function AdminOpsInboxDesk({
 
   async function updateItem(key: string, status: string) {
     try {
-      await fetch("/api/admin/ops/action", {
+      const res = await fetch("/api/admin/ops/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) { toast("error", "Could not update item."); return; }
       setItems((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
       toast("success", `Item ${status.toLowerCase()}`);
     } catch {
@@ -1245,11 +1259,12 @@ export function AdminIncidentCommandDesk({
 
   async function updateIncident(key: string, status: string) {
     try {
-      await fetch("/api/admin/incidents/action", {
+      const res = await fetch("/api/admin/incidents/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) { toast("error", "Could not update incident."); return; }
       setLocalIncidents((prev) => prev.map((i) => (i.key === key ? { ...i, status } : i)));
       toast("success", `Incident ${status.toLowerCase()}`);
     } catch {
@@ -1383,11 +1398,12 @@ export function AdminVenueOperationsDesk({
                 className={btnGhost}
                 onClick={async () => {
                   try {
-                    await fetch("/api/admin/venues/action", {
+                    const res = await fetch("/api/admin/venues/action", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ key: v.key, action: "verify" }),
                     });
+                    if (!res.ok) { toast("error", `Could not verify ${v.name}.`); return; }
                     toast("success", `${v.name} verified`);
                   } catch {
                     toast("error", `Could not verify ${v.name}. Please try again.`);
@@ -1401,11 +1417,12 @@ export function AdminVenueOperationsDesk({
                 className={btnGhost}
                 onClick={async () => {
                   try {
-                    await fetch("/api/admin/venues/action", {
+                    const res = await fetch("/api/admin/venues/action", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ key: v.key, action: "suspend" }),
                     });
+                    if (!res.ok) { toast("error", `Could not suspend ${v.name}.`); return; }
                     toast("success", `${v.name} suspended`);
                   } catch {
                     toast("error", `Could not suspend ${v.name}. Please try again.`);
@@ -1481,11 +1498,12 @@ export function AdminModerationOperationsDesk({
 
   async function updateReport(key: string, status: string) {
     try {
-      await fetch("/api/admin/moderation/action", {
+      const res = await fetch("/api/admin/moderation/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) { toast("error", "Could not update report."); return; }
       setLocalReports((prev) => prev.map((r) => (r.key === key ? { ...r, status } : r)));
       toast("success", `Report ${status.toLowerCase()}`);
     } catch {
@@ -1547,11 +1565,12 @@ export function AdminVenueApprovalConsole({
 
   async function updateApp(key: string, status: string) {
     try {
-      await fetch("/api/admin/venues/action", {
+      const res = await fetch("/api/admin/venues/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) { toast("error", "Could not update application."); return; }
       setLocalApps((prev) => prev.map((a) => (a.key === key ? { ...a, status } : a)));
       toast("success", `Application ${status.toLowerCase()}`);
     } catch {
@@ -1563,11 +1582,12 @@ export function AdminVenueApprovalConsole({
     const count = selected.size;
     const keys = [...selected];
     try {
-      await fetch("/api/admin/venues/action", {
+      const res = await fetch("/api/admin/venues/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ keys, action: status.toLowerCase() }),
       });
+      if (!res.ok) { toast("error", "Could not update applications."); return; }
       setLocalApps((prev) => prev.map((a) => (selected.has(a.key) ? { ...a, status } : a)));
       toast("success", `${count} applications ${status.toLowerCase()}`);
     } catch {
@@ -1660,11 +1680,12 @@ export function AdminModerationConsole({
 
   async function unban(key: string) {
     try {
-      await fetch("/api/admin/moderation/action", {
+      const res = await fetch("/api/admin/moderation/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: "unban" }),
       });
+      if (!res.ok) { toast("error", "Could not unban user."); return; }
       setLocalItems((prev) => prev.filter((i) => i.key !== key));
       toast("success", "User unbanned");
     } catch {
@@ -1748,11 +1769,12 @@ export function AdminSettingsControlCenter({
   async function saveSection(sectionKey: string) {
     const section = sections.find((s) => s.key === sectionKey);
     try {
-      await fetch("/api/admin/settings", {
+      const res = await fetch("/api/admin/settings", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sectionKey, items: section?.items }),
       });
+      if (!res.ok) { toast("error", "Could not save settings."); return; }
       toast("success", `${sectionKey} settings saved`);
     } catch {
       toast("error", `Could not save ${sectionKey} settings. Please try again.`);
@@ -1824,11 +1846,12 @@ export function AdminContentControlCenter({ content }: { content: ContentData })
 
   async function updateSection(key: string, status: string) {
     try {
-      await fetch("/api/admin/content/action", {
+      const res = await fetch("/api/admin/content/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) { toast("error", "Could not update section."); return; }
       setSections((prev) => prev.map((s) => (s.key === key ? { ...s, status } : s)));
       toast("success", `Section ${status.toLowerCase()}`);
     } catch {
@@ -1838,11 +1861,12 @@ export function AdminContentControlCenter({ content }: { content: ContentData })
 
   async function updateBlog(key: string, status: string) {
     try {
-      await fetch("/api/admin/content/action", {
+      const res = await fetch("/api/admin/content/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: status.toLowerCase() }),
       });
+      if (!res.ok) { toast("error", "Could not update post."); return; }
       setBlogQueue((prev) => prev.map((b) => (b.key === key ? { ...b, status } : b)));
       toast("success", `Post ${status.toLowerCase()}`);
     } catch {
@@ -2166,11 +2190,16 @@ export function AdminBookingActionsTable({
 
   async function updateBooking(key: string, newStatus: string) {
     try {
-      await fetch("/api/admin/bookings/action", {
+      const res = await fetch("/api/admin/bookings/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, action: newStatus }),
       });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        toast("error", (body as Record<string, string>).error ?? "Could not update booking.");
+        return;
+      }
       setLocal((prev) => prev.map((b) => (b.key === key ? { ...b, status: newStatus } : b)));
       toast("success", `Booking ${newStatus}`);
     } catch {

@@ -17,7 +17,12 @@ export function LeaveGroupButton({ groupSlug, groupName }: { groupSlug: string; 
     if (state === "confirming") {
       setState("loading");
       try {
-        await fetch(`/api/groups/${groupSlug}/leave`, { method: "POST" });
+        const res = await fetch(`/api/groups/${groupSlug}/leave`, { method: "POST" });
+        if (!res.ok) {
+          setState("idle");
+          toast("error", `Could not leave ${groupName}. Please try again.`);
+          return;
+        }
         setState("left");
         toast("success", `Left ${groupName}`);
       } catch {
