@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 /**
  * GET /api/events/[slug]/rsvp — Check current user's RSVP status
@@ -59,6 +60,9 @@ export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
+  if (!hasTrustedOrigin(_request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {
@@ -181,6 +185,9 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
+  if (!hasTrustedOrigin(_request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {

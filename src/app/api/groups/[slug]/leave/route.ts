@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 /**
  * POST /api/groups/[slug]/leave
@@ -11,6 +12,9 @@ export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ slug: string }> },
 ) {
+  if (!hasTrustedOrigin(_request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {

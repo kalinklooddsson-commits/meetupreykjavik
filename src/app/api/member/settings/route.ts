@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 /**
  * PATCH /api/member/settings
@@ -9,6 +10,9 @@ import { getUser } from "@/lib/auth/guards";
  * Accepts { section: string, values: Record<string, boolean | string> }
  */
 export async function PATCH(request: NextRequest) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
   try {
     const session = await getUser();
     if (!session) {
