@@ -32,10 +32,21 @@ export async function POST(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    const slug = name
+    let slug = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
+
+    // Check for existing slug and append suffix if needed
+    const { data: existingSlug } = await db
+      .from("groups")
+      .select("slug")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (existingSlug) {
+      const suffix = Date.now().toString(36).slice(-4);
+      slug = `${slug}-${suffix}`;
+    }
 
     const { error } = await db.from("groups").insert({
       name,

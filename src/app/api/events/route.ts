@@ -38,11 +38,22 @@ export async function POST(request: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const db = supabase as any;
 
-    // Generate slug
-    const slug = title
+    // Generate slug with collision avoidance
+    let slug = title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
+
+    // Check for existing slug and append suffix if needed
+    const { data: existingSlug } = await db
+      .from("events")
+      .select("slug")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (existingSlug) {
+      const suffix = Date.now().toString(36).slice(-4);
+      slug = `${slug}-${suffix}`;
+    }
 
     // Find venue by slug if provided
     let venueId = null;

@@ -138,3 +138,105 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
+
+/**
+ * DELETE /api/venues/deals
+ *
+ * Delete a venue deal by key (id).
+ * Accepts { key: string, venue_id?: string, venue_slug?: string }
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const session = await getUser();
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.accountType !== "venue" && session.accountType !== "admin") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    const body = await request.json();
+    const { key } = body as { key: string };
+
+    if (!key) {
+      return NextResponse.json({ error: "Missing deal key" }, { status: 400 });
+    }
+
+    const supabase = createSupabaseAdminClient();
+    if (!supabase) {
+      return NextResponse.json({ error: "Database unavailable" }, { status: 503 });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const db = supabase as any;
+
+    // Resolve venue ownership (same pattern as POST)
+    let venue: { id: string } | null = null;
+    if (session.accountType === "admin" && body.venue_id) {
+      venue = { id: body.venue_id };
+    } else if (session.accountType === "admin" && body.venue_slug) {
+      const { data: venueBySlug } = await db
+        .from("venues")
+        .select("id")
+        .eq("slug", body.venue_slug)
+        .maybeSingle();
+      venue = venueBySlug;
+    }
+
+    if (!venue) {
+      const { data: venueByOwner } = await db
+        .from("venues")
+        .select("id")
+        .eq("owner_id", session.id)
+        .maybeSingle();
+      venue = venueByOwner;
+    }
+
+    if (!venue && session.email) {
+      const { data: profile } = await db
+        .from("profiles")
+        .select("id")
+        .eq("email", session.email)
+        .maybeSingle();
+      if (profile) {
+        const { data: venueByProfile } = await db
+          .from("venues")
+          .select("id")
+          .eq("owner_id", profile.id)
+          .maybeSingle();
+        venue = venueByProfile;
+      }
+    }
+
+    if (!venue && session.slug) {
+      const { data: venueBySlug } = await db
+        .from("venues")
+        .select("id")
+        .eq("slug", session.slug)
+        .maybeSingle();
+      venue = venueBySlug;
+    }
+
+    if (!venue) {
+      return NextResponse.json({ error: "No venue found" }, { status: 404 });
+    }
+
+    // Delete the deal — scoped to venue_id for security
+    const { error } = await db
+      .from("venue_deals")
+      .delete()
+      .eq("id", key)
+      .eq("venue_id", venue.id);
+
+    if (error) {
+      console.error("Delete deal failed:", error);
+      return NextResponse.json({ error: "Failed to delete deal" }, { status: 500 });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("Delete deal error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}

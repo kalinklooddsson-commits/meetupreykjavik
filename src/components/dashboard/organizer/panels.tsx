@@ -160,9 +160,9 @@ export function OrganizerAttendeeControlCenter({
 
       {/* Attendee rows */}
       <div className="space-y-2">
-        {filtered.map((a) => (
+        {filtered.map((a, idx) => (
           <div
-            key={a.name}
+            key={`${a.name}-${a.ticket}-${idx}`}
             className="flex flex-col gap-3 rounded-lg border border-brand-border-light bg-white p-3 sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="min-w-0 flex-1">
