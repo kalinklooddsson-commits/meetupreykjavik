@@ -121,8 +121,20 @@ export async function AdminOverviewScreen() {
         description="Items that need a decision or action before they block downstream workflows."
       >
         <div className="grid gap-3 lg:grid-cols-3">
-          {data.urgentQueues.map((q) => (
-            <Link key={q.key} href={"/admin/events" as Route} className="block transition hover:opacity-80">
+          {data.urgentQueues.map((q) => {
+            // Route urgent queue items to the appropriate admin lane
+            const laneRoutes: Record<string, string> = {
+              events: "/admin/events",
+              venues: "/admin/venues",
+              users: "/admin/users",
+              groups: "/admin/groups",
+              bookings: "/admin/bookings",
+              moderation: "/admin/moderation",
+            };
+            const lane = q.key.split("-")[0] || "events";
+            const href = laneRoutes[lane] || "/admin/events";
+            return (
+            <Link key={q.key} href={href as Route} className="block transition hover:opacity-80">
               <StreamCard
                 eyebrow={q.meta}
                 title={q.title}
@@ -130,7 +142,8 @@ export async function AdminOverviewScreen() {
                 badge={<ToneBadge tone={q.tone}>{q.tone === "coral" ? "Urgent" : "Review"}</ToneBadge>}
               />
             </Link>
-          ))}
+            );
+          })}
         </div>
       </Surface>
 

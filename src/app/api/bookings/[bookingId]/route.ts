@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getUser } from "@/lib/auth/guards";
+import { hasTrustedOrigin } from "@/lib/security/request";
 
 /**
  * PATCH /api/bookings/[bookingId]
@@ -12,6 +13,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ bookingId: string }> },
 ) {
+  if (!hasTrustedOrigin(request)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const session = await getUser();
     if (!session) {
@@ -19,7 +24,12 @@ export async function PATCH(
     }
 
     const { bookingId } = await params;
-    const body = await request.json();
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid or missing JSON body" }, { status: 400 });
+    }
     const { status, counterOffer, venueResponse } = body as {
       status: string;
       counterOffer?: Record<string, unknown> | string;
@@ -100,7 +110,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Update failed" }, { status: 500 });
     }
 
-    return NextResponse.json({ ok: true, status });
+    return NextResponse.json({ ok: true, status: normalizedStatus });
   } catch (error) {
     console.error("Booking update error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
