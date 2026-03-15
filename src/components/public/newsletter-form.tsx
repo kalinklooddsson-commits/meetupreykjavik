@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useToast } from "@/components/ui/toast";
 
 export function NewsletterForm({
@@ -16,6 +17,7 @@ export function NewsletterForm({
   const [submitting, setSubmitting] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const { toast } = useToast();
+  const t = useTranslations("common");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,14 +32,14 @@ export function NewsletterForm({
       });
       const result = await res.json();
       if (result.ok) {
-        toast("success", result.message ?? "You're subscribed!");
+        toast("success", result.message ?? t("subscribed"));
         setEmail("");
         setSubscribed(true);
       } else {
-        toast("error", result.error ?? "Could not subscribe. Please try again.");
+        toast("error", result.error ?? t("couldNotSubscribe"));
       }
     } catch {
-      toast("error", "Network error. Please try again.");
+      toast("error", t("networkError"));
     } finally {
       setSubmitting(false);
     }
@@ -46,7 +48,7 @@ export function NewsletterForm({
   if (subscribed) {
     return (
       <p className="mt-2 text-sm text-emerald-400">
-        {successMessage ?? "Subscribed! We'll keep you posted."}
+        {successMessage ?? t("subscribed")}
       </p>
     );
   }

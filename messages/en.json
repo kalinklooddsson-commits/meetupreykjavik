@@ -771,7 +771,12 @@
     "copied": "Copied!",
     "copyLink": "Copy link",
     "linkCopied": "Link copied to clipboard",
-    "couldNotCopy": "Could not copy link"
+    "couldNotCopy": "Could not copy link",
+    "joined": "Joined!",
+    "couldNotJoinGroup": "Could not join group",
+    "networkError": "Could not reach the server. Please try again.",
+    "subscribed": "You're subscribed!",
+    "couldNotSubscribe": "Could not subscribe. Please try again."
   },
   "eventsPage": {
     "hero": {

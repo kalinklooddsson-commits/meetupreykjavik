@@ -771,7 +771,12 @@
     "copied": "Afritað!",
     "copyLink": "Afrita hlekk",
     "linkCopied": "Hlekkur afritaður",
-    "couldNotCopy": "Gat ekki afritað hlekk"
+    "couldNotCopy": "Gat ekki afritað hlekk",
+    "joined": "Skráð/ur!",
+    "couldNotJoinGroup": "Gat ekki skráð í hóp",
+    "networkError": "Gat ekki náð sambandi við netþjón. Reyndu aftur.",
+    "subscribed": "Þú ert skráð/ur!",
+    "couldNotSubscribe": "Gat ekki skráð þig. Reyndu aftur."
   },
   "eventsPage": {
     "hero": {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowRight, Loader2, Check } from "lucide-react";
 
 interface JoinGroupButtonProps {
@@ -26,6 +27,7 @@ export function JoinGroupButton({
   isMember = false,
 }: JoinGroupButtonProps) {
   const router = useRouter();
+  const t = useTranslations("common");
   const [state, setState] = useState<"idle" | "loading" | "joined" | "error">(isMember ? "joined" : "idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -51,7 +53,7 @@ export function JoinGroupButton({
           return;
         }
         setState("error");
-        setErrorMsg(data.error ?? "Could not join group");
+        setErrorMsg(data.error ?? t("couldNotJoinGroup"));
         return;
       }
 
@@ -59,7 +61,7 @@ export function JoinGroupButton({
       router.refresh();
     } catch {
       setState("error");
-      setErrorMsg("Could not reach the server. Please try again.");
+      setErrorMsg(t("networkError"));
     }
   }
 
@@ -73,7 +75,7 @@ export function JoinGroupButton({
       >
         {state === "loading" && <Loader2 className="h-4 w-4 animate-spin" />}
         {state === "joined" && <Check className="h-4 w-4" />}
-        {state === "joined" ? "Joined!" : label}
+        {state === "joined" ? t("joined") : label}
         {showArrow && state === "idle" && <ArrowRight className="h-4 w-4" />}
       </button>
       {state === "error" && errorMsg && (
