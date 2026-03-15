@@ -102,18 +102,24 @@ export function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      const result = await res.json();
-      if (result.ok) {
-        setStatus(result.message ?? t("status.saved"));
-        toast("success", tCommon("messageSent"));
-        startTransition(() => {
-          setForm(initialForm);
-          setSavedSnapshot(JSON.stringify(initialForm));
-          setFieldErrors({});
-        });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        setStatus(err?.error ?? tCommon("messageFailed"));
+        toast("error", err?.error ?? tCommon("messageFailed"));
       } else {
-        setStatus(result.error ?? tCommon("messageFailed"));
-        toast("error", result.error ?? tCommon("messageFailed"));
+        const result = await res.json();
+        if (result.ok) {
+          setStatus(result.message ?? t("status.saved"));
+          toast("success", tCommon("messageSent"));
+          startTransition(() => {
+            setForm(initialForm);
+            setSavedSnapshot(JSON.stringify(initialForm));
+            setFieldErrors({});
+          });
+        } else {
+          setStatus(result.error ?? tCommon("messageFailed"));
+          toast("error", result.error ?? tCommon("messageFailed"));
+        }
       }
     } catch {
       setStatus(tCommon("messageFailed"));

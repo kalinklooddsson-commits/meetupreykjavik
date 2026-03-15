@@ -252,6 +252,7 @@ export function AdminUserCommandCenter({
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action: "role", value: newRole }),
                       });
+                      if (!res.ok) { toast("error", "Could not change role. Please try again."); return; }
                       const result = await res.json();
                       if (result.ok) {
                         updateUser(selected.key, { type: newRole.charAt(0).toUpperCase() + newRole.slice(1) });
@@ -285,6 +286,7 @@ export function AdminUserCommandCenter({
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
+                      if (!res.ok) { toast("error", "Could not update verification. Please try again."); return; }
                       const result = await res.json();
                       if (result.ok) {
                         updateUser(selected.key, { status: selected.status === "Verified" ? "Unverified" : "Verified" });
@@ -314,6 +316,7 @@ export function AdminUserCommandCenter({
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
+                      if (!res.ok) { toast("error", "Could not update premium status. Please try again."); return; }
                       const result = await res.json();
                       if (result.ok) {
                         updateUser(selected.key, { plan: newPlan });
@@ -342,6 +345,7 @@ export function AdminUserCommandCenter({
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userKey: selected.key, action, value: action }),
                       });
+                      if (!res.ok) { toast("error", "Could not update suspension status. Please try again."); return; }
                       const result = await res.json();
                       if (result.ok) {
                         if (isSuspended) {
@@ -1988,6 +1992,7 @@ export function AdminCommsStudio({ comms }: { comms: CommsData }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audience: selectedAudience, draft }),
       });
+      if (!res.ok) { toast("error", "Could not send message. Please try again."); return; }
       const result = await res.json();
       if (result.ok) {
         toast("success", `Message sent to "${selectedAudience}"`);

@@ -195,12 +195,17 @@ export function VenueOnboardingWizard({
             partnership_tier: form.partnershipTier || "free",
           }),
         });
-        const result = await response.json();
-        if (result.ok) {
-          setMessage("Venue application submitted! Redirecting…");
-          setTimeout(() => { window.location.href = result.slug ? `/venues/${result.slug}` : "/venues"; }, 1200);
+        if (!response.ok) {
+          const err = await response.json().catch(() => null);
+          setMessage(`Server: ${err?.details?.formErrors?.[0] ?? err?.error ?? `Error ${response.status}`}`);
         } else {
-          setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+          const result = await response.json();
+          if (result.ok) {
+            setMessage("Venue application submitted! Redirecting…");
+            setTimeout(() => { window.location.href = result.slug ? `/venues/${result.slug}` : "/venues"; }, 1200);
+          } else {
+            setMessage(`Server: ${result.details?.formErrors?.[0] ?? result.error ?? "Unknown error"}`);
+          }
         }
       } catch {
         setMessage("Could not reach the server. Please try again later.");

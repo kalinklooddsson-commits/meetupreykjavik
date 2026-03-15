@@ -288,25 +288,30 @@ export function VenueEventForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(buildPayload()),
       });
-      const result = await response.json();
-
-      if (result.ok) {
-        if (isEdit) {
-          const createdSlug = result.data?.slug;
-          if (createdSlug) {
-            window.location.href = `/events/${createdSlug}`;
-            return;
-          }
-          setMessage("Changes saved successfully!");
-        } else {
-          setMessage("Event submitted for review! The platform admin will approve it shortly.");
-        }
-        setMessageType("success");
-      } else {
-        setMessage(
-          result.details?.formErrors?.[0] ?? result.error ?? "Something went wrong.",
-        );
+      if (!response.ok) {
+        const err = await response.json().catch(() => null);
+        setMessage(err?.details?.formErrors?.[0] ?? err?.error ?? `Error ${response.status}`);
         setMessageType("error");
+      } else {
+        const result = await response.json();
+        if (result.ok) {
+          if (isEdit) {
+            const createdSlug = result.data?.slug;
+            if (createdSlug) {
+              window.location.href = `/events/${createdSlug}`;
+              return;
+            }
+            setMessage("Changes saved successfully!");
+          } else {
+            setMessage("Event submitted for review! The platform admin will approve it shortly.");
+          }
+          setMessageType("success");
+        } else {
+          setMessage(
+            result.details?.formErrors?.[0] ?? result.error ?? "Something went wrong.",
+          );
+          setMessageType("error");
+        }
       }
     } catch {
       setMessage("Could not reach the server. Please try again.");

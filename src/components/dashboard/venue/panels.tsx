@@ -46,6 +46,7 @@ export function VenueBookingCommandCenter({
           counterOffer: counterNotes[key] || undefined,
         }),
       });
+      if (!res.ok) { toast("error", `Could not ${action} booking. Please try again.`); return; }
       const result = await res.json();
       if (result.ok) {
         setDecisions((prev) => ({ ...prev, [key]: action }));
@@ -297,6 +298,7 @@ export function VenueAvailabilityStudio({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ schedule: localGrid, ...(venueId ? { venue_id: venueId } : {}) }),
               });
+              if (!res.ok) { toast("error", "Could not save schedule. Please try again."); return; }
               const result = await res.json();
               if (result.ok) {
                 toast("success", "Schedule saved successfully");
@@ -357,6 +359,7 @@ export function VenueBlockedDatesManager({
           ...(venueId ? { venue_id: venueId } : {}),
         }),
       });
+      if (!res.ok) { toast("error", "Could not add blocked date. Please try again."); return; }
       const result = await res.json();
       if (result.ok) {
         setDates((prev) => [
@@ -385,6 +388,7 @@ export function VenueBlockedDatesManager({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
+      if (!res.ok) { toast("error", "Could not remove blocked date. Please try again."); return; }
       const result = await res.json();
       if (result.ok) {
         setDates((prev) => prev.filter((d) => d.id !== id));
@@ -541,6 +545,7 @@ export function VenueDealStudio({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, venue_id: venueId }),
       });
+      if (!res.ok) { toast("error", "Could not delete deal. Please try again."); return; }
       const result = await res.json();
       if (result.ok) {
         setLocalDeals((prev) => prev.filter((d) => d.key !== key));
@@ -727,6 +732,7 @@ export function VenueDealStudio({
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),
                   });
+                  if (!res.ok) { toast("error", "Could not save deal. Please try again."); setSaving(false); return; }
                   const result = await res.json();
                   if (result.ok) {
                     if (editingKey) {
@@ -892,6 +898,7 @@ export function VenueProfileSectionEditor({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ sections: localSections }),
               });
+              if (!res.ok) { toast("error", "Could not save profile. Please try again."); return; }
               const result = await res.json();
               if (result.ok) {
                 toast("success", "Profile saved successfully");
@@ -939,6 +946,7 @@ export function VenueReviewReply({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ response: text.trim() }),
       });
+      if (!res.ok) { toast("error", "Could not save reply. Please try again."); setMode("editing"); return; }
       const result = await res.json();
       if (result.ok) {
         toast("success", "Reply saved");

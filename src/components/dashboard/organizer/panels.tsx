@@ -76,6 +76,11 @@ export function OrganizerAttendeeControlCenter({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, action, eventSlug }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast("error", err?.error ?? `Could not ${action === "checkin" ? "check in" : action} ${name}. Please try again.`);
+        return;
+      }
       const result = await res.json();
       if (result.ok) {
         applyLocal(name, action);
@@ -297,6 +302,11 @@ export function OrganizerVenueRequestStudio({
           message,
         }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast("error", err?.error ?? "Could not send booking request. Please try again.");
+        return;
+      }
       const result = await res.json();
       if (result.ok) {
         setSubmitted(true);
@@ -470,6 +480,12 @@ export function OrganizerEventActions({
     setState("loading");
     try {
       const res = await fetch(`/api/events/${slug}`, { method: "DELETE" });
+      if (!res.ok) {
+        const err = await res.json().catch(() => null);
+        toast("error", err?.error ?? "Could not cancel event. Please try again.");
+        setState("idle");
+        return;
+      }
       const result = await res.json();
       if (result.ok) {
         setState("done");

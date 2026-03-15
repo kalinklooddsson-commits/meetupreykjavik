@@ -51,6 +51,7 @@ export function MemberSettingsStudio({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      if (!response.ok) { toast("error", "Failed to save profile"); return; }
       const result = await response.json();
       if (result.ok) {
         setSaved(true);
