@@ -19,6 +19,8 @@ function venueLinks(activeKey: string) {
     { key: "deals", label: "Deals", href: "/venue/deals" as Route },
     { key: "events", label: "Events", href: "/venue/events" as Route },
     { key: "reviews", label: "Reviews", href: "/venue/reviews" as Route },
+    { key: "messages", label: "Messages", href: "/venue/messages" as Route },
+    { key: "notifications", label: "Notifications", href: "/venue/notifications" as Route },
     { key: "analytics", label: "Analytics", href: "/venue/analytics" as Route },
     { key: "profile", label: "Profile", href: "/venue/profile" as Route },
   ].map((l) => ({ href: l.href, label: l.label, active: l.key === activeKey }));
