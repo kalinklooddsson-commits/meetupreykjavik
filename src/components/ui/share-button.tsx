@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Share2, Check, Link2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useToast } from "@/components/ui/toast";
 
 interface ShareButtonProps {
@@ -13,6 +14,7 @@ interface ShareButtonProps {
 export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const t = useTranslations("common");
 
   async function handleShare() {
     const url = window.location.href;
@@ -37,7 +39,7 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      toast("success", "Link copied to clipboard");
+      toast("success", t("linkCopied"));
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Final fallback for insecure contexts or denied clipboard permission
@@ -51,10 +53,10 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
         document.execCommand("copy");
         document.body.removeChild(textarea);
         setCopied(true);
-        toast("success", "Link copied to clipboard");
+        toast("success", t("linkCopied"));
         setTimeout(() => setCopied(false), 2000);
       } catch {
-        toast("error", "Could not copy link");
+        toast("error", t("couldNotCopy"));
       }
     }
   }
@@ -68,12 +70,12 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
       {copied ? (
         <>
           <Check className="h-4 w-4 text-brand-sage" />
-          Copied!
+          {t("copied")}
         </>
       ) : (
         <>
           <Share2 className="h-4 w-4" />
-          Share
+          {t("share")}
         </>
       )}
     </button>
@@ -83,15 +85,16 @@ export function ShareButton({ title, text, className = "" }: ShareButtonProps) {
 export function CopyLinkButton({ className = "" }: { className?: string }) {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const t = useTranslations("common");
 
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      toast("success", "Link copied");
+      toast("success", t("linkCopied"));
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast("error", "Could not copy link");
+      toast("error", t("couldNotCopy"));
     }
   }
 
@@ -102,7 +105,7 @@ export function CopyLinkButton({ className = "" }: { className?: string }) {
       className={`inline-flex items-center gap-1.5 text-sm font-medium text-brand-text-muted hover:text-brand-indigo transition ${className}`}
     >
       {copied ? <Check className="h-3.5 w-3.5 text-brand-sage" /> : <Link2 className="h-3.5 w-3.5" />}
-      {copied ? "Copied" : "Copy link"}
+      {copied ? t("copied") : t("copyLink")}
     </button>
   );
 }

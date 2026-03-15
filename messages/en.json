@@ -766,7 +766,12 @@
     "noFaqResults": "No questions match your search. Try different keywords.",
     "joinGroup": "Join group",
     "leaveGroup": "Leave group",
-    "memberOfGroup": "You're a member"
+    "memberOfGroup": "You're a member",
+    "share": "Share",
+    "copied": "Copied!",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied to clipboard",
+    "couldNotCopy": "Could not copy link"
   },
   "eventsPage": {
     "hero": {

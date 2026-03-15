@@ -766,7 +766,12 @@
     "noFaqResults": "Engar spurningar passa við leitina þína. Prófaðu önnur leitarorð.",
     "joinGroup": "Ganga í hóp",
     "leaveGroup": "Yfirgefa hóp",
-    "memberOfGroup": "Þú ert meðlimur"
+    "memberOfGroup": "Þú ert meðlimur",
+    "share": "Deila",
+    "copied": "Afritað!",
+    "copyLink": "Afrita hlekk",
+    "linkCopied": "Hlekkur afritaður",
+    "couldNotCopy": "Gat ekki afritað hlekk"
   },
   "eventsPage": {
     "hero": {
