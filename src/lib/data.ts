@@ -3,7 +3,7 @@ import { getEvents } from "@/lib/db/events";
 import { getGroups, getGroupBySlug } from "@/lib/db/groups";
 import { getVenues, getVenueBySlug } from "@/lib/db/venues";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { createIllustratedBackground } from "@/lib/visuals";
+import { pickEventPhoto, pickGroupPhoto, pickVenuePhoto } from "@/lib/photo-pools";
 
 /**
  * Strip HTML tags from rich-text content and split into paragraphs.
@@ -171,7 +171,7 @@ function mapDbEventToPublic(row: Record<string, unknown>): PublicEvent {
     art:
       realPhoto(row.featured_photo_url) ??
       mockEvent?.art ??
-      createIllustratedBackground(row.title as string, (category?.name_en as string) ?? "Event"),
+      pickEventPhoto((category?.name_en as string) ?? null, row.slug as string),
     gallery: (Array.isArray(row.gallery_photos) && (row.gallery_photos as string[]).length > 0)
       ? (row.gallery_photos as string[])
       : [],
@@ -221,7 +221,7 @@ function mapDbGroupToPublic(
     banner:
       realPhoto(row.banner_url) ??
       mockFallback?.banner ??
-      createIllustratedBackground(row.name as string, "Group"),
+      pickGroupPhoto(null, row.slug as string),
     tags: Array.isArray(row.tags) ? (row.tags as string[]) : mockFallback?.tags ?? [],
     upcomingEventSlugs: eventSlugs ?? [],
     pastEvents: [],
@@ -328,7 +328,7 @@ function mapDbVenueToPublic(
     art:
       realPhoto(row.hero_photo_url) ??
       mockVenue?.art ??
-      createIllustratedBackground(row.name as string, "Venue"),
+      pickVenuePhoto(row.type as string | null, row.slug as string),
     latitude: (row.latitude as number) ?? mockVenue?.latitude ?? undefined,
     longitude: (row.longitude as number) ?? mockVenue?.longitude ?? undefined,
   };

@@ -1,6 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { hasSupabaseEnv } from "@/lib/env";
-import { createSceneCoverDataUrl } from "@/lib/visuals";
+import { pickEventPhoto, pickGroupPhoto, pickVenuePhoto } from "@/lib/photo-pools";
 import type { HomeEvent, HomeGroup, HomeVenue } from "@/lib/home-data";
 import {
   heroStats as fallbackHeroStats,
@@ -28,30 +28,6 @@ export type HomePageData = {
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
-
-/** Generic placeholder image — if the DB has this, treat it as "no photo". */
-const GENERIC_PLACEHOLDER = "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg";
-
-/** Cycle through Reykjavik landmark photos so cards aren't all identical.
- *  hallgrimskirkja is excluded — it's the hero background and generic placeholder. */
-const PLACE_PHOTOS = [
-  "/place-images/reykjavik/hof-i-deccf755.jpg",
-  "/place-images/reykjavik/reykjavik-871-2-78434189.jpg",
-  "/place-images/reykjavik/dill-0aeca160.jpg",
-  "/place-images/reykjavik/hafnarborg-1be7b43b.jpg",
-  "/place-images/reykjavik/arb-jarsafn-c71d7348.jpg",
-  "/place-images/reykjavik/venues/kex-hostel.jpg",
-  "/place-images/reykjavik/venues/lebowski-bar.jpg",
-  "/place-images/reykjavik/venues/grandi-hub.jpg",
-  "/place-images/reykjavik/venues/reykjavik-roasters.jpg",
-  "/place-images/reykjavik/venues/mokka.jpg",
-];
-
-function pickPhoto(slug: string, photos: readonly string[]): string {
-  let hash = 0;
-  for (let i = 0; i < slug.length; i++) hash = (hash * 31 + slug.charCodeAt(i)) >>> 0;
-  return photos[hash % photos.length];
-}
 
 /** Returns the photo if it's a real, accessible image, otherwise null. */
 function realPhoto(url: string | null | undefined): string | null {
@@ -242,7 +218,7 @@ async function fetchEvents(
         venueSlug: venueRow?.slug ?? "",
         attendees: row.rsvp_count ?? 0,
         deal: undefined,
-        photo: realPhoto(row.featured_photo_url) ?? pickPhoto(row.slug, PLACE_PHOTOS),
+        photo: realPhoto(row.featured_photo_url) ?? pickEventPhoto(categoryRow?.name_en, row.slug),
       };
     });
   } catch {
@@ -284,7 +260,7 @@ async function fetchGroups(
         description: isGenericDescription(row.description, row.name)
           ? (fallbackGroups.find((g) => g.slug === row.slug)?.description ?? row.description ?? "")
           : (row.description ?? ""),
-        photo: realPhoto(row.banner_url) ?? pickPhoto(row.slug, PLACE_PHOTOS),
+        photo: realPhoto(row.banner_url) ?? pickGroupPhoto(categoryRow?.name_en, row.slug),
       };
     });
   } catch {
@@ -327,7 +303,7 @@ async function fetchVenues(
       photo:
         realPhoto(row.hero_photo_url) ??
         VENUE_PHOTOS[row.slug] ??
-        createSceneCoverDataUrl(row.name, row.type ?? "Venue"),
+        pickVenuePhoto(row.type, row.slug),
     }));
   } catch {
     return [...fallbackVenues];
