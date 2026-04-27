@@ -197,7 +197,8 @@ li {
   text-wrap: pretty;
 }
 
-a {
+/* Use :where() so this has 0 specificity and any Tailwind text-* utility wins. */
+:where(a) {
   color: inherit;
 }
 
