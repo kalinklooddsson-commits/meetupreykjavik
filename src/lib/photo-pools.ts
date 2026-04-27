@@ -89,24 +89,38 @@ function pick(pool: readonly string[], seed: string): string {
 }
 
 /**
- * Pick a curated photo for a venue based on its type and slug.
- *
- * Returns a deterministic image so the same venue always gets the same
- * fallback — no flicker between renders, no duplicates clustered on one row.
+ * Direct slug → photo map for venues we have real photos of.
+ * If a venue slug isn't in this map, the venue card renders the
+ * typographic placeholder instead of a misleading stand-in image.
  */
-export function pickVenuePhoto(type: string | null | undefined, slug: string): string {
-  const t = (type ?? "").toLowerCase();
+const VENUE_DIRECT: Record<string, string> = {
+  "kex-hostel": "/place-images/reykjavik/venues/kex-hostel.jpg",
+  "loft-hostel": "/place-images/reykjavik/venues/loft-hostel.jpg",
+  "lebowski-bar": "/place-images/reykjavik/venues/lebowski-bar.jpg",
+  "mokka": "/place-images/reykjavik/venues/mokka.jpg",
+  "cafe-rosenberg": "/place-images/reykjavik/venues/cafe-rosenberg.jpg",
+  "dillon": "/place-images/reykjavik/venues/dillon.jpg",
+  "reykjavik-roasters": "/place-images/reykjavik/venues/reykjavik-roasters.jpg",
+  "apotek": "/place-images/reykjavik/venues/apotek.jpg",
+  "grandi-hub": "/place-images/reykjavik/venues/grandi-hub.jpg",
+  "hlemmur-square": "/place-images/reykjavik/venues/hlemmur-square.jpg",
+  "micro-bar": "/place-images/reykjavik/venues/micro-bar.jpg",
+  "stofan-cafe": "/place-images/reykjavik/venues/stofan-cafe.jpg",
+  "dill": "/place-images/reykjavik/dill-0aeca160.jpg",
+  "hallgrimskirkja": "/place-images/reykjavik/hallgrimskirkja-60f147a6.jpg",
+  "hafnarborg": "/place-images/reykjavik/hafnarborg-1be7b43b.jpg",
+  "gaukurinn": "/demo-images/venues/gaukurinn.webp",
+  "bryggjuhusid": "/demo-images/venues/bryggjuhusid.jpg",
+  "grandi-restaurant": "/demo-images/venues/grandi-restaurant.jpg",
+};
 
-  if (/(cafe|kaffi|coffee|bakery|bakari)/.test(t)) return pick(CAFE, slug);
-  if (/(bar|pub|tap|brew|cocktail)/.test(t)) return pick(BAR, slug);
-  if (/(restaur|bistro|kitchen|matsta|food|dining)/.test(t)) return pick(RESTAURANT, slug);
-  if (/(hostel|hub|coworking|hotel|guest)/.test(t)) return pick(HOSTEL_HUB, slug);
-  if (/(museum|safn|gallery|exhibit)/.test(t)) return pick(MUSEUM, slug);
-  if (/(theatre|theater|hall|concert|leikhus|harpa|cultural)/.test(t)) return pick(CULTURAL_HALL, slug);
-  if (/(outdoor|park|hike|nature|garden|mountain)/.test(t)) return pick(OUTDOORS, slug);
-  if (/(church|landmark|monument|kirkja)/.test(t)) return pick(LANDMARK, slug);
-
-  return pick(ANY_REAL, slug);
+/**
+ * Pick a real photo for a venue ONLY if we have one — otherwise return null
+ * and let the card render its typographic placeholder. Showing a generic
+ * "cafe" photo for an arbitrary cafe is misleading; a clean wordmark is honest.
+ */
+export function pickVenuePhoto(_type: string | null | undefined, slug: string): string | null {
+  return VENUE_DIRECT[slug] ?? null;
 }
 
 /** Pick a curated photo for an event based on category + slug. */

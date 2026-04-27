@@ -300,10 +300,12 @@ async function fetchVenues(
       rating: Number(row.avg_rating) || 0,
       events: row.events_hosted ?? 0,
       deal: undefined,
+      // Empty string → card renders typographic placeholder (no misleading stand-in photo).
       photo:
         realPhoto(row.hero_photo_url) ??
         VENUE_PHOTOS[row.slug] ??
-        pickVenuePhoto(row.type, row.slug),
+        pickVenuePhoto(row.type, row.slug) ??
+        "",
     }));
   } catch {
     return [...fallbackVenues];

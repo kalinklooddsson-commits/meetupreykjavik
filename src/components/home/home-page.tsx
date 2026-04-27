@@ -246,27 +246,47 @@ function GroupCard({ group }: { group: HomeGroup }) {
 function VenueCard({ venue }: { venue: HomeVenue }) {
   const tHome = useTranslations("home.cards");
   const tCta = useTranslations("cta");
+  const hasPhoto = Boolean(venue.photo);
 
   return (
     <Link
       href={`/venues/${venue.slug}` as import("next").Route}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
-      <div className="relative h-44 overflow-hidden">
-        <Image
-          src={venue.photo}
-          alt={venue.name}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 33vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(30,27,46,0.55)]" />
-        <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-          <div className="text-base font-bold tracking-tight">{venue.name}</div>
-          <div className="mt-0.5 text-sm text-white/80">
-            {venue.type} · {venue.area}
+      <div className="relative h-44 overflow-hidden bg-brand-sand-light">
+        {hasPhoto ? (
+          <>
+            <Image
+              src={venue.photo}
+              alt={venue.name}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(30,27,46,0.55)]" />
+            <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+              <div className="text-base font-bold tracking-tight">{venue.name}</div>
+              <div className="mt-0.5 text-sm text-white/80">
+                {venue.type} · {venue.area}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="absolute inset-0 flex flex-col justify-between p-5">
+            <div className="flex items-center gap-2">
+              <span className="h-px w-6 bg-brand-text" />
+              <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-brand-text-muted">
+                {venue.type}
+              </span>
+            </div>
+            <div>
+              <p className="font-editorial line-clamp-2 text-[1.5rem] leading-[1.05] tracking-[-0.035em] text-brand-text">
+                {venue.name}
+              </p>
+              <p className="mt-1 text-xs text-brand-text-muted">{venue.area}</p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className="flex flex-1 flex-col px-5 py-4">
         <div className="flex items-center justify-between">

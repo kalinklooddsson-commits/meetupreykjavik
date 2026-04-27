@@ -328,7 +328,8 @@ function mapDbVenueToPublic(
     art:
       realPhoto(row.hero_photo_url) ??
       mockVenue?.art ??
-      pickVenuePhoto(row.type as string | null, row.slug as string),
+      pickVenuePhoto(row.type as string | null, row.slug as string) ??
+      "",
     latitude: (row.latitude as number) ?? mockVenue?.latitude ?? undefined,
     longitude: (row.longitude as number) ?? mockVenue?.longitude ?? undefined,
   };
