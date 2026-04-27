@@ -11,14 +11,12 @@ import { ShareButton } from "@/components/ui/share-button";
 import {
   ArrowRight,
   BadgeCheck,
-  BarChart3,
   Building2,
   CalendarDays,
   CheckCircle2,
   Clock3,
   Eye,
   Globe2,
-  HandHeart,
   Heart,
   Lightbulb,
   Mail,
@@ -332,26 +330,6 @@ function sourcedPlaceSignals(place: SourcedPlace, t: (key: string) => string) {
   ];
 }
 
-function blogSignals(posts: BlogPost[], t: (key: string, values?: Record<string, string | number>) => string) {
-  return [
-    {
-      label: t("signals.editorialFocus.label"),
-      value: t("signals.editorialFocus.value"),
-      detail: t("signals.editorialFocus.detail"),
-    },
-    {
-      label: t("signals.publishedPieces.label"),
-      value: String(posts.length),
-      detail: t("signals.publishedPieces.detail"),
-    },
-    {
-      label: t("signals.averageDepth.label"),
-      value: t("signals.averageDepth.sections", { count: Math.round(posts.reduce((sum, post) => sum + post.sections.length, 0) / posts.length) }),
-      detail: t("signals.averageDepth.detail"),
-    },
-  ];
-}
-
 /** Extract image URL from gradient+url art strings or plain URLs */
 function extractImageUrl(art: string | undefined | null): string | null {
   if (!art) return null;
@@ -363,6 +341,8 @@ function extractImageUrl(art: string | undefined | null): string | null {
   if (art.startsWith("http://") || art.startsWith("https://") || art.startsWith("/")) {
     // Reject malformed Wikipedia thumbnail URLs (contain nested paths like .jpg/1200px-)
     if (/\.\w{3,4}\/\d+px-/i.test(art)) return null;
+    // Reject the legacy loud gradient SVGs — render a clean placeholder instead
+    if (art.includes("/place-images/reykjavik/generated/")) return null;
     return art;
   }
   // CSS url() syntax inside gradients
@@ -372,9 +352,38 @@ function extractImageUrl(art: string | undefined | null): string | null {
     // Reject data URLs extracted from CSS — Next.js Image can't handle them
     if (url.startsWith("data:")) return null;
     if (/\.\w{3,4}\/\d+px-/i.test(url)) return null;
+    if (url.includes("/place-images/reykjavik/generated/")) return null;
     return url;
   }
   return null;
+}
+
+/* ── Clean typographic placeholder for cards without real photos ── */
+
+function PlaceholderCover({
+  title,
+  eyebrow,
+}: {
+  title: string;
+  eyebrow?: string;
+}) {
+  return (
+    <div className="absolute inset-0 flex flex-col justify-between bg-brand-sand-light p-5">
+      {eyebrow ? (
+        <div className="flex items-center gap-2">
+          <span className="h-px w-6 bg-brand-text" />
+          <span className="text-[0.625rem] font-bold uppercase tracking-[0.2em] text-brand-text-muted">
+            {eyebrow}
+          </span>
+        </div>
+      ) : (
+        <div />
+      )}
+      <p className="font-editorial line-clamp-3 text-[1.5rem] leading-[1.05] tracking-[-0.035em] text-brand-text">
+        {title}
+      </p>
+    </div>
+  );
 }
 
 /* ── Category directory ────────────────────────────────── */
@@ -444,16 +453,16 @@ function PageHeader({
   actions?: Array<{ href: Route; label: string; primary?: boolean }>;
 }) {
   return (
-    <section className="border-b border-gray-200 bg-white">
+    <section className="section-wash border-b border-brand-border-light">
       <div className="section-shell py-12 sm:py-16">
-        <span className="text-xs font-semibold uppercase tracking-widest text-brand-indigo">
+        <span className="inline-flex rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo shadow-sm">
           {eyebrow}
         </span>
-        <h1 className="font-editorial mt-3 max-w-3xl text-3xl tracking-tight text-gray-900 sm:text-4xl md:text-5xl">
+        <h1 className="font-editorial mt-5 max-w-3xl text-3xl leading-tight tracking-[-0.04em] text-brand-text sm:text-4xl md:text-5xl">
           {title}
         </h1>
         {description ? (
-          <p className="mt-4 max-w-2xl text-base text-gray-600 sm:text-lg">{description}</p>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-brand-text-muted sm:text-lg">{description}</p>
         ) : null}
         {actions?.length ? (
           <div className="mt-6 flex flex-wrap gap-3">
@@ -462,7 +471,7 @@ function PageHeader({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-bold !text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 >
                   {action.label}
                   <ArrowRight className="h-4 w-4" />
@@ -471,7 +480,7 @@ function PageHeader({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-6 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-brand-border bg-white px-6 py-3 text-sm font-semibold text-brand-text transition hover:-translate-y-0.5 hover:bg-brand-sand-light"
                 >
                   {action.label}
                 </Link>
@@ -605,9 +614,9 @@ function EventCard({ event }: { event: PublicEvent }) {
       : null;
 
   return (
-    <Link href={eventHref(event.slug)} className="group block overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+    <Link href={eventHref(event.slug)} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       {/* ── Image area ── */}
-      <div className="relative h-48 overflow-hidden bg-gray-200">
+      <div className="relative h-48 overflow-hidden bg-brand-sand-light">
         {imageUrl ? (
           <>
             <Image
@@ -621,7 +630,7 @@ function EventCard({ event }: { event: PublicEvent }) {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(30,27,46,0.55)]" />
           </>
         ) : (
-          <div className="absolute inset-0" style={{ background: event.art }} />
+          <PlaceholderCover title={event.title} eyebrow={event.category} />
         )}
 
         {/* Date badge */}
@@ -654,7 +663,7 @@ function EventCard({ event }: { event: PublicEvent }) {
       </div>
 
       {/* ── Body ── */}
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
         {/* Title */}
         <h2 className="text-lg font-bold leading-snug text-gray-900 transition-colors group-hover:text-brand-indigo">
           {event.title}
@@ -754,7 +763,7 @@ function EventCard({ event }: { event: PublicEvent }) {
         </div>
 
         {/* CTA */}
-        <div className="mt-5 flex items-center justify-end">
+        <div className="mt-auto flex items-center justify-end pt-5">
           <span
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition group-hover:opacity-90"
           >
@@ -780,9 +789,9 @@ function GroupCard({
   const isHot = group.activity > 80;
 
   return (
-    <Link href={groupHref(group.slug)} className="group block overflow-hidden rounded-xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+    <Link href={groupHref(group.slug)} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#EBE6DC] bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       {/* Banner image with overlay badge */}
-      <div className="relative h-40 overflow-hidden bg-gray-200">
+      <div className="relative h-40 overflow-hidden bg-brand-sand-light">
         {imageUrl ? (
           <>
             <Image
@@ -796,7 +805,7 @@ function GroupCard({
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
           </>
         ) : (
-          <div className="absolute inset-0" style={{ background: group.banner }} />
+          <PlaceholderCover title={group.name} eyebrow={group.category} />
         )}
 
         {/* Category badge overlaid on banner */}
@@ -828,7 +837,7 @@ function GroupCard({
       </div>
 
       {/* Card body */}
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
         <h2 className="text-lg font-bold leading-snug text-gray-900">{group.name}</h2>
         <p className="mt-1.5 line-clamp-2 text-sm text-gray-600">{group.summary}</p>
 
@@ -858,7 +867,7 @@ function GroupCard({
         </p>
 
         {/* Footer */}
-        <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
+        <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-4">
           <div className="text-sm text-gray-500">
             {upcomingTitle ? tCards("nextEvent", { title: upcomingTitle }) : tCards("noUpcoming")}
           </div>
@@ -885,9 +894,9 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
   const emptyStars = 5 - fullStars;
 
   return (
-    <Link href={venueHref(venue.slug)} className="group block overflow-hidden rounded-xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
+    <Link href={venueHref(venue.slug)} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-[0_1px_4px_rgba(42,38,56,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(42,38,56,0.12)]">
       {/* ── Image section ── */}
-      <div className="relative h-44 overflow-hidden bg-gray-200">
+      <div className="relative h-44 overflow-hidden bg-brand-sand-light">
         {imageUrl ? (
           <>
             <Image
@@ -898,37 +907,41 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
               src={imageUrl}
               unoptimized={imageUrl.startsWith("https://")}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+            {/* Venue type badge – top left */}
+            <div className="absolute left-3 top-3">
+              <span className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-gray-800 backdrop-blur-sm">
+                <Building2 className="h-3 w-3" />
+                {venue.type}
+              </span>
+            </div>
+            {venue.deal ? (
+              <div className="absolute right-3 top-3">
+                <span className="rounded-full bg-brand-coral px-2.5 py-1 text-xs font-bold !text-white">
+                  {tCards("memberDeal")}
+                </span>
+              </div>
+            ) : null}
+            <div className="absolute inset-x-0 bottom-0 px-4 pb-3">
+              <h3 className="text-lg font-bold leading-tight text-white drop-shadow-sm">{venue.name}</h3>
+            </div>
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-indigo/30 to-brand-coral/20" style={venue.art ? { background: venue.art } : undefined} />
+          <>
+            <PlaceholderCover title={venue.name} eyebrow={venue.type} />
+            {venue.deal ? (
+              <div className="absolute right-3 top-3">
+                <span className="rounded-full bg-brand-coral px-2.5 py-1 text-xs font-bold !text-white">
+                  {tCards("memberDeal")}
+                </span>
+              </div>
+            ) : null}
+          </>
         )}
-
-        {/* Venue type badge – top left */}
-        <div className="absolute left-3 top-3">
-          <span className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-semibold text-gray-800 backdrop-blur-sm">
-            <Building2 className="h-3 w-3" />
-            {venue.type}
-          </span>
-        </div>
-
-        {/* Member deal badge – top right */}
-        {venue.deal ? (
-          <div className="absolute right-3 top-3">
-            <span className="rounded-full bg-brand-coral px-2.5 py-1 text-xs font-bold !text-white">
-              {tCards("memberDeal")}
-            </span>
-          </div>
-        ) : null}
-
-        {/* Venue name overlay – bottom */}
-        <div className="absolute inset-x-0 bottom-0 px-4 pb-3">
-          <h3 className="text-lg font-bold leading-tight text-white drop-shadow-sm">{venue.name}</h3>
-        </div>
       </div>
 
       {/* ── Content section ── */}
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
         {/* Star rating + area badge row */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-0.5">
@@ -978,7 +991,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         ) : null}
 
         {/* Divider + bottom row */}
-        <div className="mt-4 border-t border-gray-100 pt-4">
+        <div className="mt-auto border-t border-gray-100 pt-4">
           <div className="flex items-center justify-between gap-2">
             {/* Next event or open status */}
             <div className="min-w-0 flex-1 text-sm text-gray-500">
@@ -1216,24 +1229,25 @@ function IndexHero({
   searchDefault?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-gray-900">
+    <section className="relative overflow-hidden bg-brand-basalt">
       <Image
         fill
         alt=""
         role="presentation"
-        className="object-cover opacity-30"
+        className="object-cover opacity-45"
         sizes="100vw"
         src={imageSrc}
         priority
         placeholder="blur"
         blurDataURL={BLUR_DATA_URL}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-gray-900/60 to-gray-900/90" />
-      <div className="section-shell relative z-10 py-10 text-white sm:py-16 md:py-24">
-        <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.48)_0%,rgba(30,27,46,0.66)_58%,rgba(30,27,46,0.92)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(30,27,46,0.86)_0%,rgba(30,27,46,0.42)_55%,rgba(232,97,77,0.28)_100%)]" />
+      <div className="section-shell relative z-10 py-12 text-white sm:py-20 md:py-24">
+        <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white/85 backdrop-blur-sm">
           {eyebrow}
         </span>
-        <h1 className="font-editorial mt-3 max-w-3xl text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1 className="font-editorial mt-5 max-w-3xl text-4xl leading-[1.04] tracking-[-0.04em] sm:text-5xl md:text-6xl">
           {title}
         </h1>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/85 sm:text-lg">
@@ -1241,21 +1255,22 @@ function IndexHero({
         </p>
         {/* Inline search bar */}
         {searchAction ? (
-          <form action={searchAction} method="GET" className="mt-8 flex max-w-lg">
+          <form action={searchAction} method="GET" className="mt-8 flex max-w-2xl rounded-2xl border border-white/20 bg-white/15 p-1.5 shadow-2xl shadow-black/10 backdrop-blur-md sm:rounded-full">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/65" />
               <input
-                type="text"
+                type="search"
                 name="q"
                 defaultValue={searchDefault}
                 placeholder={searchPlaceholder ?? "Search..."}
-                className="w-full rounded-l-full border-0 bg-white py-3.5 pl-12 pr-4 text-sm text-gray-900 shadow-lg placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-coral"
+                aria-label={searchPlaceholder ?? "Search"}
+                className="w-full rounded-l-xl border-0 bg-transparent py-3.5 pl-12 pr-4 text-sm text-white placeholder:text-white/60 focus:outline-none sm:rounded-l-full"
               />
             </div>
             <button
               type="submit"
               aria-label="Search"
-              className="rounded-r-full bg-brand-coral px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:opacity-90"
+              className="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-bold text-brand-indigo shadow-lg transition hover:bg-brand-sand sm:rounded-full"
             >
               <Search className="h-5 w-5" />
             </button>
@@ -1268,7 +1283,7 @@ function IndexHero({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-coral/20 transition hover:opacity-90"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-coral px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-brand-coral/20 transition hover:-translate-y-0.5 hover:shadow-xl"
                 >
                   {action.label}
                   <ArrowRight className="h-4 w-4" />
@@ -1277,7 +1292,7 @@ function IndexHero({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/20"
                 >
                   {action.label}
                 </Link>
@@ -1286,11 +1301,11 @@ function IndexHero({
           </div>
         ) : null}
         {stats?.length ? (
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+          <div className="mt-10 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {stats.map((stat) => (
-              <div key={stat.label}>
-                <div className="text-2xl font-bold sm:text-3xl">{stat.value}</div>
-                <div className="mt-1 text-sm text-white/80">{stat.label}</div>
+              <div key={stat.label} className="glass-panel rounded-2xl px-4 py-4">
+                <div className="text-2xl font-black tracking-tight sm:text-3xl">{stat.value}</div>
+                <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-white/70">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -1552,11 +1567,29 @@ export function EventsIndexScreen({
           ) : null}
 
           {/* Event grid */}
-          <div className="reveal-group mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {events.map((event) => (
-              <EventCard key={event.slug} event={event} />
-            ))}
-          </div>
+          {events.length ? (
+            <div className="reveal-group mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {events.map((event) => (
+                <EventCard key={event.slug} event={event} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 rounded-3xl border border-brand-border-light bg-white p-8 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-indigo-soft text-brand-indigo">
+                <Search className="h-5 w-5" />
+              </div>
+              <h3 className="mt-4 text-lg font-bold text-brand-text">No matching events yet</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-brand-text-muted">
+                Try a broader category, clear the time filter, or search for a venue or group name.
+              </p>
+              <Link
+                href="/events"
+                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-indigo px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                Clear filters
+              </Link>
+            </div>
+          )}
 
           {/* CTA */}
           <div className="mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-indigo via-indigo-700 to-indigo-900 p-8 text-center text-white sm:p-10 md:p-14">
@@ -2112,11 +2145,29 @@ export function GroupsIndexScreen({
           </div>
 
           <h2 className="font-editorial mb-6 text-2xl text-gray-900">{t("grid.activeGroups")}</h2>
-          <div className="reveal-group grid gap-6 md:grid-cols-2">
-            {groups.map((group) => (
-              <GroupCard key={group.slug} group={group} upcomingTitle={nextEventByGroup.get(group.slug)} />
-            ))}
-          </div>
+          {groups.length ? (
+            <div className="reveal-group grid gap-6 md:grid-cols-2">
+              {groups.map((group) => (
+                <GroupCard key={group.slug} group={group} upcomingTitle={nextEventByGroup.get(group.slug)} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-brand-border-light bg-white p-8 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-coral-soft text-brand-coral-dark">
+                <UsersRound className="h-5 w-5" />
+              </div>
+              <h3 className="mt-4 text-lg font-bold text-brand-text">No matching groups yet</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-brand-text-muted">
+                Clear the category filter or search for a broader community theme.
+              </p>
+              <Link
+                href="/groups"
+                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-indigo px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                Clear filters
+              </Link>
+            </div>
+          )}
 
           {/* Start a group CTA */}
           <div className="relative mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-coral via-[#e8634a] to-[#d4503d] p-6 shadow-[0_8px_32px_rgba(212,80,61,0.25)] sm:p-8 md:p-12">
@@ -2597,11 +2648,29 @@ export function VenuesIndexScreen({
           </div>
 
           <h2 className="font-editorial mb-6 text-2xl text-gray-900">{t("grid.partnerVenues")}</h2>
-          <div className="reveal-group grid gap-6 md:grid-cols-2">
-            {venues.map((venue) => (
-              <VenueCard key={venue.slug} venue={venue} />
-            ))}
-          </div>
+          {venues.length ? (
+            <div className="reveal-group grid gap-6 md:grid-cols-2">
+              {venues.map((venue) => (
+                <VenueCard key={venue.slug} venue={venue} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-3xl border border-brand-border-light bg-white p-8 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[rgba(124,154,130,0.14)] text-brand-sage">
+                <Building2 className="h-5 w-5" />
+              </div>
+              <h3 className="mt-4 text-lg font-bold text-brand-text">No matching venues yet</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-brand-text-muted">
+                Try another neighborhood, venue type, or amenity search.
+              </p>
+              <Link
+                href="/venues"
+                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-indigo px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                Clear filters
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 

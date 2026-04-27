@@ -55,10 +55,7 @@ type SiteHeaderClientProps = {
 };
 
 function isActivePath(pathname: string, href: Route) {
-  if (href === "/") {
-    return pathname === "/";
-  }
-
+  if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -80,7 +77,43 @@ function portalLabel(
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Desktop "More" dropdown                                                   */
+/*  Desktop primary nav link — minimal text link with subtle underline        */
+/* -------------------------------------------------------------------------- */
+
+function NavLink({
+  href,
+  label,
+  active,
+}: {
+  href: Route;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "relative inline-flex items-center px-3 py-2 text-sm transition-colors duration-150",
+        active
+          ? "font-semibold text-brand-text"
+          : "font-medium text-brand-text-muted hover:text-brand-text",
+      )}
+    >
+      {label}
+      <span
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-x-3 -bottom-[1px] h-px bg-brand-text transition-opacity",
+          active ? "opacity-100" : "opacity-0",
+        )}
+      />
+    </Link>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Desktop "More" dropdown — flat list, no decoration                        */
 /* -------------------------------------------------------------------------- */
 
 function MoreDropdown({
@@ -97,14 +130,10 @@ function MoreDropdown({
 
   const close = useCallback(() => setOpen(false), []);
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         close();
       }
     }
@@ -112,7 +141,6 @@ function MoreDropdown({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open, close]);
 
-  // Close on Escape
   useEffect(() => {
     if (!open) return;
     function handleKey(e: KeyboardEvent) {
@@ -132,10 +160,10 @@ function MoreDropdown({
         aria-haspopup="true"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-[0.8125rem] font-semibold tracking-[-0.01em] transition-all duration-200",
-          hasActive
-            ? "bg-brand-indigo !text-white shadow-sm"
-            : "text-gray-800 hover:bg-gray-100 hover:text-gray-900",
+          "inline-flex items-center gap-1 px-3 py-2 text-sm transition-colors duration-150",
+          hasActive || open
+            ? "font-semibold text-brand-text"
+            : "font-medium text-brand-text-muted hover:text-brand-text",
         )}
       >
         {label}
@@ -147,13 +175,12 @@ function MoreDropdown({
         />
       </button>
 
-      {/* Dropdown panel */}
       <div
         className={cn(
-          "absolute right-0 top-full z-50 mt-2.5 min-w-[220px] origin-top-right rounded-xl border border-gray-200 bg-white py-1.5 shadow-xl ring-1 ring-black/[0.03] transition-all duration-200",
+          "absolute right-0 top-full z-50 mt-2 min-w-[220px] overflow-hidden rounded-xl border border-brand-border-light bg-white py-1.5 shadow-[0_12px_40px_-12px_rgba(30,27,46,0.18)] transition-all duration-150",
           open
-            ? "scale-100 opacity-100"
-            : "pointer-events-none scale-95 opacity-0",
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-1 opacity-0",
         )}
         role="menu"
       >
@@ -166,10 +193,10 @@ function MoreDropdown({
               role="menuitem"
               onClick={close}
               className={cn(
-                "block px-4 py-2.5 text-[0.8125rem] font-medium transition-colors",
+                "block px-4 py-2 text-sm transition-colors",
                 active
-                  ? "bg-brand-indigo/8 text-brand-indigo"
-                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
+                  ? "font-semibold text-brand-text"
+                  : "font-medium text-brand-text-muted hover:bg-brand-sand-light hover:text-brand-text",
               )}
             >
               {item.label}
@@ -208,19 +235,12 @@ function MobileDrawer({
     ? (portalPathForRole(session.accountType) as Route)
     : null;
 
-  // Lock body scroll when open
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (open) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Close on Escape
   useEffect(() => {
     if (!open) return;
     function handleKey(e: KeyboardEvent) {
@@ -230,53 +250,44 @@ function MobileDrawer({
     return () => document.removeEventListener("keydown", handleKey);
   }, [open, onClose]);
 
-  // Portal to document.body to escape the <header>'s backdrop-blur
-  // containing block, which clips fixed children on iOS Safari.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-
   if (!mounted) return null;
 
   return createPortal(
     <>
-      {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm transition-opacity duration-300",
-          open
-            ? "opacity-100"
-            : "pointer-events-none opacity-0",
+          "fixed inset-0 z-[60] bg-brand-basalt/40 backdrop-blur-sm transition-opacity duration-200",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Drawer panel */}
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
         className={cn(
-          "fixed inset-y-0 right-0 z-[70] flex w-full max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ease-in-out",
+          "fixed inset-y-0 right-0 z-[70] flex w-full max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ease-out",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
-        {/* Close button */}
-        <div className="flex items-center justify-end px-5 pt-4">
+        <div className="flex items-center justify-between border-b border-brand-border-light px-5 py-4">
+          <span className="text-sm font-semibold text-brand-text">Menu</span>
           <button
             type="button"
             onClick={onClose}
             aria-label={closeLabel}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-600 transition hover:bg-gray-200 hover:text-gray-900"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-brand-text-muted transition hover:bg-brand-sand-light hover:text-brand-text"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Scrollable content */}
-        <nav className="flex-1 overflow-y-auto px-5 pb-8">
-          {/* Primary links */}
-          <ul className="space-y-0.5 pt-2">
+        <nav className="flex-1 overflow-y-auto px-3 pb-8 pt-3">
+          <ul>
             {navigation.map((item) => {
               const active = isActivePath(activePath, item.href);
               return (
@@ -286,10 +297,10 @@ function MobileDrawer({
                     onClick={onClose}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "block rounded-xl px-4 py-3 text-[0.9375rem] font-semibold transition",
+                      "block rounded-lg px-3 py-3 text-base transition",
                       active
-                        ? "bg-brand-indigo !text-white"
-                        : "text-gray-800 hover:bg-gray-50",
+                        ? "bg-brand-sand-light font-semibold text-brand-text"
+                        : "font-medium text-brand-text-muted hover:bg-brand-sand-light hover:text-brand-text",
                     )}
                   >
                     {item.label}
@@ -299,11 +310,9 @@ function MobileDrawer({
             })}
           </ul>
 
-          {/* Divider */}
-          <div className="my-4 border-t border-gray-100" />
+          <div className="my-4 border-t border-brand-border-light" />
 
-          {/* Secondary links */}
-          <ul className="space-y-0.5">
+          <ul>
             {secondaryNavigation.map((item) => {
               const active = isActivePath(activePath, item.href);
               return (
@@ -313,10 +322,10 @@ function MobileDrawer({
                     onClick={onClose}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "block rounded-xl px-4 py-3 text-[0.9375rem] font-medium transition",
+                      "block rounded-lg px-3 py-2.5 text-[0.9375rem] transition",
                       active
-                        ? "bg-brand-indigo !text-white"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
+                        ? "font-semibold text-brand-text"
+                        : "text-brand-text-muted hover:bg-brand-sand-light hover:text-brand-text",
                     )}
                   >
                     {item.label}
@@ -326,35 +335,33 @@ function MobileDrawer({
             })}
           </ul>
 
-          {/* Divider */}
-          <div className="my-4 border-t border-gray-100" />
+          <div className="my-5 border-t border-brand-border-light" />
 
-          {/* Auth section */}
-          <div className="space-y-2.5">
+          <div className="space-y-2 px-1">
             {session && portalHref ? (
               <>
                 <Link
                   href={portalHref}
                   onClick={onClose}
-                  className="block w-full rounded-full bg-brand-indigo px-5 py-3 text-center text-sm font-bold text-white transition hover:opacity-90"
+                  className="block w-full rounded-full bg-brand-text px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-brand-basalt"
                 >
                   {portalLabel(session.accountType, labels)}
                 </Link>
-                <SignOutButton className="w-full min-h-10 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-gray-50" />
+                <SignOutButton className="w-full min-h-11 border-transparent bg-transparent px-3 py-2 text-sm shadow-none hover:border-transparent hover:bg-brand-sand-light" />
               </>
             ) : (
               <>
                 <Link
                   href="/signup"
                   onClick={onClose}
-                  className="block w-full rounded-full bg-brand-coral px-5 py-3 text-center text-sm font-bold text-white shadow-md transition hover:opacity-90"
+                  className="block w-full rounded-full bg-brand-text px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-brand-basalt"
                 >
                   {labels.signup}
                 </Link>
                 <Link
                   href="/login"
                   onClick={onClose}
-                  className="block w-full rounded-full border-2 border-gray-200 px-5 py-3 text-center text-sm font-semibold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+                  className="block w-full rounded-full border border-brand-border px-5 py-3 text-center text-sm font-medium text-brand-text transition hover:bg-brand-sand-light"
                 >
                   {labels.signin}
                 </Link>
@@ -362,8 +369,7 @@ function MobileDrawer({
             )}
           </div>
 
-          {/* Locale switcher */}
-          <div className="mt-6">
+          <div className="mt-6 px-1">
             <LocaleSwitcher />
           </div>
         </nav>
@@ -392,20 +398,7 @@ function SearchOverlay({
   open: boolean;
   placeholder: string;
   onClose: () => void;
-  overlayLabels?: {
-    recentSearches: string;
-    noRecentSearches: string;
-    browse: string;
-    browseEvents: string;
-    browseGroups: string;
-    browseVenues: string;
-    popularCategories: string;
-    catMusic: string;
-    catTech: string;
-    catArt: string;
-    catOutdoors: string;
-    catFood: string;
-  };
+  overlayLabels?: SiteHeaderClientProps["searchOverlayLabels"];
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -415,7 +408,6 @@ function SearchOverlay({
   const [selectedIdx, setSelectedIdx] = useState(0);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  // Build flat list of navigable results for arrow-key navigation
   const flatResults: { label: string; href: string; section: string }[] = [];
   if (results) {
     for (const e of results.events) flatResults.push({ label: e.title, href: `/events/${e.slug}`, section: "Events" });
@@ -441,18 +433,6 @@ function SearchOverlay({
     return () => document.removeEventListener("keydown", handleKey);
   }, [open, onClose]);
 
-  // Cmd+K / Ctrl+K global shortcut
-  useEffect(() => {
-    function handleGlobalKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-      }
-    }
-    document.addEventListener("keydown", handleGlobalKey);
-    return () => document.removeEventListener("keydown", handleGlobalKey);
-  }, []);
-
-  // Debounced live search
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     const q = query.trim();
@@ -487,14 +467,10 @@ function SearchOverlay({
       role="dialog"
       aria-modal="true"
       aria-label="Search"
-      className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 backdrop-blur-sm pt-20 sm:pt-32"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      className="fixed inset-0 z-[60] flex items-start justify-center bg-brand-basalt/40 backdrop-blur-sm pt-20 sm:pt-32"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl ring-1 ring-black/[0.03]">
-        <div className="h-0.5 bg-gradient-to-r from-brand-indigo via-brand-coral to-brand-indigo" />
-
+      <div className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-[0_24px_60px_-12px_rgba(30,27,46,0.25)]">
         <div className="p-5">
           <form
             onSubmit={(e) => {
@@ -507,7 +483,7 @@ function SearchOverlay({
             }}
           >
             <div className="flex items-center gap-3">
-              <Search className="h-5 w-5 shrink-0 text-gray-400" />
+              <Search className="h-5 w-5 shrink-0 text-brand-text-light" />
               <input
                 ref={inputRef}
                 type="search"
@@ -523,22 +499,21 @@ function SearchOverlay({
                     setSelectedIdx((i) => Math.max(i - 1, 0));
                   }
                 }}
-                className="flex-1 bg-transparent text-base text-gray-900 outline-none placeholder:text-gray-400"
+                className="flex-1 bg-transparent text-base text-brand-text outline-none placeholder:text-brand-text-light"
               />
               {loading && (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-brand-indigo" />
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-brand-border-light border-t-brand-text" />
               )}
               <button
                 type="button"
                 onClick={onClose}
-                className="shrink-0 rounded-md border border-gray-200 px-2 py-1 text-[0.6875rem] font-medium text-gray-500 transition hover:bg-gray-50"
+                className="shrink-0 rounded-md border border-brand-border-light px-2 py-1 text-[0.6875rem] font-medium text-brand-text-muted transition hover:bg-brand-sand-light"
               >
                 Esc
               </button>
             </div>
           </form>
 
-          {/* Live search results */}
           {!showDefaultContent && hasResults && (
             <div className="mt-4 max-h-80 overflow-y-auto">
               {(["Events", "Groups", "Venues"] as const).map((section) => {
@@ -546,7 +521,7 @@ function SearchOverlay({
                 if (items.length === 0) return null;
                 return (
                   <div key={section} className="mb-3">
-                    <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
+                    <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-brand-text-light mb-1.5">
                       {section}
                     </p>
                     {items.map((item) => {
@@ -558,8 +533,8 @@ function SearchOverlay({
                           onClick={() => navigateTo(item.href)}
                           className={`w-full text-left rounded-lg px-3 py-2 text-sm transition ${
                             idx === selectedIdx
-                              ? "bg-brand-indigo/10 text-brand-indigo font-semibold"
-                              : "text-gray-700 hover:bg-gray-50"
+                              ? "bg-brand-sand-light font-semibold text-brand-text"
+                              : "text-brand-text-muted hover:bg-brand-sand-light hover:text-brand-text"
                           }`}
                         >
                           {item.label}
@@ -572,18 +547,16 @@ function SearchOverlay({
             </div>
           )}
 
-          {/* No results */}
           {!showDefaultContent && !hasResults && !loading && (
-            <div className="mt-4 border-t border-gray-100 pt-4">
-              <p className="text-sm text-gray-500">No results found for &ldquo;{query.trim()}&rdquo;</p>
+            <div className="mt-4 border-t border-brand-border-light pt-4">
+              <p className="text-sm text-brand-text-muted">No results found for &ldquo;{query.trim()}&rdquo;</p>
             </div>
           )}
 
-          {/* Default browse content when no query */}
           {showDefaultContent && (
             <>
-              <div className="mt-4 border-t border-gray-100 pt-4">
-                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
+              <div className="mt-4 border-t border-brand-border-light pt-4">
+                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-brand-text-light">
                   {overlayLabels?.browse ?? "Browse"}
                 </p>
                 <div className="mt-2.5 flex flex-wrap gap-2">
@@ -596,7 +569,7 @@ function SearchOverlay({
                       key={link.href}
                       type="button"
                       onClick={() => navigateTo(link.href)}
-                      className="rounded-full border border-gray-200 bg-gray-50 px-3.5 py-1.5 text-sm font-semibold text-gray-700 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
+                      className="rounded-full border border-brand-border-light px-3.5 py-1.5 text-sm font-medium text-brand-text transition hover:bg-brand-sand-light"
                     >
                       {link.label}
                     </button>
@@ -604,8 +577,8 @@ function SearchOverlay({
                 </div>
               </div>
 
-              <div className="mt-4 border-t border-gray-100 pt-4">
-                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-gray-400">
+              <div className="mt-4 border-t border-brand-border-light pt-4">
+                <p className="text-[0.6875rem] font-bold uppercase tracking-wider text-brand-text-light">
                   {overlayLabels?.popularCategories ?? "Popular categories"}
                 </p>
                 <div className="mt-2.5 flex flex-wrap gap-2">
@@ -620,7 +593,7 @@ function SearchOverlay({
                       key={tag.slug}
                       type="button"
                       onClick={() => navigateTo(`/events?category=${encodeURIComponent(tag.slug)}`)}
-                      className="rounded-full border border-gray-200 px-3 py-1.5 text-sm text-gray-600 transition hover:border-brand-indigo hover:bg-brand-indigo/5 hover:text-brand-indigo"
+                      className="rounded-full border border-brand-border-light px-3 py-1.5 text-sm text-brand-text-muted transition hover:bg-brand-sand-light hover:text-brand-text"
                     >
                       {tag.label}
                     </button>
@@ -662,13 +635,11 @@ export function SiteHeaderClient({
   const [searchOpen, setSearchOpen] = useState(false);
   const closeSearch = useCallback(() => setSearchOpen(false), []);
 
-  // Close drawer on route change
   useEffect(() => {
     setDrawerOpen(false);
     setSearchOpen(false);
   }, [pathname]);
 
-  // Cmd+K / Ctrl+K to open search
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -682,65 +653,45 @@ export function SiteHeaderClient({
 
   return (
     <>
-      {/* ──────────────── Desktop ──────────────── */}
-      <div className="hidden flex-1 lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-center lg:gap-6">
-        <div aria-hidden="true" />
-
-        <nav className="flex items-center gap-0.5 justify-self-center">
-          {navigation.map((item) => {
-            const active = isActivePath(activePath, item.href);
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "group relative inline-flex items-center rounded-lg px-4 py-2 text-[0.8125rem] font-semibold tracking-[-0.01em] transition-all duration-200",
-                  active
-                    ? "bg-brand-indigo !text-white shadow-sm [text-shadow:0_1px_2px_rgba(0,0,0,0.2)]"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-gray-900",
-                )}
-              >
-                {item.label}
-                {!active && (
-                  <span className="absolute bottom-1 left-4 right-4 h-[1.5px] origin-left scale-x-0 rounded-full bg-brand-indigo transition-transform duration-200 group-hover:scale-x-100" />
-                )}
-              </Link>
-            );
-          })}
-
+      {/* Desktop */}
+      <div className="hidden flex-1 lg:flex lg:items-center lg:justify-between lg:gap-6">
+        <nav className="flex items-center gap-1">
+          {navigation.map((item) => (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              active={isActivePath(activePath, item.href)}
+            />
+          ))}
           <MoreDropdown items={secondaryNavigation} label={moreLabel} />
         </nav>
 
-        <div className="flex items-center gap-2.5 justify-self-end">
-          {/* Search */}
+        <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label={searchLabel}
             aria-keyshortcuts="Meta+K"
             onClick={() => setSearchOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50/80 px-3 py-1.5 text-sm text-gray-500 transition hover:border-gray-300 hover:bg-gray-100"
+            className="inline-flex h-9 items-center gap-2 rounded-full border border-brand-border-light bg-white/60 px-3 text-sm text-brand-text-muted transition hover:border-brand-border hover:bg-white"
           >
             <Search className="h-3.5 w-3.5" />
-            <kbd className="hidden text-[0.625rem] font-medium text-gray-400 xl:inline-block">
+            <span className="hidden xl:inline">Search</span>
+            <kbd className="hidden rounded border border-brand-border-light bg-brand-sand-light px-1.5 py-px text-[0.625rem] font-medium text-brand-text-light xl:inline-block">
               ⌘K
             </kbd>
           </button>
 
-          {/* Divider */}
-          <div className="mx-1 h-5 w-px bg-gray-200" />
-
-          {/* Locale */}
           <LocaleSwitcher compact />
 
-          {/* Auth */}
+          <div className="mx-1 h-5 w-px bg-brand-border-light" />
+
           {session && portalHref ? (
             <>
-              <SignOutButton className="min-h-9 border-transparent bg-transparent px-3 py-2 text-sm font-medium text-gray-600 shadow-none hover:border-transparent hover:bg-gray-100 hover:text-gray-900" />
+              <SignOutButton className="min-h-9 border-transparent bg-transparent px-3 py-2 text-sm font-medium text-brand-text-muted shadow-none hover:border-transparent hover:bg-brand-sand-light hover:text-brand-text" />
               <Link
                 href={portalHref}
-                className="inline-flex items-center justify-center rounded-full bg-brand-indigo px-5 py-2.5 text-[0.8125rem] font-bold text-white shadow-sm transition hover:shadow-md hover:brightness-110"
+                className="inline-flex items-center justify-center rounded-full bg-brand-text px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-basalt"
               >
                 {portalLabel(session.accountType, labels)}
               </Link>
@@ -749,13 +700,13 @@ export function SiteHeaderClient({
             <>
               <Link
                 href="/login"
-                className="rounded-lg px-3 py-2 text-[0.8125rem] font-semibold text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
+                className="rounded-full px-3 py-2 text-sm font-medium text-brand-text-muted transition-colors hover:bg-brand-sand-light hover:text-brand-text"
               >
                 {labels.signin}
               </Link>
               <Link
                 href="/signup"
-                className="inline-flex items-center justify-center rounded-full bg-brand-coral px-5 py-2.5 text-[0.8125rem] font-bold text-white shadow-sm transition hover:shadow-md hover:brightness-110"
+                className="inline-flex items-center justify-center rounded-full bg-brand-text px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-basalt"
               >
                 {labels.signup}
               </Link>
@@ -764,13 +715,13 @@ export function SiteHeaderClient({
         </div>
       </div>
 
-      {/* ──────────────── Mobile search + hamburger buttons ──────────────── */}
-      <div className="flex items-center gap-2 lg:hidden">
+      {/* Mobile */}
+      <div className="flex items-center gap-1.5 lg:hidden">
         <button
           type="button"
           onClick={() => setSearchOpen(true)}
-          aria-label="Search"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200"
+          aria-label={searchLabel}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-brand-text transition hover:bg-brand-sand-light"
         >
           <Search className="h-5 w-5" />
         </button>
@@ -778,13 +729,12 @@ export function SiteHeaderClient({
           type="button"
           onClick={() => setDrawerOpen(true)}
           aria-label={menuLabel}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700 transition hover:bg-gray-200"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-brand-text transition hover:bg-brand-sand-light"
         >
           <Menu className="h-5 w-5" />
         </button>
       </div>
 
-      {/* Mobile drawer */}
       <MobileDrawer
         open={drawerOpen}
         onClose={closeDrawer}
@@ -795,7 +745,6 @@ export function SiteHeaderClient({
         closeLabel={closeLabel}
       />
 
-      {/* Search overlay */}
       <SearchOverlay
         open={searchOpen}
         onClose={closeSearch}
@@ -805,4 +754,3 @@ export function SiteHeaderClient({
     </>
   );
 }
-

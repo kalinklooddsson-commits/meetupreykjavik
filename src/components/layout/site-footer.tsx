@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Route } from "next";
-import { Compass } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { NewsletterForm } from "@/components/public/newsletter-form";
 
@@ -44,26 +43,20 @@ export async function SiteFooter() {
     <footer className="relative overflow-hidden bg-brand-basalt px-4 py-14 text-white">
       <div className="section-shell relative z-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
         <div>
-          <div className="mb-4 flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-indigo text-white">
-              <Compass className="h-5 w-5" />
+          <div className="mb-4 flex items-baseline gap-1.5">
+            <span className="text-base font-bold tracking-[-0.02em] text-white">
+              {tHeader("brandTop")}
             </span>
-            <div>
-              <div className="text-sm font-bold uppercase tracking-[0.18em] text-white/70">
-                {tHeader("brandTop")}
-              </div>
-              <div className="font-editorial text-2xl text-white">
-                {tHeader("brandBottom")}
-              </div>
-            </div>
+            <span className="font-editorial text-lg tracking-[-0.035em] text-white">
+              {tHeader("brandBottom")}
+            </span>
           </div>
           <p className="max-w-sm text-sm leading-7 text-white/70">
             {tFooter("description")}
           </p>
 
-          {/* Newsletter signup */}
-          <div className="mt-5">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">
+          <div className="mt-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
               {tFooter("newsletter")}
             </p>
             <NewsletterForm
@@ -75,7 +68,7 @@ export async function SiteFooter() {
 
           <Link
             href="/signup"
-            className="mt-6 inline-flex min-h-11 items-center rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
+            className="mt-6 inline-flex min-h-11 items-center rounded-full bg-white px-5 py-3 text-sm font-semibold text-brand-text transition hover:bg-brand-sand-light"
           >
             {tCta("signup")}
           </Link>

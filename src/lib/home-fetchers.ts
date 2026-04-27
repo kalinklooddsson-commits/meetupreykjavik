@@ -324,7 +324,10 @@ async function fetchVenues(
       rating: Number(row.avg_rating) || 0,
       events: row.events_hosted ?? 0,
       deal: undefined,
-      photo: realPhoto(row.hero_photo_url) ?? VENUE_PHOTOS[row.slug] ?? `/place-images/reykjavik/generated/${row.slug}.svg`,
+      photo:
+        realPhoto(row.hero_photo_url) ??
+        VENUE_PHOTOS[row.slug] ??
+        createSceneCoverDataUrl(row.name, row.type ?? "Venue"),
     }));
   } catch {
     return [...fallbackVenues];

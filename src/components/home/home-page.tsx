@@ -5,13 +5,17 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
   ArrowRight,
+  BadgeCheck,
+  Building2,
   CalendarDays,
-  CheckCircle2,
   Compass,
+  HeartHandshake,
   MapPin,
   Search,
+  ShieldCheck,
   Sparkles,
   Star,
+  Ticket,
   Users,
   Zap,
 } from "lucide-react";
@@ -73,12 +77,14 @@ function slugify(value: string) {
 function SectionHeading({
   eyebrow,
   title,
+  description,
   actionHref,
   actionLabel,
   center,
 }: {
   eyebrow: string;
   title: string;
+  description?: string;
   actionHref?: string;
   actionLabel?: string;
   center?: boolean;
@@ -94,6 +100,11 @@ function SectionHeading({
         <h2 className="font-editorial mt-2 text-3xl leading-tight tracking-[-0.04em] text-brand-text sm:text-4xl lg:text-[2.75rem]">
           {title}
         </h2>
+        {description ? (
+          <p className={`mt-3 max-w-2xl text-sm leading-relaxed text-brand-text-muted sm:text-base ${center ? "mx-auto" : ""}`}>
+            {description}
+          </p>
+        ) : null}
       </div>
       {actionHref && actionLabel ? (
         <Link
@@ -119,7 +130,7 @@ function EventCard({ event }: { event: HomeEvent }) {
   return (
     <Link
       href={`/events/${event.slug}` as import("next").Route}
-      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
       <div className="relative h-[180px] overflow-hidden">
         <Image
@@ -154,7 +165,7 @@ function EventCard({ event }: { event: HomeEvent }) {
         ) : null}
       </div>
 
-      <div className="px-5 py-4">
+      <div className="flex flex-1 flex-col px-5 py-4">
         <h3 className="text-base font-bold tracking-tight text-brand-text group-hover:text-brand-indigo">
           {event.title}
         </h3>
@@ -168,7 +179,7 @@ function EventCard({ event }: { event: HomeEvent }) {
             {event.venue}
           </span>
         </div>
-        <div className="mt-3 flex items-center justify-between">
+        <div className="mt-auto flex items-center justify-between pt-4">
           <span className="inline-flex items-center gap-1.5 text-sm text-gray-600">
             <Users className="h-3.5 w-3.5 text-gray-400" />
             {event.attendees} {t("going")}
@@ -193,7 +204,7 @@ function GroupCard({ group }: { group: HomeGroup }) {
   return (
     <Link
       href={`/groups/${group.slug}` as import("next").Route}
-      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
       <div className="relative h-44 overflow-hidden">
         <Image
@@ -205,7 +216,7 @@ function GroupCard({ group }: { group: HomeGroup }) {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(30,27,46,0.45)]" />
       </div>
-      <div className="px-5 py-4">
+      <div className="flex flex-1 flex-col px-5 py-4">
         <span className="inline-flex rounded-full bg-[rgba(79,70,229,0.08)] px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-brand-indigo">
           {group.category}
         </span>
@@ -215,7 +226,7 @@ function GroupCard({ group }: { group: HomeGroup }) {
         <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-gray-600">
           {group.description}
         </p>
-        <div className="mt-3 flex items-center justify-between border-t border-brand-border-light pt-3">
+        <div className="mt-auto flex items-center justify-between border-t border-brand-border-light pt-3">
           <span className="text-sm font-semibold text-brand-text">
             {group.members} {group.members === 1 ? tCards("member") : tCards("members")}
           </span>
@@ -239,7 +250,7 @@ function VenueCard({ venue }: { venue: HomeVenue }) {
   return (
     <Link
       href={`/venues/${venue.slug}` as import("next").Route}
-      className="group block overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-brand-border-light bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-premium"
     >
       <div className="relative h-44 overflow-hidden">
         <Image
@@ -257,7 +268,7 @@ function VenueCard({ venue }: { venue: HomeVenue }) {
           </div>
         </div>
       </div>
-      <div className="px-5 py-4">
+      <div className="flex flex-1 flex-col px-5 py-4">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600">
             {venue.events} {tHome("hostedEvents")}
@@ -272,12 +283,77 @@ function VenueCard({ venue }: { venue: HomeVenue }) {
             {tHome("memberDeal")}: {venue.deal}
           </div>
         ) : null}
-        <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-brand-indigo">
+        <div className="mt-auto inline-flex items-center gap-1.5 pt-4 text-sm font-bold text-brand-indigo">
           {tCta("exploreVenue")}
           <ArrowRight className="h-3.5 w-3.5" />
         </div>
       </div>
     </Link>
+  );
+}
+
+function SignalCard({
+  icon: Icon,
+  title,
+  description,
+  label,
+}: {
+  icon: typeof ShieldCheck;
+  title: string;
+  description: string;
+  label: string;
+}) {
+  return (
+    <article className="rounded-2xl border border-brand-border-light bg-white/90 p-6 shadow-card">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-indigo-soft text-brand-indigo">
+        <Icon className="h-5 w-5" />
+      </div>
+      <h3 className="mt-5 text-lg font-bold tracking-tight text-brand-text">
+        {title}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
+        {description}
+      </p>
+      <span className="mt-5 inline-flex rounded-full bg-brand-sand px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-muted">
+        {label}
+      </span>
+    </article>
+  );
+}
+
+function BusinessLane({
+  icon: Icon,
+  title,
+  description,
+  points,
+}: {
+  icon: typeof Users;
+  title: string;
+  description: string;
+  points: string[];
+}) {
+  return (
+    <article className="rounded-2xl border border-brand-border-light bg-white p-6 shadow-card">
+      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-coral-soft text-brand-coral-dark">
+        <Icon className="h-5 w-5" />
+      </div>
+      <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-text">
+        {title}
+      </h3>
+      <p className="mt-3 text-sm leading-relaxed text-brand-text-muted">
+        {description}
+      </p>
+      <div className="mt-6 space-y-3">
+        {points.map((point) => (
+          <div
+            key={point}
+            className="rounded-xl border border-brand-border-light bg-brand-sand-light px-4 py-3 text-sm font-medium leading-relaxed text-brand-text"
+          >
+            {point}
+          </div>
+        ))}
+      </div>
+    </article>
   );
 }
 
@@ -331,6 +407,39 @@ export function HomePage({
     },
   ];
 
+  const heroFeaturedEvents = events.slice(0, 3);
+
+  const commandNotes = [
+    {
+      icon: ShieldCheck,
+      label: tHero("noteOneLabel"),
+      value: tHero("noteOneValue"),
+    },
+    {
+      icon: Ticket,
+      label: tHero("noteTwoLabel"),
+      value: tHero("noteTwoValue"),
+    },
+    {
+      icon: Building2,
+      label: tHero("noteThreeLabel"),
+      value: tHero("noteThreeValue"),
+    },
+    {
+      icon: CalendarDays,
+      label: tHero("noteFourLabel"),
+      value: tHero("noteFourValue"),
+    },
+  ];
+
+  const chips = [
+    tHero("chipSafety"),
+    tHero("chipVenue"),
+    tHero("chipPremium"),
+    tHero("chipSocial"),
+    tHero("chipWorkshops"),
+  ];
+
   /* Community member avatars — colors + initials */
   const communityAvatars = [
     { initial: "S", bg: "bg-brand-coral" },
@@ -348,7 +457,7 @@ export function HomePage({
       {/* ============================================================ */}
       {/*  HERO — cinematic, full-viewport                             */}
       {/* ============================================================ */}
-      <section className="relative min-h-[85vh] overflow-hidden bg-[linear-gradient(160deg,#1e1b2e_0%,#262243_28%,#2d2654_52%,#3a2c5f_100%)] text-white">
+      <section className="relative min-h-[88vh] overflow-hidden bg-brand-basalt text-white">
         {/* Background image with overlay */}
         <div className="absolute inset-0">
           <Image
@@ -356,44 +465,45 @@ export function HomePage({
             alt=""
             role="presentation"
             fill
-            className="object-cover opacity-20"
+            className="object-cover opacity-45"
             sizes="100vw"
             priority
             placeholder="blur"
             blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzJhMjYzOCIvPjwvc3ZnPg=="
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[rgba(30,27,46,0.5)] via-[rgba(30,27,46,0.3)] to-[rgba(30,27,46,0.85)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.55)_0%,rgba(30,27,46,0.65)_55%,rgba(30,27,46,0.92)_100%)]" />
         </div>
 
         {/* Content */}
-        <div className="section-shell relative z-10 flex min-h-[85vh] flex-col items-center justify-center px-4 py-24 text-center">
+        <div className="section-shell relative z-10 flex min-h-[88vh] flex-col justify-center px-4 py-20 sm:py-24">
           <span className="inline-flex rounded-full border border-white/30 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-white/90 backdrop-blur-sm">
             {tHero("badge")}
           </span>
 
-          <h1 className="font-editorial mx-auto mt-8 max-w-4xl text-5xl leading-[1.1] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+          <h1 className="font-editorial mt-8 max-w-4xl text-5xl leading-[1.05] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
             {tHero("titleLead")}
             <br />
-            <span className="text-brand-coral">
+            <span className="italic text-white/95">
               {tHero("titleAccent")}
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/80 sm:text-xl">
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
             {tHero("subtitleTop")}
             <br className="hidden sm:block" /> {tHero("subtitleBottom")}
           </p>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/events"
-              className="rounded-full bg-brand-coral px-8 py-4 text-sm font-bold !text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-coral px-8 py-4 text-sm font-bold !text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl"
             >
               {tCta("exploreEvents")}
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/groups"
-              className="rounded-full border border-white/35 bg-white/12 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+              className="inline-flex items-center justify-center rounded-full border border-white/35 bg-white/12 px-8 py-4 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             >
               {tCta("startGroup")}
             </Link>
@@ -402,7 +512,7 @@ export function HomePage({
           {/* Hero search */}
           <form
             action="/events"
-            className="mt-8 flex w-full max-w-lg items-center rounded-full bg-white/15 px-5 py-3 backdrop-blur-sm border border-white/25 transition-colors focus-within:bg-white/25"
+            className="mt-8 flex w-full max-w-2xl items-center rounded-2xl border border-white/25 bg-white/15 px-4 py-3 backdrop-blur-sm transition-colors focus-within:bg-white/25 sm:rounded-full sm:px-5"
           >
             <Search className="h-5 w-5 shrink-0 text-white/70" />
             <input
@@ -411,20 +521,39 @@ export function HomePage({
               placeholder={tHero("searchPlaceholder")}
               className="ml-3 flex-1 bg-transparent text-sm text-white placeholder:text-white/60 outline-none"
             />
-            <button type="submit" className="ml-2 rounded-full bg-white/20 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-white/30">
+            <button type="submit" className="ml-2 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-brand-indigo transition hover:bg-brand-sand">
               {tCta("explore")}
             </button>
           </form>
 
-          {/* Spacer before floating stats */}
-          <div className="flex-1" />
+          {heroFeaturedEvents.length ? (
+            <div className="mt-8 grid gap-3 lg:max-w-4xl lg:grid-cols-3">
+              {heroFeaturedEvents.map((event) => (
+                <Link
+                  key={event.slug}
+                  href={`/events/${event.slug}` as import("next").Route}
+                  className="group flex items-center justify-between gap-4 rounded-2xl border border-white/18 bg-white/10 px-4 py-3 backdrop-blur-md transition hover:bg-white/16"
+                >
+                  <span>
+                    <span className="block text-xs font-bold uppercase tracking-[0.18em] text-brand-coral">
+                      {event.day} · {event.time}
+                    </span>
+                    <span className="mt-1 block text-sm font-bold text-white">
+                      {event.title}
+                    </span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-white/60 transition group-hover:translate-x-0.5 group-hover:text-white" />
+                </Link>
+              ))}
+            </div>
+          ) : null}
 
           {/* Stats — glass-panel cards floating at hero bottom */}
-          <div className="mt-16 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          <div className="mt-12 grid w-full max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {localizedHeroStats.map((stat) => (
               <div
                 key={stat.label}
-                className="glass-panel rounded-2xl px-5 py-4 text-center"
+                className="glass-panel rounded-2xl px-5 py-4"
               >
                 <div className="text-2xl font-black tracking-tight text-white sm:text-3xl">
                   {stat.value}
@@ -439,12 +568,109 @@ export function HomePage({
       </section>
 
       {/* ============================================================ */}
+      {/*  SEARCH-LED DISCOVERY                                        */}
+      {/* ============================================================ */}
+      <section className="section-shell -mt-10 relative z-10 pb-20">
+        <div className="overflow-hidden rounded-3xl border border-white/75 bg-white/95 p-5 shadow-premium backdrop-blur sm:p-8">
+          <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.22em] text-brand-indigo">
+                {tHero("commandEyebrow")}
+              </span>
+              <h2 className="font-editorial mt-3 text-3xl leading-tight tracking-[-0.04em] text-brand-text sm:text-4xl">
+                {tHero("commandTitle")}
+              </h2>
+              <p className="mt-4 text-sm leading-relaxed text-brand-text-muted sm:text-base">
+                {tHero("commandDescription")}
+              </p>
+              <form
+                action="/events"
+                className="market-command-input mt-6 flex items-center gap-3 px-4 py-3"
+              >
+                <Search className="h-5 w-5 shrink-0 text-brand-indigo" />
+                <input
+                  type="search"
+                  name="q"
+                  placeholder={tHero("searchPlaceholder")}
+                  className="min-w-0 flex-1 bg-transparent text-sm text-brand-text outline-none placeholder:text-brand-text-light"
+                />
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:brightness-110"
+                >
+                  {tCta("explore")}
+                </button>
+              </form>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {chips.map((chip, index) => (
+                  <span
+                    key={chip}
+                    className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] ${
+                      index % 3 === 0
+                        ? "bg-brand-indigo-soft text-brand-indigo"
+                        : index % 3 === 1
+                          ? "bg-brand-coral-soft text-brand-coral-dark"
+                          : "bg-[rgba(124,154,130,0.14)] text-brand-sage"
+                    }`}
+                  >
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {commandNotes.map(({ icon: Icon, label, value }) => (
+                <article
+                  key={label}
+                  className="rounded-2xl border border-brand-border-light bg-white p-4 shadow-sm"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-sand text-brand-indigo">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div className="mt-4 text-[11px] font-bold uppercase tracking-[0.18em] text-brand-text-light">
+                    {label}
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
+                    {value}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-shell pb-20">
+        <div className="grid gap-5 lg:grid-cols-3">
+          <SignalCard
+            icon={ShieldCheck}
+            title={tSections("signalTrustTitle")}
+            description={tSections("signalTrustDescription")}
+            label="Trust"
+          />
+          <SignalCard
+            icon={Ticket}
+            title={tSections("signalRevenueTitle")}
+            description={tSections("signalRevenueDescription")}
+            label="Revenue"
+          />
+          <SignalCard
+            icon={Building2}
+            title={tSections("signalVenueTitle")}
+            description={tSections("signalVenueDescription")}
+            label="Quality"
+          />
+        </div>
+      </section>
+
+      {/* ============================================================ */}
       {/*  THIS WEEK IN REYKJAVIK — responsive event grid              */}
       {/* ============================================================ */}
-      <section className="reveal section-shell py-20">
+      <section className="reveal section-shell pb-20">
         <SectionHeading
           eyebrow={tSections("thisWeekEyebrow")}
           title={tSections("thisWeekTitle")}
+          description={tSections("thisWeekDescription")}
           actionHref="/events"
           actionLabel={tCta("seeAllEvents")}
         />
@@ -494,6 +720,7 @@ export function HomePage({
           <SectionHeading
             eyebrow={tSections("categoriesEyebrow")}
             title={tSections("categoriesTitle")}
+            description={tSections("howDescription")}
             center
           />
           <div className="reveal-group grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -530,12 +757,103 @@ export function HomePage({
       </section>
 
       {/* ============================================================ */}
+      {/*  MARKETPLACE LANES                                           */}
+      {/* ============================================================ */}
+      <section className="reveal section-shell py-20">
+        <SectionHeading
+          eyebrow={tSections("businessEyebrow")}
+          title={tSections("businessTitle")}
+          description={tSections("businessDescription")}
+          actionHref="/pricing"
+          actionLabel={tSections("businessCta")}
+        />
+        <div className="reveal-group grid gap-6 lg:grid-cols-3">
+          <BusinessLane
+            icon={Users}
+            title={tSections("memberLaneTitle")}
+            description={tSections("memberLaneDescription")}
+            points={[
+              tSections("memberLanePointOne"),
+              tSections("memberLanePointTwo"),
+              tSections("memberLanePointThree"),
+            ]}
+          />
+          <BusinessLane
+            icon={Zap}
+            title={tSections("organizerLaneTitle")}
+            description={tSections("organizerLaneDescription")}
+            points={[
+              tSections("organizerLanePointOne"),
+              tSections("organizerLanePointTwo"),
+              tSections("organizerLanePointThree"),
+            ]}
+          />
+          <BusinessLane
+            icon={Building2}
+            title={tSections("venueLaneTitle")}
+            description={tSections("venueLaneDescription")}
+            points={[
+              tSections("venueLanePointOne"),
+              tSections("venueLanePointTwo"),
+              tSections("venueLanePointThree"),
+            ]}
+          />
+        </div>
+        <div className="mt-6 rounded-3xl border border-brand-border-light bg-white/90 p-6 shadow-card sm:p-8">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo">
+            {tSections("flywheelEyebrow")}
+          </span>
+          <h3 className="font-editorial mt-3 max-w-3xl text-3xl leading-tight tracking-[-0.04em] text-brand-text sm:text-4xl">
+            {tSections("flywheelTitle")}
+          </h3>
+          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-brand-text-muted sm:text-base">
+            {tSections("flywheelDescription")}
+          </p>
+          <div className="mt-8 grid gap-4 lg:grid-cols-3">
+            {[
+              {
+                icon: Search,
+                title: tSections("flywheelPointOneTitle"),
+                description: tSections("flywheelPointOneDescription"),
+              },
+              {
+                icon: BadgeCheck,
+                title: tSections("flywheelPointTwoTitle"),
+                description: tSections("flywheelPointTwoDescription"),
+              },
+              {
+                icon: HeartHandshake,
+                title: tSections("flywheelPointThreeTitle"),
+                description: tSections("flywheelPointThreeDescription"),
+              },
+            ].map(({ icon: Icon, title, description }) => (
+              <article
+                key={title}
+                className="rounded-2xl border border-brand-border-light bg-brand-sand-light p-5"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-brand-indigo shadow-sm">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <h4 className="mt-4 text-base font-bold text-brand-text">
+                  {title}
+                </h4>
+                <p className="mt-2 text-sm leading-relaxed text-brand-text-muted">
+                  {description}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================ */}
       {/*  HOW IT WORKS — decorative step numbers                      */}
       {/* ============================================================ */}
       <section className="reveal section-shell py-20">
         <SectionHeading
           eyebrow={tSections("howEyebrow")}
           title={tSections("howTitle")}
+          description={tSections("howDescription")}
           center
         />
         <div className="reveal-group grid gap-6 lg:grid-cols-3">
@@ -578,6 +896,7 @@ export function HomePage({
           <SectionHeading
             eyebrow={tSections("groupsEyebrow")}
             title={tSections("groupsTitle")}
+            description={tSections("groupsDescription")}
             actionHref="/groups"
             actionLabel={tCta("seeAllGroups")}
           />
@@ -596,6 +915,7 @@ export function HomePage({
         <SectionHeading
           eyebrow={tSections("venuesEyebrow")}
           title={tSections("venuesTitle")}
+          description={tSections("venuesDescription")}
           actionHref="/venues"
           actionLabel={tCta("becomePartner")}
         />
@@ -609,8 +929,8 @@ export function HomePage({
       {/* ============================================================ */}
       {/*  BOTTOM CTA — full-width gradient                            */}
       {/* ============================================================ */}
-      <section className="px-4 pb-20">
-        <div className="section-shell overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#3730A3_0%,#4F46E5_40%,#E8614D_100%)] px-6 py-16 text-center text-white sm:px-12 sm:py-20">
+      <section className="bg-[linear-gradient(135deg,#3730A3_0%,#4F46E5_46%,#E8614D_100%)] px-4 py-20 text-white">
+        <div className="section-shell text-center">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/85">
             {tSections("joinEyebrow")}
           </span>

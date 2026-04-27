@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Fraunces, Geist } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -8,17 +8,18 @@ import { cn } from "@/lib/utils";
 import { ToastProvider } from "@/components/ui/toast";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
+const uiSans = Plus_Jakarta_Sans({
+  variable: "--font-ui",
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
+const displaySerif = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin", "latin-ext"],
   display: "swap",
+  axes: ["SOFT", "WONK", "opsz"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -66,9 +67,9 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={cn("font-sans", geist.variable)}
+      className={cn("font-sans", uiSans.variable, displaySerif.variable)}
     >
-      <body className={`${dmSans.variable} ${fraunces.variable} antialiased overflow-x-hidden`}>
+      <body className="antialiased overflow-x-hidden">
         <NextIntlClientProvider>
           <ToastProvider>
             {children}
