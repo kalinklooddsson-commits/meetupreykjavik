@@ -3499,18 +3499,17 @@ export function PricingScreen() {
   return (
     <>
       {/* Pricing hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
-        <div className="section-shell relative z-10 py-16 text-center text-white sm:py-24">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
-          <h1 className="font-editorial mt-3 text-3xl tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">{t("hero.title")}</h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base text-white/85 sm:text-lg">{t("hero.description", { commission: ticketCommissionRate })}</p>
+      <section className="border-b border-brand-border-light bg-brand-sand-light">
+        <div className="section-shell py-16 text-center sm:py-24">
+          <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.22em] text-brand-text-muted">{t("hero.eyebrow")}</span>
+          <h1 className="font-editorial mx-auto mt-3 max-w-3xl text-4xl tracking-[-0.04em] text-brand-text sm:text-5xl md:text-6xl">{t("hero.title")}</h1>
+          <p className="mx-auto mt-5 max-w-2xl text-base text-brand-text-muted sm:text-lg">{t("hero.description", { commission: ticketCommissionRate })}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90" style={{ color: "var(--color-brand-indigo-light)" }}>
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-brand-text px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-basalt">
               {t("hero.getStartedFree")}
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+            <Link href="/contact" className="inline-flex items-center gap-2 rounded-full border border-brand-border bg-white px-7 py-3.5 text-sm font-medium text-brand-text transition hover:bg-white/90">
               {t("hero.talkToUs")}
             </Link>
           </div>
@@ -3547,8 +3546,8 @@ export function PricingScreen() {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {userTiers.map((tier, i) => (
-              <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-indigo ring-2 ring-brand-indigo/20 shadow-lg" : "border-gray-200")}>
-                {i === 1 ? (<div className="rounded-t-2xl bg-brand-indigo py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("members.mostPopular")}</div>) : null}
+              <article key={tier.name} className={cn("sales-tier-card rounded-2xl border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg", i === 1 ? "border-brand-text ring-2 ring-brand-text/15 shadow-lg" : "border-gray-200")}>
+                {i === 1 ? (<div className="rounded-t-2xl bg-brand-text py-2 text-center text-xs font-bold uppercase tracking-wider text-white">{t("members.mostPopular")}</div>) : null}
                 <div className="border-b border-gray-100 p-7">
                   <div className="text-sm font-semibold text-gray-500">{tier.name}</div>
                   <div className="mt-3 text-4xl font-bold text-gray-900">{tier.price}</div>
@@ -3563,7 +3562,7 @@ export function PricingScreen() {
                   ))}
                 </div>
                 <div className="px-7 pb-7">
-                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-indigo text-white hover:bg-brand-basalt" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
+                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-text text-white hover:bg-brand-basalt" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
                     {tier.price === "0 ISK" ? t("members.joinFree") : t("members.getStarted")}
                   </Link>
                 </div>
@@ -4355,7 +4354,7 @@ export function ForOrganizersScreen() {
                       "inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold transition hover:-translate-y-0.5",
                       i === 1
                         ? "bg-brand-coral text-white shadow-lg hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
-                        : "bg-brand-indigo text-white hover:bg-brand-basalt"
+                        : "bg-brand-text text-white hover:bg-brand-basalt"
                     )}
                   >
                     {t("pricing.getStarted")}
