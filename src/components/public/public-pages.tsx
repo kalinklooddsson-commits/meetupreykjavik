@@ -1241,8 +1241,7 @@ function IndexHero({
         placeholder="blur"
         blurDataURL={BLUR_DATA_URL}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.48)_0%,rgba(30,27,46,0.66)_58%,rgba(30,27,46,0.92)_100%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(30,27,46,0.86)_0%,rgba(30,27,46,0.42)_55%,rgba(232,97,77,0.28)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(30,27,46,0.55)_0%,rgba(30,27,46,0.7)_58%,rgba(30,27,46,0.94)_100%)]" />
       <div className="section-shell relative z-10 py-12 text-white sm:py-20 md:py-24">
         <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white/85 backdrop-blur-sm">
           {eyebrow}
@@ -3349,28 +3348,23 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
 
   return (
     <>
-      {/* Large hero banner with brand gradient */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
-        <div className="absolute inset-0 opacity-20">
-          <Image fill alt="" role="presentation" className="object-cover" sizes="100vw" src="/place-images/reykjavik/jo-leikhusi-52f6c2dd.jpg" />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-indigo/40 to-[#312e81]/80" />
-        <div className="section-shell relative z-10 py-20 text-center text-white sm:py-28 md:py-36">
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand-coral-soft">{t("hero.eyebrow")}</span>
-          <h1 className="font-editorial mx-auto mt-4 max-w-4xl text-4xl tracking-tight sm:text-5xl md:text-6xl">{t("hero.title")}</h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85">{t("hero.description")}</p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
+      {/* About hero — clean editorial */}
+      <section className="border-b border-brand-border-light bg-brand-sand-light">
+        <div className="section-shell py-20 text-center sm:py-28 md:py-32">
+          <span className="text-[0.6875rem] font-semibold uppercase tracking-[0.22em] text-brand-text-muted">{t("hero.eyebrow")}</span>
+          <h1 className="font-editorial mx-auto mt-4 max-w-4xl text-4xl tracking-[-0.04em] text-brand-text sm:text-5xl md:text-6xl">{t("hero.title")}</h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-brand-text-muted">{t("hero.description")}</p>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
             <Link
               href="/events"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90"
-              style={{ color: "var(--color-brand-indigo-light)" }}
+              className="inline-flex items-center gap-2 rounded-full bg-brand-text px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-basalt"
             >
               {t("hero.exploreEvents")}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+              className="inline-flex items-center gap-2 rounded-full border border-brand-border bg-white px-7 py-3.5 text-sm font-medium text-brand-text transition hover:bg-white/90"
             >
               {t("hero.getInTouch")}
             </Link>
@@ -3465,18 +3459,17 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
-        <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
-          <h3 className="font-editorial text-3xl">{t("cta.title")}</h3>
-          <p className="mx-auto mt-4 max-w-lg text-base text-white/85">{t("cta.description")}</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90" style={{ color: "var(--color-brand-indigo-light)" }}>
+      {/* About — closing CTA */}
+      <section className="border-t border-brand-border-light bg-brand-basalt text-white">
+        <div className="section-shell py-16 text-center sm:py-20">
+          <h3 className="font-editorial text-3xl tracking-[-0.035em]">{t("cta.title")}</h3>
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/75">{t("cta.description")}</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-brand-text transition hover:bg-brand-sand-light">
               {t("cta.createAccount")}
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/events" className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+            <Link href="/events" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-sm font-medium text-white transition hover:bg-white/10">
               {t("cta.browseEvents")}
             </Link>
           </div>
@@ -4368,17 +4361,16 @@ export function ForOrganizersScreen() {
       </section>
 
       {/* CTA with gradient */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-indigo via-[#4338ca] to-[#312e81]">
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
-        <div className="section-shell relative z-10 py-16 text-center text-white sm:py-20">
-          <h3 className="text-3xl font-bold">{t("cta.heading")}</h3>
-          <p className="mx-auto mt-4 max-w-lg text-base text-white/85">{t("cta.description")}</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold shadow-lg transition hover:bg-white/90" style={{ color: "var(--color-brand-indigo-light)" }}>
+      <section className="border-t border-brand-border-light bg-brand-basalt text-white">
+        <div className="section-shell py-16 text-center sm:py-20">
+          <h3 className="font-editorial text-3xl tracking-[-0.035em]">{t("cta.heading")}</h3>
+          <p className="mx-auto mt-4 max-w-lg text-base text-white/75">{t("cta.description")}</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/signup" className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-brand-text transition hover:bg-brand-sand-light">
               {t("cta.button")}
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/pricing" className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20">
+            <Link href="/pricing" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-sm font-medium text-white transition hover:bg-white/10">
               {t("hero.seePricing")}
             </Link>
           </div>
