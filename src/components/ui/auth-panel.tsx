@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   CalendarDays,
-  Compass,
   ShieldCheck,
   Store,
   UsersRound,
@@ -179,11 +178,11 @@ export function AuthPanel({
   return (
     <div className="mx-auto max-w-lg px-4 py-12">
       <div className="text-center">
-        <Link href="/" className="mb-6 inline-flex items-center gap-2 text-brand-text">
-          <Compass className="h-5 w-5 text-brand-indigo" />
-          <span className="text-sm font-bold">MeetupReykjavik</span>
+        <Link href="/" className="mb-6 inline-flex items-baseline gap-1.5 no-underline">
+          <span className="text-sm font-bold tracking-[-0.02em] text-brand-text">Meetup</span>
+          <span className="font-editorial text-base tracking-[-0.035em] text-brand-text">Reykjavík</span>
         </Link>
-        <div className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-brand-indigo">
+        <div className="mt-4 text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-brand-text-muted">
           {eyebrow}
         </div>
         <h1 className="font-editorial mt-2 text-3xl tracking-tight text-brand-text">
@@ -229,8 +228,8 @@ export function AuthPanel({
                       onClick={() => updateField("requestedAccountType", role.value)}
                       className={`flex items-center gap-2.5 rounded-xl border px-3 py-3 text-left text-sm transition ${
                         selected
-                          ? "border-brand-indigo bg-[rgba(79,70,229,0.06)] font-semibold text-brand-indigo"
-                          : "border-brand-border bg-white text-brand-text-muted hover:border-brand-indigo"
+                          ? "border-brand-text bg-brand-sand-light font-semibold text-brand-text"
+                          : "border-brand-border bg-white text-brand-text-muted hover:border-brand-text"
                       }`}
                     >
                       <Icon className="h-4 w-4 shrink-0" />
@@ -339,7 +338,7 @@ export function AuthPanel({
         <button
           type="submit"
           disabled={isPending}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-brand-coral px-5 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-brand-text px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-basalt disabled:cursor-not-allowed disabled:opacity-70"
         >
           {primaryLabel}
           <ArrowRight className="h-4 w-4" />
@@ -348,7 +347,7 @@ export function AuthPanel({
         {mode === "login" ? (
           <Link
             href={"/forgot-password" as Route}
-            className="block text-center text-sm text-brand-text-muted hover:text-brand-indigo"
+            className="block text-center text-sm text-brand-text-muted hover:text-brand-text"
           >
             {tAuth("login.forgotPassword")}
           </Link>
@@ -356,7 +355,7 @@ export function AuthPanel({
 
         <Link
           href={secondaryHref as Route}
-          className="block text-center text-sm font-semibold text-brand-indigo"
+          className="block text-center text-sm font-semibold text-brand-text underline-offset-4 hover:underline"
         >
           {secondaryLabel}
         </Link>

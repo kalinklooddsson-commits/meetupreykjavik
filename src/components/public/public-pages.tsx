@@ -471,7 +471,7 @@ function PageHeader({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-bold !text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-text px-6 py-3 text-sm font-bold !text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 >
                   {action.label}
                   <ArrowRight className="h-4 w-4" />
@@ -545,7 +545,7 @@ function DetailHero({
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:bg-brand-basalt"
                 >
                   {action.label}
                   <ArrowRight className="h-4 w-4" />
@@ -765,7 +765,7 @@ function EventCard({ event }: { event: PublicEvent }) {
         {/* CTA */}
         <div className="mt-auto flex items-center justify-end pt-5">
           <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition group-hover:opacity-90"
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand-text px-4 py-2 text-sm font-semibold !text-white transition group-hover:bg-brand-basalt"
           >
             {tCta("viewEvent")}
             <ArrowRight className="h-3.5 w-3.5" />
@@ -872,7 +872,7 @@ function GroupCard({
             {upcomingTitle ? tCards("nextEvent", { title: upcomingTitle }) : tCards("noUpcoming")}
           </div>
           <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition group-hover:opacity-90"
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand-text px-4 py-2 text-sm font-semibold !text-white transition group-hover:bg-brand-basalt"
           >
             {tCta("viewGroup")}
             <ArrowRight className="h-3.5 w-3.5" />
@@ -1005,7 +1005,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
               )}
             </div>
             <span
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition group-hover:opacity-90"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-text px-4 py-2 text-sm font-semibold !text-white transition group-hover:bg-brand-basalt"
             >
               {tCta("viewVenue")}
               <ArrowRight className="h-3.5 w-3.5" />
@@ -1124,7 +1124,7 @@ function SourcedPlaceCard({ place }: { place: SourcedPlace }) {
         ) : null}
         <Link
           href={venueHref(place.slug)}
-          className="inline-flex items-center gap-1.5 rounded-full bg-brand-indigo px-4 py-2 text-sm font-semibold !text-white transition hover:opacity-90"
+          className="inline-flex items-center gap-1.5 rounded-full bg-brand-text px-4 py-2 text-sm font-semibold !text-white transition hover:bg-brand-basalt"
         >
           {tCta("viewVenue")}
           <ArrowRight className="h-3.5 w-3.5" />
@@ -1163,7 +1163,7 @@ function TimeFilterBar({
             className={cn(
               "rounded-full px-4 py-2 text-sm font-medium transition",
               isActive
-                ? "bg-brand-indigo !text-white"
+                ? "bg-brand-text !text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200",
             )}
           >
@@ -1450,7 +1450,7 @@ export function EventsIndexScreen({
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href={eventHref(featured.slug)}
-                className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
+                className="inline-flex items-center gap-2 rounded-full bg-brand-text px-6 py-3 text-sm font-semibold !text-white transition hover:bg-brand-basalt"
               >
                 {t("featured.reserveSpot")}
                 <ArrowRight className="h-4 w-4" />
@@ -1485,7 +1485,7 @@ export function EventsIndexScreen({
               className={cn(
                 "rounded-full px-4 py-1.5 text-xs font-semibold transition",
                 !activeCategory
-                  ? "bg-brand-indigo !text-white"
+                  ? "bg-brand-text !text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200",
               )}
             >
@@ -1511,7 +1511,7 @@ export function EventsIndexScreen({
                   className={cn(
                     "rounded-full px-4 py-1.5 text-xs font-semibold transition",
                     isActive
-                      ? "bg-brand-indigo !text-white"
+                      ? "bg-brand-text !text-white"
                       : usedCategories.includes(cat)
                         ? "bg-brand-indigo/10 text-brand-indigo ring-1 ring-brand-indigo/20 hover:bg-brand-indigo/20"
                         : "bg-gray-100 text-gray-500 cursor-default",
@@ -1584,7 +1584,7 @@ export function EventsIndexScreen({
               </p>
               <Link
                 href="/events"
-                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-indigo px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
+                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-text px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 Clear filters
               </Link>
@@ -2114,7 +2114,7 @@ export function GroupsIndexScreen({
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                 !activeCategory
-                  ? "bg-brand-indigo !text-white"
+                  ? "bg-brand-text !text-white"
                   : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
               )}
             >
@@ -2134,7 +2134,7 @@ export function GroupsIndexScreen({
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                     isActive
-                      ? "bg-brand-indigo !text-white"
+                      ? "bg-brand-text !text-white"
                       : "border border-brand-border-light bg-white text-gray-700 shadow-[0_1px_2px_rgba(42,38,56,0.04)] hover:border-brand-indigo/30 hover:bg-brand-indigo-soft",
                   )}
                 >
@@ -2162,7 +2162,7 @@ export function GroupsIndexScreen({
               </p>
               <Link
                 href="/groups"
-                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-indigo px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
+                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-text px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 Clear filters
               </Link>
@@ -2241,7 +2241,7 @@ export function GroupDetailScreen({ group, events: eventsProp, isMember = false 
               label={t("actions.joinThisGroup")}
               showArrow
               isMember={isMember}
-              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90 disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:bg-brand-basalt disabled:opacity-60"
             />
             <ShareButton title={group.name} text={group.summary} />
           </div>
@@ -2438,7 +2438,7 @@ export function GroupDetailScreen({ group, events: eventsProp, isMember = false 
                 slug={group.slug}
                 label={t("actions.joinThisGroup")}
                 showArrow
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90 disabled:opacity-60"
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-brand-text px-6 py-3 text-sm font-semibold !text-white transition hover:bg-brand-basalt disabled:opacity-60"
               />
             </div>
           </div>
@@ -2588,7 +2588,7 @@ export function VenuesIndexScreen({
               className={cn(
                 "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                 !activeType && !activeArea
-                  ? "bg-brand-indigo !text-white"
+                  ? "bg-brand-text !text-white"
                   : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30",
               )}
             >
@@ -2609,7 +2609,7 @@ export function VenuesIndexScreen({
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-xs font-semibold transition",
                     isActive
-                      ? "bg-brand-indigo !text-white"
+                      ? "bg-brand-text !text-white"
                       : "border border-brand-border-light bg-white text-gray-700 hover:border-brand-indigo/30",
                   )}
                 >
@@ -2665,7 +2665,7 @@ export function VenuesIndexScreen({
               </p>
               <Link
                 href="/venues"
-                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-indigo px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
+                className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-brand-text px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 Clear filters
               </Link>
@@ -2739,7 +2739,7 @@ export function VenuesIndexScreen({
             </p>
             <Link
               href="/venue/onboarding"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-coral px-10 py-4 text-sm font-semibold text-white shadow-lg shadow-brand-coral/20 transition hover:opacity-90"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-brand-coral px-10 py-4 text-sm font-semibold text-white shadow-lg shadow-brand-coral/20 transition hover:bg-brand-basalt"
             >
               {t("cta.button")}
               <ArrowRight className="h-4 w-4" />
@@ -3055,7 +3055,7 @@ export function SourcedVenueDetailScreen({ place, relatedPlaces = [] }: { place:
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/venue/onboarding"
-              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-coral px-6 py-3 text-sm font-semibold !text-white transition hover:bg-brand-basalt"
             >
               {t("claimVenue")}
               <ArrowRight className="h-4 w-4" />
@@ -3238,7 +3238,7 @@ export function BlogIndexScreen() {
               <div className="mt-4 text-sm text-gray-500">{featured.publishedAt}</div>
               <Link
                 href={blogHref(featured.slug)}
-                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-indigo px-6 py-3 text-sm font-semibold !text-white transition hover:opacity-90"
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-text px-6 py-3 text-sm font-semibold !text-white transition hover:bg-brand-basalt"
               >
                 {t("readArticle")}
                 <ArrowRight className="h-4 w-4" />
@@ -3431,7 +3431,7 @@ export function AboutScreen({ stats }: { stats?: { label: string; value: string 
           <h2 className="font-editorial mb-12 text-center text-3xl text-gray-900">{t("team.title")}</h2>
           <div className="grid gap-8 md:grid-cols-3">
             {aboutTeam.map((member, i) => {
-              const colors = ["bg-brand-indigo !text-white", "bg-brand-coral !text-white", "bg-brand-sage text-white"];
+              const colors = ["bg-brand-text !text-white", "bg-brand-coral !text-white", "bg-brand-sage text-white"];
               return (
                 <div key={member.name} className="rounded-2xl border border-gray-200 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                   <div className={cn("mx-auto flex h-20 w-20 items-center justify-center rounded-full text-2xl font-bold", colors[i % colors.length])}>
@@ -3563,7 +3563,7 @@ export function PricingScreen() {
                   ))}
                 </div>
                 <div className="px-7 pb-7">
-                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-indigo text-white hover:opacity-90" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
+                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-indigo text-white hover:bg-brand-basalt" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
                     {tier.price === "0 ISK" ? t("members.joinFree") : t("members.getStarted")}
                   </Link>
                 </div>
@@ -3602,7 +3602,7 @@ export function PricingScreen() {
                   ))}
                 </div>
                 <div className="px-7 pb-7">
-                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-coral text-white hover:opacity-90" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
+                  <Link href="/signup" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-coral text-white hover:bg-brand-basalt" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
                     {t("organizers.startOrganizing")}
                   </Link>
                 </div>
@@ -3641,7 +3641,7 @@ export function PricingScreen() {
                   ))}
                 </div>
                 <div className="px-7 pb-7">
-                  <Link href="/venue/onboarding" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-sage text-white hover:opacity-90" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
+                  <Link href="/venue/onboarding" className={cn("flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition", i === 1 ? "bg-brand-sage text-white hover:bg-brand-basalt" : "border border-gray-300 text-gray-700 hover:bg-gray-50")}>
                     {tier.price === "0 ISK" ? t("venues.listFree") : t("venues.applyNow")}
                   </Link>
                 </div>
@@ -4206,7 +4206,7 @@ export function FaqScreen() {
           <p className="mx-auto mt-3 max-w-lg text-sm text-gray-600">{t("cta.description")}</p>
           <Link
             href="/contact"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-indigo px-8 py-3.5 text-sm font-semibold !text-white transition hover:opacity-90"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-text px-8 py-3.5 text-sm font-semibold !text-white transition hover:bg-brand-basalt"
           >
             {t("hero.contactUs")}
             <ArrowRight className="h-4 w-4" />
@@ -4355,7 +4355,7 @@ export function ForOrganizersScreen() {
                       "inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold transition hover:-translate-y-0.5",
                       i === 1
                         ? "bg-brand-coral text-white shadow-lg hover:shadow-[0_12px_28px_rgba(232,97,77,0.3)]"
-                        : "bg-brand-indigo text-white hover:opacity-90"
+                        : "bg-brand-indigo text-white hover:bg-brand-basalt"
                     )}
                   >
                     {t("pricing.getStarted")}
@@ -4506,7 +4506,7 @@ export function ForVenuesScreen() {
                     className={cn(
                       "flex w-full items-center justify-center rounded-full py-3.5 text-sm font-semibold transition",
                       i === 1
-                        ? "bg-brand-sage text-white hover:opacity-90"
+                        ? "bg-brand-sage text-white hover:bg-brand-basalt"
                         : "border border-gray-300 text-gray-700 hover:bg-gray-50",
                     )}
                   >

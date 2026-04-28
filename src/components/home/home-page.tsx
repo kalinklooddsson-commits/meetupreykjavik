@@ -616,7 +616,7 @@ export function HomePage({
                 />
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-full bg-brand-indigo px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:brightness-110"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-text px-4 py-2 text-xs font-semibold text-white transition hover:bg-brand-basalt"
                 >
                   {tCta("explore")}
                 </button>
