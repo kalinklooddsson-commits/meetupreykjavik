@@ -1591,18 +1591,17 @@ export function EventsIndexScreen({
           )}
 
           {/* CTA */}
-          <div className="mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-indigo via-indigo-700 to-indigo-900 p-8 text-center text-white sm:p-10 md:p-14">
-            <h3 className="font-editorial text-3xl sm:text-4xl">{t("cta.title")}</h3>
-            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/85">
+          <div className="mt-12 overflow-hidden rounded-2xl bg-brand-basalt p-8 text-center text-white sm:p-10 md:p-14">
+            <h3 className="font-editorial text-3xl tracking-[-0.035em] sm:text-4xl">{t("cta.title")}</h3>
+            <p className="mx-auto mt-4 max-w-lg text-base leading-relaxed text-white/75">
               {t("cta.description")}
             </p>
-            <p className="mx-auto mt-2 max-w-md text-sm text-white/80">
+            <p className="mx-auto mt-2 max-w-md text-sm text-white/65">
               {t("cta.subtitle")}
             </p>
             <Link
               href="/signup"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-10 py-4 text-base font-semibold shadow-lg shadow-black/20 transition hover:bg-white/90"
-              style={{ color: "var(--color-brand-indigo-light)" }}
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-brand-text transition hover:bg-brand-sand-light"
             >
               {t("cta.button")}
               <ArrowRight className="h-4 w-4" />
@@ -2169,31 +2168,18 @@ export function GroupsIndexScreen({
           )}
 
           {/* Start a group CTA */}
-          <div className="relative mt-12 overflow-hidden rounded-2xl bg-gradient-to-br from-brand-coral via-[#e8634a] to-[#d4503d] p-6 shadow-[0_8px_32px_rgba(212,80,61,0.25)] sm:p-8 md:p-12">
-            {/* Decorative dot pattern */}
-            <div
-              className="pointer-events-none absolute inset-0 opacity-[0.07]"
-              style={{
-                backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
-                backgroundSize: "24px 24px",
-              }}
-            />
-
-            <div className="relative flex flex-col items-center text-center sm:flex-row sm:text-left sm:gap-8">
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-                <Zap className="h-9 w-9 text-white" />
-              </div>
-              <div className="mt-4 sm:mt-0">
-                <h3 className="text-xl font-bold !text-white">{t("startGroup.title")}</h3>
-                <p className="mt-2 max-w-lg text-sm text-white/80">
+          <div className="mt-12 overflow-hidden rounded-2xl border border-brand-border bg-brand-sand-light p-6 sm:p-8 md:p-12">
+            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:gap-8">
+              <div>
+                <h3 className="font-editorial text-2xl tracking-[-0.035em] text-brand-text sm:text-3xl">{t("startGroup.title")}</h3>
+                <p className="mt-2 max-w-lg text-sm text-brand-text-muted">
                   {t("startGroup.description")}
                 </p>
               </div>
-              <div className="mt-6 shrink-0 sm:mt-0 sm:ml-auto">
+              <div className="shrink-0 sm:ml-auto">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition hover:scale-105 hover:shadow-[0_8px_24px_rgba(0,0,0,0.18)]"
-                  style={{ color: "var(--color-brand-indigo-light)" }}
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-text px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-basalt"
                 >
                   {t("startGroup.button")}
                   <ArrowRight className="h-4 w-4" />
